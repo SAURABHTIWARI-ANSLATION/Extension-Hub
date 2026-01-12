@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Daily Goal Tracker</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <div class="brand">
+                <div class="icon-circle">🎯</div>
+                <div>
+                    <h1>Focus</h1>
+                    <p id="date" class="date-text"></p>
+                </div>
+            </div>
+            <div id="streak" class="streak-pill">🔥 0</div>
+        </header>
+
+        <div class="input-group">
+            <input id="newGoal" placeholder="Add a new goal..." autofocus />
+            <button id="addBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+        </div>
+
+        <div class="list-container">
+            <ul id="goalList" class="list"></ul>
+        </div>
+
+        <div id="historyContainer" class="history-section"></div>
+
+        <footer class="footer">
+            <button id="clearDone" class="btn-secondary">Clear Completed</button>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

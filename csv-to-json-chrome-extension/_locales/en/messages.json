@@ -1,0 +1,8 @@
+{
+  "extName": {
+    "message": "CSV ⇄ JSON Converter"
+  },
+  "extDesc": {
+    "message": "Convert CSV to JSON and JSON to CSV instantly. Works offline."
+  }
+}

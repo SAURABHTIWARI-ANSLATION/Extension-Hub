@@ -1,0 +1,310 @@
+/* Goal List Items */
+.goal-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  border: 1px solid var(--border);
+}
+.goal-item.done .text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+.status-dropdown {
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-main);
+  font-size: 13px;
+  padding: 2px 8px;
+}
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: auto;
+}
+.remove-btn:hover {
+  color: #fff;
+  background: var(--danger);
+  border-radius: 4px;
+}
+.history-title {
+  font-size: 13px;
+  color: var(--primary);
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+.history-item {
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+:root {
+  --bg: #0b0f1a;
+  --card-bg: #161b2c;
+  --border: #2d364f;
+  --primary: #3b82f6;
+  --primary-hover: #60a5fa;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --danger: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  margin: 0;
+  width: 320px;
+  background-color: var(--bg);
+  background: radial-gradient(circle at top right, #1e293b, #0b0f1a);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+.app-container {
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-circle {
+  background: rgba(59, 130, 246, 0.1);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 18px;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.date-text {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.streak-pill {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+}
+
+/* Input Section */
+.input-group {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+input {
+  flex: 1;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: white;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+#addBtn {
+  background: var(--primary);
+  border: none;
+  border-radius: 12px;
+  width: 44px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, background 0.2s;
+}
+
+#addBtn:hover {
+  background: var(--primary-hover);
+}
+#addBtn:active {
+  transform: scale(0.95);
+}
+
+/* List Section */
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.goal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  animation: slideIn 0.3s ease-out;
+  transition: transform 0.2s;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.goal-item:hover {
+  border-color: #475569;
+  transform: translateX(2px);
+}
+
+.goal-item.done {
+  opacity: 0.6;
+  background: rgba(22, 27, 44, 0.5);
+}
+
+.goal-item.done .text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.text {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Custom Checkbox */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+input[type="checkbox"]:checked::after {
+  content: "✓";
+  position: absolute;
+  color: white;
+  font-size: 14px;
+  left: 3px;
+  top: -1px;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.remove-btn:hover {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* History Section */
+.history-section {
+  margin-top: 20px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+}
+
+.history-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.history-item {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+/* Footer */
+.footer {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-secondary {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  color: var(--danger);
+  background: rgba(239, 68, 68, 0.05);
+}

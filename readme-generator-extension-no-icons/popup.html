@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>README Generator</title>
+<link rel="stylesheet" href="popup.css">
+</head>
+<body class="dark">
+<div class="app">
+<header>
+<h1>README.md Generator</h1>
+<div class="controls">
+<select id="templateSelect">
+<option value="standard">Standard</option>
+<option value="minimal">Minimal</option>
+</select>
+<button id="themeToggle">🌙</button>
+</div>
+</header>
+
+<div class="content">
+<section class="panel">
+<textarea id="projectInput" placeholder="Paste your project description here..."></textarea>
+<button id="generateBtn" disabled>Generate README</button>
+</section>
+
+<section class="panel preview">
+<pre id="previewArea">Paste a project description to begin…</pre>
+<div class="actions">
+<button id="copyBtn" disabled>Copy</button>
+<button id="downloadBtn" disabled>Download</button>
+</div>
+</section>
+</div>
+
+<footer id="footerText">100% Local • No Tracking</footer>
+</div>
+<script src="popup.js"></script>
+</body>
+</html>

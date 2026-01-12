@@ -1,0 +1,169 @@
+/* =================================================
+   DAY / NIGHT FRIENDLY THEME (BMI STYLE)
+   Only colors & theme — UI unchanged
+   ================================================= */
+
+/* ---------- DAY MODE (LIGHT) ---------- */
+:root {
+  --bg: linear-gradient(180deg, #0d47a1 0%, #1976d2 100%);
+  --text: #ffffff;
+
+  --card: #ffffff;
+  --card-text: #0f172a;
+
+  --btn: linear-gradient(90deg, #2196f3, #1e88e5);
+  --btn-text: #ffffff;
+
+  --border: rgba(255,255,255,0.25);
+  --soft: rgba(255,255,255,0.18);
+}
+
+/* ---------- NIGHT MODE (DARK) ---------- */
+body.dark {
+  --bg: linear-gradient(180deg, #050b18 0%, #0b1c33 100%);
+  --text: #dbeafe;
+
+  --card: #0f2647;
+  --card-text: #e5f0ff;
+
+  --btn: linear-gradient(90deg, #1e88e5, #1565c0);
+  --btn-text: #ffffff;
+
+  --border: rgba(255,255,255,0.12);
+  --soft: rgba(255,255,255,0.08);
+}
+
+/* ---------- BASE ---------- */
+body {
+  background: var(--bg);
+  color: var(--text);
+  width: 380px;
+  padding: 14px;
+  font-family: Arial, sans-serif;
+  transition: background 0.4s ease, color 0.3s ease;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ---------- INPUTS / SELECT / OUTPUT ---------- */
+select,
+input,
+pre {
+  width: 100%;
+  margin: 6px 0;
+  padding: 11px;
+  background: var(--card);
+  color: var(--card-text);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+pre {
+  height: 180px;
+  overflow: auto;
+}
+
+/* ---------- DRAG & DROP ---------- */
+#dropZone {
+  background: var(--soft);
+  color: var(--text);
+  border: 2px dashed rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 16px;
+  margin: 6px 0;
+  transition: background 0.3s ease;
+}
+
+/* ---------- BUTTONS ---------- */
+button {
+  width: 100%;
+  margin: 6px 0;
+  padding: 13px;
+  background: var(--btn);
+  color: var(--btn-text);
+  border: none;
+  border-radius: 18px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.3s ease;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ---------- PROGRESS ---------- */
+#progressWrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.25);
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+#progressBar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 4px;
+  transition: width 0.2s linear;
+}
+
+/* ---------- TOGGLE ---------- */
+.switch {
+  width: 40px;
+  height: 20px;
+  position: relative;
+}
+
+.switch input {
+  display: none;
+}
+
+.slider {
+  background: rgba(255,255,255,0.4);
+  border-radius: 20px;
+  position: absolute;
+  inset: 0;
+  transition: background 0.3s ease;
+}
+
+.slider:before {
+  content: "";
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+
+input:checked + .slider {
+  background: #22c55e;
+}
+
+input:checked + .slider:before {
+  transform: translateX(20px);
+}
+
+/* ---------- UTILITY ---------- */
+.hidden {
+  display: none;
+}
