@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="notification" id="notification"></div>
+        <div class="header">
+            <h1><i class="fas fa-code"></i> Code Snippet Manager</h1>
+            <div class="header-actions">
+                <button id="newSnippet" class="btn-primary">
+                    <i class="fas fa-plus"></i> New Snippet
+                </button>
+                <button id="exportSnippets" class="btn-secondary" title="Export snippets">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search snippets...">
+            <select id="filterLanguage">
+                <option value="">All Languages</option>
+                <option value="javascript">JavaScript</option>
+                <option value="python">Python</option>
+                <option value="html">HTML</option>
+                <option value="css">CSS</option>
+                <option value="java">Java</option>
+                <option value="cpp">C++</option>
+                <option value="php">PHP</option>
+                <option value="sql">SQL</option>
+            </select>
+        </div>
+
+        <div id="editorView" class="hidden">
+            <div class="editor-header">
+                <input type="text" id="snippetTitle" placeholder="Snippet Title">
+                <select id="snippetLanguage">
+                    <option value="plaintext">Plain Text</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="html">HTML</option>
+                    <option value="css">CSS</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="php">PHP</option>
+                    <option value="sql">SQL</option>
+                </select>
+            </div>
+            <textarea id="snippetCode" placeholder="Paste your code here..."></textarea>
+            <div class="editor-actions">
+                <button id="saveSnippet" class="btn-primary">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button id="cancelEdit" class="btn-secondary">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button id="insertToPage" class="btn-success">
+                    <i class="fas fa-paper-plane"></i> Insert to Page
+                </button>
+            </div>
+        </div>
+
+        <div id="snippetsList">
+            <!-- Snippets will be loaded here -->
+        </div>
+
+        <div id="noSnippets" class="hidden">
+            <i class="fas fa-code fa-3x"></i>
+            <p>No snippets saved yet</p>
+            <button id="createFirstSnippet" class="btn-primary">
+                Create Your First Snippet
+            </button>
+        </div>
+    </div>
+    <script src="storage-manager.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

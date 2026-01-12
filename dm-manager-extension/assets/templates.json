@@ -1,0 +1,210 @@
+{
+  "templates": [
+    {
+      "id": "welcome_001",
+      "name": "Welcome - New Connection",
+      "category": "networking",
+      "content": "Hi {{name}},\n\nThanks for connecting! I noticed you're interested in {{industry}}.\n\nWhat's keeping you busy these days?\n\nBest,\n{{your_name}}",
+      "tags": ["welcome", "connection", "networking"],
+      "usageCount": 42,
+      "createdAt": "2024-01-15T10:30:00Z"
+    },
+    {
+      "id": "follow_up_001",
+      "name": "Follow-up - After Meeting",
+      "category": "follow-up",
+      "content": "Hi {{name}},\n\nGreat connecting with you yesterday about {{topic}}.\n\nHere's that [resource] I mentioned.\n\nLet me know if you have any questions!\n\nBest,\n{{your_name}}",
+      "tags": ["follow-up", "meeting", "resource"],
+      "usageCount": 28,
+      "createdAt": "2024-01-20T14:15:00Z"
+    },
+    {
+      "id": "sales_inquiry_001",
+      "name": "Sales - Product Inquiry",
+      "category": "sales",
+      "content": "Hi {{name}},\n\nThanks for your interest in {{product}}!\n\nOur pricing starts at {{price}} and includes:\n• Feature 1\n• Feature 2\n• Feature 3\n\nWould you like to schedule a quick demo?\n\nBest,\n{{your_name}}",
+      "tags": ["sales", "pricing", "demo"],
+      "usageCount": 35,
+      "createdAt": "2024-01-10T09:45:00Z"
+    },
+    {
+      "id": "support_001",
+      "name": "Support - Issue Resolution",
+      "category": "support",
+      "content": "Hi {{name}},\n\nI understand you're experiencing an issue with {{feature}}.\n\nHere are the steps to resolve it:\n1. Step 1\n2. Step 2\n3. Step 3\n\nLet me know if this helps!\n\nBest,\n{{your_name}}",
+      "tags": ["support", "help", "troubleshooting"],
+      "usageCount": 19,
+      "createdAt": "2024-01-25T11:20:00Z"
+    },
+    {
+      "id": "cold_outreach_001",
+      "name": "Cold Outreach - LinkedIn",
+      "category": "sales",
+      "content": "Hi {{name}},\n\nI noticed you're the {{position}} at {{company}}.\n\nI help companies like yours with {{service}}.\n\nWould you be open to a quick 15-minute chat next week?\n\nBest,\n{{your_name}}",
+      "tags": ["cold-outreach", "linkedin", "sales"],
+      "usageCount": 56,
+      "createdAt": "2024-01-05T16:30:00Z"
+    },
+    {
+      "id": "thank_you_001",
+      "name": "Thank You - After Purchase",
+      "category": "general",
+      "content": "Hi {{name}},\n\nThank you for choosing {{product}}!\n\nWe're excited to have you on board.\n\nHere's how to get started:\n1. Step 1\n2. Step 2\n\nLet us know if you need any help.\n\nBest,\n{{your_name}}",
+      "tags": ["thank-you", "onboarding", "welcome"],
+      "usageCount": 22,
+      "createdAt": "2024-01-30T13:10:00Z"
+    },
+    {
+      "id": "feedback_001",
+      "name": "Feedback Request",
+      "category": "support",
+      "content": "Hi {{name}},\n\nHope you're enjoying {{product}}!\n\nWe'd love to hear your feedback about {{feature}}.\n\nWhat's one thing we could improve?\n\nThanks,\n{{your_name}}",
+      "tags": ["feedback", "survey", "improvement"],
+      "usageCount": 14,
+      "createdAt": "2024-02-01T10:00:00Z"
+    },
+    {
+      "id": "event_invite_001",
+      "name": "Event Invitation",
+      "category": "networking",
+      "content": "Hi {{name}},\n\nYou're invited to our {{event_name}} on {{date}}.\n\nJoin us to learn about {{topic}}.\n\nRSVP: [link]\n\nHope to see you there!\n\nBest,\n{{your_name}}",
+      "tags": ["event", "invitation", "networking"],
+      "usageCount": 8,
+      "createdAt": "2024-02-05T15:45:00Z"
+    },
+    {
+      "id": "job_opportunity_001",
+      "name": "Job Opportunity",
+      "category": "recruitment",
+      "content": "Hi {{name}},\n\nI came across your profile and was impressed by your experience in {{skill}}.\n\nWe're hiring for {{position}} at {{company}}.\n\nWould you be interested in learning more?\n\nBest,\n{{your_name}}",
+      "tags": ["job", "recruitment", "opportunity"],
+      "usageCount": 31,
+      "createdAt": "2024-01-18T12:20:00Z"
+    },
+    {
+      "id": "cancellation_001",
+      "name": "Meeting Cancellation",
+      "category": "general",
+      "content": "Hi {{name}},\n\nI need to reschedule our meeting on {{date}}.\n\nCould we move it to [alternative_date] instead?\n\nApologies for any inconvenience.\n\nBest,\n{{your_name}}",
+      "tags": ["cancellation", "reschedule", "meeting"],
+      "usageCount": 12,
+      "createdAt": "2024-01-22T09:15:00Z"
+    }
+  ],
+  
+  "categories": [
+    {
+      "id": "general",
+      "name": "General",
+      "icon": "💬",
+      "count": 2
+    },
+    {
+      "id": "sales",
+      "name": "Sales",
+      "icon": "💰",
+      "count": 2
+    },
+    {
+      "id": "support",
+      "name": "Support",
+      "icon": "🛠️",
+      "count": 2
+    },
+    {
+      "id": "follow-up",
+      "name": "Follow-up",
+      "icon": "↪️",
+      "count": 1
+    },
+    {
+      "id": "networking",
+      "name": "Networking",
+      "icon": "🤝",
+      "count": 2
+    },
+    {
+      "id": "recruitment",
+      "name": "Recruitment",
+      "icon": "👥",
+      "count": 1
+    }
+  ],
+  
+  "variables": [
+    {
+      "name": "{{name}}",
+      "description": "Recipient's name",
+      "example": "Hi {{name}}!"
+    },
+    {
+      "name": "{{your_name}}",
+      "description": "Your name",
+      "example": "Best, {{your_name}}"
+    },
+    {
+      "name": "{{company}}",
+      "description": "Recipient's company",
+      "example": "At {{company}}"
+    },
+    {
+      "name": "{{position}}",
+      "description": "Recipient's position",
+      "example": "{{position}} at {{company}}"
+    },
+    {
+      "name": "{{industry}}",
+      "description": "Industry or field",
+      "example": "In the {{industry}} space"
+    },
+    {
+      "name": "{{product}}",
+      "description": "Product name",
+      "example": "Our {{product}} can help"
+    },
+    {
+      "name": "{{service}}",
+      "description": "Service name",
+      "example": "We provide {{service}}"
+    },
+    {
+      "name": "{{price}}",
+      "description": "Price or cost",
+      "example": "Starts at {{price}}"
+    },
+    {
+      "name": "{{date}}",
+      "description": "Date",
+      "example": "On {{date}}"
+    },
+    {
+      "name": "{{topic}}",
+      "description": "Topic or subject",
+      "example": "About {{topic}}"
+    },
+    {
+      "name": "{{feature}}",
+      "description": "Feature or functionality",
+      "example": "The {{feature}} feature"
+    },
+    {
+      "name": "{{event_name}}",
+      "description": "Event name",
+      "example": "{{event_name}} event"
+    },
+    {
+      "name": "{{skill}}",
+      "description": "Skill or expertise",
+      "example": "Your {{skill}} skills"
+    }
+  ],
+  
+  "settings": {
+    "defaultSignature": "Best regards,\n{{your_name}}",
+    "autoResponseDelay": 5,
+    "enableWorkingHours": false,
+    "workingHoursStart": "09:00",
+    "workingHoursEnd": "17:00",
+    "timezone": "UTC"
+  }
+}

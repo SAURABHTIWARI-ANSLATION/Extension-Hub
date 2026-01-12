@@ -1,0 +1,51 @@
+{
+  "manifest_version": 3,
+  "name": "QuickFill Pro - Smart Form Autofill",
+  "version": "1.0.0",
+  "description": "Instantly fill forms with multiple profiles. Save time on repetitive form filling!",
+
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus"
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "options_page": "options.html",
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "commands": {
+    "fill-form": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+F",
+        "mac": "Command+Shift+F"
+      },
+      "description": "Fill form with default profile"
+    }
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["themes.json"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

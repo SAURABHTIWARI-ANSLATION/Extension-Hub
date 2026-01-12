@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="violet-glow">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickFill Pro</title>
+  <link rel="stylesheet" href="theme-variables.css" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body data-theme="violet-glow">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <span>⚡</span>
+        <h1>QuickFill Pro</h1>
+      </div>
+
+      <button class="settings-btn" id="openOptions" title="Manage Profiles">
+        ⚙️
+      </button>
+    </div>
+
+    <!-- Profile -->
+    <div class="profile-section">
+      <label for="profileSelect">Select Profile</label>
+      <select id="profileSelect" class="profile-select">
+        <option value="">-- Choose Profile --</option>
+      </select>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button id="fillBtn" class="btn btn-primary">
+        ⚡ Fill Form
+      </button>
+
+      <button class="btn btn-secondary" id="manageProfiles">
+        Manage Profiles
+      </button>
+    </div>
+
+    <!-- Status -->
+    <div id="status" class="status-message" style="display:none"></div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-icon">👤</div>
+        <div class="stat-content">
+          <div id="profileCount" class="stat-value">0</div>
+          <div class="stat-label">Profiles</div>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <div class="stat-icon">✓</div>
+        <div class="stat-content">
+          <div id="filledCount" class="stat-value">0</div>
+          <div class="stat-label">Forms Filled</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>
+        💡 Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd> to quick fill
+      </p>
+      <p class="version">v1.0.0</p>
+    </div>
+
+  </div>
+
+  <script src="theme-manager.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

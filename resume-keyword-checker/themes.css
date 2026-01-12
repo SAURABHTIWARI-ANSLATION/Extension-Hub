@@ -1,0 +1,124 @@
+/* Theme System for Resume Keyword Checker */
+:root {
+    /* Layout & Typography - Consistent across all themes */
+    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --border-radius: 10px;
+    --spacing-small: 8px;
+    --spacing-medium: 15px;
+    --spacing-large: 20px;
+    --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    --box-shadow-large: 0 2px 20px rgba(0, 0, 0, 0.15);
+    
+    /* Font sizes */
+    --font-size-xs: 12px;
+    --font-size-sm: 13px;
+    --font-size-md: 14px;
+    --font-size-lg: 16px;
+    --font-size-xl: 22px;
+    
+    /* Component sizes */
+    --button-height: 44px;
+    --textarea-min-height: 100px;
+    --score-circle-size: 100px;
+}
+
+/* Theme 1: Ocean Blue (Default) */
+[data-theme="ocean-blue"],
+:root {
+    --bg-gradient: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
+    --header-bg: #0A3D91;
+    --primary-btn-gradient: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+    --secondary-btn-gradient: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+    --tertiary-btn-gradient: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    --accent-color: #64B5F6;
+    --text-primary: #FFFFFF;
+    --text-secondary: #CFE8FF;
+    --text-dark: #333333;
+    --card-bg: #FFFFFF;
+    --category-bg: #f8f9fa;
+    --border-color: #e9ecef;
+    --score-bg: linear-gradient(135deg, #2196F3 0%, #1E88E5 100%);
+    --success-color: #27ae60;
+    --error-color: #e74c3c;
+    --summary-bg: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+}
+
+/* Theme 2: Mint Teal */
+[data-theme="mint-teal"] {
+    --bg-gradient: linear-gradient(135deg, #0F766E 0%, #2DD4BF 100%);
+    --header-bg: #115E59;
+    --primary-btn-gradient: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%);
+    --secondary-btn-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    --tertiary-btn-gradient: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+    --accent-color: #5EEAD4;
+    --text-primary: #ECFEFF;
+    --text-secondary: #FFFFFF;
+    --text-dark: #1f2937;
+    --card-bg: #FFFFFF;
+    --category-bg: #f0fdfa;
+    --border-color: #ccfbf1;
+    --score-bg: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%);
+    --success-color: #10b981;
+    --error-color: #ef4444;
+    --summary-bg: linear-gradient(135deg, #115E59 0%, #0d9488 100%);
+}
+
+/* Theme 3: Indigo Night */
+[data-theme="indigo-night"] {
+    --bg-gradient: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+    --header-bg: #020617;
+    --primary-btn-gradient: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+    --secondary-btn-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    --tertiary-btn-gradient: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    --accent-color: #818CF8;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0E7FF;
+    --text-dark: #1e293b;
+    --card-bg: #FFFFFF;
+    --category-bg: #f8fafc;
+    --border-color: #e2e8f0;
+    --score-bg: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+    --success-color: #22c55e;
+    --error-color: #ef4444;
+    --summary-bg: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+}
+
+/* Theme 4: Sky Gradient */
+[data-theme="sky-gradient"] {
+    --bg-gradient: linear-gradient(135deg, #0284C7 0%, #7DD3FC 100%);
+    --header-bg: #0369A1;
+    --primary-btn-gradient: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+    --secondary-btn-gradient: linear-gradient(135deg, #fb7185 0%, #f43f5e 100%);
+    --tertiary-btn-gradient: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    --accent-color: #BAE6FD;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0F2FE;
+    --text-dark: #0c4a6e;
+    --card-bg: #FFFFFF;
+    --category-bg: #f0f9ff;
+    --border-color: #e0f2fe;
+    --score-bg: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+    --success-color: #0d9488;
+    --error-color: #f43f5e;
+    --summary-bg: linear-gradient(135deg, #0369a1 0%, #0284c7 100%);
+}
+
+/* Theme 5: Violet Glow */
+[data-theme="violet-glow"] {
+    --bg-gradient: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%);
+    --header-bg: #4C1D95;
+    --primary-btn-gradient: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+    --secondary-btn-gradient: linear-gradient(135deg, #ec4899 0%, #db2777 100%);
+    --tertiary-btn-gradient: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+    --accent-color: #C4B5FD;
+    --text-primary: #FFFFFF;
+    --text-secondary: #F5F3FF;
+    --text-dark: #4c1d95;
+    --card-bg: #FFFFFF;
+    --category-bg: #faf5ff;
+    --border-color: #f3e8ff;
+    --score-bg: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+    --success-color: #8b5cf6;
+    --error-color: #ec4899;
+    --summary-bg: linear-gradient(135deg, #4c1d95 0%, #6d28d9 100%);
+}

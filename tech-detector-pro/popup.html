@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="indigo-night">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech Detector Pro</title>
+  <link rel="stylesheet" href="theme-variables.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body data-theme="indigo-night">
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="header">
+      <h1>🔍 Tech Detector Pro</h1>
+      <p>Detect technologies used by current website</p>
+    </header>
+
+    <!-- Current Website -->
+    <div class="current-site">
+      <h3>🌐 Current Website</h3>
+      <p id="currentUrl">Loading...</p>
+    </div>
+
+    <!-- Scan Button -->
+    <div class="scan-section">
+      <button id="scanBtn" class="btn-primary">
+        🚀 Scan Technologies
+      </button>
+      <button id="rescanBtn" class="btn-secondary">
+        🔄 Rescan
+      </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="loading">
+      <div class="spinner"></div>
+      <p>Scanning website technologies...</p>
+      <div class="progress">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results">
+      <div class="results-header">
+        <h3>📊 Detected Technologies</h3>
+        <div class="stats">
+          <span id="techCount">0</span> technologies found
+        </div>
+      </div>
+
+      <!-- Categories -->
+      <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="frontend">Frontend</button>
+        <button class="category-btn" data-category="backend">Backend</button>
+        <button class="category-btn" data-category="cms">CMS</button>
+        <button class="category-btn" data-category="analytics">Analytics</button>
+        <button class="category-btn" data-category="hosting">Hosting</button>
+        <button class="category-btn" data-category="libraries">Libraries</button>
+      </div>
+
+      <!-- Tech List -->
+      <div class="tech-list" id="techList">
+        <!-- Technologies will be loaded here -->
+      </div>
+
+      <!-- Summary -->
+      <div class="summary">
+        <h4>📈 Technology Summary</h4>
+        <div class="summary-grid" id="summaryGrid">
+          <!-- Summary will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Section -->
+    <div class="export-section">
+      <h3>📥 Export Results</h3>
+      <div class="export-buttons">
+        <button id="copyBtn" class="btn-secondary">
+          📋 Copy Report
+        </button>
+        <button id="downloadBtn" class="btn-secondary">
+          ⬇ Download JSON
+        </button>
+        <button id="shareBtn" class="btn-secondary">
+          🔗 Share
+        </button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="history-section">
+      <h3>📚 Scan History</h3>
+      <div class="history-list" id="historyList">
+        <!-- History items will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <p>Tech Detector Pro v1.0 | For Developers & Learners</p>
+    </footer>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

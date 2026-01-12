@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DM Manager</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>💬 DM Manager</h1>
+      <p class="subtitle">Professional message templates</p>
+    </div>
+    
+    <div class="quick-stats">
+      <div class="stat">
+        <div class="stat-value" id="templateCount">0</div>
+        <div class="stat-label">Templates</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="usedToday">0</div>
+        <div class="stat-label">Used Today</div>
+      </div>
+    </div>
+    
+    <div class="quick-actions">
+      <button id="openPanelBtn" class="btn-primary">
+        📋 Open Templates
+      </button>
+      <button id="createTemplateBtn" class="btn-secondary">
+        ➕ New Template
+      </button>
+    </div>
+    
+    <div class="recent-templates">
+      <h3>Recent Templates</h3>
+      <div id="recentTemplatesList" class="templates-list">
+        <!-- Templates will be loaded here -->
+      </div>
+    </div>
+    
+    <div class="auto-responder">
+      <label class="switch">
+        <input type="checkbox" id="autoResponderToggle">
+        <span class="slider"></span>
+      </label>
+      <span>Auto-Responder</span>
+    </div>
+    
+    <div class="footer">
+      <button id="settingsBtn" class="btn-link">⚙️ Settings</button>
+      <button id="helpBtn" class="btn-link">❓ Help</button>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

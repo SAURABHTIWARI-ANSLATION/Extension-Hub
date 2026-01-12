@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "WhatFont - Font Identifier",
+  "version": "1.0.0",
+  "description": "Identify fonts used on any website by hovering over text. Detect font family, size, weight, and more with a single hover.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "images/icon16.png",
+      "48": "images/icon48.png",
+      "128": "images/icon128.png"
+    },
+    "default_title": "WhatFont - Identify Fonts"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["themes/themes.css"],
+      "run_at": "document_end",
+      "all_frames": false
+    }
+  ],
+  "icons": {
+    "16": "images/icon16.png",
+    "48": "images/icon48.png",
+    "128": "images/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["images/*", "fonts/*", "themes/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

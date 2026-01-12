@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WhatFont Test Page</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .font-sample {
+            margin: 30px 0;
+            padding: 20px;
+            border-left: 4px solid #8B5CF6;
+            background: #F5F3FF;
+        }
+        
+        h1 { font-family: 'Georgia', serif; font-size: 36px; }
+        h2 { font-family: 'Arial', sans-serif; font-size: 24px; font-weight: bold; }
+        h3 { font-family: 'Courier New', monospace; font-size: 20px; }
+        
+        .roboto { font-family: 'Roboto', sans-serif; }
+        .opensans { font-family: 'Open Sans', sans-serif; }
+        .monospace { font-family: 'Fira Code', monospace; }
+        .script { font-family: 'Brush Script MT', cursive; }
+        
+        .weight-light { font-weight: 300; }
+        .weight-regular { font-weight: 400; }
+        .weight-bold { font-weight: 700; }
+        
+        .italic { font-style: italic; }
+    </style>
+</head>
+<body>
+    <h1>WhatFont Test Page</h1>
+    <p>Hover over any text to test the WhatFont extension!</p>
+    
+    <div class="font-sample">
+        <h2>Serif Fonts</h2>
+        <p style="font-family: 'Times New Roman';">Times New Roman - The quick brown fox jumps over the lazy dog</p>
+        <p style="font-family: Georgia;">Georgia - The quick brown fox jumps over the lazy dog</p>
+    </div>
+    
+    <div class="font-sample">
+        <h2>Sans-Serif Fonts</h2>
+        <p style="font-family: Arial;">Arial - The quick brown fox jumps over the lazy dog</p>
+        <p style="font-family: 'Helvetica Neue';">Helvetica Neue - The quick brown fox jumps over the lazy dog</p>
+        <p class="roboto">Roboto - The quick brown fox jumps over the lazy dog</p>
+        <p class="opensans weight-light">Open Sans Light - The quick brown fox jumps over the lazy dog</p>
+        <p class="opensans weight-regular">Open Sans Regular - The quick brown fox jumps over the lazy dog</p>
+        <p class="opensans weight-bold">Open Sans Bold - The quick brown fox jumps over the lazy dog</p>
+    </div>
+    
+    <div class="font-sample">
+        <h2>Monospace Fonts</h2>
+        <p style="font-family: 'Courier New';">Courier New - The quick brown fox jumps over the lazy dog</p>
+        <p class="monospace">Fira Code - The quick brown fox jumps over the lazy dog</p>
+    </div>
+    
+    <div class="font-sample">
+        <h2>Font Styles & Weights</h2>
+        <p style="font-weight: 300;">Font Weight 300 (Light)</p>
+        <p style="font-weight: 400;">Font Weight 400 (Regular)</p>
+        <p style="font-weight: 500;">Font Weight 500 (Medium)</p>
+        <p style="font-weight: 700;">Font Weight 700 (Bold)</p>
+        <p style="font-style: italic;">Italic Style</p>
+        <p style="font-weight: bold; font-style: italic;">Bold Italic Style</p>
+    </div>
+    
+    <div class="font-sample">
+        <h2>Different Sizes</h2>
+        <p style="font-size: 12px;">12px - Small text</p>
+        <p style="font-size: 16px;">16px - Regular text</p>
+        <p style="font-size: 24px;">24px - Large text</p>
+        <p style="font-size: 32px;">32px - Extra large text</p>
+    </div>
+    
+    <div class="font-sample">
+        <h2>Colors</h2>
+        <p style="color: #FF0000;">Red text #FF0000</p>
+        <p style="color: #00FF00;">Green text #00FF00</p>
+        <p style="color: #0000FF;">Blue text #0000FF</p>
+        <p style="color: #FF6B35;">Orange text #FF6B35</p>
+        <p style="color: #6D28D9;">Purple text #6D28D9</p>
+    </div>
+    
+    <script>
+        // Load Google Fonts for testing
+        const link = document.createElement('link');
+        link.href = 'https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Open+Sans:wght@300;400;700&family=Fira+Code:wght@400&display=swap';
+        link.rel = 'stylesheet';
+        document.head.appendChild(link);
+    </script>
+</body>
+</html>

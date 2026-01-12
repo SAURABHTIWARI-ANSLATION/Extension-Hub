@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grammar Check Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Header -->
+    <header class="header">
+      <h1>✍️ Grammar Check Pro</h1>
+      <p>Perfect your writing in real-time</p>
+    </header>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <button id="checkPageBtn" class="btn-primary">
+        🔍 Check Current Page
+      </button>
+      <button id="checkSelectedBtn" class="btn-secondary">
+        📝 Check Selected Text
+      </button>
+    </div>
+
+    <!-- Text Input Area -->
+    <div class="input-section">
+      <h3>📝 Check Custom Text</h3>
+      <div class="text-area-container">
+        <textarea id="textInput" placeholder="Type or paste your text here to check grammar and spelling..." 
+                  rows="6"></textarea>
+        <div class="text-stats">
+          <span id="charCount">0 chars</span>
+          <span id="wordCount">0 words</span>
+        </div>
+      </div>
+      <button id="checkTextBtn" class="btn-check">
+        ✅ Check Grammar
+      </button>
+    </div>
+
+    <!-- Settings -->
+    <div class="settings-section">
+      <h3>⚙️ Settings</h3>
+      <div class="settings-grid">
+        <label class="checkbox">
+          <input type="checkbox" id="autoCheck" checked>
+          <span>Auto-check while typing</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="spellCheck" checked>
+          <span>Spell checking</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="grammarCheck" checked>
+          <span>Grammar checking</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="toneCheck">
+          <span>Tone suggestions</span>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" id="soundEffects">
+          <span>Sound effects</span>
+        </label>
+      </div>
+
+      <!-- API Provider Selection -->
+      <div class="api-settings">
+        <h4>🔧 Grammar Checker API</h4>
+        <label for="apiProvider">Select Provider:</label>
+        <select id="apiProvider">
+          <option value="LOCAL">Local Rules (No internet required)</option>
+          <option value="LANGUAGETOOL">LanguageTool (Free, Online)</option>
+        </select>
+        <p class="api-info" id="apiInfo"></p>
+      </div>
+    </div>
+
+    <!-- Results Panel -->
+    <div id="resultsPanel" class="results-panel">
+      <div class="results-header">
+        <h3>📊 Results</h3>
+        <div class="score-badge" id="scoreBadge">100%</div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🔤</div>
+          <div class="stat-value" id="totalErrors">0</div>
+          <div class="stat-label">Total Errors</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">✏️</div>
+          <div class="stat-value" id="spellingErrors">0</div>
+          <div class="stat-label">Spelling</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📖</div>
+          <div class="stat-value" id="grammarErrors">0</div>
+          <div class="stat-label">Grammar</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💬</div>
+          <div class="stat-value" id="styleErrors">0</div>
+          <div class="stat-label">Style</div>
+        </div>
+      </div>
+
+      <!-- Error List -->
+      <div class="errors-section">
+        <h4>⚠️ Issues Found</h4>
+        <div class="errors-list" id="errorsList">
+          <!-- Errors will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Suggestions -->
+      <div class="suggestions-section">
+        <h4>💡 Suggestions</h4>
+        <div class="suggestions-list" id="suggestionsList">
+          <!-- Suggestions will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      <button id="copyTextBtn" class="btn-action" title="Copy corrected text">
+        📋 Copy
+      </button>
+      <button id="clearTextBtn" class="btn-action" title="Clear text">
+        🗑️ Clear
+      </button>
+      <button id="exportBtn" class="btn-action" title="Export report">
+        📤 Export
+      </button>
+      <button id="historyBtn" class="btn-action" title="View history">
+        📚 History
+      </button>
+      <button id="helpBtn" class="btn-action" title="Help">
+        ❓ Help
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="language-selector">
+          <select id="languageSelect">
+            <option value="en_US">English (US)</option>
+            <option value="en_GB">English (UK)</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+          </select>
+        </div>
+        <div class="version">v1.0 | Grammar Check Pro</div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

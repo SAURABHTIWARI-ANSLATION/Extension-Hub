@@ -1,0 +1,511 @@
+{
+  "technologies": {
+    "frontend": [
+      {
+        "id": "react",
+        "name": "React",
+        "patterns": [
+          "react",
+          "__REACT_DEVTOOLS_GLOBAL_HOOK__",
+          "data-reactroot",
+          "data-reactid",
+          "ReactDOM",
+          "react-dom"
+        ],
+        "icon": "⚛️",
+        "website": "https://react.dev"
+      },
+      {
+        "id": "nextjs",
+        "name": "Next.js",
+        "patterns": [
+          "__NEXT_DATA__",
+          "__NEXT_PAGE__",
+          "nextjs",
+          "/_next/",
+          "next/"
+        ],
+        "icon": "⏭️",
+        "website": "https://nextjs.org"
+      },
+      {
+        "id": "vue",
+        "name": "Vue.js",
+        "patterns": [
+          "__VUE__",
+          "data-v-",
+          "Vue",
+          "vue@"
+        ],
+        "icon": "💚",
+        "website": "https://vuejs.org"
+      },
+      {
+        "id": "nuxtjs",
+        "name": "Nuxt.js",
+        "patterns": [
+          "__NUXT__",
+          "nuxt",
+          "nuxt/"
+        ],
+        "icon": "🌀",
+        "website": "https://nuxt.com"
+      },
+      {
+        "id": "angular",
+        "name": "Angular",
+        "patterns": [
+          "ng-app",
+          "data-ng-",
+          "ng-repeat",
+          "__ng",
+          "angular",
+          "ng-version"
+        ],
+        "icon": "🅰️",
+        "website": "https://angular.io"
+      },
+      {
+        "id": "svelte",
+        "name": "Svelte",
+        "patterns": [
+          "svelte",
+          "svelte/",
+          "svelte-"
+        ],
+        "icon": "⚡",
+        "website": "https://svelte.dev"
+      },
+      {
+        "id": "gatsby",
+        "name": "Gatsby",
+        "patterns": [
+          "gatsby",
+          "___gatsby"
+        ],
+        "icon": "🟣",
+        "website": "https://gatsbyjs.com"
+      }
+    ],
+    "backend": [
+      {
+        "id": "nodejs",
+        "name": "Node.js",
+        "patterns": [
+          "node",
+          "express"
+        ],
+        "icon": "🟢",
+        "website": "https://nodejs.org"
+      },
+      {
+        "id": "express",
+        "name": "Express.js",
+        "patterns": [
+          "express",
+          "x-powered-by: express"
+        ],
+        "icon": "⚡",
+        "website": "https://expressjs.com"
+      },
+      {
+        "id": "php",
+        "name": "PHP",
+        "patterns": [
+          ".php",
+          "php",
+          "x-powered-by: php"
+        ],
+        "icon": "🐘",
+        "website": "https://php.net"
+      },
+      {
+        "id": "python",
+        "name": "Python",
+        "patterns": [
+          "python",
+          "django",
+          "flask"
+        ],
+        "icon": "🐍",
+        "website": "https://python.org"
+      },
+      {
+        "id": "ruby",
+        "name": "Ruby",
+        "patterns": [
+          "ruby",
+          "rails"
+        ],
+        "icon": "💎",
+        "website": "https://ruby-lang.org"
+      },
+      {
+        "id": "java",
+        "name": "Java",
+        "patterns": [
+          "java",
+          "jsp",
+          "servlet"
+        ],
+        "icon": "☕",
+        "website": "https://java.com"
+      },
+      {
+        "id": "net",
+        "name": ".NET",
+        "patterns": [
+          ".net",
+          "asp.net",
+          "aspnet"
+        ],
+        "icon": "🪟",
+        "website": "https://dotnet.microsoft.com"
+      },
+      {
+        "id": "firebase",
+        "name": "Firebase",
+        "patterns": [
+          "firebase",
+          "firebaseio.com"
+        ],
+        "icon": "🔥",
+        "website": "https://firebase.google.com"
+      }
+    ],
+    "cms": [
+      {
+        "id": "wordpress",
+        "name": "WordPress",
+        "patterns": [
+          "wp-content",
+          "wp-includes",
+          "/wp-admin",
+          "wp-json",
+          "wordpress",
+          "wp-"
+        ],
+        "icon": "📝",
+        "website": "https://wordpress.org"
+      },
+      {
+        "id": "shopify",
+        "name": "Shopify",
+        "patterns": [
+          "shopify",
+          "cdn.shopify.com",
+          "myshopify.com",
+          "Shopify.theme"
+        ],
+        "icon": "🛒",
+        "website": "https://shopify.com"
+      },
+      {
+        "id": "wix",
+        "name": "Wix",
+        "patterns": [
+          "wix.com",
+          "wixsite.com",
+          "static.wixstatic.com"
+        ],
+        "icon": "🔧",
+        "website": "https://wix.com"
+      },
+      {
+        "id": "squarespace",
+        "name": "Squarespace",
+        "patterns": [
+          "squarespace",
+          "squarespace.com"
+        ],
+        "icon": "⬛",
+        "website": "https://squarespace.com"
+      },
+      {
+        "id": "webflow",
+        "name": "Webflow",
+        "patterns": [
+          "webflow",
+          "webflow.io"
+        ],
+        "icon": "🌊",
+        "website": "https://webflow.com"
+      },
+      {
+        "id": "joomla",
+        "name": "Joomla",
+        "patterns": [
+          "joomla",
+          "joomla.org"
+        ],
+        "icon": "🎯",
+        "website": "https://joomla.org"
+      },
+      {
+        "id": "drupal",
+        "name": "Drupal",
+        "patterns": [
+          "drupal",
+          "drupal.org"
+        ],
+        "icon": "💧",
+        "website": "https://drupal.org"
+      }
+    ],
+    "analytics": [
+      {
+        "id": "google_analytics",
+        "name": "Google Analytics",
+        "patterns": [
+          "gtag.js",
+          "GoogleAnalyticsObject",
+          "__google_analytics",
+          "/analytics.js",
+          "ga("
+        ],
+        "icon": "📊",
+        "website": "https://analytics.google.com"
+      },
+      {
+        "id": "google_tag_manager",
+        "name": "Google Tag Manager",
+        "patterns": [
+          "googletagmanager.com",
+          "gtm.js",
+          "gtm.start"
+        ],
+        "icon": "🏷️",
+        "website": "https://tagmanager.google.com"
+      },
+      {
+        "id": "facebook_pixel",
+        "name": "Facebook Pixel",
+        "patterns": [
+          "facebook.net/pixel",
+          "fbq(",
+          "facebook.com/tr/",
+          "fbevents.js"
+        ],
+        "icon": "📱",
+        "website": "https://facebook.com/business/tools/meta-pixel"
+      },
+      {
+        "id": "hotjar",
+        "name": "Hotjar",
+        "patterns": [
+          "hotjar",
+          "hjid:",
+          "hjsettings"
+        ],
+        "icon": "🔥",
+        "website": "https://hotjar.com"
+      },
+      {
+        "id": "mixpanel",
+        "name": "Mixpanel",
+        "patterns": [
+          "mixpanel",
+          "mixpanel.track"
+        ],
+        "icon": "📈",
+        "website": "https://mixpanel.com"
+      }
+    ],
+    "hosting": [
+      {
+        "id": "cloudflare",
+        "name": "Cloudflare",
+        "patterns": [
+          "cloudflare",
+          "cf-ray",
+          "__cf"
+        ],
+        "icon": "☁️",
+        "website": "https://cloudflare.com"
+      },
+      {
+        "id": "aws",
+        "name": "AWS",
+        "patterns": [
+          "amazonaws.com",
+          "s3.amazonaws",
+          "cloudfront.net"
+        ],
+        "icon": "🟠",
+        "website": "https://aws.amazon.com"
+      },
+      {
+        "id": "azure",
+        "name": "Microsoft Azure",
+        "patterns": [
+          "azure",
+          "azureedge.net",
+          "azure.com"
+        ],
+        "icon": "🔷",
+        "website": "https://azure.microsoft.com"
+      },
+      {
+        "id": "google_cloud",
+        "name": "Google Cloud",
+        "patterns": [
+          "googleapis.com",
+          "gstatic.com"
+        ],
+        "icon": "🔴",
+        "website": "https://cloud.google.com"
+      },
+      {
+        "id": "vercel",
+        "name": "Vercel",
+        "patterns": [
+          "vercel.com",
+          "vercel.app",
+          "now.sh"
+        ],
+        "icon": "▲",
+        "website": "https://vercel.com"
+      },
+      {
+        "id": "netlify",
+        "name": "Netlify",
+        "patterns": [
+          "netlify",
+          "netlify.com",
+          "netlify.app"
+        ],
+        "icon": "🌐",
+        "website": "https://netlify.com"
+      },
+      {
+        "id": "heroku",
+        "name": "Heroku",
+        "patterns": [
+          "herokuapp.com",
+          "heroku.com"
+        ],
+        "icon": "💜",
+        "website": "https://heroku.com"
+      }
+    ],
+    "libraries": [
+      {
+        "id": "jquery",
+        "name": "jQuery",
+        "patterns": [
+          "jquery",
+          "jQuery",
+          "jquery/"
+        ],
+        "icon": "⚡",
+        "website": "https://jquery.com"
+      },
+      {
+        "id": "bootstrap",
+        "name": "Bootstrap",
+        "patterns": [
+          "bootstrap",
+          "bootstrap/"
+        ],
+        "icon": "🎨",
+        "website": "https://getbootstrap.com"
+      },
+      {
+        "id": "tailwind",
+        "name": "Tailwind CSS",
+        "patterns": [
+          "tailwindcss",
+          "tailwind",
+          "tailwindcss/"
+        ],
+        "icon": "🎨",
+        "website": "https://tailwindcss.com"
+      },
+      {
+        "id": "font_awesome",
+        "name": "Font Awesome",
+        "patterns": [
+          "fontawesome",
+          "font-awesome",
+          "fortawesome"
+        ],
+        "icon": "✨",
+        "website": "https://fontawesome.com"
+      },
+      {
+        "id": "google_fonts",
+        "name": "Google Fonts",
+        "patterns": [
+          "fonts.googleapis.com",
+          "fonts.gstatic.com"
+        ],
+        "icon": "🔤",
+        "website": "https://fonts.google.com"
+      },
+      {
+        "id": "lodash",
+        "name": "Lodash",
+        "patterns": [
+          "lodash",
+          "_lodash",
+          "lodash/"
+        ],
+        "icon": "📚",
+        "website": "https://lodash.com"
+      },
+      {
+        "id": "axios",
+        "name": "Axios",
+        "patterns": [
+          "axios",
+          "axios/"
+        ],
+        "icon": "🔗",
+        "website": "https://axios-http.com"
+      },
+      {
+        "id": "momentjs",
+        "name": "Moment.js",
+        "patterns": [
+          "moment",
+          "moment.js"
+        ],
+        "icon": "⏰",
+        "website": "https://momentjs.com"
+      },
+      {
+        "id": "bulma",
+        "name": "Bulma",
+        "patterns": [
+          "bulma",
+          "bulma/"
+        ],
+        "icon": "🎯",
+        "website": "https://bulma.io"
+      },
+      {
+        "id": "materialize",
+        "name": "Materialize",
+        "patterns": [
+          "materialize",
+          "materializecss"
+        ],
+        "icon": "🎨",
+        "website": "https://materializecss.com"
+      }
+    ]
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastUpdated": "2026-01-07",
+    "totalTechnologies": 54,
+    "categories": [
+      "frontend",
+      "backend",
+      "cms",
+      "analytics",
+      "hosting",
+      "libraries"
+    ]
+  }
+}
