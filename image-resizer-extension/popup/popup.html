@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/popup.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    <div class="container glass">
+        <header>
+            <h1>Imaginator</h1>
+            <button id="optsBtn" aria-label="Settings" class="icon-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.39a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z">
+                    </path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+            </button>
+        </header>
+
+        <main>
+            <!-- Drop Zone -->
+            <div id="dropZone" class="drop-zone">
+                <div class="drop-content">
+                    <svg class="upload-icon" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <p id="dropText">__MSG_dropZoneText__</p>
+                    <input type="file" id="fileInput" accept="image/*" hidden>
+                </div>
+            </div>
+
+            <!-- Image Preview & File Info (Hidden initially) -->
+            <div id="fileInfo" class="file-info hidden">
+                <div class="file-details">
+                    <span id="fileName" class="name">image.jpg</span>
+                    <span id="fileSize" class="size">2.4 MB</span>
+                </div>
+                <button id="removeBtn" class="icon-btn small">&times;</button>
+            </div>
+
+            <!-- Controls (Disabled initially) -->
+            <div id="controls" class="controls disabled">
+
+                <!-- Format Selection -->
+                <div class="control-group">
+                    <label>Format</label>
+                    <div class="format-options">
+                        <label class="radio-label">
+                            <input type="radio" name="format" value="jpeg" checked>
+                            <span>JPG</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="format" value="png">
+                            <span>PNG</span>
+                        </label>
+                        <label class="radio-label">
+                            <input type="radio" name="format" value="webp">
+                            <span>WEBP</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Dimensions -->
+                <div class="control-group dimensions">
+                    <div class="input-wrapper">
+                        <label>__MSG_widthLabel__</label>
+                        <input type="number" id="widthInput" placeholder="Width">
+                    </div>
+
+                    <button id="linkRatioBtn" class="icon-btn active" title="Lock Aspect Ratio">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                        </svg>
+                    </button>
+
+                    <div class="input-wrapper">
+                        <label>__MSG_heightLabel__</label>
+                        <input type="number" id="heightInput" placeholder="Height">
+                    </div>
+                </div>
+
+                <!-- Quality Slider -->
+                <div class="control-group">
+                    <div class="slider-header">
+                        <label>__MSG_qualityLabel__</label>
+                        <span id="qualityValue">90%</span>
+                    </div>
+                    <input type="range" id="qualityInput" min="1" max="100" value="90">
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="processBtn" class="primary-btn" disabled>
+                __MSG_processButton__
+            </button>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../scripts/utils.js"></script>
+    <script src="../scripts/image-processor.js"></script>
+    <script src="../scripts/popup.js"></script>
+</body>
+
+</html>

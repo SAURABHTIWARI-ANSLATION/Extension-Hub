@@ -1,0 +1,219 @@
+/* CSS Variables - Ocean Blue + Indigo Theme */
+:root {
+    --bg-gradient-start: #0A4DBF;
+    --bg-gradient-end: #1E88E5;
+    --header-bg: #020617;
+    
+    --primary-btn-start: #2196F3;
+    --primary-btn-end: #42A5F5;
+    --primary-btn-hover: #1976D2;
+    
+    --accent-color: #64B5F6;
+    
+    --text-primary: #FFFFFF;
+    --text-secondary: #CFE8FF;
+    --text-muted: rgba(207, 232, 255, 0.7);
+    
+    --panel-bg: rgba(255, 255, 255, 0.95);
+    --code-bg: #E0E7FF;
+    --border-color: #E2E8F0;
+    
+    --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
+    --font-ui: system-ui, -apple-system, sans-serif;
+    
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    
+    --radius-sm: 4px;
+    --radius-md: 8px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 600px;
+    height: 400px; /* Fixed height for popup consistency */
+    font-family: var(--font-ui);
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Header */
+header {
+    background-color: var(--header-bg);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+header h1 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+/* Buttons */
+.btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn.primary {
+    background: linear-gradient(to right, var(--primary-btn-start), var(--primary-btn-end));
+    color: white;
+}
+
+.btn.primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn.secondary {
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid rgba(255,255,255,0.2);
+    margin-left: 8px;
+}
+
+.btn.secondary:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--text-primary);
+}
+
+/* Main Layout */
+.container {
+    flex: 1;
+    display: flex;
+    padding: var(--spacing-sm);
+    gap: var(--spacing-sm);
+    overflow: hidden;
+}
+
+.panel {
+    flex: 1;
+    background: white;
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.panel label {
+    display: block;
+    padding: 8px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #64748B;
+    background: #F8FAFC;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Inputs & Output */
+#markup-input {
+    flex: 1;
+    border: none;
+    resize: none;
+    padding: 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: #334155;
+    outline: none;
+}
+
+#markup-input:focus {
+    background: #FAFAFA;
+}
+
+.preview-content {
+    flex: 1;
+    padding: 12px;
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1E293B;
+}
+
+/* Markdown Styles in Preview */
+.preview-content h1, 
+.preview-content h2, 
+.preview-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    color: #0F172A;
+}
+
+.preview-content h1 { font-size: 1.5em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+.preview-content h2 { font-size: 1.3em; }
+
+.preview-content p {
+    margin-bottom: 1em;
+}
+
+.preview-content ul, 
+.preview-content ol {
+    margin-bottom: 1em;
+    padding-left: 20px;
+}
+
+.preview-content code {
+    background-color: var(--code-bg);
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: #0c4a6e;
+}
+
+.preview-content blockquote {
+    border-left: 4px solid var(--accent-color);
+    margin: 0 0 1em 0;
+    padding-left: 12px;
+    color: #64748B;
+}
+
+.preview-content a {
+    color: var(--bg-gradient-end);
+    text-decoration: none;
+}
+
+.preview-content a:hover {
+    text-decoration: underline;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}

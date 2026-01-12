@@ -1,0 +1,26 @@
+{
+    "manifest_version": 3,
+    "name": "Markdown Converter",
+    "description": "Convert Markdown quickly and accurately to formatted text.",
+    "version": "2.0.0",
+    "action": {
+        "default_title": "Markdown Converter",
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "icon16.png",
+            "32": "icon32.png",
+            "48": "icon48.png",
+            "128": "logo.png"
+        }
+    },
+    "icons": {
+        "16": "icon16.png",
+        "32": "icon32.png",
+        "48": "icon48.png",
+        "128": "logo.png"
+    },
+    "permissions": [
+        "activeTab",
+        "clipboardWrite"
+    ]
+}

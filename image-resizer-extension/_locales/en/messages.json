@@ -1,0 +1,30 @@
+{
+    "extensionName": {
+        "message": "Image Resizer & Converter",
+        "description": "Name of the extension"
+    },
+    "extensionDescription": {
+        "message": "Resize, compress, and convert images with a premium glassmorphism interface.",
+        "description": "Description of the extension"
+    },
+    "processButton": {
+        "message": "Process Image",
+        "description": "Button text to start processing"
+    },
+    "dropZoneText": {
+        "message": "Drag & Drop Image Here",
+        "description": "Text in the drag and drop zone"
+    },
+    "widthLabel": {
+        "message": "Width (px)",
+        "description": "Label for width input"
+    },
+    "heightLabel": {
+        "message": "Height (px)",
+        "description": "Label for height input"
+    },
+    "qualityLabel": {
+        "message": "Quality",
+        "description": "Label for quality slider"
+    }
+}

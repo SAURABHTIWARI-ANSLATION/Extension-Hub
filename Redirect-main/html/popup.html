@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/popup.css">
+</head>
+<body>
+
+<div id="app">
+  <div class="header">
+    <div class="container pos-rel">
+      <a id="main-logo" href="https://lrt.li/rtlogoappchrome" target="_blank"></a>
+      <div id="rate-container" class="hidden">
+        <div id="rate-title"><a href="#">Enjoying this extension?</a></div>
+        <div id="rate-body">
+          <div>
+            <a href="#" target="_blank" data-track="rate-it">Give us 5 stars on Chrome Web Store</a>.
+          </div>
+          We will love you forever.
+        </div>
+      </div>
+      <div id="see-also" class="hidden">
+        <span><a href="https://lrt.li/lrtseealsoch" target="_blank" data-track="see-other-extensions">Do you also know our other free extensions?</a></span>
+      </div>
+
+      <a id="lrt-logo" href="https://lrt.li/rtlogochrome" target="_blank"></a>
+      <a id="btn-options" href="options.html" data-track="options"></a>
+      <a id="btn-help" href="https://lrt.li/rthelpchrome" target="_blank" data-track="help">Help</a>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="status impct-red hidden"></div>
+    <div id="result">
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="container footer-btns">
+      <div class="pull-right">
+        <a class="btn btn-blue btn-try-lrt" href="https://lrt.li/rtchrtrial" data-track="try lrt" target="_blank">Try LinkResearchTools</a>
+      </div>
+      <a class="btn btn-copy" data-track="copy to clipboard">Copy to Clipboard</a>
+      <a class="btn btn-export" data-track="export">Export</a>
+      <a class="btn btn-capture" data-track="screenshot">Save screenshot</a>
+    </div>
+  </div>
+
+  <div class="banner">
+    <div class="ad"></div>
+  </div>
+
+</div>
+
+  <!-- HOP template -->
+  <script type="text/template" id="hop-main">
+  <div class="hop-container {{#lastHop}}last-hop{{/lastHop}}">
+    <div class="hop-header {{redirectColor}}">
+      <div class="container">
+        <div class="hop-url">
+          <a href="https://app.linkresearchtools.com/smart/qbl_loader.php?domainlink={{domain}}" target="_blank" class="btn-qbl-loader" title="Sample links to domain {{domain}}">
+            <i class="lrt-qbl"></i>
+          </a>
+          <a id="url-link" class="url" href="{{url}}" target="_blank">
+            <span class="lrt-app lrt-padlock-filled secure-url {{^https}}hidden{{/https}}" title="Content was served over HTTPS"></span><span class="url-link-value">{{urlWithoutScheme}}</span>
+          </a>
+        </div>
+        <div class="hop-expand-icon"></div>
+      </div>
+    </div>
+    <div class="hop-body">
+      <div class="hop-body-container">
+        <table class="hop-main-table">
+          <tr>
+            <td class="hop-col-img">
+              <div class="hop-img">
+                <div class="round {{redirectColor}}">
+                  <span class="status-code">
+                    {{#redirectType}}
+                    {{redirectType}}
+                    {{/redirectType}}
+                    {{^redirectType}}
+                    {{statusCode}}
+                    {{/redirectType}}
+                  </span>
+                </div>
+              </div>
+            </td>
+            <td class="hop-col-descr">
+              <div>
+                {{statusString}}
+
+              </div>
+              {{#redirect}}
+              <div class="hop-redirectTo">
+                <a href="{{redirectTo}}" target="_blank">{{redirectTo}}</a>
+              </div>
+              {{/redirect}}
+              <div class="hop-icons">
+                {{#timeDiff}}
+                <span class="hop-icon icon-time"></span>
+                <span class="time-diff">{{timeDiff}} ms <span class="time-percent">({{timePercent}}%)</span></span>
+                {{/timeDiff}}
+                {{#robotsTxtRed}}<span class="hop-icon icon-warning-red icon-not-crawlable"></span>{{/robotsTxtRed}}
+                {{#robotsTxtYellow}}<span class="hop-icon icon-warning-yellow icon-major-crawlable"></span>{{/robotsTxtYellow}}
+                {{#setting_showRobots}}
+                {{#summary}}
+                {{#indexRed}}<span class="hop-icon icon-noindex"></span>{{/indexRed}}
+                {{#indexYellow}}<span class="hop-icon icon-major"></span>{{/indexYellow}}
+                {{#indexGreen}}<span class="hop-icon icon-index"></span>{{/indexGreen}}
+                {{#summary.nofollow}}<span class="hop-icon icon-nofollow"></span>{{/summary.nofollow}}
+                {{^summary.nofollow}}<span class="hop-icon icon-follow"></span>{{/summary.nofollow}}
+                {{/summary}}
+                {{#showRelCan}}
+                <span class="hop-icon icon-canonical"></span>
+                {{/showRelCan}}
+                {{/setting_showRobots}}
+                {{#setting_showCookie}}
+                {{#cookieCount}}<span class="hop-icon icon-cookie"></span>{{/cookieCount}}
+                {{/setting_showCookie}}
+                {{#fromCache}}<span class="btn-nocache" title="Click to reload with cache-buster">from cache</span>{{/fromCache}}
+              </div>
+              {{#lastHop}}
+              {{#totalTime}}
+              <div class="hop-icons">
+                <span class="hop-icon icon-final"></span>
+                <span class="time-diff">{{totalTime}} ms</span>
+              </div>
+              {{/totalTime}}
+              {{/lastHop}}
+            </td>
+            <!-- <td class="hop-col-dtox"></td> -->
+            <td class="hop-col-backlinks">
+              <div class="bl-value">
+                <a target="_blank" data-track="backlinks_check">&hellip;</a>
+              </div>
+              <div class="bl-key">Backlinks</div>
+            </td>
+            <td class="hop-col-lrt">
+              {{#setting_showLRT}}
+              <div class="hop-lrt-container">
+                <div class="lrt-power"><span class="lrt-key">LRT Power</span><span class="lrt-value">&hellip;</span></div>
+                <div class="lrt-pt-title">PAGE</div>
+                <div class="lrt-trust"><span class="lrt-key">LRT Trust</span><span class="lrt-value">&hellip;</span></div>
+                <div class="lrt-icon"></div>
+              </div>
+              {{/setting_showLRT}}
+            </td>
+          </tr>
+        </table>
+
+
+        <div class="hop-ext-view">
+
+          {{#setting_showRobots}}
+          {{#robotsTxtBlocked}}
+          <div class="hop-ext-header">robots.txt</div>
+          <table>
+            <tr>
+              <td class="hop-ext-col-icons">
+                {{#robotsTxtRed}}<span class="hop-icon icon-warning-red icon-not-crawlable"></span>{{/robotsTxtRed}}
+                {{#robotsTxtYellow}}<span class="hop-icon icon-warning-yellow icon-major-crawlable"></span>{{/robotsTxtYellow}}
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="text-warning">BUT</span>
+                <span class="">robots.txt blocks {{robotsTxtBlockedList}}
+                {{#robotsTxtAllowed}}
+                <span class="text-warning">BUT NOT</span>
+                {{robotsTxtAllowedList}}
+                {{/robotsTxtAllowed}}</span>
+              </td>
+            </tr>
+          </table>
+          {{/robotsTxtBlocked}}
+          {{/setting_showRobots}}
+
+          {{#showHTMLSection}}
+          <div class="hop-ext-header">HTML</div>
+          <table>
+            {{#relCanHTML}}
+            <tr>
+              <td class="hop-ext-col-icons">
+                <span class="hop-icon icon-canonical"></span>
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">{{src}}</span>
+              </td>
+              <td class="hop-ext-col-broken">
+                <span class="hop-icon icon-broken hidden"></span>
+              </td>
+              <td class="hop-ext-col-value">
+                <div class="relCan-item">
+                  <span class="text-warning hidden">BROKEN</span>
+                  <a href="{{url}}" target="_blank">{{url}}</a>
+                </div>
+              </td>
+            </tr>
+            {{/relCanHTML}}
+
+            {{#setting_showRobots}}
+            {{#robotsHTML}}
+            <tr>
+              <td class="hop-ext-col-icons">
+                {{#noindex}}<span class="hop-icon icon-noindex"></span>{{/noindex}}
+                {{^noindex}}<span class="hop-icon icon-index"></span>{{/noindex}}
+                {{#nofollow}}<span class="hop-icon icon-nofollow"></span>{{/nofollow}}
+                {{^nofollow}}<span class="hop-icon icon-follow"></span>{{/nofollow}}
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">Meta Robots tag</span>
+              </td>
+              <td class="hop-ext-col-broken">
+              </td>
+              <td class="hop-ext-col-value">
+                {{#noindex}}noindex{{/noindex}}
+                {{^noindex}}index{{/noindex}}
+                {{#nofollow}}nofollow{{/nofollow}}
+                {{^nofollow}}follow{{/nofollow}}
+                {{#noarchive}}noarchive{{/noarchive}}
+              </td>
+            </tr>
+            {{/robotsHTML}}
+            {{/setting_showRobots}}
+          </table>
+          {{/showHTMLSection}}
+
+
+          {{#showHTTPSection}}
+          <div class="hop-ext-header">HTTP</div>
+          <table>
+            {{#relCanHeader}}
+            <tr>
+              <td class="hop-ext-col-icons">
+                <span class="hop-icon icon-canonical"></span>
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">HTTP Rel-Canonical</span>
+              </td>
+              <td class="hop-ext-col-broken">
+                <span class="hop-icon icon-broken hidden"></span>
+              </td>
+              <td class="hop-ext-col-value">
+                <div class="relCan-item">
+                  <span class="text-warning hidden">BROKEN</span>
+                  <a href="{{url}}" target="_blank">{{url}}</a>
+                </div>
+              </td>
+            </tr>
+            {{/relCanHeader}}
+
+            {{#shortlinks}}
+            <tr>
+              <td class="hop-ext-col-icons">
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">Shortlink</span>
+              </td>
+              <td class="hop-ext-col-broken">
+                <span class="hop-icon icon-broken hidden"></span>
+              </td>
+              <td class="hop-ext-col-value">
+                <div class="shortlink-item">
+                  <span class="text-warning hidden">BROKEN</span>
+                  <a href="{{url}}" target="_blank">{{url}}</a>
+                </div>
+              </td>
+            </tr>
+            {{/shortlinks}}
+
+            {{#setting_showRobots}}
+            {{#robotsHeader}}
+            <tr>
+              <td class="hop-ext-col-icons">
+                {{#noindex}}<span class="hop-icon icon-noindex"></span>{{/noindex}}
+                {{^noindex}}<span class="hop-icon icon-index"></span>{{/noindex}}
+                {{#nofollow}}<span class="hop-icon icon-nofollow"></span>{{/nofollow}}
+                {{^nofollow}}<span class="hop-icon icon-follow"></span>{{/nofollow}}
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">X-Robots-Tag</span>
+              </td>
+              <td class="hop-ext-col-broken">
+              </td>
+              <td class="hop-ext-col-value">
+                <strong>{{bot}}</strong>
+                {{#noindex}}noindex{{/noindex}}
+                {{#index}}index{{/index}}
+                {{#nofollow}}nofollow{{/nofollow}}
+                {{#follow}}follow{{/follow}}
+                {{#noarchive}}noarchive{{/noarchive}}
+                {{#archive}}archive{{/archive}}
+              </td>
+            </tr>
+            {{/robotsHeader}}
+            {{/setting_showRobots}}
+
+            {{#setting_showCookie}}
+            {{#cookies}}
+            <tr>
+              <td class="hop-ext-col-icons">
+                <span class="hop-icon icon-cookie"></span>
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">Set-Cookie</span>
+              </td>
+              <td class="hop-ext-col-broken">
+              </td>
+              <td class="hop-ext-col-value">
+              {{key}}={{val}}
+              </td>
+            </tr>
+            {{/cookies}}
+            {{/setting_showCookie}}
+
+          </table>
+          {{/showHTTPSection}}
+
+
+          <div class="hop-ext-header">Raw HTTP Headers</div>
+          <table>
+            {{#protocolUC}}
+            <tr>
+              <td class="hop-ext-col-icons">
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">Protocol</span>
+              </td>
+              <td class="hop-ext-col-broken">
+                </td>
+              <td class="hop-ext-col-value">
+                {{protocolUC}}
+              </td>
+            </tr>
+            {{/protocolUC}}
+            <tr>
+              <td class="hop-ext-col-icons">
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">IP</span>
+              </td>
+              <td class="hop-ext-col-broken">
+                </td>
+              <td class="hop-ext-col-value" data-ip="{{ip}}">
+                {{ip}}
+              </td>
+            </tr>
+            {{#headers}}
+            <tr>
+              <td class="hop-ext-col-icons">
+<!--
+                {{#icons}}
+                  <span class="hop-icon icon-{{.}}"></span>
+                {{/icons}}
+-->
+              </td>
+              <td class="hop-ext-col-key">
+                <span class="">{{name}}</span>
+              </td>
+              <td class="hop-ext-col-broken">
+              </td>
+              <td class="hop-ext-col-value">
+                {{value}}
+              </td>
+            </tr>
+            {{/headers}}
+          </table>
+
+        </div>
+        {{#footerMessage}}
+        <div class="hop-bottom-message {{redirectColor}}">
+          {{footerMessage}}
+        </div>
+        {{/footerMessage}}
+      </div>
+    </div>
+    <div class="hop-footer"></div>
+    {{^lastHop}}
+    <div class="hop-backlayer {{redirectColor}}"></div>
+    {{/lastHop}}
+  </div>
+  </script>
+
+
+  <script type="text/template" id="hops-warn-template">
+    <div class="google-warn impct-red">
+      <div class="container">
+        <span>Google recommends to not have more than 5 hops in a redirect chain. We found {{count}} hops. This could mean slower or delayed crawling as well as potential SEO problems caused by this.</span>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/template" id="self-relcan-warn-template">
+    <div class="self-relcan-warn impct-gray">
+      <div class="container">
+        <div>
+          We added an option to show self-referencing canonicals, as well, because it's a good practice to use them.
+        </div>
+        <div>
+          Would you like to enable showing of self-referencing canonicals? You can always change this setting in options.
+        </div>
+        <div>
+          <span class="self-relcan-warn-btn"><a href="#" id="btn-self-relcan-enable" class="">Enable</a></span>
+          <span class="self-relcan-warn-btn"><a href="#" id="btn-self-relcan-no" class="">No</a></span>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  </script>
+
+
+  <script type="text/javascript" src="/lib/jquery-3.6.1.min.js"></script>
+  <script type="text/javascript" src="/lib/mustache-2.2.1.min.js"></script>
+  <script type="text/javascript" src="/js/lrt/LRTIcon.js"></script>
+  <script type="text/javascript" src="/js/Helpers.js"></script>
+  <script type="text/javascript" src="/js/Warning.js"></script>
+  <script type="text/javascript" src="/js/SearchEngines.js"></script>
+  <script type="text/javascript" src="/js/Path.js"></script>
+  <script type="text/javascript" src="/js/Screenshot.js"></script>
+  <script type="text/javascript" src="/js/popup.js"></script>
+
+</body>
+</html>

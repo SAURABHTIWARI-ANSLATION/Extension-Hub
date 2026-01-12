@@ -1,0 +1,278 @@
+:root {
+    /* Mint Teal Theme Palette - Enhanced for Contrast */
+    --color-bg-gradient-start: #0F766E;
+    --color-bg-gradient-end: #14B8A6;
+    /* Slightly lighter end for better gradient */
+    --color-header-bg: #115E59;
+    --color-accent: #5EEAD4;
+    --color-accent-hover: #99F6E4;
+    --color-text-main: #F0FDFA;
+    /* Brighter white-cyan */
+    --color-text-muted: #CCFBF1;
+    /* More visible than before */
+    --color-btn-primary-start: #2d4cd4;
+    --color-btn-primary-end: #5EEAD4;
+    --color-grid-hover: rgba(255, 255, 255, 0.15);
+
+    /* Spacing & Layout */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --popup-width: 400px;
+    --popup-height: 520px;
+
+    /* Typography */
+    --font-family: 'Inter', system-ui, sans-serif;
+    --font-size-base: 15px;
+    /* Increased slightly */
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-deep: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    width: var(--popup-width);
+    height: var(--popup-height);
+    background: linear-gradient(145deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
+    color: var(--color-text-main);
+    overflow: hidden;
+    user-select: none;
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Header */
+.app-header {
+    background-color: var(--color-header-bg);
+    padding: 20px var(--spacing-md);
+    box-shadow: var(--shadow-deep);
+    z-index: 10;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.month-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.month-year {
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    /* Bolder text */
+    text-transform: capitalize;
+    letter-spacing: -0.5px;
+    /* Text Shadow */
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn {
+    background: rgba(255, 255, 255, 0.05);
+    /* Subtle background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    /* Softer corners */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-btn:hover {
+    color: var(--color-text-main);
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.nav-btn:active {
+    transform: scale(0.95);
+}
+
+/* Calendar Main Area */
+.calendar-main {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: auto repeat(6, 1fr);
+    /* Explicit rows */
+    gap: 8px;
+    /* Increased gap */
+    flex: 1;
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* Common Cell Styles */
+.calendar-board div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    /* Rounder cells */
+    font-size: var(--font-size-base);
+}
+
+/* Weekday Headers */
+.calendar-board .weekday-header {
+    font-size: 13px;
+    font-weight: 800;
+    /* Extra Bold */
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    height: 30px;
+    margin-bottom: 4px;
+    opacity: 1;
+    /* Full opacity for better visibility */
+}
+
+/* Day Cells */
+.day-cell {
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    aspect-ratio: 1/1;
+    position: relative;
+    font-weight: 700;
+    /* Bold numbers by default */
+    color: var(--color-text-main);
+}
+
+.day-cell:hover {
+    background-color: var(--color-grid-hover);
+    transform: translateY(-2px);
+    /* Lift effect */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.day-cell.today {
+    border: 2px solid var(--color-accent);
+    box-shadow: 0 0 15px rgba(94, 234, 212, 0.4);
+    font-weight: 900;
+    /* Heavy for today */
+    background-color: rgba(94, 234, 212, 0.15);
+    color: #fff;
+}
+
+.day-cell.prev-date,
+.day-cell.next-date {
+    color: rgba(255, 255, 255, 0.35);
+    /* Increased visibility slightly */
+    font-weight: 400;
+}
+
+.day-cell.prev-date:hover,
+.day-cell.next-date:hover {
+    background-color: transparent;
+    transform: none;
+    box-shadow: none;
+    cursor: default;
+}
+
+/* Footer */
+.app-footer {
+    padding: 24px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 100%);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto;
+}
+
+.footer-btn {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    /* Pill shape */
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Today Button - Glass Style */
+.footer-btn.secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-text-main);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-btn.secondary:hover {
+    background: #FFFFFF;
+    color: #0F766E;
+    /* Teal text on white */
+    border-color: #FFFFFF;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Add Event Button - Action Style */
+.footer-btn.primary {
+    background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-btn-primary-start) 100%);
+    /* Fresh Gradient */
+    color: #003833;
+    /* Deep Teal Text */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    /* Space between icon and text */
+    box-shadow: 0 4px 15px rgba(20, 184, 166, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-btn.primary svg {
+    stroke-width: 3px;
+    width: 18px;
+    height: 18px;
+}
+
+.footer-btn.primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 20px rgba(94, 234, 212, 0.6);
+    /* Stronger Glow */
+}
+
+.footer-btn.primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

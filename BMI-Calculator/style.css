@@ -1,0 +1,319 @@
+:root {
+  /* Color Palette - Blue Theme */
+  --bg-gradient: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
+  --header-bg: #0A3D91;
+  --accent-color: #64B5F6;
+  --accent-hover: #42A5F5;
+  --button-gradient: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #CFE8FF;
+  --text-inverse: #0A3D91;
+  /* For inputs */
+
+  --surface-color: transparent;
+  /* Use gradient from body/container */
+  --input-bg: #FFFFFF;
+
+  --border-color: rgba(255, 255, 255, 0.1);
+  --shadow-soft: none;
+
+  /* Spacing & Radius */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 380px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: var(--text-primary);
+  min-height: 520px;
+  /* Ensure popup has height */
+  display: flex;
+  flex-direction: column;
+  /* Removed padding and centering to fill space */
+}
+
+.container {
+  background: var(--bg-gradient);
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  /* Fill height */
+}
+
+/* Header */
+.header {
+  background-color: var(--header-bg);
+  padding: var(--spacing-lg) var(--spacing-lg) var(--spacing-md);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  /* Removed background circle to let the logo stand out properly */
+}
+
+.logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Main Content */
+.main-content {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  flex-grow: 1;
+  /* Pushes footer to the bottom */
+}
+
+/* ... skipped inputs ... */
+
+/* Footer */
+.footer {
+  padding: 12px 0 4px 0;
+  /* Minimal bottom padding, enough top padding */
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: rgba(10, 61, 145, 0.5);
+  margin-top: auto;
+  /* Double insurance to push bottom */
+}
+
+.footer p {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  opacity: 0.8;
+  margin: 0;
+  /* Remove default paragraph margins */
+  padding-bottom: 2px;
+}
+
+/* Inputs */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.input-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-left: var(--spacing-xs);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 12px;
+  color: var(--header-bg);
+  /* Dark blue icon for white input */
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 16px 12px 40px;
+  /* Left padding for icon */
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  /* Prepare for focus */
+  background-color: var(--input-bg);
+  font-size: 15px;
+  color: var(--text-inverse);
+  /* Dark text inside input */
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-weight: 500;
+}
+
+.input-group input:focus {
+  border-color: var(--accent-color);
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 4px rgba(100, 181, 246, 0.2);
+}
+
+.input-group input:focus+.input-icon,
+.input-group input:focus~.input-icon {
+  /* Depending on structure, but usually sibling */
+  color: var(--accent-color);
+  /* Light blue active icon */
+}
+
+/* Focus within wrapper trick relying on input state */
+.input-wrapper:focus-within .input-icon {
+  color: #2196F3;
+  /* A nice mid-blue for focus state icon against white */
+}
+
+
+.input-group input::placeholder {
+  color: #90A4AE;
+}
+
+/* Button */
+.primary-btn {
+  background: var(--button-gradient);
+  background-size: 200% auto;
+  /* For gradient animation */
+  color: #FFFFFF;
+  border: none;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  font-weight: 700;
+  /* Bolder text */
+  letter-spacing: 0.5px;
+  /* Better readability */
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 6px -1px rgba(33, 150, 243, 0.4), 0 2px 4px -1px rgba(33, 150, 243, 0.2);
+  /* Base shadow */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  /* Text legibility */
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  /* Slight lift and grow */
+  box-shadow: 0 10px 20px -5px rgba(33, 150, 243, 0.5), 0 8px 10px -6px rgba(33, 150, 243, 0.3);
+  /* Stronger glow */
+  background-position: right center;
+  /* Gradient shift */
+}
+
+.primary-btn:active {
+  transform: translateY(1px) scale(0.98);
+  /* Press effect */
+  box-shadow: 0 2px 4px -1px rgba(33, 150, 243, 0.4);
+}
+
+/* Optional Ripple effect container - kept simple with CSS transition for now */
+
+/* Result Card */
+.result-card {
+  background-color: rgba(255, 255, 255, 0.1);
+  /* Glassmorphism for dark theme */
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  margin-top: var(--spacing-xs);
+  animation: fadeIn 0.3s ease-out;
+  backdrop-filter: blur(5px);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.result-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: var(--spacing-xs);
+}
+
+.result-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-category {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0A3D91;
+  /* Dark blue text on badge */
+  background: var(--accent-color);
+  /* Light blue badge */
+  padding: 6px 14px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+.error-message {
+  color: #FFCDD2;
+  background-color: rgba(211, 47, 47, 0.2);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  text-align: center;
+  border: 1px solid rgba(255, 205, 210, 0.3);
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dictionary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo-area">
+                <h1>Dictionary</h1>
+            </div>
+            <form id="searchForm">
+                <div class="input-group">
+                    <input type="text" name="search" id="searchInput" placeholder="Type a word..." autocomplete="off"
+                        required />
+                    <button type="submit" aria-label="Search">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </header>
+
+        <main>
+            <div id="result" class="result state-empty">
+                <!-- Default State -->
+                <div class="empty-state">
+                    <p>Enter a word to look up its definition.</p>
+                </div>
+
+                <!-- Content will be injected here -->
+                <div id="wordContent" class="word-content displayNone"></div>
+
+                <!-- Loading State -->
+                <div id="loading" class="loading displayNone">
+                    <div class="spinner"></div>
+                    <p>Searching...</p>
+                </div>
+
+                <!-- Error State -->
+                <div id="error" class="error displayNone"></div>
+            </div>
+        </main>
+
+        <footer>
+            <button id="clearBtn" class="action-btn" title="Clear">
+                <span class="btn-text">Clear</span>
+            </button>
+            <div class="version">v1.0</div>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>

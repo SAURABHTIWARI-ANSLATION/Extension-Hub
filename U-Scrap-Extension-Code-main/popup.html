@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title> U-Scraper</title>
+  <link rel="stylesheet" href="popup.css"/>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <img src="icons/logo.png" alt="U-Scrap Logo" class="extension-logo">
+      <h1>U-Scraper</h1>
+      <p class="tagline">Extract data from any website with ease</p>
+    </header>
+
+    <div class="main-content">
+      <div class="status-section section">
+        <div id="status-indicator" class="status-ready">
+          <span id="status-text">Ready to scrape</span>
+        </div>
+        <div class="progress-bar" aria-hidden="true">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="controls-section">
+        <button id="start-scrape" class="btn primary" aria-label="Start scraping">Start Scraping</button>
+        <button id="stop-scrape" class="btn secondary" disabled aria-label="Stop scraping">Stop</button>
+      </div>
+
+      <div class="options-section section" aria-label="Scraper options">
+        <div class="option-group">
+          <label for="scrape-type">Scrape Type</label>
+          <select id="scrape-type">
+            <option value="full-page">Full Page</option>
+            <option value="list">List Items</option>
+            <option value="detail">Detail Pages</option>
+          </select>
+        </div>
+
+        <div class="option-group">
+          <label for="scrape-speed">Scrape Speed</label>
+          <select id="scrape-speed">
+            <option value="slow">Slow (Gentle)</option>
+            <option value="medium" selected>Medium</option>
+            <option value="fast">Fast</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="results-section">
+        <h2>Results <span id="result-count">(0)</span></h2>
+        <div id="results-container" class="results-container" role="region" aria-live="polite" aria-label="Scraped results">
+          <p class="no-results">No data scraped yet</p>
+        </div>
+      </div>
+
+      <div class="export-section">
+        <button id="export-csv" class="btn export" disabled>Export as CSV</button>
+        <button id="export-json" class="btn export" disabled>Export as JSON</button>
+        <button id="clear-data" class="btn clear" disabled>Clear Data</button>
+      </div>
+
+      <div class="preview-section">
+        <button id="preview-data" class="btn preview">Preview Data</button>
+      </div>
+    </div>
+
+    <footer>
+      <p>Quick Web Scraper runs locally in your browser. Your data never leaves your device.</p>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

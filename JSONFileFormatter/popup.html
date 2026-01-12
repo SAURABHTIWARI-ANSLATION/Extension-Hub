@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap"
+    rel="stylesheet">
+</head>
+
+<body>
+  <div class="app-container">
+    <header class="header">
+      <div class="header-left">
+        <h1>JSON Formatter</h1>
+      </div>
+      <div class="header-right">
+        <button id="btn-upload" class="icon-btn" title="Upload JSON File">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="17 8 12 3 7 8" />
+            <line x1="12" y1="3" x2="12" y2="15" />
+          </svg>
+        </button>
+        <button id="btn-download" class="icon-btn" title="Download JSON">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main class="editor-container">
+      <div class="editor-pane input-pane">
+        <div class="pane-header">
+          <span class="pane-label">Input</span>
+          <button id="btn-clear" class="text-btn">Clear</button>
+        </div>
+        <textarea id="json-input" placeholder="Paste JSON here..." spellcheck="false"></textarea>
+      </div>
+
+      <div class="editor-pane output-pane">
+        <div class="pane-header">
+          <span class="pane-label">Output</span>
+          <button id="btn-copy" class="text-btn">Copy</button>
+        </div>
+        <div id="json-output" class="output-area" tabindex="0"></div>
+      </div>
+    </main>
+
+    <footer class="action-bar">
+      <div class="status-msg" id="status-msg"></div>
+      <div class="primary-actions">
+        <button id="btn-minify" class="btn btn-secondary">Minify</button>
+        <button id="btn-text" class="btn btn-secondary">Text to JSON</button>
+        <button id="btn-format" class="btn btn-primary">Format</button>
+      </div>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+
+</html>

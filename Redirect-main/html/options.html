@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <link rel="stylesheet" href="/css/fonts.css">
+  <link rel="stylesheet" href="/css/popup.css">
+</head>
+<body>
+
+  <div class="header">
+    <div class="container pos-rel">
+      <a id="main-logo" href="https://lrt.li/rtlogoappchrome" target="_blank"></a>
+      <a id="lrt-logo" href="https://lrt.li/rtlogochrome" target="_blank"></a>
+      <a id="btn-options" href="options.html"></a>
+    </div>
+  </div>
+
+  <div class="body">
+
+    <div class="settings hop-container last-hop">
+      <div class="hop-header"></div>
+      <div class="hop-body">
+        <div class="hop-body-container">
+
+          <a class="rate-it-container" href="https://lrt.li/rtsettingsratingch" target="_blank">
+            <span class="dosis">RATE IT</span>
+            <span class="stars"></span>
+          </a>
+          <h2 class="dosis">Options</h2>
+          <div class="row">
+            <input id="input-showCookie" type="checkbox"/><label for="input-showCookie">Show Cookie Information for each redirect hop</label>
+          </div>
+          <div class="row">
+            <input id="input-testRelcan" type="checkbox"/><label for="input-testRelcan">Show Errors in REL-Canonical targets</label>
+          </div>
+          <div class="row">
+            <input id="input-showLRT" type="checkbox"/><label for="input-showLRT">Show LRT Power*Trust for each redirect hop</label>
+          </div>
+          <div class="row">
+            <input id="input-showRobots" type="checkbox"/><label for="input-showRobots">Show crawler instructions and limitations from Robots.txt, HTML Head and X-Robots HTTP header</label>
+          </div>
+          <div class="row">
+            <label for="input-robotsCacheTime"> Robots.txt cache time</label> <input id="input-robotsCacheTime" type="number"/> s
+          </div>
+          <div class="row">
+            <input id="input-showSelfRelcan" type="checkbox"/><label for="input-showSelfRelcan">Show self-referencing canonicals</label>
+          </div>
+          <div class="row">
+            <input id="input-robotsBlockingNonIndexable" type="checkbox"/><label for="input-robotsBlockingNonIndexable">Interpret Robots.txt blocking as non-indexable (old behavior)</label>
+          </div>
+          <div class="row">
+            <input id="input-highlightNoFollow" type="checkbox"/><label for="input-highlightNoFollow">Highlight No-Follow links on the page</label>
+          </div>
+          <div class="row analytics-row hidden">
+            <input id="analytics" type="checkbox"/><label for="analytics">Allow Google Analytics tracking</label>
+          </div>
+
+          <div class="buttons-row">
+            <a href="#" class="btn btn-ok impct-blue">OK</a>
+          </div>
+
+        </div>
+      </div>
+      <div class="hop-footer"></div>
+    </div>
+
+  </div>
+
+  <script type="text/javascript" src="/lib/jquery-3.6.1.min.js"></script>
+  <script type="text/javascript" src="/js/options.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+{
+    "extensionName": {
+        "message": "Redimensionador y Conversor de Imágenes",
+        "description": "Name of the extension"
+    },
+    "extensionDescription": {
+        "message": "Redimensiona, comprime y convierte imágenes con una interfaz premium.",
+        "description": "Description of the extension"
+    },
+    "processButton": {
+        "message": "Procesar Imagen",
+        "description": "Button text to start processing"
+    },
+    "dropZoneText": {
+        "message": "Arrastra y suelta la imagen aquí",
+        "description": "Text in the drag and drop zone"
+    },
+    "widthLabel": {
+        "message": "Ancho (px)",
+        "description": "Label for width input"
+    },
+    "heightLabel": {
+        "message": "Alto (px)",
+        "description": "Label for height input"
+    },
+    "qualityLabel": {
+        "message": "Calidad",
+        "description": "Label for quality slider"
+    }
+}

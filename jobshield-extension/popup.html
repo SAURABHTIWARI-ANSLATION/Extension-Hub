@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JobShield - Job Scam Detector</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <img src="icons/icon128.png" alt="JobShield Logo" class="icon-logo">
+                <h1>JobShield</h1>
+            </div>
+            <div class="header-controls">
+                <button id="settingsBtn" class="icon-btn" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="status-card" id="statusContainer">
+                <div class="status-header">
+                    <div class="status-icon-wrapper" id="statusIcon">
+                        <svg class="status-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                        </svg>
+                    </div>
+                </div>
+                <div class="status-text">
+                    <h2 id="statusTitle">Analyzing Page...</h2>
+                    <p class="status-subtitle">Scanning for potential job scams</p>
+                </div>
+
+                <div class="score-container" id="riskScore">
+                    <div class="score-bar-bg">
+                        <div class="score-bar-fill" id="scoreFill"></div>
+                    </div>
+                    <div class="score-value" id="scoreLabel">0/100</div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Words</span>
+                        <span class="stat-value" id="wordsScanned">0</span>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Time</span>
+                        <span class="stat-value" id="analysisTime">0ms</span>
+                    </div>
+                </div>
+                <div class="stat-item full-width">
+                    <div class="stat-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Domain</span>
+                        <span class="stat-value truncate" id="domainInfo">Unknown</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                    <line x1="4" y1="22" x2="4" y2="15"></line>
+                </svg>
+                <h3>Detected Risks</h3>
+            </div>
+
+            <div class="flags-container">
+                <ul id="flagsList" class="flags-list">
+                    <li class="no-flags-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                        <span>No suspicious detected</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="action-buttons">
+                <button id="rescanBtn" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 4 23 10 17 10"></polyline>
+                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    Scan Again
+                </button>
+                <button id="viewHistoryBtn" class="btn btn-outline">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    History
+                </button>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                Secure & Local
+            </p>
+            <p class="copyright">
+                &copy; Anslation Company
+            </p>
+        </footer>
+    </div>
+
+    <!-- Modals -->
+    <div id="historyModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <h2>Scan History</h2>
+            </div>
+            <div id="historyList"></div>
+            <div class="modal-footer">
+                <button id="clearHistoryBtn" class="btn btn-text text-danger">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                    Clear History
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div class="modal-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="settings-options">
+                <label class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-title">Auto Scan</span>
+                        <span class="setting-desc">Scan job pages automatically</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="autoScan" checked>
+                        <span class="slider"></span>
+                    </div>
+                </label>
+                <label class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-title">Status Badge</span>
+                        <span class="setting-desc">Show safety badge on page</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="showBadge" checked>
+                        <span class="slider"></span>
+                    </div>
+                </label>
+                <label class="setting-item">
+                    <div class="setting-info">
+                        <span class="setting-title">Sound Alerts</span>
+                        <span class="setting-desc">Play sound on danger detection</span>
+                    </div>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="enableSound" checked>
+                        <span class="slider"></span>
+                    </div>
+                </label>
+                <div class="setting-group">
+                    <label class="setting-label">Sensitivity</label>
+                    <select id="sensitivityLevel" class="select-input">
+                        <option value="low">Low (Strict)</option>
+                        <option value="medium" selected>Medium (Balanced)</option>
+                        <option value="high">High (Cautious)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

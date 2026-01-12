@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Perfect Color Picker</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Favicon / Icons -->
+    <link rel="icon" href="icons/icon16.png" sizes="16x16" type="image/png">
+    <link rel="icon" href="icons/icon32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="icons/icon48.png" sizes="48x48" type="image/png">
+
+    <!-- Apple Touch Icon (extra polish, optional but recommended) -->
+    <link rel="apple-touch-icon" href="icons/icon128.png">
+
+    <!-- Theme color (future-proof, Chrome UI polish) -->
+    <meta name="theme-color" content="#6366f1">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="app-header">
+            <div class="logo">
+                <img src="icons/icon48.png" alt="Logo" width="24" height="24">
+                <h1>Pixel Perfect</h1>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <button id="btn-pick" class="btn-primary">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+                    <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+                    <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+                    <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+                    <path
+                        d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z">
+                    </path>
+                </svg>
+                <span>Pick Color</span>
+            </button>
+
+            <!-- Preview Section -->
+            <div id="preview-section" class="preview-card" style="display: none;">
+                <div id="color-swatch" class="color-preview"></div>
+
+                <div class="values-container">
+                    <!-- HEX -->
+                    <div class="value-item">
+                        <span class="label">HEX</span>
+                        <div class="value-row">
+                            <code id="val-hex">#000000</code>
+                            <button class="btn-copy" aria-label="Copy HEX">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- RGB -->
+                    <div class="value-item">
+                        <span class="label">RGB</span>
+                        <div class="value-row">
+                            <code id="val-rgb">rgb(0, 0, 0)</code>
+                            <button class="btn-copy" aria-label="Copy RGB">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- HSL -->
+                    <div class="value-item">
+                        <span class="label">HSL</span>
+                        <div class="value-row">
+                            <code id="val-hsl">hsl(0, 0%, 0%)</code>
+                            <button class="btn-copy" aria-label="Copy HSL">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- History Section -->
+            <div class="history-section">
+                <h6>Recent Colors</h6>
+                <div id="history-grid" class="history-grid">
+                    <!-- History items will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span>Copied to clipboard</span>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

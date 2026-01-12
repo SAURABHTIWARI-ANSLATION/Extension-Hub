@@ -1,0 +1,298 @@
+{
+  "extensionName": {
+    "message": "JobShield: Job Scam Detector",
+    "description": "Name of the extension"
+  },
+  "extensionDescription": {
+    "message": "Real-time detection of fake and scam job postings",
+    "description": "Description of the extension"
+  },
+  "defaultTitle": {
+    "message": "JobShield",
+    "description": "Default title for the extension popup"
+  },
+  "tagline": {
+    "message": "Real-time Job Scam Detection",
+    "description": "Tagline shown in the popup"
+  },
+  "statusAnalyzing": {
+    "message": "Analyzing Page...",
+    "description": "Status when analyzing is in progress"
+  },
+  "statusSafe": {
+    "message": "✅ Safe Job Posting",
+    "description": "Status when page is safe"
+  },
+  "statusSuspicious": {
+    "message": "⚠️ Suspicious Content Found",
+    "description": "Status when suspicious content is found"
+  },
+  "statusDanger": {
+    "message": "❌ Likely Scam Detected",
+    "description": "Status when scam is detected"
+  },
+  "detectedRedFlags": {
+    "message": "Detected Red Flags",
+    "description": "Heading for red flags section"
+  },
+  "noSuspiciousContent": {
+    "message": "No suspicious content detected yet",
+    "description": "Message when no red flags are found"
+  },
+  "pageInformation": {
+    "message": "Page Information",
+    "description": "Heading for page information section"
+  },
+  "domain": {
+    "message": "Domain",
+    "description": "Label for domain information"
+  },
+  "analysisTime": {
+    "message": "Analysis Time",
+    "description": "Label for analysis time information"
+  },
+  "wordsScanned": {
+    "message": "Words Scanned",
+    "description": "Label for words scanned count"
+  },
+  "rescanButton": {
+    "message": "Rescan Current Page",
+    "description": "Text for rescan button"
+  },
+  "viewHistoryButton": {
+    "message": "View Scan History",
+    "description": "Text for view history button"
+  },
+  "settingsButton": {
+    "message": "Settings",
+    "description": "Text for settings button"
+  },
+  "clearHistoryButton": {
+    "message": "Clear Scan History",
+    "description": "Text for clear history button"
+  },
+  "privacyNotice": {
+    "message": "All analysis runs locally in your browser. No data is collected or stored.",
+    "description": "Privacy notice in footer"
+  },
+  "disclaimer": {
+    "message": "JobShield detects common scam patterns. Always verify job opportunities independently.",
+    "description": "Disclaimer text"
+  },
+  "scanHistoryTitle": {
+    "message": "Scan History",
+    "description": "Title for scan history modal"
+  },
+  "settingsTitle": {
+    "message": "Settings",
+    "description": "Title for settings modal"
+  },
+  "noHistory": {
+    "message": "No scan history yet",
+    "description": "Message when no scan history exists"
+  },
+  "autoScanSetting": {
+    "message": "Automatically scan pages",
+    "description": "Label for auto scan setting"
+  },
+  "showBadgeSetting": {
+    "message": "Show status badge on pages",
+    "description": "Label for show badge setting"
+  },
+  "enableSoundSetting": {
+    "message": "Play warning sounds",
+    "description": "Label for enable sound setting"
+  },
+  "sensitivityLevelLabel": {
+    "message": "Sensitivity Level",
+    "description": "Label for sensitivity level setting"
+  },
+  "sensitivityLow": {
+    "message": "Low (Fewer warnings)",
+    "description": "Option for low sensitivity"
+  },
+  "sensitivityMedium": {
+    "message": "Medium",
+    "description": "Option for medium sensitivity"
+  },
+  "sensitivityHigh": {
+    "message": "High (More warnings)",
+    "description": "Option for high sensitivity"
+  },
+  "errorCannotAnalyze": {
+    "message": "Cannot analyze this page",
+    "description": "Error message when page cannot be analyzed"
+  },
+  "errorNoResponse": {
+    "message": "No response from content script",
+    "description": "Error message when content script doesn't respond"
+  },
+  "errorAnalyzing": {
+    "message": "Error analyzing page",
+    "description": "Generic error message for analysis"
+  },
+  "scanningForRedFlags": {
+    "message": "Scanning for red flags...",
+    "description": "Message shown while scanning"
+  },
+  "unableToScan": {
+    "message": "Unable to scan this page",
+    "description": "Message when scanning fails"
+  },
+  "safeNoSuspicious": {
+    "message": "✅ No suspicious content detected",
+    "description": "Message when no red flags are found"
+  },
+  "confirmClearHistory": {
+    "message": "Are you sure you want to clear all scan history?",
+    "description": "Confirmation message for clearing history"
+  },
+  "financialScamType": {
+    "message": "Financial Scams",
+    "description": "Type of red flag: financial scams"
+  },
+  "financialScamDesc": {
+    "message": "Requests for upfront payments or fees",
+    "description": "Description of financial scam red flag"
+  },
+  "urgencyPressureType": {
+    "message": "Urgency Pressure",
+    "description": "Type of red flag: urgency pressure"
+  },
+  "urgencyPressureDesc": {
+    "message": "Creates artificial urgency or pressure",
+    "description": "Description of urgency pressure red flag"
+  },
+  "contactRedFlagsType": {
+    "message": "Contact Red Flags",
+    "description": "Type of red flag: contact red flags"
+  },
+  "contactRedFlagsDesc": {
+    "message": "Unprofessional contact methods",
+    "description": "Description of contact red flag"
+  },
+  "salaryPromisesType": {
+    "message": "Salary Promises",
+    "description": "Type of red flag: salary promises"
+  },
+  "salaryPromisesDesc": {
+    "message": "Unrealistic salary promises",
+    "description": "Description of salary promises red flag"
+  },
+  "processRedFlagsType": {
+    "message": "Process Red Flags",
+    "description": "Type of red flag: process red flags"
+  },
+  "processRedFlagsDesc": {
+    "message": "Suspicious hiring process",
+    "description": "Description of process red flag"
+  },
+  "grammarIssuesType": {
+    "message": "Grammar Issues",
+    "description": "Type of red flag: grammar issues"
+  },
+  "grammarIssuesDesc": {
+    "message": "Poor grammar and formatting",
+    "description": "Description of grammar issues red flag"
+  },
+  "remoteWorkScamsType": {
+    "message": "Remote Work Scams",
+    "description": "Type of red flag: remote work scams"
+  },
+  "remoteWorkScamsDesc": {
+    "message": "Common remote work scam types",
+    "description": "Description of remote work scam red flag"
+  },
+  "unknownDomain": {
+    "message": "Unknown",
+    "description": "Placeholder for unknown domain"
+  },
+  "historyRiskScore": {
+    "message": "Risk Score",
+    "description": "Label for risk score in history"
+  },
+  "historyFlagsFound": {
+    "message": "Flags Found",
+    "description": "Label for flags found in history"
+  },
+  "historyFlags": {
+    "message": "Flags",
+    "description": "Label for flags in history"
+  },
+  "welcomeTitle": {
+    "message": "Welcome to JobShield!",
+    "description": "Title on welcome page"
+  },
+  "welcomeTagline": {
+    "message": "Your guardian against job scams and fake postings",
+    "description": "Tagline on welcome page"
+  },
+  "featureRealtimeTitle": {
+    "message": "Real-Time Scanning",
+    "description": "Title for real-time scanning feature"
+  },
+  "featureRealtimeDesc": {
+    "message": "Automatically analyzes job listings as you browse, providing instant safety ratings.",
+    "description": "Description for real-time scanning feature"
+  },
+  "featureRedFlagsTitle": {
+    "message": "Red Flag Detection",
+    "description": "Title for red flag detection feature"
+  },
+  "featureRedFlagsDesc": {
+    "message": "Identifies common scam patterns like upfront fees, WhatsApp-only contacts, and unrealistic promises.",
+    "description": "Description for red flag detection feature"
+  },
+  "featurePrivacyTitle": {
+    "message": "Complete Privacy",
+    "description": "Title for privacy feature"
+  },
+  "featurePrivacyDesc": {
+    "message": "All analysis happens locally in your browser. No data is collected or sent to servers.",
+    "description": "Description for privacy feature"
+  },
+  "warningTitle": {
+    "message": "Important Disclaimer",
+    "description": "Title for warning box"
+  },
+  "warningText": {
+    "message": "JobShield is a tool that helps identify common scam patterns, but it cannot guarantee 100% accuracy. Always conduct your own due diligence when applying for jobs and never share sensitive personal or financial information.",
+    "description": "Text for warning disclaimer"
+  },
+  "getStartedButton": {
+    "message": "Get Started",
+    "description": "Text for get started button"
+  },
+  "userGuideButton": {
+    "message": "User Guide",
+    "description": "Text for user guide button"
+  },
+  "privacyInfo": {
+    "message": "JobShield runs entirely in your browser. No accounts, no tracking, no data collection. The extension icon will appear in your toolbar — click it to see scan results on any job page.",
+    "description": "Privacy information on welcome page"
+  },
+  "badgeStatusAnalyzing": {
+    "message": "Analyzing...",
+    "description": "Status text on page badge"
+  },
+  "badgeStatusSafe": {
+    "message": "✅ Safe",
+    "description": "Safe status on page badge"
+  },
+  "badgeStatusSuspicious": {
+    "message": "⚠️ Suspicious",
+    "description": "Suspicious status on page badge"
+  },
+  "badgeStatusDanger": {
+    "message": "❌ High Risk",
+    "description": "Danger status on page badge"
+  },
+  "badgeRiskLabel": {
+    "message": "Risk",
+    "description": "Label for risk percentage"
+  },
+  "badgeFlagsLabel": {
+    "message": "Flags",
+    "description": "Label for flags count"
+  }
+}

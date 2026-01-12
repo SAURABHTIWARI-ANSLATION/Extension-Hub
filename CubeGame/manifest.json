@@ -1,0 +1,20 @@
+{
+    "manifest_version": 3,
+    "name": "Violet Glow Cube Game",
+    "version": "1.0",
+    "description": "A 3D Cube Game with a modern Violet Glow theme.",
+    "action": {
+        "default_popup": "index.html",
+        "default_icon": {
+            "16": "icon.png",
+            "48": "icon.png",
+            "128": "icon.png"
+        }
+    },
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "permissions": []
+}

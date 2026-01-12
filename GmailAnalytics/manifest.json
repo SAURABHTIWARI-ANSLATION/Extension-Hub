@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_gmailcheck_name__",
+  "version": "5.0.0",
+  "description": "__MSG_gmailcheck_description__",
+  "default_locale": "en",
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "gmail_not_logged_in.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "alarms",
+    "offscreen",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://mail.google.com/"
+  ]
+}

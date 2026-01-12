@@ -1,0 +1,17 @@
+{
+	"manifest_version": 3,
+	"name": "Background Generator",
+	"version": "2.0",
+	"description": "Create stunning gradients and backgrounds instantly.",
+	"action": {
+		"default_popup": "popup.html",
+		"default_icon": "pic.png"
+	},
+	"icons": {
+		"128": "pic.png"
+	},
+	"permissions": [
+		"storage",
+		"activeTab"
+	]
+}

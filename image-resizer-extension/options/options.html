@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Image Resizer Options</title>
+    <link rel="stylesheet" href="../styles/options.css">
+</head>
+
+<body>
+    <div class="container glass">
+        <header>
+            <h1>Image Resizer Settings</h1>
+        </header>
+
+        <main>
+            <form id="optionsForm">
+                <div class="option-group">
+                    <label>Default Output Format</label>
+                    <select id="defaultFormat">
+                        <option value="jpeg">JPG</option>
+                        <option value="png">PNG</option>
+                        <option value="webp">WEBP</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label>Default Quality: <span id="qualityVal">90%</span></label>
+                    <input type="range" id="defaultQuality" min="1" max="100" value="90">
+                </div>
+            </form>
+        </main>
+
+        <footer>
+            <button id="saveBtn" class="primary-btn">Save Settings</button>
+            <p id="status" class="status-msg"></p>
+        </footer>
+    </div>
+
+    <script src="../scripts/options.js"></script>
+</body>
+
+</html>

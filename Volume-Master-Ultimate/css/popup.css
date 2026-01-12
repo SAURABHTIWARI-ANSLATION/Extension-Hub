@@ -1,0 +1,622 @@
+/* MIDNIGHT PRO PREMIUM UI - Volume Booster Ultimate */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* 1. Reset & Core Variables */
+:root {
+    /* ================= LIGHT MODE (Default) ================= */
+    --bg-color: #f8fafc;
+    --bg-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.08) 0%, transparent 50%);
+
+    --bg-card: #ffffff;
+    --bg-card-hover: #f1f5f9;
+
+    --text-primary: #0f172a;
+    --text-secondary: #64748b;
+
+    /* Accents */
+    --accent-primary: #6366f1;
+    --accent-secondary: #ec4899;
+    --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+    --accent-glow: 0 4px 15px rgba(99, 102, 241, 0.3);
+
+    /* Borders & Shadows */
+    --border-glass: #e2e8f0;
+    --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+
+    /* Components */
+    --slider-track: #e2e8f0;
+    --slider-thumb-border: #ffffff;
+
+    /* Layout */
+    --app-width: 360px;
+    --app-padding: 24px;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 20px;
+}
+
+body.dark-mode {
+    /* ================= DARK MODE (Midnight Pro) ================= */
+    --bg-color: #0b0f19;
+    --bg-image: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
+
+    --bg-card: rgba(30, 41, 59, 0.65);
+    --bg-card-hover: rgba(51, 65, 85, 0.8);
+
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+
+    --border-glass: rgba(255, 255, 255, 0.08);
+    --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.2);
+
+    --slider-track: #1e293b;
+    --accent-glow: 0 0 20px rgba(139, 92, 241, 0.5);
+}
+
+/* 2. Global Resets */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    width: var(--app-width);
+    min-height: 540px;
+    padding: var(--app-padding);
+    background-color: var(--bg-color);
+    background-image: var(--bg-image);
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Utility: Hidden Elements */
+.is-hidden {
+    display: none !important;
+}
+
+/* 3. Header Section */
+.header {
+    margin-bottom: 40px;
+    text-align: center;
+    position: relative;
+}
+
+.header__heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.header__icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--bg-card);
+    padding: 4px;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-glass);
+}
+
+.header__name {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.header__description {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+/* Settings Button (Top Right Absolute) */
+.header__buttons {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.c-settings-switch {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-card);
+}
+
+.c-settings-switch:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
+}
+
+.c-settings-switch__icon {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+/* 4. Hero Volume Slider */
+.volume-slider {
+    margin: 40px 0 20px 0;
+    position: relative;
+}
+
+.volume-slider__slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 12px;
+    background: var(--slider-track);
+    border-radius: 99px;
+    outline: none;
+    cursor: pointer;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 2;
+    border: 1px solid var(--border-glass);
+}
+
+.volume-slider__slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accent-gradient);
+    cursor: pointer;
+    border: 2px solid var(--slider-thumb-border);
+    box-shadow: var(--accent-glow);
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    margin-top: -9px;
+}
+
+.volume-slider__slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+/* Volume Info */
+.volume-info {
+    text-align: center;
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.volume-info__volume-current {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.volume-info__volume-current-value {
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text-primary);
+    /* Optional text shadow for depth */
+    text-shadow: 0 4px 20px rgba(99, 102, 241, 0.2);
+}
+
+.volume-info__volume-current::after {
+    content: "BOOST LEVEL";
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-secondary);
+    margin-top: 8px;
+}
+
+.volume-info__volume-min,
+.volume-info__volume-max {
+    position: absolute;
+    top: -25px;
+    /* Above the slider */
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.volume-info__volume-min {
+    left: 0;
+}
+
+.volume-info__volume-max {
+    right: 0;
+}
+
+/* 5. Card Component (Shared) */
+.c-equalizer,
+.c-settings-pane,
+.tabs,
+.volume-actions,
+.c-analyser,
+.c-promo {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-card);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 6. Tabs List */
+.tabs {
+    padding: 16px;
+}
+
+.tabs__title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-weight: 700;
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    background: transparent;
+    margin-bottom: 8px;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    color: var(--text-primary);
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-primary);
+    transform: translateX(4px);
+}
+
+.tab__icon-image {
+    width: 18px;
+    height: 18px;
+    margin-right: 12px;
+    border-radius: 4px;
+}
+
+.tab__title {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9rem;
+}
+
+/* 7. Equalizer Controls */
+.c-equalizer__presets {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.c-equalizer__presets-button {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+    padding: 12px 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.c-equalizer__presets-button:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    border-color: var(--accent-primary);
+}
+
+.c-equalizer__presets-button.is-active {
+    background: var(--accent-gradient);
+    border-color: transparent;
+    color: white;
+    box-shadow: var(--accent-glow);
+}
+
+/* Equalizer Sliders */
+.c-equalizer section {
+    margin-bottom: 12px;
+}
+
+.c-equalizer input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    background: var(--slider-track);
+    border-radius: 4px;
+    outline: none;
+}
+
+.c-equalizer input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--text-primary);
+    border: 2px solid var(--bg-card);
+    /* contrast ring */
+    cursor: pointer;
+    margin-top: -5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 8. Action Buttons */
+.volume-actions__button {
+    width: 100%;
+    padding: 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-glass);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    margin-bottom: 12px;
+}
+
+.volume-actions__button:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--accent-primary);
+}
+
+/* 9. Analyser Canvas */
+.c-analyser {
+    padding: 12px;
+    background: #000;
+    border: 1px solid #333;
+}
+
+.c-analyser__canvas {
+    height: 60px;
+    filter: drop-shadow(0 0 5px var(--accent-primary));
+}
+
+/* 10. Settings Pane */
+.c-settings-pane {
+    padding: 24px;
+}
+
+.c-settings-pane__title {
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-glass);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.c-settings-pane__option-group {
+    margin-bottom: 24px;
+}
+
+.c-settings-pane__option-header {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+}
+
+.c-settings-pane__option-icon {
+    width: 16px;
+    height: 16px;
+    fill: var(--accent-primary);
+    filter: drop-shadow(0 0 5px rgba(99, 102, 241, 0.5));
+}
+
+.c-settings-pane__option {
+    background: transparent;
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    transition: background 0.2s;
+    border: 1px solid transparent;
+}
+
+.c-settings-pane__option:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-glass);
+}
+
+.c-settings-pane__checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.c-settings-pane__label {
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    flex: 1;
+}
+
+/* Custom IOS-style Toggle Switch */
+.c-settings-pane__checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 48px;
+    height: 26px;
+    background: var(--slider-track);
+    border-radius: 99px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+    border: 1px solid var(--border-glass);
+}
+
+.c-settings-pane__checkbox::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.c-settings-pane__checkbox:checked {
+    background: var(--accent-gradient);
+    border-color: transparent;
+}
+
+.c-settings-pane__checkbox:checked::after {
+    transform: translateX(22px);
+}
+
+/* Animation Entry */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body>section {
+    animation: fadeInUp 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    opacity: 0;
+}
+
+.header {
+    animation: fadeInUp 0.6s 0ms forwards;
+    opacity: 0;
+}
+
+.volume-slider {
+    animation: fadeInUp 0.6s 100ms forwards;
+    opacity: 0;
+}
+
+.volume-info {
+    animation: fadeInUp 0.6s 100ms forwards;
+    opacity: 0;
+}
+
+.volume-actions {
+    animation: fadeInUp 0.6s 200ms forwards;
+    opacity: 0;
+}
+
+.tabs {
+    animation: fadeInUp 0.6s 300ms forwards;
+    opacity: 0;
+}
+
+.c-equalizer {
+    animation: fadeInUp 0.6s 400ms forwards;
+    opacity: 0;
+}
+
+
+/* Font Faces for Icons */
+@font-face {
+    font-family: fa4;
+    src: url(font/fa4.woff2);
+    font-weight: 400;
+    font-style: normal;
+}
+
+[class*=" icon-"]:before,
+[class^=icon-]:before {
+    font-family: fa4;
+    font-style: normal;
+    display: inline-block;
+    margin-right: .3em;
+}
+
+.icon-reset:before {
+    content: '\e800';
+}
+
+.icon-ccw:before {
+    content: '\e801';
+}
+
+.icon-mic:before {
+    content: '\f130';
+}
+
+.icon-rocket:before {
+    content: '\f135';
+}
+
+.icon-history:before {
+    content: '\f1da';
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 4px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-secondary);
+    border-radius: 99px;
+    opacity: 0.5;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-primary);
+}

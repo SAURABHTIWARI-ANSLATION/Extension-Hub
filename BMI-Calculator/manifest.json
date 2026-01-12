@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "BMI Calculator",
+  "version": "1.0.0",
+  "description": "A clean and modern BMI Calculator for checking your health stats uniquely.",
+  "icons": {
+    "128": "Logo-code.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "Logo-code.png"
+  },
+  "permissions": []
+}

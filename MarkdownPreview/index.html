@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Converter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <h1>Markdown Converter</h1>
+    <div class="actions">
+      <button id="btn-copy" class="btn primary">Copy Output</button>
+      <button id="btn-clear" class="btn secondary">Clear</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="panel input-panel">
+      <label for="markup-input">Markdown Input</label>
+      <textarea id="markup-input" placeholder="Type Markdown here...
+# Hello World
+**Bold** and *Italic*
+- List item 1
+- List item 2"></textarea>
+    </div>
+
+    <div class="active-divider"></div>
+
+    <div class="panel output-panel">
+      <label>Preview</label>
+      <div id="preview-output" class="preview-content"></div>
+    </div>
+  </main>
+
+  <script src="parser.js"></script>
+  <script src="popup.js"></script>
+</body>
+
+</html>

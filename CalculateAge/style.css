@@ -1,0 +1,433 @@
+:root {
+    /* Soft Mint-Teal to Sky Blue Gradient */
+    --bg-gradient: linear-gradient(180deg, #f0fdfa 0%, #e0f2fe 100%);
+    /* Slate-50 to Sky-100 */
+
+    /* Primary Action & Brand */
+    --accent-primary: #0ea5e9;
+    /* Sky-500 */
+    --accent-hover: #0284c7;
+    /* Sky-600 */
+    --accent-glow: rgba(14, 165, 233, 0.3);
+
+    /* Glass Surfaces */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.9);
+    --glass-highlight: #ffffff;
+
+    /* Typography */
+    --text-primary: #334155;
+    /* Slate-700 - Softer than pure black */
+    --text-secondary: #64748b;
+    /* Slate-500 */
+    --text-heading: #0f172a;
+    /* Slate-900 - High contrast for titles */
+
+    --font-main: 'Plus Jakarta Sans', sans-serif;
+}
+
+@keyframes float {
+    0% {
+        transform: translate(0, 0);
+    }
+
+    50% {
+        transform: translate(-10px, 10px);
+    }
+
+    100% {
+        transform: translate(0, 0);
+    }
+}
+
+@keyframes pulse-soft {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html {
+    overflow: hidden;
+}
+
+body {
+    font-family: var(--font-main);
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    width: 380px;
+    height: fit-content;
+    /* Allow body to shrink to content */
+    min-height: auto;
+    /* Remove fixed minimum height */
+    display: flex;
+    justify-content: center;
+    padding: 24px;
+    padding-bottom: 5px;
+    /* Slightly less padding at bottom */
+    overflow: hidden;
+    position: relative;
+}
+
+/* Dynamic background blob */
+/* Dynamic background blob - Subtle warm highlight */
+.bg-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at center, rgba(45, 212, 191, 0.1) 0%, transparent 60%);
+    /* Teal tint */
+    z-index: -1;
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /* Reduced specific gap between sections */
+    z-index: 1;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.icon-pulse {
+    background: #ffffff;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    color: var(--accent-primary);
+    display: flex;
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+}
+
+.header-text h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text-heading);
+    /* Removed gradient text for better readability on light mode */
+}
+
+.header-text p {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--text-secondary);
+    margin-left: 4px;
+}
+
+.input-wrapper {
+    position: relative;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    /* Subtle depth */
+    border-radius: 16px;
+}
+
+input[type="date"] {
+    width: 100%;
+    padding: 16px;
+    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    /* Slate-200 */
+    color: var(--text-heading);
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 500;
+    outline: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    color-scheme: light;
+}
+
+input[type="date"]:hover {
+    border-color: #cbd5e1;
+    /* Slate-300 */
+    background: #f8fafc;
+}
+
+input[type="date"]:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.15);
+    /* Sky blue ring */
+    background: #ffffff;
+}
+
+/* Custom Calendar Icon Hiding/Styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+
+.input-icon {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent-primary);
+    pointer-events: none;
+    opacity: 1;
+    /* More visible in light mode */
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 16px;
+    /* Soft Blue Gradient */
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    color: white;
+    font-family: var(--font-main);
+    font-weight: 600;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px var(--accent-glow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(rgba(255, 255, 255, 0.2), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(37, 99, 235, 0.5);
+}
+
+button:hover::before {
+    opacity: 1;
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.result-grid.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.result-grid.hidden {
+    display: none;
+}
+
+.result-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.result-item.primary {
+    grid-column: 1 / -1;
+    padding: 24px;
+    background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+    border-color: #bae6fd;
+    /* Very light sky border */
+    box-shadow: 0 10px 25px -10px rgba(14, 165, 233, 0.15);
+}
+
+.label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+    font-weight: 600;
+}
+
+.value {
+    font-weight: 800;
+    color: var(--text-heading);
+}
+
+.primary .value {
+    font-size: 48px;
+    line-height: 1;
+    /* Gradient text for the main number */
+    background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.secondary .value {
+    font-size: 24px;
+    color: var(--text-heading);
+}
+
+.next-bday-card {
+    background: #f0fdf4;
+    /* Light green mint */
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: -8px;
+    /* Slight animation */
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.next-bday-card.hidden {
+    display: none;
+}
+
+.bday-icon {
+    font-size: 20px;
+}
+
+.bday-text {
+    font-size: 13px;
+    color: #166534;
+    /* Green-800 */
+    display: flex;
+    flex-direction: column;
+}
+
+.bday-text strong {
+    color: #15803d;
+    /* Green-700 */
+    font-weight: 700;
+}
+
+.error-msg {
+    color: #b91c1c;
+    /* Red-700 */
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    background: #fef2f2;
+    /* Red-50 */
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #fecaca;
+    animation: shake 0.4s cubic-bezier(.36, .07, .19, .97) both;
+}
+
+.error-msg.hidden {
+    display: none;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.copyright {
+    text-align: center;
+    font-size: 11px;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-top: 4px;
+    font-weight: 500;
+}
