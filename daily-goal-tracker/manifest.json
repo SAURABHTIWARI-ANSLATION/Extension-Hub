@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Daily Goal Tracker",
+  "version": "1.0",
+  "description": "Track your daily goals and habits",
+  "permissions": ["storage", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
