@@ -1,0 +1,75 @@
+{
+  "manifest_version": 3,
+  "name": "Grammar Check Pro",
+  "description": "Real-time grammar and spelling checker for perfect writing",
+  "version": "1.0.0",
+  "author": "Grammar Check Pro Team",
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Grammar Check Pro",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "contextMenus",
+    "notifications"
+  ],
+  
+  "host_permissions": [
+    "<all_urls>",
+    "https://api.languagetool.org/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "grammar-checker.js",
+        "dictionaries/*",
+        "rules/*",
+        "sounds/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "commands": {
+    "check-text": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+G",
+        "mac": "Command+Shift+G"
+      },
+      "description": "Check grammar of selected text"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+    },
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="violet-glow">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuickFill Pro – Manage Profiles</title>
+  <link rel="stylesheet" href="theme-variables.css" />
+  <link rel="stylesheet" href="options.css" />
+</head>
+
+<body data-theme="violet-glow">
+  <div class="container">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            stroke="currentColor" stroke-width="2" />
+        </svg>
+        <div>
+          <h1>QuickFill Pro</h1>
+          <p>Manage Your Profiles</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>Profiles</h2>
+          <button class="btn-icon" id="addProfileBtn" title="Add Profile">+</button>
+        </div>
+
+        <div id="profilesList" class="profiles-list"></div>
+      </aside>
+
+      <!-- Main -->
+      <main class="main-content">
+
+        <!-- 🔥 HOW TO USE -->
+        <div class="help-box">
+          <h3>💡 How to use QuickFill Pro</h3>
+          <ul>
+            <li>Create a profile and add the fields you want to autofill</li>
+            <li>
+              Use <b>Keywords</b> that match form inputs on websites
+              <br />
+              <small>Example: <code>first, firstname, your-name</code></small>
+            </li>
+            <li>Separate multiple keywords using commas</li>
+            <li>Open any form → Click <b>Fill Form</b> from the extension popup</li>
+          </ul>
+        </div>
+
+        <!-- Empty -->
+        <div id="emptyState" class="empty-state">
+          <h3>No Profile Selected</h3>
+          <p>Select or create a profile from the left</p>
+        </div>
+
+        <!-- Form -->
+        <form id="profileForm" class="profile-form" style="display:none">
+
+          <div class="form-header">
+            <h2 id="formTitle">Edit Profile</h2>
+            <button type="button" class="btn-icon" id="deleteProfileBtn">🗑</button>
+          </div>
+
+          <!-- Profile Name -->
+          <div class="form-group">
+            <label>Profile Name</label>
+            <input type="text" id="profileName" required />
+          </div>
+
+          <!-- Dynamic Fields -->
+          <div class="form-group">
+            <label>Profile Fields</label>
+
+            <div id="fieldsContainer">
+              <!-- Fields added dynamically -->
+            </div>
+
+            <button
+              type="button"
+              id="addFieldBtn"
+              class="btn-secondary"
+              style="margin-top:10px"
+            >
+              ➕ Add Field
+            </button>
+          </div>
+
+          <!-- Default -->
+          <div class="form-group checkbox">
+            <label>
+              <input type="checkbox" id="profileDefault" />
+              Set as default profile
+            </label>
+          </div>
+
+          <!-- Save -->
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">Save Profile</button>
+          </div>
+
+        </form>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="theme-manager.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

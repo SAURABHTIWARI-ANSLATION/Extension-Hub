@@ -1,0 +1,138 @@
+{
+  "themes": {
+    "ocean-blue": {
+      "name": "Ocean Blue",
+      "description": "Professional and reliable appearance for general utilities and productivity tools",
+      "category": "default",
+      "colors": {
+        "background-gradient-start": "#0A4DBF",
+        "background-gradient-end": "#1E88E5",
+        "header-bg": "#0A3D91",
+        "primary-button-start": "#2196F3",
+        "primary-button-end": "#42A5F5",
+        "accent-color": "#64B5F6",
+        "text-primary": "#FFFFFF",
+        "text-secondary": "#CFE8FF",
+        "body-bg": "#F0F7FF",
+        "sidebar-bg": "#E3F2FD",
+        "border-color": "#BBDEFB",
+        "hover-bg": "#E1F5FE",
+        "focus-ring": "rgba(33, 150, 243, 0.15)",
+        "success-bg": "#C8E6C9",
+        "success-text": "#1B5E20",
+        "error-bg": "#FFCDD2",
+        "error-text": "#B71C1C"
+      }
+    },
+    "mint-teal": {
+      "name": "Mint Teal",
+      "description": "Calm and refreshing visual tone for health-oriented and tracker tools",
+      "category": "health",
+      "colors": {
+        "background-gradient-start": "#0F766E",
+        "background-gradient-end": "#2DD4BF",
+        "header-bg": "#115E59",
+        "primary-button-start": "#14B8A6",
+        "primary-button-end": "#2DD4BF",
+        "accent-color": "#5EEAD4",
+        "text-primary": "#FFFFFF",
+        "text-secondary": "#ECFEFF",
+        "body-bg": "#F0FDFA",
+        "sidebar-bg": "#E0F2F1",
+        "border-color": "#B2DFDB",
+        "hover-bg": "#E0F2F1",
+        "focus-ring": "rgba(20, 184, 166, 0.15)",
+        "success-bg": "#B2DFDB",
+        "success-text": "#004D40",
+        "error-bg": "#FFCDD2",
+        "error-text": "#B71C1C"
+      }
+    },
+    "indigo-night": {
+      "name": "Indigo Night",
+      "description": "Premium and focused visual style for security and data-driven tools",
+      "category": "security",
+      "colors": {
+        "background-gradient-start": "#1E1B4B",
+        "background-gradient-end": "#312E81",
+        "header-bg": "#020617",
+        "primary-button-start": "#6366F1",
+        "primary-button-end": "#4F46E5",
+        "accent-color": "#818CF8",
+        "text-primary": "#FFFFFF",
+        "text-secondary": "#E0E7FF",
+        "body-bg": "#0F172A",
+        "sidebar-bg": "#1E293B",
+        "border-color": "#334155",
+        "hover-bg": "#1E293B",
+        "focus-ring": "rgba(99, 102, 241, 0.15)",
+        "success-bg": "#10B981",
+        "success-text": "#ECFDF5",
+        "error-bg": "#EF4444",
+        "error-text": "#FEE2E2"
+      }
+    },
+    "sky-gradient": {
+      "name": "Sky Gradient",
+      "description": "Soft and approachable interface for beginner-friendly and education-focused tools",
+      "category": "education",
+      "colors": {
+        "background-gradient-start": "#0284C7",
+        "background-gradient-end": "#7DD3FC",
+        "header-bg": "#0369A1",
+        "primary-button-start": "#38BDF8",
+        "primary-button-end": "#0EA5E9",
+        "accent-color": "#BAE6FD",
+        "text-primary": "#FFFFFF",
+        "text-secondary": "#E0F2FE",
+        "body-bg": "#F0F9FF",
+        "sidebar-bg": "#E0F2FE",
+        "border-color": "#BAE6FD",
+        "hover-bg": "#E0F2FE",
+        "focus-ring": "rgba(56, 189, 248, 0.15)",
+        "success-bg": "#D1FAE5",
+        "success-text": "#065F46",
+        "error-bg": "#FEE2E2",
+        "error-text": "#991B1B"
+      }
+    },
+    "violet-glow": {
+      "name": "Violet Glow",
+      "description": "Distinct and modern visual identity for creative and design-oriented tools",
+      "category": "creative",
+      "colors": {
+        "background-gradient-start": "#6D28D9",
+        "background-gradient-end": "#A78BFA",
+        "header-bg": "#4C1D95",
+        "primary-button-start": "#8B5CF6",
+        "primary-button-end": "#A78BFA",
+        "accent-color": "#C4B5FD",
+        "text-primary": "#FFFFFF",
+        "text-secondary": "#F5F3FF",
+        "body-bg": "#FAF5FF",
+        "sidebar-bg": "#F3E8FF",
+        "border-color": "#E9D5FF",
+        "hover-bg": "#F3E8FF",
+        "focus-ring": "rgba(139, 92, 246, 0.15)",
+        "success-bg": "#D1D5DB",
+        "success-text": "#1F2937",
+        "error-bg": "#FECACA",
+        "error-text": "#7F1D1D"
+      }
+    }
+  },
+  "defaultTheme": "ocean-blue",
+  "categoryMapping": {
+    "general-utility": "ocean-blue",
+    "productivity": "ocean-blue",
+    "developer-tools": "ocean-blue",
+    "security": "indigo-night",
+    "finance": "indigo-night",
+    "health": "mint-teal",
+    "tracker": "mint-teal",
+    "education": "sky-gradient",
+    "beginner-friendly": "sky-gradient",
+    "creative": "violet-glow",
+    "design": "violet-glow"
+  }
+}

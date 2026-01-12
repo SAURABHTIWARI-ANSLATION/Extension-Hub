@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sky-gradient">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Optimizer - AI Assistant</title>
+    <link rel="stylesheet" href="themes/themes.css">
+    <link rel="stylesheet" href="popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header theme-gradient-bg">
+            <div class="logo-container">
+                <i class="fas fa-magic logo-icon"></i>
+            </div>
+            <div class="header-content">
+                <h1 class="theme-text-primary">Prompt Optimizer</h1>
+                <p class="subtitle theme-text-secondary">Boost your AI prompts instantly</p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Input Section -->
+            <div class="control-section theme-card-bg">
+                <h3 class="section-title">
+                    <i class="fas fa-keyboard"></i> Your Prompt
+                </h3>
+                <div class="input-container">
+                    <textarea id="promptInput" placeholder="Paste or type your prompt here... 
+Example: 'write a blog about AI'"></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span> characters
+                    </div>
+                </div>
+                
+                <div class="quick-actions">
+                    <button id="extractBtn" class="action-btn-small theme-btn-secondary">
+                        <i class="fas fa-download"></i> Extract from Page
+                    </button>
+                    <button id="clearBtn" class="action-btn-small theme-btn-secondary">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Optimization Settings -->
+            <div class="control-section theme-card-bg">
+                <h3 class="section-title">
+                    <i class="fas fa-sliders-h"></i> Optimization Settings
+                </h3>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="addContext" checked>
+                            <span class="theme-checkbox-checkmark"></span>
+                            Add missing context
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="improveTone" checked>
+                            <span class="theme-checkbox-checkmark"></span>
+                            Improve tone & clarity
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="addExamples">
+                            <span class="theme-checkbox-checkmark"></span>
+                            Add examples
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="specifyFormat" checked>
+                            <span class="theme-checkbox-checkmark"></span>
+                            Specify format
+                        </label>
+                    </div>
+                </div>
+
+                <div class="tone-selection">
+                    <h4 class="section-subtitle">
+                        <i class="fas fa-volume-up"></i> Select Tone
+                    </h4>
+                    <div class="tone-buttons">
+                        <button class="tone-btn active" data-tone="professional">
+                            <i class="fas fa-briefcase"></i> Professional
+                        </button>
+                        <button class="tone-btn" data-tone="friendly">
+                            <i class="fas fa-smile"></i> Friendly
+                        </button>
+                        <button class="tone-btn" data-tone="creative">
+                            <i class="fas fa-paint-brush"></i> Creative
+                        </button>
+                        <button class="tone-btn" data-tone="concise">
+                            <i class="fas fa-bolt"></i> Concise
+                        </button>
+                    </div>
+                </div>
+
+                <div class="ai-platform">
+                    <h4 class="section-subtitle">
+                        <i class="fas fa-robot"></i> AI Platform
+                    </h4>
+                    <select id="platformSelect" class="theme-select">
+                        <option value="chatgpt">ChatGPT (OpenAI)</option>
+                        <option value="claude">Claude (Anthropic)</option>
+                        <option value="bard">Google Bard/Gemini</option>
+                        <option value="copilot">Microsoft Copilot</option>
+                        <option value="general">General AI</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Optimize Button -->
+            <div class="action-section">
+                <button id="optimizeBtn" class="action-btn-lg theme-btn-primary">
+                    <i class="fas fa-wand-magic-sparkles"></i> Optimize Prompt
+                </button>
+                <p class="action-hint">
+                    Get a better prompt with improved context, tone, and clarity
+                </p>
+            </div>
+
+            <!-- Results Section -->
+            <div class="control-section theme-card-bg hidden" id="resultsSection">
+                <h3 class="section-title">
+                    <i class="fas fa-star"></i> Optimized Prompt
+                </h3>
+                
+                <div class="improvement-score">
+                    <div class="score-circle">
+                        <span id="improvementScore">0</span>%
+                    </div>
+                    <div class="score-label">Improvement Score</div>
+                </div>
+
+                <div class="optimized-preview">
+                    <div class="preview-header">
+                        <span>Optimized Version</span>
+                        <button id="copyBtn" class="copy-btn theme-btn-success">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <div class="prompt-output" id="optimizedOutput">
+                        <!-- Optimized prompt will appear here -->
+                    </div>
+                </div>
+
+                <div class="improvements-list">
+                    <h4 class="section-subtitle">
+                        <i class="fas fa-check-circle theme-success"></i> Improvements Made
+                    </h4>
+                    <div class="improvements-grid" id="improvementsList">
+                        <!-- Improvements will be listed here -->
+                    </div>
+                </div>
+
+                <div class="tone-preview">
+                    <h4 class="section-subtitle">
+                        <i class="fas fa-volume-up theme-info"></i> Tone Applied: 
+                        <span id="appliedTone">Professional</span>
+                    </h4>
+                    <div class="tone-sample" id="toneSample">
+                        <!-- Tone sample text -->
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button id="regenerateBtn" class="action-btn theme-btn-secondary">
+                        <i class="fas fa-redo"></i> Regenerate
+                    </button>
+                    <button id="useBtn" class="action-btn theme-btn-primary">
+                        <i class="fas fa-paper-plane"></i> Use in Chat
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="control-section theme-card-bg">
+                <h3 class="section-title">
+                    <i class="fas fa-lightbulb"></i> Quick Tips
+                </h3>
+                <div class="tips-grid">
+                    <div class="tip-item">
+                        <i class="fas fa-bullseye"></i>
+                        <p>Be specific about what you want</p>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-users"></i>
+                        <p>Specify your target audience</p>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-ruler"></i>
+                        <p>Define the desired length</p>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-example"></i>
+                        <p>Include examples if possible</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer theme-header-bg">
+            <div class="footer-content">
+                <div class="footer-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <div class="stat-value" id="promptsOptimized">0</div>
+                            <div class="stat-label">Prompts Optimized</div>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <div class="stat-value" id="timeSaved">0</div>
+                            <div class="stat-label">Minutes Saved</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p class="copyright theme-text-secondary">
+                        Boost your AI productivity with better prompts
+                    </p>
+                    <button id="historyBtn" class="footer-btn">
+                        <i class="fas fa-history"></i> History
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

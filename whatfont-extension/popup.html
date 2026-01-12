@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="violet-glow">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatFont - Font Identifier</title>
+    <link rel="stylesheet" href="themes/themes.css">
+    <link rel="stylesheet" href="popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with theme gradient -->
+        <div class="header theme-gradient-bg">
+            <div class="logo-container">
+                <i class="fas fa-font logo-icon"></i>
+            </div>
+            <div class="header-content">
+                <h1 class="theme-text-primary">WhatFont</h1>
+                <p class="subtitle theme-text-secondary">Identify fonts on any website</p>
+            </div>
+        </div>
+
+        <!-- Main Controls -->
+        <div class="main-content">
+            <!-- Toggle Section -->
+            <div class="control-section theme-card-bg">
+                <h3 class="section-title">
+                    <i class="fas fa-mouse-pointer"></i> Font Detection
+                </h3>
+                <div class="toggle-control">
+                    <span class="toggle-label">Enable Hover Mode</span>
+                    <label class="theme-toggle">
+                        <input type="checkbox" id="toggleHover">
+                        <span class="theme-toggle-slider"></span>
+                    </label>
+                </div>
+                <p class="control-hint">Turn on to hover and detect fonts on the current page</p>
+            </div>
+
+            <!-- Mode Selection -->
+            <div class="control-section theme-card-bg">
+                <h3 class="section-title">
+                    <i class="fas fa-cogs"></i> Detection Mode
+                </h3>
+                <div class="mode-grid">
+                    <button class="mode-option active" data-mode="hover">
+                        <i class="fas fa-mouse-pointer"></i>
+                        <span>Hover</span>
+                    </button>
+                    <button class="mode-option" data-mode="click">
+                        <i class="fas fa-hand-pointer"></i>
+                        <span>Click</span>
+                    </button>
+                    <button class="mode-option" data-mode="scan">
+                        <i class="fas fa-search"></i>
+                        <span>Scan All</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Settings -->
+            <div class="control-section theme-card-bg">
+                <h3 class="section-title">
+                    <i class="fas fa-sliders-h"></i> Settings
+                </h3>
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="showDownload" checked>
+                            <span class="theme-checkbox-checkmark"></span>
+                            Show download links
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="showCSS" checked>
+                            <span class="theme-checkbox-checkmark"></span>
+                            Show CSS code
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label class="theme-checkbox">
+                            <input type="checkbox" id="highlightText">
+                            <span class="theme-checkbox-checkmark"></span>
+                            Highlight detected text
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>Panel position:</label>
+                        <select id="panelPosition" class="theme-select">
+                            <option value="top-right">Top Right</option>
+                            <option value="top-left">Top Left</option>
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="follow">Follow Mouse</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detected Fonts Panel -->
+            <div class="control-section theme-card-bg" id="detectedSection">
+                <h3 class="section-title">
+                    <i class="fas fa-history"></i> Recently Detected
+                </h3>
+                <div class="fonts-container" id="fontsList">
+                    <div class="empty-state">
+                        <i class="fas fa-font"></i>
+                        <p>No fonts detected yet</p>
+                        <small>Hover over text to start detecting</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Font Preview -->
+            <div class="control-section theme-card-bg hidden" id="currentFontSection">
+                <h3 class="section-title">
+                    <i class="fas fa-eye"></i> Currently Viewing
+                </h3>
+                <div class="font-preview-card">
+                    <div class="font-sample" id="currentPreview">
+                        Aa Bb Cc
+                    </div>
+                    <div class="font-details-grid" id="currentDetails">
+                        <!-- Font details will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-bar">
+            <button id="startBtn" class="action-btn theme-btn-primary">
+                <i class="fas fa-play"></i> Start Detection
+            </button>
+            <button id="stopBtn" class="action-btn theme-btn-secondary">
+                <i class="fas fa-stop"></i> Stop
+            </button>
+            <button id="clearBtn" class="action-btn theme-btn-tertiary">
+                <i class="fas fa-trash"></i> Clear
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer theme-header-bg">
+            <div class="quick-tips">
+                <h4 class="theme-text-primary">
+                    <i class="fas fa-lightbulb"></i> Quick Tips
+                </h4>
+                <ul class="tips-list theme-text-secondary">
+                    <li>Hover over any text to identify its font</li>
+                    <li>Click on detected font to copy CSS</li>
+                    <li>Use Scan mode to detect all fonts on page</li>
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                <p class="copyright theme-text-secondary">
+                    Made with <i class="fas fa-heart" style="color: #F472B6;"></i> for designers & developers
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

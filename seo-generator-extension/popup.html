@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEO Analyzer Pro</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <div class="container" data-theme="light">
+
+    <!-- HEADER with Toggle Switch -->
+    <header class="header">
+      <div class="header-top">
+        <div>
+          <h1>SEO Analyzer Pro</h1>
+          <p>Analyze complete website SEO instantly</p>
+        </div>
+        <div class="theme-toggle">
+          <span class="theme-icon">🌙</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="darkModeToggle">
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="theme-icon">☀️</span>
+        </div>
+      </div>
+      
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </header>
+
+    <!-- ================= ANALYZER ================= -->
+    <div class="form">
+      <div class="section-header">
+        <h3>🔍 Website SEO Analyzer</h3>
+        <button class="info-btn" id="infoBtn" title="How to use">?</button>
+      </div>
+
+      <p class="description">
+        This will analyze the <strong>currently opened website tab</strong>
+      </p>
+
+      <!-- URL Input -->
+      <div class="input-group">
+        <input type="text" id="customUrl" placeholder="Or enter custom URL..." />
+        <button id="analyzeCustomBtn" class="btn-secondary">Analyze</button>
+      </div>
+
+      <button id="analyzeBtn" class="btn-primary">
+        🚀 Analyze Current Page
+      </button>
+
+      <!-- Loading -->
+      <div id="loading" class="loading-container">
+        <div class="spinner"></div>
+        <span>🔍 Analyzing website SEO…</span>
+        <div class="loading-stats">
+          <span id="loadingStat">Initializing...</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= SEO REPORT ================= -->
+    <div id="seoReport" class="seo-report">
+
+      <div class="section-header">
+        <h3>📊 SEO Report</h3>
+        <div class="score-badge" id="scoreBadge">0</div>
+      </div>
+
+      <!-- Score Gauge -->
+      <div class="score-gauge">
+        <div class="gauge">
+          <div class="gauge-fill" id="gaugeFill"></div>
+          <div class="gauge-text" id="gaugeText">0</div>
+        </div>
+        <div class="score-labels">
+          <span>Poor</span>
+          <span>Good</span>
+          <span>Excellent</span>
+        </div>
+      </div>
+
+      <!-- Report Tabs -->
+      <div class="report-tabs">
+        <button class="tab-btn active" data-tab="basic">Basic</button>
+        <button class="tab-btn" data-tab="advanced">Advanced</button>
+        <button class="tab-btn" data-tab="issues">Issues</button>
+      </div>
+
+      <!-- Tab Content -->
+      <div class="tab-content active" id="basicTab">
+        <div class="report-grid">
+          <div class="report-card">
+            <span class="report-label">Title</span>
+            <div class="report-value" id="rTitle">-</div>
+            <div class="report-detail">
+              <span id="titleLength">0 chars</span>
+              <span class="status-badge" id="titleStatus">-</span>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <span class="report-label">Meta Description</span>
+            <div class="report-value" id="rDesc">-</div>
+            <div class="report-detail">
+              <span id="descLength">0 chars</span>
+              <span class="status-badge" id="descStatus">-</span>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <span class="report-label">H1 Count</span>
+            <div class="report-value" id="rH1">0</div>
+            <div class="report-detail">
+              <span class="status-badge" id="h1Status">-</span>
+            </div>
+          </div>
+
+          <div class="report-card">
+            <span class="report-label">H2 Count</span>
+            <div class="report-value" id="rH2">0</div>
+            <div class="report-detail">
+              <span class="status-badge" id="h2Status">-</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="advancedTab">
+        <div class="report-grid">
+          <div class="report-card">
+            <span class="report-label">Canonical</span>
+            <div class="report-value" id="rCanonical">-</div>
+          </div>
+          <div class="report-card">
+            <span class="report-label">Robots Tag</span>
+            <div class="report-value" id="rRobots">-</div>
+          </div>
+          <div class="report-card">
+            <span class="report-label">Viewport</span>
+            <div class="report-value" id="rViewport">-</div>
+          </div>
+          <div class="report-card">
+            <span class="report-label">Charset</span>
+            <div class="report-value" id="rCharset">-</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="issuesTab">
+        <div class="issues-list" id="issuesList">
+          <!-- Issues will be populated here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- WARNINGS -->
+    <div id="seoWarnings" class="seo-warnings">
+      <div class="warnings-header">
+        <h4>⚠️ Issues Found</h4>
+        <span class="badge" id="issuesCount">0</span>
+      </div>
+      <div class="warnings-list" id="warningsList"></div>
+    </div>
+
+    <!-- RECOMMENDATIONS -->
+    <div class="recommendations">
+      <h4>💡 Recommendations</h4>
+      <ul id="recommendationsList">
+        <!-- Recommendations will be populated here -->
+      </ul>
+    </div>
+
+    <!-- EXPORT & ACTIONS -->
+    <div class="actions-section">
+      <div class="export-actions">
+        <button id="copyReportBtn" class="btn-secondary">
+          📋 Copy Report
+        </button>
+        <button id="downloadReportBtn" class="btn-secondary">
+          ⬇ Download JSON
+        </button>
+        <button id="exportPDFBtn" class="btn-secondary">
+          📄 Export PDF
+        </button>
+      </div>
+      
+      <div class="extra-actions">
+        <button id="screenshotBtn" class="btn-icon-small" title="Take Screenshot">
+          📸
+        </button>
+        <button id="historyBtn" class="btn-icon-small" title="View History">
+          📊
+        </button>
+        <button id="settingsBtn" class="btn-icon-small" title="Settings">
+          ⚙️
+        </button>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-content">
+        <small>v3.0 · SEO Analyzer Pro</small>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

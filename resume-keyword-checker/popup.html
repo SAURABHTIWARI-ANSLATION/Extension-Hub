@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="themes.css">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body data-theme="ocean-blue">
+    <div class="container">
+        <!-- Theme Selector -->
+        <div class="theme-selector">
+            <button class="theme-button" id="themeToggle">🎨</button>
+            <div class="theme-dropdown" id="themeDropdown">
+                <div class="theme-option" data-theme="ocean-blue">
+                    <div class="theme-color" data-theme="ocean-blue"></div>
+                    <span>Ocean Blue</span>
+                </div>
+                <div class="theme-option" data-theme="mint-teal">
+                    <div class="theme-color" data-theme="mint-teal"></div>
+                    <span>Mint Teal</span>
+                </div>
+                <div class="theme-option" data-theme="indigo-night">
+                    <div class="theme-color" data-theme="indigo-night"></div>
+                    <span>Indigo Night</span>
+                </div>
+                <div class="theme-option" data-theme="sky-gradient">
+                    <div class="theme-color" data-theme="sky-gradient"></div>
+                    <span>Sky Gradient</span>
+                </div>
+                <div class="theme-option" data-theme="violet-glow">
+                    <div class="theme-color" data-theme="violet-glow"></div>
+                    <span>Violet Glow</span>
+                </div>
+            </div>
+        </div>
+        
+        <h1>📄 Resume Keyword Checker</h1>
+        
+        <div class="section">
+            <h3>Paste Job Description</h3>
+            <textarea id="jobDescription" placeholder="Copy and paste the job description here..."></textarea>
+        </div>
+        
+        <div class="section">
+            <h3>Paste Resume Text</h3>
+            <textarea id="resumeText" placeholder="Copy and paste your resume text here..."></textarea>
+        </div>
+        
+        <div class="button-container">
+            <button id="analyzeBtn" class="btn primary">🔍 Analyze Match</button>
+            <button id="clearBtn" class="btn secondary">🗑️ Clear</button>
+            <button id="scrapeBtn" class="btn tertiary">🌐 Extract from Page</button>
+        </div>
+        
+        <div id="results" class="results-section hidden">
+            <h3>📊 Analysis Results</h3>
+            <div class="score-card">
+                <div class="score-circle">
+                    <span id="score">0</span>%
+                </div>
+                <div class="score-label">ATS Compatibility Score</div>
+            </div>
+            
+            <div class="categories">
+                <div class="category">
+                    <h4>✅ Found Keywords</h4>
+                    <ul id="foundKeywords"></ul>
+                </div>
+                <div class="category">
+                    <h4>❌ Missing Keywords</h4>
+                    <ul id="missingKeywords"></ul>
+                </div>
+                <div class="category">
+                    <h4>💡 Suggestions</h4>
+                    <div id="suggestions"></div>
+                </div>
+            </div>
+            
+            <div class="summary">
+                <h4>📈 Summary</h4>
+                <div id="summaryText"></div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <small>Improve your resume's ATS compatibility</small>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Code Snippet Manager",
+  "version": "1.0",
+  "description": "Save and organize code snippets with syntax highlighting",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Code Snippet Manager"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; style-src 'self' https://cdnjs.cloudflare.com;"
+  }
+}

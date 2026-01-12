@@ -1,0 +1,367 @@
+<!-- 
+  THEME SHOWCASE - Visual Reference for All Themes
+  Open this file in a browser to preview all themes
+  Useful for QA and design validation
+-->
+<!DOCTYPE html>
+<html lang="en" data-theme="ocean-blue">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickFill Pro - Theme Showcase</title>
+  <link rel="stylesheet" href="theme-variables.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--body-bg);
+      color: var(--label-color);
+      padding: 40px 20px;
+    }
+
+    .showcase-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .showcase-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .showcase-header h1 {
+      font-size: 32px;
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-md);
+      color: var(--label-color);
+    }
+
+    .showcase-header p {
+      font-size: var(--font-size-lg);
+      color: var(--label-secondary);
+      margin-bottom: var(--space-xl);
+    }
+
+    .theme-selector {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-md);
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+
+    .theme-btn {
+      padding: 10px 20px;
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius);
+      background: var(--surface-bg);
+      color: var(--label-color);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .theme-btn:hover {
+      background: var(--hover-bg);
+      border-color: var(--accent-color);
+    }
+
+    .theme-btn.active {
+      background: var(--btn-primary-gradient);
+      color: var(--text-primary);
+      border-color: var(--btn-primary-start);
+    }
+
+    .components-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .component-card {
+      background: var(--surface-bg);
+      border-radius: var(--border-radius-lg);
+      padding: var(--space-xl);
+      box-shadow: var(--shadow-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .component-card h3 {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      color: var(--label-color);
+      margin-bottom: var(--space-lg);
+    }
+
+    .component-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+      cursor: pointer;
+      transition: all var(--transition-normal);
+    }
+
+    .btn-primary {
+      background: var(--btn-primary-gradient);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-secondary {
+      background: var(--btn-secondary-bg);
+      color: var(--btn-secondary-text);
+      border: 2px solid var(--btn-secondary-border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--btn-secondary-hover);
+    }
+
+    .status-box {
+      padding: 12px;
+      border-radius: var(--border-radius);
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--space-md);
+    }
+
+    .status-success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-border);
+    }
+
+    .status-error {
+      background: var(--error-bg);
+      color: var(--error-text);
+      border: 1px solid var(--error-border);
+    }
+
+    .status-warning {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border: 1px solid var(--warning-border);
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: var(--space-md);
+    }
+
+    .color-box {
+      border-radius: var(--border-radius);
+      padding: var(--space-lg);
+      text-align: center;
+      color: white;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-semibold);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .color-primary {
+      background: var(--btn-primary-start);
+    }
+
+    .color-accent {
+      background: var(--accent-color);
+    }
+
+    .color-header {
+      background: var(--header-bg);
+    }
+
+    .input-demo {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .input-demo input {
+      padding: 8px 12px;
+      border: 1.5px solid var(--input-border);
+      border-radius: var(--border-radius);
+      font-family: var(--font-family);
+      color: var(--input-text);
+      background: var(--input-bg);
+    }
+
+    .input-demo input:focus {
+      outline: none;
+      border-color: var(--input-focus-border);
+      box-shadow: 0 0 0 3px var(--input-focus-ring);
+    }
+
+    .theme-info {
+      background: var(--sidebar-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: var(--space-lg);
+      margin-top: 40px;
+    }
+
+    .theme-info h2 {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--space-md);
+      color: var(--label-color);
+    }
+
+    .theme-info p {
+      font-size: var(--font-size-md);
+      color: var(--label-color);
+      line-height: var(--line-height-relaxed);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="showcase-container">
+    <div class="showcase-header">
+      <h1>⚡ QuickFill Pro - Theme Showcase</h1>
+      <p>Explore all 5 production-ready themes</p>
+    </div>
+
+    <div class="theme-selector">
+      <button class="theme-btn active" onclick="switchTheme('ocean-blue')">Ocean Blue</button>
+      <button class="theme-btn" onclick="switchTheme('mint-teal')">Mint Teal</button>
+      <button class="theme-btn" onclick="switchTheme('indigo-night')">Indigo Night</button>
+      <button class="theme-btn" onclick="switchTheme('sky-gradient')">Sky Gradient</button>
+      <button class="theme-btn" onclick="switchTheme('violet-glow')">Violet Glow</button>
+    </div>
+
+    <div class="components-section">
+      <!-- Buttons Component -->
+      <div class="component-card">
+        <h3>Buttons</h3>
+        <div class="component-demo">
+          <button class="btn btn-primary">Primary Button</button>
+          <button class="btn btn-secondary">Secondary Button</button>
+        </div>
+      </div>
+
+      <!-- Status Messages -->
+      <div class="component-card">
+        <h3>Status Messages</h3>
+        <div class="component-demo">
+          <div class="status-box status-success">✓ Success message</div>
+          <div class="status-box status-warning">⚠ Warning message</div>
+          <div class="status-box status-error">✕ Error message</div>
+        </div>
+      </div>
+
+      <!-- Form Inputs -->
+      <div class="component-card">
+        <h3>Form Inputs</h3>
+        <div class="input-demo">
+          <input type="text" placeholder="Text input">
+          <input type="email" placeholder="Email input">
+        </div>
+      </div>
+
+      <!-- Colors -->
+      <div class="component-card">
+        <h3>Colors</h3>
+        <div class="color-grid">
+          <div class="color-box color-primary">Primary</div>
+          <div class="color-box color-accent">Accent</div>
+          <div class="color-box color-header">Header</div>
+        </div>
+      </div>
+
+      <!-- Typography -->
+      <div class="component-card">
+        <h3>Typography</h3>
+        <div style="line-height: 1.8;">
+          <div style="font-size: var(--font-size-sm); color: var(--label-secondary);">Small text</div>
+          <div style="font-size: var(--font-size-md);">Medium text</div>
+          <div style="font-size: var(--font-size-lg); font-weight: var(--font-weight-bold);">Large bold</div>
+        </div>
+      </div>
+
+      <!-- Spacing -->
+      <div class="component-card">
+        <h3>Spacing</h3>
+        <div>
+          <div style="background: var(--accent-color); width: var(--space-xl); height: 20px; margin-bottom: var(--space-md); border-radius: 4px;"></div>
+          <div style="font-size: var(--font-size-sm); color: var(--label-secondary);">Consistent spacing scale</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Info -->
+    <div class="theme-info" id="themeInfo">
+      <h2>Current Theme: Ocean Blue</h2>
+      <p>Professional and reliable appearance for general utilities and productivity tools. High readability and strong contrast make it the best default option for large-scale deployment.</p>
+    </div>
+  </div>
+
+  <script>
+    const themeDescriptions = {
+      'ocean-blue': {
+        name: 'Ocean Blue',
+        description: 'Professional and reliable appearance for general utilities and productivity tools. High readability and strong contrast make it the best default option for large-scale deployment.'
+      },
+      'mint-teal': {
+        name: 'Mint Teal',
+        description: 'Calm and refreshing visual tone ideal for health-oriented tools and trackers. Reduced eye strain and suitable for frequent or long-duration usage.'
+      },
+      'indigo-night': {
+        name: 'Indigo Night',
+        description: 'Premium and focused visual style for security, finance, and data-driven tools. High contrast for critical information and conveys seriousness and trust.'
+      },
+      'sky-gradient': {
+        name: 'Sky Gradient',
+        description: 'Soft and approachable interface for beginner-friendly and education-focused tools. Easy to understand for new users with broad mass-user appeal.'
+      },
+      'violet-glow': {
+        name: 'Violet Glow',
+        description: 'Distinct visual identity for creative and design-oriented tools. Modern and expressive tone that differentiates creative tools without sacrificing readability.'
+      }
+    };
+
+    function switchTheme(themeName) {
+      document.documentElement.setAttribute('data-theme', themeName);
+      document.body.setAttribute('data-theme', themeName);
+      
+      // Update active button
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Update theme info
+      const info = themeDescriptions[themeName];
+      document.getElementById('themeInfo').innerHTML = `
+        <h2>Current Theme: ${info.name}</h2>
+        <p>${info.description}</p>
+      `;
+    }
+  </script>
+</body>
+</html>

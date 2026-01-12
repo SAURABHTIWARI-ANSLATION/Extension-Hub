@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Specificity Calculator</title>
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body class="theme-ocean-blue">
+    <div class="popup-container">
+        <!-- Header -->
+        <header class="popup-header">
+            <div class="header-content">
+                <div class="header-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" 
+                              fill="var(--theme-accent-color)"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" 
+                              fill="var(--bg-primary)"/>
+                    </svg>
+                </div>
+                <div class="header-text">
+                    <h1>CSS Specificity Calculator</h1>
+                    <p class="subtitle">Visualize and compare CSS selector specificity</p>
+                </div>
+                <button class="icon-btn" id="infoBtn" title="How it works">
+                    <svg width="20" height="20" fill="var(--text-secondary)" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="popup-main">
+            <!-- Input Section -->
+            <section class="input-section theme-card">
+                <div class="section-header">
+                    <h3>Enter CSS Selectors</h3>
+                    <div class="input-actions">
+                        <button class="icon-btn" id="clearBtn" title="Clear all">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                            </svg>
+                        </button>
+                        <button class="icon-btn" id="exampleBtn" title="Load examples">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="selector-inputs">
+                    <div class="selector-input-group">
+                        <label class="input-label">Selector 1</label>
+                        <input type="text" 
+                               id="selector1" 
+                               class="theme-input" 
+                               placeholder="e.g., #nav .item.active"
+                               autocomplete="off">
+                    </div>
+                    
+                    <div class="selector-input-group">
+                        <label class="input-label">Selector 2 (Optional for comparison)</label>
+                        <input type="text" 
+                               id="selector2" 
+                               class="theme-input" 
+                               placeholder="e.g., div#nav ul li a"
+                               autocomplete="off">
+                    </div>
+                </div>
+                
+                <button id="calculateBtn" class="theme-btn theme-btn-primary">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 8px;">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                    </svg>
+                    Calculate Specificity
+                </button>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section theme-card" id="resultsSection" style="display: none;">
+                <div class="section-header">
+                    <h3>Specificity Results</h3>
+                    <div class="results-actions">
+                        <button class="icon-btn" id="copyResultsBtn" title="Copy results">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Selector 1 Results -->
+                <div class="selector-results" id="selector1Results">
+                    <div class="result-header">
+                        <h4 class="selector-text" id="selector1Text"></h4>
+                        <div class="specificity-score">
+                            <span class="score-label">Score:</span>
+                            <span class="score-value" id="selector1Score"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="specificity-breakdown">
+                        <div class="breakdown-header">
+                            <span class="breakdown-title">Breakdown</span>
+                            <span class="breakdown-format">(Inline, IDs, Classes, Elements)</span>
+                        </div>
+                        <div class="specificity-visualization">
+                            <div class="specificity-bar" id="selector1Bar"></div>
+                            <div class="specificity-values" id="selector1Values"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="specificity-details">
+                        <div class="details-grid" id="selector1Details"></div>
+                    </div>
+                </div>
+                
+                <!-- Comparison Results (if selector 2 provided) -->
+                <div class="comparison-section" id="comparisonSection" style="display: none;">
+                    <div class="comparison-header">
+                        <h4>Comparison Result</h4>
+                        <div class="comparison-result" id="comparisonResult"></div>
+                    </div>
+                    
+                    <div class="comparison-visual">
+                        <div class="comparison-row">
+                            <div class="comparison-selector" id="comparisonSelector1"></div>
+                            <div class="comparison-vs">VS</div>
+                            <div class="comparison-selector" id="comparisonSelector2"></div>
+                        </div>
+                        <div class="comparison-bars">
+                            <div class="comparison-bar" id="comparisonBar1"></div>
+                            <div class="comparison-bar" id="comparisonBar2"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Selector 2 Results -->
+                <div class="selector-results" id="selector2Results" style="display: none;">
+                    <div class="result-header">
+                        <h4 class="selector-text" id="selector2Text"></h4>
+                        <div class="specificity-score">
+                            <span class="score-label">Score:</span>
+                            <span class="score-value" id="selector2Score"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="specificity-breakdown">
+                        <div class="breakdown-header">
+                            <span class="breakdown-title">Breakdown</span>
+                            <span class="breakdown-format">(Inline, IDs, Classes, Elements)</span>
+                        </div>
+                        <div class="specificity-visualization">
+                            <div class="specificity-bar" id="selector2Bar"></div>
+                            <div class="specificity-values" id="selector2Values"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="specificity-details">
+                        <div class="details-grid" id="selector2Details"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Specificity Guide -->
+            <section class="guide-section theme-card">
+                <div class="section-header">
+                    <h3>Specificity Hierarchy</h3>
+                    <button class="text-btn" id="toggleGuideBtn">Show Details</button>
+                </div>
+                
+                <div class="guide-content" id="guideContent">
+                    <div class="hierarchy-list">
+                        <div class="hierarchy-item hierarchy-inline">
+                            <div class="hierarchy-badge badge-inline">Inline Styles</div>
+                            <div class="hierarchy-desc">Highest specificity (1,0,0,0)</div>
+                            <div class="hierarchy-example">style="color: red;"</div>
+                        </div>
+                        
+                        <div class="hierarchy-item hierarchy-id">
+                            <div class="hierarchy-badge badge-id">ID Selectors</div>
+                            <div class="hierarchy-desc">Second highest (0,1,0,0)</div>
+                            <div class="hierarchy-example">#header, #nav, #main</div>
+                        </div>
+                        
+                        <div class="hierarchy-item hierarchy-class">
+                            <div class="hierarchy-badge badge-class">Class/Attribute/Pseudo-class</div>
+                            <div class="hierarchy-desc">Third (0,0,1,0)</div>
+                            <div class="hierarchy-example">.active, [type="text"], :hover</div>
+                        </div>
+                        
+                        <div class="hierarchy-item hierarchy-element">
+                            <div class="hierarchy-badge badge-element">Element/Pseudo-element</div>
+                            <div class="hierarchy-desc">Lowest (0,0,0,1)</div>
+                            <div class="hierarchy-example">div, p, ::before, ::after</div>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-details" id="guideDetails" style="display: none;">
+                        <div class="details-note">
+                            <strong>Note:</strong> Specificity is calculated as (a,b,c,d) where:
+                        </div>
+                        <ul class="details-list">
+                            <li><strong>a</strong> = Inline styles (always 0 or 1)</li>
+                            <li><strong>b</strong> = ID selectors</li>
+                            <li><strong>c</strong> = Class selectors, attribute selectors, pseudo-classes</li>
+                            <li><strong>d</strong> = Element selectors, pseudo-elements</li>
+                        </ul>
+                        <div class="details-example">
+                            <strong>Example:</strong> 
+                            <code>#nav .item.active:hover</code> = <strong>(0,1,3,0)</strong>
+                            <br>1 ID (#nav) + 2 classes (.item, .active) + 1 pseudo-class (:hover)
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Reference -->
+            <section class="reference-section theme-card">
+                <h3>Common Selector Examples</h3>
+                <div class="reference-grid">
+                    <div class="reference-item">
+                        <code class="selector-example">*</code>
+                        <div class="selector-score">(0,0,0,0)</div>
+                    </div>
+                    <div class="reference-item">
+                        <code class="selector-example">div</code>
+                        <div class="selector-score">(0,0,0,1)</div>
+                    </div>
+                    <div class="reference-item">
+                        <code class="selector-example">.container</code>
+                        <div class="selector-score">(0,0,1,0)</div>
+                    </div>
+                    <div class="reference-item">
+                        <code class="selector-example">#header</code>
+                        <div class="selector-score">(0,1,0,0)</div>
+                    </div>
+                    <div class="reference-item">
+                        <code class="selector-example">div.active</code>
+                        <div class="selector-score">(0,0,1,1)</div>
+                    </div>
+                    <div class="reference-item">
+                        <code class="selector-example">#nav li a:hover</code>
+                        <div class="selector-score">(0,1,1,2)</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="popup-footer">
+            <div class="status-bar">
+                <div class="status-item">
+                    <span class="status-icon">⚡</span>
+                    <span class="status-text" id="statusText">Enter a CSS selector to begin</span>
+                </div>
+                <div class="footer-actions">
+                    <button class="text-btn" id="settingsBtn">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" style="margin-right: 4px;">
+                            <path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+                        </svg>
+                        Settings
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal-overlay" id="infoModal" style="display: none;">
+        <div class="modal theme-card">
+            <div class="modal-header">
+                <h3>How CSS Specificity Works</h3>
+                <button class="icon-btn modal-close" id="closeInfoBtn">
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-content">
+                <p>CSS specificity determines which CSS rule is applied by browsers when multiple rules could apply to the same element.</p>
+                
+                <h4>Calculation Rules:</h4>
+                <ol>
+                    <li>Inline styles have highest specificity (a=1)</li>
+                    <li>Count the number of ID selectors (b)</li>
+                    <li>Count the number of class selectors, attribute selectors, and pseudo-classes (c)</li>
+                    <li>Count the number of element selectors and pseudo-elements (d)</li>
+                </ol>
+                
+                <h4>Comparison Rules:</h4>
+                <ul>
+                    <li>Compare from left to right: a, then b, then c, then d</li>
+                    <li>Higher number wins at each position</li>
+                    <li>If all equal, the last rule wins (source order)</li>
+                </ul>
+                
+                <div class="modal-example">
+                    <strong>Example Comparison:</strong><br>
+                    <code>#content div.text</code> (0,1,1,1) <strong>WINS OVER</strong><br>
+                    <code>body .container p</code> (0,0,1,2)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+/**
+ * CSS Specificity Calculator - Theme System
+ * Theme: Ocean Blue (Developer Tools)
+ */
+
+:root {
+  /* === Core Color Tokens === */
+  --theme-bg-gradient-start: #0A4DBF;
+  --theme-bg-gradient-end: #1E88E5;
+  --theme-header-bg: #0A3D91;
+  --theme-primary-btn-start: #2196F3;
+  --theme-primary-btn-end: #42A5F5;
+  --theme-accent-color: #64B5F6;
+  --theme-success-color: #4CAF50;
+  --theme-warning-color: #FF9800;
+  --theme-error-color: #F44336;
+  --theme-info-color: #00BCD4;
+  
+  /* Specificity Colors */
+  --specificity-inline: #F44336;
+  --specificity-id: #FF9800;
+  --specificity-class: #4CAF50;
+  --specificity-element: #2196F3;
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #CFE8FF;
+  --text-muted: #90CAF9;
+  --text-code: #E3F2FD;
+  
+  /* Background Layers */
+  --bg-primary: rgba(10, 77, 191, 0.95);
+  --bg-secondary: rgba(33, 150, 243, 0.8);
+  --bg-card: rgba(10, 61, 145, 0.7);
+  --bg-hover: rgba(100, 181, 246, 0.15);
+  --bg-active: rgba(100, 181, 246, 0.25);
+  --bg-editor: #0D1B2A;
+  
+  /* Borders & Shadows */
+  --border-color: rgba(100, 181, 246, 0.3);
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 16px;
+  --border-radius-full: 9999px;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.45);
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+  
+  /* Spacing System (8px base) */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-family-mono: 'Roboto Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+  --font-size-xs: 11px;
+  --font-size-sm: 13px;
+  --font-size-base: 15px;
+  --font-size-lg: 18px;
+  --font-size-xl: 22px;
+  --font-size-2xl: 28px;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+  
+  /* Z-index layers */
+  --z-dropdown: 100;
+  --z-tooltip: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+}
+
+/* === Utility Classes === */
+.theme-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-lg);
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  border: none;
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.theme-btn-primary {
+  background: linear-gradient(135deg, var(--theme-primary-btn-start), var(--theme-primary-btn-end));
+  color: var(--text-primary);
+}
+
+.theme-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(33, 150, 243, 0.4);
+}
+
+.theme-btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.theme-btn-secondary:hover {
+  background: var(--bg-hover);
+  transform: translateY(-1px);
+}
+
+.theme-input {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: var(--space-sm) var(--space-md);
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  transition: all var(--transition-fast);
+  width: 100%;
+}
+
+.theme-input:focus {
+  outline: none;
+  border-color: var(--theme-accent-color);
+  box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2);
+}
+
+.theme-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* Specificity Visualizations */
+.specificity-bar {
+  display: flex;
+  height: 24px;
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-inner);
+}
+
+.specificity-segment {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: white;
+  transition: all var(--transition-fast);
+}
+
+.specificity-segment:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Animation */
+@keyframes slideIn {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes highlight {
+  0% { background-color: rgba(100, 181, 246, 0); }
+  50% { background-color: rgba(100, 181, 246, 0.3); }
+  100% { background-color: rgba(100, 181, 246, 0); }
+}
+
+.slide-in {
+  animation: slideIn var(--transition-normal) forwards;
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-normal) forwards;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.highlight {
+  animation: highlight 1.5s ease;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--theme-accent-color);
+  border-radius: var(--border-radius-sm);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--theme-primary-btn-start);
+}
+
+/* Code Editor Styles */
+.code-editor {
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  line-height: 1.5;
+  tab-size: 2;
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: var(--border-radius-full);
+}
+
+.status-success {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--theme-success-color);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.status-warning {
+  background: rgba(255, 152, 0, 0.2);
+  color: var(--theme-warning-color);
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
+.status-error {
+  background: rgba(244, 67, 54, 0.2);
+  color: var(--theme-error-color);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+.status-info {
+  background: rgba(0, 188, 212, 0.2);
+  color: var(--theme-info-color);
+  border: 1px solid rgba(0, 188, 212, 0.3);
+}
+
+/* Comparison Styles */
+.winner {
+  box-shadow: 0 0 0 3px var(--theme-success-color);
+}
+
+.loser {
+  opacity: 0.7;
+}
+
+.draw {
+  box-shadow: 0 0 0 3px var(--theme-warning-color);
+}
+
+/* Badge Styles */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: var(--border-radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-inline {
+  background: var(--specificity-inline);
+  color: white;
+}
+
+.badge-id {
+  background: var(--specificity-id);
+  color: white;
+}
+
+.badge-class {
+  background: var(--specificity-class);
+  color: white;
+}
+
+.badge-element {
+  background: var(--specificity-element);
+  color: white;
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  background: var(--theme-header-bg);
+  color: var(--text-primary);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  z-index: var(--z-tooltip);
+  pointer-events: none;
+  animation: fadeIn var(--transition-fast);
+  max-width: 300px;
+  white-space: normal;
+}
