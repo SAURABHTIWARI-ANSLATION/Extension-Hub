@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>HTML Previewer Pro</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h2>HTML Previewer Pro</h2>
+  </header>
+
+  <div class="code-tabs">
+    <button class="code-tab active" data-type="html">HTML</button>
+    <button class="code-tab" data-type="css">CSS</button>
+    <button class="code-tab" data-type="js">JS</button>
+  </div>
+
+  <textarea id="editor"></textarea>
+
+  <iframe id="preview"></iframe>
+
+  <div class="controls">
+    <button id="runBtn">▶ Run</button>
+    <button id="exportBtn">⬇ Export</button>
+    <button id="clearBtn">Clear</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

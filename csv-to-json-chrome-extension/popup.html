@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV ⇄ JSON</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+<header>
+  <h3>CSV ⇄ JSON</h3>
+  <label class="switch">
+    <input type="checkbox" id="themeToggle">
+    <span class="slider"></span>
+  </label>
+</header>
+
+<select id="mode">
+  <option value="csv2json">CSV → JSON</option>
+  <option value="json2csv">JSON → CSV</option>
+</select>
+
+<div id="dropZone">Drag & Drop File Here</div>
+<input type="file" id="fileInput">
+
+<button id="convertBtn">Convert</button>
+<button id="downloadBtn" disabled>Download</button>
+<button id="copyBtn" disabled>Copy</button>
+
+<div id="progressWrap" class="hidden">
+  <div id="progressBar"></div>
+</div>
+
+<pre id="output">Upload a file to begin…</pre>
+
+<script src="popup.js"></script>
+</body>
+</html>

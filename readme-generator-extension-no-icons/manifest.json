@@ -1,0 +1,12 @@
+
+{
+  "manifest_version": 3,
+  "name": "README.md Generator – Offline & Private",
+  "description": "Create professional README.md files from project descriptions. Runs entirely in your browser.",
+  "version": "1.0.0",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html"
+}

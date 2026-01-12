@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "PDF Previewer",
+  "version": "1.0",
+  "description": "Preview PDF files instantly using Chrome's built-in PDF viewer.",
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

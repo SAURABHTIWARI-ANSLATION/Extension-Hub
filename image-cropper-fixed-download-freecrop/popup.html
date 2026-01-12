@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Image Cropper</title>
+  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="cropper.min.css">
+</head>
+<body>
+
+  <h3>Image Cropper</h3>
+
+  <h4 style="color: rgba(255, 255, 255, 0.9); margin-bottom: 8px; font-size: 14px; font-weight: 600;">Upload Image</h4>
+  <input type="file" id="upload" accept="image/*">
+
+  <h4 style="color: rgba(255, 255, 255, 0.9); margin-bottom: 8px; font-size: 14px; font-weight: 600;">Select Size</h4>
+  <select id="ratio">
+    <option value="free">Free Crop</option>
+    <option value="1">1:1</option>
+    <option value="16/9">16:9</option>
+    <option value="4/3">4:3</option>
+  </select>
+
+  <div class="preview-box">
+    <img id="image">
+  </div>
+
+  <button id="download">Download Cropped Image</button>
+
+  <script src="cropper.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
