@@ -1,35 +1,113 @@
-# Contributing Guidelines
+# Contributing Guidelines & Git Cheat Sheet 🚀
 
-## ⚠️ CRITICAL RULE: NO DIRECT PUSHES TO MAIN
+To maintain a clean and conflict-free repo, **ALL** contributors (Ritik, Aryan, Raman, etc.) must follow this guide.
 
-**To maintain the stability of this project, the following rules are strictly enforced for all collaborators (Ritik, Aryan, etc.):**
+## ⚠️ GOLDEN RULES
+1.  **NEVER delete `.gitignore`**.
+2.  **NEVER push directly to `main`**. Only Saurabh can merge to `main`.
+3.  **ALWAYS pull before you start working**.
 
-1.  **Stop! Do NOT push directly to the `main` branch.**
-    - Direct pushes to `main` are reserved **ONLY** for the Repository Administrator (Saurabh).
-    - Any direct push by a collaborator will be considered a breach of protocol.
+---
 
-2.  **Use the Pull Request Workflow:**
-    - **Step 1:** Create a new branch for your feature or fix.
-      ```bash
-      git checkout -b feature/my-new-feature
-      ```
-    - **Step 2:** Commit your changes to your new branch.
-    - **Step 3:** Push your branch to GitHub.
-      ```bash
-      git push origin feature/my-new-feature
-      ```
-    - **Step 4:** Go to GitHub and open a **Pull Request (PR)** targeting `main`.
-    - **Step 5:** Assign **Saurabh** as the reviewer.
+## 🧑‍� Member-Specific Workflow (Copy Your Commands)
 
-3.  **Branch Structure & Naming:**
-    - **`main`**: The primary, stable branch. (Protected).
-    - **`saurabh-tiwari`**: A contributor branch (treated like any other feature branch).
-    - **`Aryan-Tay` / `Ritik_Extension`**: Contributor branches.
-    - **New Branches**: Please use descriptive names (e.g., `feature/dark-mode`, `fix/login-bug`).
+Select your name below and use the exact commands provided.
 
-4.  **Approval Required:**
-    - Do not merge your own PR.
-    - Wait for the Admin (Saurabh) to review and approve the changes.
-    - Once approved, the Admin or the Author may merge, as per specific instruction in the PR.
+### 👤 For Ritik (`Ritik_Extension`)
 
-**Thank you for keeping the code clean and safe!**
+**1. Start Day:**
+```bash
+git checkout main
+git pull origin main
+```
+
+**2. Create New Task:**
+```bash
+# syntax: git checkout -b Ritik_Extension/<feature-name>
+git checkout -b Ritik_Extension/new-feature
+```
+
+**3. Save & Push:**
+```bash
+git add .
+git commit -m "Your message here"
+# SYNC WITH MAIN BEFORE PUSHING:
+git checkout main
+git pull origin main
+git checkout Ritik_Extension/new-feature
+git merge main
+# PUSH:
+git push origin Ritik_Extension/new-feature
+```
+
+---
+
+### 👤 For Aryan (`Aryan-Tay`)
+
+**1. Start Day:**
+```bash
+git checkout main
+git pull origin main
+```
+
+**2. Create New Task:**
+```bash
+# syntax: git checkout -b Aryan-Tay/<feature-name>
+git checkout -b Aryan-Tay/new-feature
+```
+
+**3. Save & Push:**
+```bash
+git add .
+git commit -m "Your message here"
+# SYNC WITH MAIN BEFORE PUSHING:
+git checkout main
+git pull origin main
+git checkout Aryan-Tay/new-feature
+git merge main
+# PUSH:
+git push origin Aryan-Tay/new-feature
+```
+
+---
+
+### 👤 For Raman (`raman-ans`)
+
+**1. Start Day:**
+```bash
+git checkout main
+git pull origin main
+```
+
+**2. Create New Task:**
+```bash
+# syntax: git checkout -b raman-ans/<feature-name>
+git checkout -b raman-ans/new-feature
+```
+
+**3. Save & Push:**
+```bash
+git add .
+git commit -m "Your message here"
+# SYNC WITH MAIN BEFORE PUSHING:
+git checkout main
+git pull origin main
+git checkout raman-ans/new-feature
+git merge main
+# PUSH:
+git push origin raman-ans/new-feature
+```
+
+---
+
+## 🛑 Common Fixes
+
+### "I deleted .gitignore by mistake!"
+```bash
+git checkout main -- .gitignore
+```
+
+### "Merge Conflicts!"
+1.  Accept the "Incoming Change" (usually main) or "Current Change" (yours) in VS Code.
+2.  `git add .`
+3.  `git commit`
