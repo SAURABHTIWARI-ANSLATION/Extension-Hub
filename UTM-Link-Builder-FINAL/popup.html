@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>UTM Link Builder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="top">
+    <h2 id="title"></h2>
+  </div>
+
+  <input id="url" placeholder="Base URL * (Ctrl+U)" />
+  <input id="source" placeholder="utm_source *" />
+  <input id="medium" placeholder="utm_medium *" />
+  <input id="campaign" placeholder="utm_campaign *" />
+  <input id="term" placeholder="utm_term" />
+  <input id="content" placeholder="utm_content" />
+
+  <textarea id="result" readonly placeholder="Generated UTM URL"></textarea>
+
+  <div class="row">
+    <button id="copy" title="Copy (Ctrl+C)">Copy</button>
+    <button id="clear" title="Clear (Esc)">Clear</button>
+  </div>
+
+  <p id="message"></p>
+
+  <script src="popup.js"></script>
+</body>
+</html>

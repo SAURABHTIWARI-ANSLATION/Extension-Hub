@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "UTM Link Builder",
+  "description": "Build UTM tracking links instantly with presets, templates, CSV export, shortcuts, and dark mode.",
+  "version": "1.6",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["clipboardWrite", "tabs", "storage"],
+  "default_locale": "en"
+}
