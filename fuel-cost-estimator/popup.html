@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fuel Cost Estimator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h3 class="title">⛽ Fuel Cost Estimator</h3>
+      <p class="subtitle">Estimate your trip fuel cost instantly</p>
+    </header>
+
+    <section class="card">
+      <div class="field">
+        <label for="distance">Distance (km)</label>
+        <input id="distance" type="number" inputmode="decimal" placeholder="e.g. 250" />
+      </div>
+
+      <div class="field">
+        <label for="mileage">Mileage (km/l)</label>
+        <input id="mileage" type="number" inputmode="decimal" placeholder="e.g. 18" />
+      </div>
+
+      <div class="field">
+        <label for="price">Fuel Price (₹ / liter)</label>
+        <input id="price" type="number" inputmode="decimal" placeholder="e.g. 105" />
+      </div>
+
+      <button id="calculate" class="primary">Calculate Cost</button>
+
+      <div id="result" class="result" aria-live="polite"></div>
+    </section>
+
+    <footer class="footer">
+      <small>Offline • Private • No tracking</small>
+    </footer>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
