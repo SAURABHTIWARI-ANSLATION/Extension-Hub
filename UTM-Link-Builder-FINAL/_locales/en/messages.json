@@ -1,0 +1,11 @@
+{
+  "appName": {
+    "message": "UTM Link Builder"
+  },
+  "copySuccess": {
+    "message": "Copied to clipboard"
+  },
+  "invalidUrl": {
+    "message": "Invalid URL"
+  }
+}
