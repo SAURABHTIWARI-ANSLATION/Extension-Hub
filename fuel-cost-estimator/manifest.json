@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Fuel Cost Estimator",
+  "version": "1.0",
+  "description": "Estimate fuel cost for your trip quickly.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
