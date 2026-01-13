@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+  <title>Quick Search</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🔍 Quick Search</h1>
+      <div class="subtitle">Select text and search instantly</div>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="home">Home</div>
+      <div class="tab" data-tab="history">History</div>
+      <div class="tab" data-tab="custom">Custom</div>
+    </div>
+    
+    <!-- Home Tab -->
+    <div class="tab-content active" id="home">
+      <div class="instructions">
+        <h3>How to use:</h3>
+        <div class="instruction-step">
+          <div class="step-number">1</div>
+          <div class="step-text">Select any text on a webpage</div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">2</div>
+          <div class="step-text">Right-click and choose "Quick Search"</div>
+        </div>
+        <div class="instruction-step">
+          <div class="step-number">3</div>
+          <div class="step-text">Or press <strong>Ctrl+Shift+S</strong></div>
+        </div>
+      </div>
+      
+      <div class="keyboard-shortcut">
+        <strong>Keyboard Shortcut:</strong><br>
+        <code>Ctrl+Shift+S</code> (Windows/Linux)<br>
+        <code>Cmd+Shift+S</code> (Mac)
+      </div>
+      
+      <div class="engines-grid">
+        <div class="engine-btn" data-engine="google">
+          <span class="engine-icon">🔎</span>
+          <span class="engine-name">Google</span>
+        </div>
+        <div class="engine-btn" data-engine="youtube">
+          <span class="engine-icon">▶️</span>
+          <span class="engine-name">YouTube</span>
+        </div>
+        <div class="engine-btn" data-engine="wikipedia">
+          <span class="engine-icon">📚</span>
+          <span class="engine-name">Wikipedia</span>
+        </div>
+        <div class="engine-btn" data-engine="amazon">
+          <span class="engine-icon">🛒</span>
+          <span class="engine-name">Amazon</span>
+        </div>
+        <div class="engine-btn" data-engine="github">
+          <span class="engine-icon">💻</span>
+          <span class="engine-name">GitHub</span>
+        </div>
+        <div class="engine-btn" data-engine="stackoverflow">
+          <span class="engine-icon">❓</span>
+          <span class="engine-name">StackOverflow</span>
+        </div>
+        <div class="engine-btn" data-engine="twitter">
+          <span class="engine-icon">🐦</span>
+          <span class="engine-name">Twitter</span>
+        </div>
+        <div class="engine-btn" data-engine="reddit">
+          <span class="engine-icon">👥</span>
+          <span class="engine-name">Reddit</span>
+        </div>
+        <div class="engine-btn" data-engine="images">
+          <span class="engine-icon">🖼️</span>
+          <span class="engine-name">Images</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- History Tab -->
+    <div class="tab-content" id="history">
+      <div class="history-section">
+        <div class="section-header">
+          <h3>Recent Searches</h3>
+          <button id="clearHistoryBtn" class="btn btn-secondary btn-small">Clear All</button>
+        </div>
+        <div id="historyList">
+          <p style="color:#666;text-align:center;padding:20px;">No recent searches</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Custom Tab -->
+    <div class="tab-content" id="custom">
+      <div class="custom-form">
+        <h3 style="margin-bottom:15px;">Add Custom Search Engine</h3>
+        <div class="form-group">
+          <label for="engineName">Engine Name</label>
+          <input type="text" id="engineName" placeholder="e.g., Netflix">
+        </div>
+        <div class="form-group">
+          <label for="engineUrl">Search URL (use %s as placeholder)</label>
+          <input type="text" id="engineUrl" placeholder="e.g., https://www.netflix.com/search?q=%s">
+        </div>
+        <div class="form-buttons">
+          <button id="testCustomBtn" class="btn btn-secondary">Test</button>
+          <button id="addCustomEngineBtn" class="btn btn-primary">Add Engine</button>
+        </div>
+      </div>
+      
+      <div class="custom-section">
+        <div class="section-header">
+          <h3>Your Custom Engines</h3>
+        </div>
+        <div id="customEnginesList">
+          <p style="color:#666;text-align:center;padding:20px;">No custom engines yet</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+      Made with ❤️ | Select text → Search anywhere
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        const tabId = tab.dataset.tab;
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+    
+    // Engine buttons in home tab
+    document.querySelectorAll('.engine-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const engine = btn.dataset.engine;
+        
+        // Get active tab and send message to search
+        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+          chrome.tabs.sendMessage(tabs[0].id, {
+            type: 'searchWithEngine',
+            engine: engine
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
