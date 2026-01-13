@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Simple Screen Recorder",
+  "version": "1.0",
+  "description": "Record your screen, tab, or window easily.",
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

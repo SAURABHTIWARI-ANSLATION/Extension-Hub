@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Poll Maker</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h3 class="title">📊 Poll Maker</h3>
+        <p class="subtitle">Create a poll and share it instantly</p>
+      </header>
+
+      <section class="card">
+        <div class="field">
+          <label for="question">Question</label>
+          <input id="question" placeholder="Enter your poll question" />
+        </div>
+
+        <div class="field">
+          <label>Options</label>
+          <div id="options" class="options"></div>
+        </div>
+
+        <div class="actions">
+          <button id="addOption" class="secondary">+ Add Option</button>
+          <button id="createPoll" class="primary">Create Poll</button>
+        </div>
+
+        <div class="share">
+          <button id="generateLink" class="primary">Generate Link</button>
+          <input
+            id="shareLink"
+            readonly
+            placeholder="Share link appears here"
+          />
+        </div>
+
+        <div id="pollArea" class="poll-area"></div>
+      </section>
+
+      <footer class="footer">
+        <small>Private • Offline • No tracking</small>
+      </footer>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

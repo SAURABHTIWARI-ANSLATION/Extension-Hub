@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Screen Recorder</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h3 class="title">🎥 Screen Recorder</h3>
+        <p class="subtitle">Record your screen, tab, or window</p>
+      </header>
+
+      <section class="card">
+        <div class="status-row">
+          <span class="dot" id="recordDot"></span>
+          <span id="status">Idle</span>
+          <span id="timer">00:00</span>
+        </div>
+
+        <div class="controls">
+          <button id="startBtn" class="primary">Start Recording</button>
+          <button id="stopBtn" class="danger" disabled>Stop Recording</button>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <small>Private • Offline • No tracking</small>
+      </footer>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

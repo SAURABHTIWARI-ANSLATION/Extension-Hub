@@ -1,0 +1,154 @@
+:root {
+  --bg: #020617;
+  --card: #020617;
+  --border: #334155;
+  --primary: #22c55e;
+  --primary-hover: #16a34a;
+  --secondary: #334155;
+  --text: #e5e7eb;
+  --muted: #94a3b8;
+  --radius: 10px;
+  --transition: 0.15s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.container {
+  padding: 12px;
+  min-width: 260px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Card */
+.card {
+  background: var(--card);
+  padding: 12px;
+  border-radius: var(--radius);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+/* Fields */
+.field {
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+input {
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: #020617;
+  color: var(--text);
+  font-size: 13px;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* Options */
+.options input {
+  margin-top: 4px;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+button {
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+}
+
+.primary {
+  background: var(--primary);
+  color: #022c22;
+}
+
+.primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.secondary {
+  background: var(--secondary);
+  color: var(--text);
+}
+
+.secondary:hover {
+  background: #475569;
+}
+
+/* Share */
+.share {
+  margin-top: 8px;
+}
+
+.share input {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+/* Poll area */
+.poll-area {
+  margin-top: 10px;
+}
+
+.poll-area button {
+  width: 100%;
+  margin-top: 4px;
+  background: #1e293b;
+}
+
+.poll-area button:hover {
+  background: #334155;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 8px;
+}

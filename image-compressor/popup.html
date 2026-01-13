@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Image Compressor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h3 class="title">🖼 Image Compressor</h3>
+        <p class="subtitle">Compress images locally — no uploads</p>
+      </header>
+
+      <section class="card">
+        <label class="dropzone" for="fileInput">
+          <input type="file" id="fileInput" accept="image/*" hidden />
+          <span class="drop-text">Click or drag image here</span>
+          <span id="fileName" class="file-name"></span>
+        </label>
+
+        <div class="field">
+          <label for="quality">Quality</label>
+          <div class="range-row">
+            <input type="range" id="quality" min="10" max="100" value="70" />
+            <span id="qualityVal">70%</span>
+          </div>
+        </div>
+
+        <button id="compressBtn" class="primary" disabled>
+          Compress Image
+        </button>
+
+        <div id="info" class="info"></div>
+      </section>
+
+      <footer class="footer">
+        <small>Private • Offline • No tracking</small>
+      </footer>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

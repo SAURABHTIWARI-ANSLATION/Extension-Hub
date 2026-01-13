@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Quick Unit Converter",
+  "description": "Convert length, weight, and temperature units instantly.",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Unit Converter"
+  }
+}
