@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX to PDF Generator</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>LaTeX to PDF</h1>
+            <select id="template-select" class="template-select" title="Choose a template">
+                <option value="" disabled selected>Load Template...</option>
+                <option value="blank">Blank Document</option>
+                <option value="article">Academic Article</option>
+                <option value="homework">Math Homework</option>
+                <option value="resume">Simple Resume</option>
+            </select>
+        </header>
+
+        <main class="split-view">
+            <div class="panel editor-panel">
+                <div class="panel-header">
+                    <span>LaTeX Input</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <span id="word-count" class="word-count">0 words</span>
+                        <span id="save-status" class="save-status">Saved</span>
+                    </div>
+                </div>
+                <div class="editor-container">
+                    <div id="line-numbers" class="line-numbers">1</div>
+                    <textarea id="latex-editor"
+                        placeholder="\documentclass{article}&#10;\begin{document}&#10;Hello World!&#10;\end{document}"
+                        spellcheck="false"></textarea>
+                </div>
+            </div>
+
+            <div class="panel preview-panel">
+                <div class="panel-header">Preview</div>
+                <div id="preview-area" class="preview-content">
+                    <div class="placeholder-text">Preview will appear here...</div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="action-bar">
+            <div class="status-message" id="status-message"></div>
+            <div class="actions">
+                <button id="export-btn" class="btn secondary" title="Download .tex source">Export .tex</button>
+                <button id="clear-btn" class="btn secondary">Clear</button>
+                <button id="generate-btn" class="btn primary">Generate PDF</button>
+                <button id="copy-btn" class="btn secondary" title="Copy for Word/Docs">Copy HTML</button>
+                <button id="download-btn" class="btn success" disabled>Download PDF</button>
+            </div>
+        </footer>
+    </div>
+    <script src="popup.js"></script>
+</body>
+
+</html>
