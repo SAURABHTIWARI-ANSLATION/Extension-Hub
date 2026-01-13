@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Water Alert",
+  "version": "2.1",
+  "description": "Smart hydration reminder with popup alert",
+  "permissions": ["storage", "alarms", "notifications", "idle"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["alert.html", "alert.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Focus Mode</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      :root {
+        --bg: #020617;
+        --card: #0f172a;
+        --border: #1e293b;
+        --accent: #3b82f6;
+        --text: #f1f5f9;
+        --text-dim: #94a3b8;
+        --danger: #ef4444;
+      }
+
+      body {
+        margin: 0;
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        padding: 16px;
+        width: 280px;
+        max-height: 520px;
+        overflow-y: auto;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 700;
+      }
+
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 20px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: #334155;
+        transition: .4s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px;
+        width: 14px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: .4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--accent);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(14px);
+      }
+
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 16px;
+      }
+
+      label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-dim);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+      }
+
+      .row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      input[type="time"],
+      input[type="text"] {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 8px;
+        font-size: 0.85rem;
+        width: 100%;
+        min-width: 0;
+        outline: none;
+      }
+
+      input:focus {
+        border-color: var(--accent);
+      }
+
+      button#add {
+        background: var(--accent);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 8px;
+        width: 100%;
+      }
+
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 12px 0 0;
+        max-height: 140px;
+        overflow-y: auto;
+      }
+
+      li {
+        font-size: 0.85rem;
+        padding: 8px;
+        background: rgba(255,255,255,0.03);
+        border-radius: 6px;
+        margin-bottom: 4px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .delete-btn {
+        color: var(--text-dim);
+        cursor: pointer;
+        font-size: 1rem;
+      }
+
+      .delete-btn:hover {
+        color: var(--danger);
+      }
+
+      #stats {
+        margin-top: 20px;
+        font-size: 0.7rem;
+        color: var(--text-dim);
+        text-align: center;
+        border-top: 1px solid var(--border);
+        padding-top: 12px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h3>Focus Mode</h3>
+      <label class="switch">
+        <input type="checkbox" id="focusToggle" />
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <div class="card">
+      <label>Active Hours</label>
+      <div class="row">
+        <input type="time" id="startTime" value="09:00" />
+        <span style="color: var(--text-dim)">-</span>
+        <input type="time" id="endTime" value="17:00" />
+      </div>
+    </div>
+
+    <div class="card">
+      <label>Blocklist</label>
+      <input id="site" type="text" placeholder="e.g. twitter.com" />
+      <button id="add">Add Website</button>
+      <ul id="list"></ul>
+    </div>
+
+    <p id="stats">0 hours focused today</p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
