@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prompt Saver</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="card">
+    <header class="header">
+      <span class="emoji">💡</span>
+      <div>
+        <div class="title">Prompt Saver</div>
+        <div class="subtitle">Save & reuse your best prompts</div>
+      </div>
+    </header>
+
+    <main class="section-input">
+      <div class="field">
+        <label for="prompt">Prompt</label>
+        <textarea id="prompt" placeholder="Write or paste your prompt here..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="category">Category</label>
+        <input id="category" placeholder="e.g. Marketing, Coding, Email..." list="cat-suggestions" />
+        <datalist id="cat-suggestions">
+          <option value="Marketing"></option>
+          <option value="Coding"></option>
+          <option value="Personal"></option>
+        </datalist>
+      </div>
+
+      <button id="save" class="primary-btn">💾 Save Prompt</button>
+    </main>
+
+    <section class="section-list">
+      <div class="search-wrapper">
+        <input id="search" type="search" placeholder="🔍 Search prompts..." />
+      </div>
+      <div id="list" class="list"></div>
+    </section>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

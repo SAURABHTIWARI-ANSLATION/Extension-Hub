@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mini Games</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h3>🎮 Mini Games</h3>
+        <p class="subtitle">Play quick games while you wait</p>
+      </header>
+
+      <div class="selector">
+        <label
+          for="gameSelect"
+          style="
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+          "
+        >
+          <span style="font-size: 18px">🎲</span> Choose a game
+        </label>
+        <div class="custom-select-wrapper">
+          <button
+            id="gameDropdownBtn"
+            class="custom-select"
+            type="button"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 8px;
+            "
+          >
+            <span id="selectedGameIcon">⚡</span>
+            <span id="selectedGameText">Click Speed</span>
+            <span style="font-size: 16px">▼</span>
+          </button>
+          <ul id="gameDropdown" class="dropdown-list" style="display: none">
+            <li data-value="click">
+              <span style="font-size: 16px">⚡</span> Click Speed
+            </li>
+            <li data-value="reaction">
+              <span style="font-size: 16px">⏱</span> Reaction Test
+            </li>
+            <li data-value="memory">
+              <span style="font-size: 16px">🧠</span> Memory Match
+            </li>
+            <li data-value="tic">
+              <span style="font-size: 16px">⭕</span> Tic Tac Toe
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Click Game -->
+      <section id="clickGame" class="game">
+        <div class="stats">
+          <span id="timer">⏱ 10s</span>
+          <span id="score">🎯 0</span>
+        </div>
+        <button id="clickBtn" class="primary big" disabled>Click Me!</button>
+        <button id="startClick" class="secondary">Start Game</button>
+      </section>
+
+      <!-- Reaction Game -->
+      <section id="reactionGame" class="game hidden">
+        <div id="reactionText" class="reaction-text">Press start and wait…</div>
+        <button id="reactionBtn" class="primary big" disabled>Click!</button>
+        <button id="startReaction" class="secondary">
+          Start Reaction Test
+        </button>
+      </section>
+
+      <!-- Memory Game -->
+      <section id="memoryGame" class="game hidden">
+        <div class="memory-grid" id="memoryGrid"></div>
+        <button id="startMemory" class="secondary">Start Memory Game</button>
+      </section>
+
+      <!-- Tic Tac Toe -->
+      <section id="ticGame" class="game hidden">
+        <div class="tic-grid" id="ticGrid"></div>
+        <div id="ticStatus">Player X's turn</div>
+        <button id="resetTic" class="secondary">Reset</button>
+      </section>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

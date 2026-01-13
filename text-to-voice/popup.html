@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Text to Voice</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app card">
+      <h3 style="font-size: 20px; margin-bottom: 8px; letter-spacing: 1px">
+        🔊 <span style="color: #38bdf8">Text to Voice</span>
+      </h3>
+
+      <textarea
+        id="text"
+        placeholder="Type or paste text here..."
+        style="margin-bottom: 8px"
+      ></textarea>
+
+      <div class="row-group">
+        <div class="row-label">
+          <span style="font-size: 16px">🎤</span>
+          <label for="voice">Voice</label>
+        </div>
+        <select id="voice"></select>
+      </div>
+
+      <div class="row-group">
+        <div class="row-label">
+          <span style="font-size: 16px">🚀</span>
+          <label for="rate">Speed</label>
+          <span
+            id="rateVal"
+            style="margin-left: auto; font-size: 12px; color: #38bdf8"
+            >1.0x</span
+          >
+        </div>
+        <input type="range" id="rate" min="0.5" max="2" step="0.1" value="1" />
+      </div>
+
+      <div class="row-group">
+        <div class="row-label">
+          <span style="font-size: 16px">🎵</span>
+          <label for="pitch">Pitch</label>
+          <span
+            id="pitchVal"
+            style="margin-left: auto; font-size: 12px; color: #38bdf8"
+            >1.0</span
+          >
+        </div>
+        <input type="range" id="pitch" min="0" max="2" step="0.1" value="1" />
+      </div>
+
+      <div class="buttons">
+        <button id="speak" class="primary">
+          <span style="font-size: 16px">▶️</span> Speak
+        </button>
+        <button id="stop" class="secondary">
+          <span style="font-size: 16px">⏹️</span> Stop
+        </button>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
