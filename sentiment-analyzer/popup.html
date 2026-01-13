@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sentiment Analyzer</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="card">
+      <div class="header">
+        <span class="emoji">🧠</span>
+        <span class="title">Sentiment Analyzer</span>
+      </div>
+
+      <textarea
+        id="text"
+        placeholder="Paste or type your text here..."
+      ></textarea>
+
+      <button id="analyze" class="primary">Analyze</button>
+
+      <div id="result" class="result"></div>
+
+      <div class="history-section">
+        <div class="history-header">
+          <span>History</span>
+          <button id="export" class="secondary">Export CSV</button>
+        </div>
+        <div id="history" class="history"></div>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

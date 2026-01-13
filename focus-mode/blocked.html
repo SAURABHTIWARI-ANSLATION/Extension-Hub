@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Mode — Deep Work</title>
+    <style>
+        :root {
+            --bg: #020617;
+            --card-bg: rgba(15, 23, 42, 0.7);
+            --accent: #3b82f6;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at top left, #1e293b, #020617);
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Subtle animated background glow */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: var(--accent);
+            filter: blur(120px);
+            opacity: 0.15;
+            top: 10%;
+            left: 10%;
+            z-index: -1;
+            animation: drift 20s infinite alternate;
+        }
+
+        @keyframes drift {
+            from { transform: translate(0, 0); }
+            to { transform: translate(100px, 50px); }
+        }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 400px;
+            width: 85%;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .icon-container {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
+        }
+
+        h2 {
+            margin: 0 0 12px 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+        }
+
+        p {
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            font-size: 1rem;
+        }
+
+        .quote-box {
+            border-left: 2px solid var(--accent);
+            padding: 8px 0 8px 16px;
+            margin: 24px 0;
+            text-align: left;
+        }
+
+        .quote {
+            font-style: italic;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            opacity: 0.9;
+        }
+
+        .author {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        button {
+            background: var(--text-main);
+            color: var(--bg);
+            border: none;
+            border-radius: 12px;
+            padding: 14px 28px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #1e293b;
+            color: #475569;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .note {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #475569;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        /* Impulse Delay Timer */
+        #timer-text {
+            font-weight: bold;
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <div class="icon-container">🌙</div>
+        <h2>Deep Work in Progress</h2>
+        <p>This site is currently restricted to help you reach your goals.</p>
+
+        <div class="quote-box">
+            <span class="quote">“Discipline is choosing between what you want now and what you want most.”</span>
+            <span class="author">— Abraham Lincoln</span>
+        </div>
+
+        <button id="unlock" disabled>
+            Wait <span id="countdown">3</span>s to unlock
+        </button>
+
+        <div class="note" id="status-note">Emergency 10-minute access only.</div>
+    </div>
+
+    <script>
+        const btn = document.getElementById("unlock");
+        const countdownEl = document.getElementById("countdown");
+        let timeLeft = 3;
+
+        // Impulse Control: Force a 3-second wait before button is active
+        const timer = setInterval(() => {
+            timeLeft--;
+            countdownEl.textContent = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.textContent = "Emergency Access (10 min)";
+            }
+        }, 1000);
+
+        btn.onclick = () => {
+            // Save the timestamp for 10 minutes from now
+            chrome.storage.sync.set(
+                { emergencyUntil: Date.now() + 10 * 60 * 1000 },
+                () => {
+                    // Go back to the page the user was trying to visit
+                    window.history.back();
+                }
+            );
+        };
+    </script>
+</body>
+</html>

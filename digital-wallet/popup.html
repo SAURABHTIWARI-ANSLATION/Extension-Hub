@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital Wallet</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="wallet">
+
+    <!-- Header -->
+    <header class="wallet-header">
+      <h2>💳 Digital Wallet</h2>
+      <p class="subtitle">Track your income and expenses</p>
+    </header>
+
+    <!-- Balance -->
+    <section class="balance-card">
+      <span class="label">Current Balance</span>
+      <div class="balance-amount">
+        ₹<span id="balance">0</span>
+      </div>
+    </section>
+
+    <!-- Entry Form -->
+    <section class="entry">
+      <div class="field">
+        <label for="title">Description</label>
+        <input id="title" type="text" placeholder="e.g. Salary, Coffee, Rent" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="amount">Amount</label>
+        <input id="amount" type="number" placeholder="Enter amount" min="0" step="0.01" />
+      </div>
+
+      <div class="buttons">
+        <button id="addIncome" class="income">+ Income</button>
+        <button id="addExpense" class="expense">- Expense</button>
+      </div>
+    </section>
+
+    <!-- History -->
+    <section class="history-section">
+      <h3>Transaction History</h3>
+      <p id="emptyState" class="empty">No transactions yet</p>
+      <ul id="history"></ul>
+    </section>
+
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

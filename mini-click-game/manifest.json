@@ -1,0 +1,9 @@
+{
+  "manifest_version": 3,
+  "name": "Mini Click Game",
+  "description": "Click as fast as you can in 10 seconds!",
+  "version": "1.0",
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
