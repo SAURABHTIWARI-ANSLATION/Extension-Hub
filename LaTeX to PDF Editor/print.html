@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Export PDF</title>
+    <style>
+        /* Core Reset */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #525659;
+        }
+
+        /* A4 Page Simulation */
+        .page-container {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            background: white;
+            padding: 20mm;
+            /* Standard margins */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Resume / Content Styles (Mirrored from CSS) */
+        h2 {
+            font-size: 24px;
+            border-bottom: 2px solid #333;
+            margin-top: 20px;
+            text-transform: uppercase;
+            padding-bottom: 5px;
+            color: #000;
+        }
+
+        h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        h4 {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #000;
+        }
+
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+            line-height: 1.6;
+            color: #000;
+        }
+
+        /* Lists */
+        ul,
+        ol {
+            margin-left: 20px;
+            margin-bottom: 10px;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 4px;
+        }
+
+        .resume-list {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        /* Complex Resume Components */
+        .resume-subheading {
+            margin-bottom: 10px;
+        }
+
+        .resume-project {
+            margin-bottom: 8px;
+        }
+
+        .rs-row {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .small-caps {
+            font-variant: small-caps;
+        }
+
+        a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        /* Formatting */
+        strong {
+            font-weight: bold;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        .math-inline {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+        }
+
+        .math-display {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .code-block {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 10px;
+            white-space: pre-wrap;
+        }
+
+        /* Print Settings */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+            }
+
+            .page-container {
+                width: 100%;
+                margin: 0;
+                box-shadow: none;
+                padding: 0;
+                /* Let @page handle margins if possible, or reset */
+            }
+
+            @page {
+                size: A4;
+                margin: 20mm;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content" class="page-container">
+        <!-- Content will be injected here -->
+    </div>
+    <script src="print.js"></script>
+</body>
+
+</html>
