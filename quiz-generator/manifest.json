@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Quiz Generator",
+  "version": "1.0",
+  "description": "Create and share quizzes instantly.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["viewer.html", "viewer.js"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

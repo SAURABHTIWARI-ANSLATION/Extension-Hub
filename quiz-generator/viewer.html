@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Play Quiz</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .quiz-app {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 700px;
+      width: 100%;
+      overflow: hidden;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .quiz-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+
+    .quiz-header h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-around;
+      font-size: 1rem;
+      opacity: 0.95;
+    }
+
+    .meta span {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 20px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+
+    .quiz-card {
+      padding: 40px 30px;
+    }
+
+    .question {
+      font-size: 1.5rem;
+      color: #2d3748;
+      margin-bottom: 30px;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+
+    .options {
+      display: grid;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      background: #f7fafc;
+      border: 2px solid #e2e8f0;
+      padding: 18px 24px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: left;
+      color: #2d3748;
+      font-weight: 500;
+    }
+
+    .options button:hover {
+      background: #edf2f7;
+      border-color: #667eea;
+      transform: translateX(5px);
+    }
+
+    .options button.correct {
+      background: #c6f6d5;
+      border-color: #48bb78;
+      animation: pulse 0.5s ease;
+    }
+
+    .options button.wrong {
+      background: #fed7d7;
+      border-color: #f56565;
+      animation: shake 0.5s ease;
+    }
+
+    .options button:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
+    .feedback {
+      min-height: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .feedback.correct {
+      color: #48bb78;
+    }
+
+    .feedback.wrong {
+      color: #f56565;
+    }
+
+    .controls {
+      padding: 0 30px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 50px;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .next-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+
+    .next-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .completion {
+      text-align: center;
+      padding: 60px 30px;
+    }
+
+    .completion-icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+      animation: bounceIn 0.6s ease;
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        transform: scale(1.05);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .completion h3 {
+      font-size: 2rem;
+      color: #2d3748;
+      margin-bottom: 20px;
+    }
+
+    .final-score {
+      font-size: 1.5rem;
+      color: #667eea;
+      font-weight: 700;
+      margin-bottom: 30px;
+    }
+
+    .score-percentage {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-size: 1.8rem;
+      margin-top: 10px;
+    }
+
+    .error-message {
+      text-align: center;
+      color: white;
+      font-size: 1.5rem;
+      padding: 40px;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-header h2 {
+        font-size: 1.5rem;
+      }
+
+      .question {
+        font-size: 1.2rem;
+      }
+
+      .options button {
+        font-size: 1rem;
+        padding: 15px 20px;
+      }
+
+      .meta {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="quiz-app">
+    <header class="quiz-header">
+      <h2>🧠 Quiz Challenge</h2>
+      <div class="meta">
+        <span id="progress">1 / 1</span>
+        <span id="score">Score: 0</span>
+      </div>
+    </header>
+
+    <section class="quiz-card">
+      <h3 id="q" class="question"></h3>
+      <div id="opts" class="options"></div>
+      <p id="feedback" class="feedback"></p>
+    </section>
+
+    <div class="controls">
+      <button id="next" class="next-btn" disabled>Next Question →</button>
+    </div>
+  </main>
+
+</body>
+</html>

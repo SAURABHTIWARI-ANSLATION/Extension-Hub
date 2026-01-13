@@ -1,0 +1,33 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0A4DBF, #1E88E5);
+  color: #FFFFFF;
+}
+
+.app {
+  width: 260px;
+  padding: 20px;
+  text-align: center;
+}
+
+#timer {
+  font-size: 48px;
+  margin: 20px 0;
+  color: #FFFFFF;
+}
+
+.buttons button {
+  margin: 6px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(135deg, #2196F3, #42A5F5);
+  color: white;
+}
+
+.buttons button:hover {
+  opacity: 0.9;
+}
