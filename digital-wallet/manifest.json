@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Digital Wallet Tracker",
+  "version": "1.0",
+  "description": "Track income, expenses, and balance easily.",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

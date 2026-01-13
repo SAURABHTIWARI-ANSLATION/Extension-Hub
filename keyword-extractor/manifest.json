@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "Keyword Extractor",
+  "version": "1.0",
+  "description": "Extract top keywords from any page or text",
+  "permissions": ["activeTab", "scripting"],
+  "action": { "default_popup": "popup.html" }
+}

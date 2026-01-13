@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Auto Form Filler",
+  "version": "2.0",
+  "permissions": ["activeTab", "storage"],
+  "action": { "default_popup": "popup.html" },
+  "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }]
+}
