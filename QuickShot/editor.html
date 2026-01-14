@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>QuickShot Editor</title>
+    <link rel="stylesheet" href="editor.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="editor-container">
+        <aside class="toolbar">
+            <div class="tool-group">
+                <button class="tool-btn active" data-tool="select" title="Select/Move">✋</button>
+                <button class="tool-btn" data-tool="pen" title="Freehand Pen">✏️</button>
+                <button class="tool-btn" data-tool="arrow" title="Draw Arrow">↗️</button>
+                <button class="tool-btn" data-tool="rect" title="Draw Rectangle">⬜</button>
+                <button class="tool-btn" data-tool="text" title="Add Text">T</button>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="tool-group colors">
+                <div class="color-swatch active" style="background: #ef4444;" data-color="#ef4444"></div>
+                <div class="color-swatch" style="background: #eab308;" data-color="#eab308"></div>
+                <div class="color-swatch" style="background: #22c55e;" data-color="#22c55e"></div>
+                <div class="color-swatch" style="background: #3b82f6;" data-color="#3b82f6"></div>
+                <div class="color-swatch" style="background: #ffffff;" data-color="#ffffff"></div>
+                <div class="color-swatch" style="background: #000000;" data-color="#000000"></div>
+            </div>
+
+            <div class="separator"></div>
+
+            <div class="tool-group">
+                <button class="tool-btn" id="btn-undo" title="Undo (Ctrl+Z)">↩️</button>
+            </div>
+
+            <div class="bottom-actions">
+                <button id="btn-copy" class="action-btn secondary">Copy</button>
+                <button id="btn-download" class="action-btn primary">Download</button>
+            </div>
+        </aside>
+
+        <main class="canvas-area">
+            <div class="canvas-wrapper">
+                <canvas id="editor-canvas"></canvas>
+            </div>
+        </main>
+    </div>
+    <script src="editor.js"></script>
+</body>
+
+</html>
