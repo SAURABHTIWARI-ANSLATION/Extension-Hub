@@ -1,0 +1,6 @@
+/* Styles for content script UI if needed in future */
+.design-token-highlight {
+outline: 2px solid #6366F1 !important;
+outline-offset: 2px !important;
+background-color: rgba(99, 102, 241, 0.1) !important;
+}
