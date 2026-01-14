@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Grocery List Builder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+
+  <div class="header">
+    <div class="icon">🛒</div>
+    <h2>Grocery List</h2>
+    <p>Plan your shopping easily</p>
+  </div>
+
+  <div class="input-card">
+    <div class="input-row">
+      <input id="itemInput" type="text" placeholder="e.g. Potato" autofocus>
+      <input id="qtyInput" type="number" placeholder="Qty" min="1" value="1">
+    </div>
+    <button id="addBtn">+ Add Item</button>
+  </div>
+
+  <p id="emptyState">No items yet 🧺</p>
+  <ul id="groceryList"></ul>
+
+  <button id="clearBtn" class="clear">Clear All</button>
+
+  <script src="popup.js"></script>
+</body>
+</html>

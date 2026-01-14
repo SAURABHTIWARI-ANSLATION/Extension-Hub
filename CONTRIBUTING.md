@@ -111,3 +111,4 @@ git checkout main -- .gitignore
 1.  Accept the "Incoming Change" (usually main) or "Current Change" (yours) in VS Code.
 2.  `git add .`
 3.  `git commit`
+`
