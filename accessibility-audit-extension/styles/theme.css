@@ -1,0 +1,88 @@
+/* styles/theme.css - New file for theme configuration */
+:root {
+  /* Indigo Night Theme Variables */
+  --theme-bg-gradient-start: #1E1B4B;
+  --theme-bg-gradient-end: #312E81;
+  --theme-header-bg: #020617;
+  --theme-primary-btn-start: #6366F1;
+  --theme-primary-btn-end: #4F46E5;
+  --theme-accent-color: #818CF8;
+  --theme-light-accent: #C4B5FD;
+  --theme-text-primary: #FFFFFF;
+  --theme-text-secondary: #E0E7FF;
+  --theme-success: #10B981;
+  --theme-warning: #F59E0B;
+  --theme-danger: #EF4444;
+  --theme-card-bg: rgba(2, 6, 23, 0.7);
+  --theme-border-color: rgba(99, 102, 241, 0.3);
+  --theme-shadow-color: rgba(99, 102, 241, 0.2);
+  
+  /* Spacing (Consistent across themes) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  
+  /* Typography (Consistent across themes) */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-md: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 24px;
+  --font-size-2xl: 28px;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 600;
+  
+  /* Border Radius (Consistent across themes) */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  --border-radius-full: 9999px;
+  
+  /* Shadows (Consistent across themes) */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+}
+
+/* Theme application classes */
+.theme-indigo-night {
+  background: linear-gradient(135deg, var(--theme-bg-gradient-start), var(--theme-bg-gradient-end));
+}
+
+.theme-indigo-night .card {
+  background: var(--theme-card-bg);
+  border: 1px solid var(--theme-border-color);
+  backdrop-filter: blur(10px);
+}
+
+.theme-indigo-night .btn-primary {
+  background: linear-gradient(135deg, var(--theme-primary-btn-start), var(--theme-primary-btn-end));
+  color: var(--theme-text-primary);
+}
+
+.theme-indigo-night .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--theme-text-primary);
+  border: 1px solid var(--theme-border-color);
+}
+
+.theme-indigo-night .text-primary {
+  color: var(--theme-text-primary);
+}
+
+.theme-indigo-night .text-secondary {
+  color: var(--theme-text-secondary);
+}
