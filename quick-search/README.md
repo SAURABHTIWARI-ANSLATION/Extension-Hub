@@ -1,6 +1,6 @@
-# Age Calculator
+# Quick Search
 
-Calculate your exact age instantly.
+Select text and search on multiple platforms instantly
 
 <div align="center">
 
@@ -11,16 +11,22 @@ Calculate your exact age instantly.
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Local Storage**: Saves your preferences locally.
+- **Context Menu**: Quick access via right-click.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── background.js
+├── content.js
+├── icons
+│   ├── icon128.png
+│   ├── icon16.png
+│   └── icon48.png
 ├── manifest.json
-├── readme.md
-├── script.js
+├── popup.html
+├── popup.js
 └── style.css
 ```
 
@@ -30,18 +36,18 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **quick-search** folder.
 
 ## 📖 How to Use
 
 1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+2.   navigate to a supported page to see it in action.
 
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `contextMenus`: Required for core functionality.
+- `storage`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

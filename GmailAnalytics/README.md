@@ -1,27 +1,34 @@
-# Age Calculator
+# __MSG_gmailcheck_name__
 
-Calculate your exact age instantly.
+__MSG_gmailcheck_description__
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-5.0.0-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Local Storage**: Saves your preferences locally.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── _locales
+│   └── en
+├── background.js
+├── gmail_logged_in.png
+├── gmail_not_logged_in.png
+├── icon_128.png
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── offscreen.html
+├── offscreen.js
+├── popup.css
+├── popup.html
+└── popup.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +37,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **GmailAnalytics** folder.
 
 ## 📖 How to Use
 
@@ -40,8 +47,9 @@ Calculate your exact age instantly.
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `alarms`: Required for core functionality.
+- `offscreen`: Required for core functionality.
+- `storage`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

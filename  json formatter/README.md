@@ -1,27 +1,29 @@
-# Age Calculator
+# JSONBeautifyinator
 
-Calculate your exact age instantly.
+Format, validate, and minimize JSON text with ease.
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.1-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── icons
+│   ├── icon16.png
+│   ├── icon32.png
+│   └── icon48.png
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.html
+├── popup.js
+└── styles.css
 ```
 
 ## 🛠️ Installation
@@ -30,7 +32,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the ** json formatter** folder.
 
 ## 📖 How to Use
 

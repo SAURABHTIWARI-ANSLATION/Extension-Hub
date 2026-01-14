@@ -1,27 +1,33 @@
-# Age Calculator
+# Moving Car
 
-Calculate your exact age instantly.
+Amazing animation of a moving car
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-0.0.1-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Deep Integration**: interacts directly with your current tab.
 
 ## 📁 Project Structure
 
 ```
+├── background.jpg
+├── car_body.png
+├── car_wheel_left.png
+├── car_wheel_right.png
 ├── index.html
-├── logo.png
+├── index.js
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── mycar.png
+├── sound.mp3
+├── style.css
+├── track_modern.png
+└── trees.png
 ```
 
 ## 🛠️ Installation
@@ -30,7 +36,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **Moving_Car** folder.
 
 ## 📖 How to Use
 
@@ -40,8 +46,7 @@ Calculate your exact age instantly.
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `activeTab`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

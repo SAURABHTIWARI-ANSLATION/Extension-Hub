@@ -1,27 +1,25 @@
-# Age Calculator
+# HTML Previewer Pro
 
-Calculate your exact age instantly.
+Professional HTML, CSS & JS Previewer with live output, tabs, export and offline support.
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.8-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.css
+├── popup.html
+└── popup.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +28,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **html-previewer-extension-step9** folder.
 
 ## 📖 How to Use
 

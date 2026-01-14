@@ -1,27 +1,27 @@
-# Age Calculator
+# Dictionary search
 
-Calculate your exact age instantly.
+A simple and useful Dictionary search extension.
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-0.0.1-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
+├── loading.svg
 ├── logo.png
 ├── manifest.json
-├── readme.md
+├── popup.html
 ├── script.js
-└── style.css
+└── styles.css
 ```
 
 ## 🛠️ Installation
@@ -30,7 +30,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **Dictionary** folder.
 
 ## 📖 How to Use
 

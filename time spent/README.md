@@ -1,6 +1,6 @@
-# Age Calculator
+# Time Spent Tracker
 
-Calculate your exact age instantly.
+Track how much time you spend on each website
 
 <div align="center">
 
@@ -11,16 +11,22 @@ Calculate your exact age instantly.
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Local Storage**: Saves your preferences locally.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── background.js
+├── icons
+│   ├── icons128.png
+│   ├── icons16.png
+│   ├── icons24.png
+│   ├── icons32.png
+│   └── icons48.png
 ├── manifest.json
-├── readme.md
-├── script.js
+├── popup.html
+├── popup.js
 └── style.css
 ```
 
@@ -30,7 +36,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **time spent** folder.
 
 ## 📖 How to Use
 
@@ -40,8 +46,10 @@ Calculate your exact age instantly.
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `storage`: Required for core functionality.
+- `tabs`: Required for core functionality.
+- `idle`: Required for core functionality.
+- `alarms`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

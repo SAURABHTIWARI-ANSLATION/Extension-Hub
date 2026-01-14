@@ -1,10 +1,10 @@
-# README.md Generator – Offline & Private
+# URL Safety Preview
 
-Create professional README.md files from project descriptions. Runs entirely in your browser.
+Show safety scores before visiting shortened or suspicious links
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.2.0-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
@@ -12,21 +12,27 @@ Create professional README.md files from project descriptions. Runs entirely in 
 ## 🚀 Features
 
 - **Local Storage**: Saves your preferences locally.
+- **Deep Integration**: interacts directly with your current tab.
 - **User Friendly UI**: Easy-to-use popup interface.
-- **Customizable**: Configure settings to your liking.
 
 ## 📁 Project Structure
 
 ```
-├── README.md
+├── background.js
+├── block.html
+├── block.js
+├── content-script.js
+├── icons
+│   ├── icon128.png
+│   ├── icon16.png
+│   └── icon48.png
 ├── manifest.json
-├── options.css
-├── options.html
-├── options.js
 ├── popup.css
 ├── popup.html
 ├── popup.js
-└── privacy.html
+├── settings.html
+├── settings.js
+└── theme.css
 ```
 
 ## 🛠️ Installation
@@ -35,17 +41,20 @@ Create professional README.md files from project descriptions. Runs entirely in 
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **readme-generator-extension-no-icons** folder.
+5.  Select the **url-safety-preview** folder.
 
 ## 📖 How to Use
 
 1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+2.   navigate to a supported page to see it in action.
 
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
+- `activeTab`: Required for core functionality.
 - `storage`: Required for core functionality.
+- `webNavigation`: Required for core functionality.
+- `notifications`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

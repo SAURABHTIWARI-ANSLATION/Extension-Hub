@@ -1,27 +1,28 @@
-# Age Calculator
+# Web to Phone Bridge
 
-Calculate your exact age instantly.
+Save phone numbers and emails from any website with one right-click.
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-2.1-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Local Storage**: Saves your preferences locally.
+- **Context Menu**: Quick access via right-click.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── bg.js
+├── content.js
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.html
+└── popup.js
 ```
 
 ## 🛠️ Installation
@@ -30,18 +31,18 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **SaveContact** folder.
 
 ## 📖 How to Use
 
 1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+2.   navigate to a supported page to see it in action.
 
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `storage`: Required for core functionality.
+- `contextMenus`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

@@ -1,27 +1,31 @@
-# Age Calculator
+# __MSG_extName__
 
-Calculate your exact age instantly.
+__MSG_extDesc__
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.4-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
+- **Customizable**: Configure settings to your liking.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── _locales
+│   └── en
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── options.html
+├── options.js
+├── popup.css
+├── popup.html
+├── popup.js
+└── worker.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +34,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **csv-to-json-chrome-extension** folder.
 
 ## 📖 How to Use
 
