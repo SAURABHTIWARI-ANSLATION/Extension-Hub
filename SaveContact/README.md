@@ -1,57 +1,56 @@
-# Web to Phone Bridge
+# 📲 Web to Phone Bridge (SaveContact)
 
-Save phone numbers and emails from any website with one right-click.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Web to Phone Bridge** simplifies the process of saving contacts from the web. Instead of manually typing numbers into your phone, simply right-click any phone number or email address on a website to save it directly to your "Saved Contacts" list in the extension.
 
-![Version](https://img.shields.io/badge/Version-2.1-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Context Menu Integration**: Right-click on selection to save instantly.
+- **Auto-Detection**: Smartly classifies selected text as phone or email.
+- **Centralized List**: View all saved contacts in the popup.
+- **QR Sharing**: (Optional feature) Scan to move contacts to mobile.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Popup list.
+- **CSS3**: Styles.
+- **JavaScript (Vanilla)**: Regex and storage logic.
+- **Chrome Extension (Manifest V3)**: Context Menus API.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Context Menu**: Quick access via right-click.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── bg.js
-├── content.js
-├── manifest.json
-├── popup.html
-└── popup.js
+SaveContact/
+├── bg.js              # Background service worker
+├── content.js         # Content interaction
+├── popup.html         # Saved list UI
+├── popup.js           # List management
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions/`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `SaveContact`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **SaveContact** folder.
+### 🧠 How It Works
+1.  **Context Menu**: `bg.js` creates a context menu item "Save to Contacts".
+2.  **Selection**: When clicked, it captures `info.selectionText`.
+3.  **Validation**: It checks if the text looks like a number or email.
+4.  **Storage**: Saves the valid contact to `chrome.storage.sync/local`.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`contextMenus`**: To add the right-click "Save Contact" option.
+- **`storage`**: To persist your saved contact list.
+- **`host_permissions`**: To ensure the context menu works on all pages.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Context Menu](https://via.placeholder.com/600x400?text=Context+Menu)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Private Storage**: Contacts are stored in your browser.
+- **No Sync**: We do not upload your contacts to any server.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- `contextMenus`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

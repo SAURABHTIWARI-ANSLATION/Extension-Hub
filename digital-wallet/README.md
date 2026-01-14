@@ -1,54 +1,52 @@
-# Digital Wallet Tracker
+# 💰 Digital Wallet Tracker
 
-Track income, expenses, and balance easily.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Digital Wallet Tracker** is a personal finance extension. Track your daily expenses and income streams directly from your browser. With a simple dashboard, stay on top of your budget without needing complex spreadsheet software.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Transaction Log**: Add Income or Expense entries with descriptions.
+- **Balance Overview**: Real-time calculation of your current wallet balance.
+- **History**: Scrollable list of past transactions.
+- **categories**: Tag transactions for better organization.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: form and list UI.
+- **CSS3**: Styling.
+- **JavaScript**: Balance calculation logic.
+- **Chrome Extension (Manifest V3)**: Storage.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+digital-wallet/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `digital-wallet`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **digital-wallet** folder.
+### 🧠 How It Works
+1.  **Input**: User enters Amount, Type (Cr/Dr), and Note.
+2.  **Storage**: Object is pushed to a transactions array in `chrome.storage`.
+3.  **Calculation**: `Balance = Sum(Income) - Sum(Expense)`.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`storage`**: Essential to keep your financial records saved locally.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Wallet Dashboard](https://via.placeholder.com/600x400?text=Wallet+Dashboard)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local Only**: Financial data is computed and stored on your device only.
+- **Secure**: No external connections.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

@@ -1,54 +1,51 @@
-# Poll Maker
+# 📊 Poll Maker
 
-Create polls, share links, and collect votes locally.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Poll Maker** allows you to create quick polls and surveys directly from your browser. Whether you're deciding on lunch or gathering feedback, generate a poll and share the link (or collect votes locally) in seconds.
 
-![Version](https://img.shields.io/badge/Version-1.2-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Create**: Add questions and multiple options.
+- **Vote**: Interface to select an option.
+- **Results**: Real-time bar chart of votes.
+- **History**: View past polls.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Form builder.
+- **CSS3**: Chart styling.
+- **JavaScript**: Voting logic.
+- **Chrome Extension (Manifest V3)**: Storage.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+poll-maker/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Logic
+└── style.css          # Styles
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `poll-maker`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **poll-maker** folder.
+### 🧠 How It Works
+1.  **Draft**: User enters a question and options.
+2.  **Save**: Poll object is saved to `chrome.storage`.
+3.  **Interact**: User clicks an option, updating the count in the stored object.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`storage`**: To persist your polls and vote counts.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Poll Results](https://via.placeholder.com/600x400?text=Poll+Results)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local**: Votes are stored on your machine (unless an external backend is configured).
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

@@ -1,91 +1,51 @@
-# 🧠 Focus Mode — Chrome Extension
+# 🚫 Focus Mode
 
-Focus Mode is a lightweight productivity extension that helps you stay focused during work hours by blocking distracting websites and allowing controlled emergency access when needed.
+## 👨‍💻 Made by Saurabh Tiwari
 
----
+### 🧩 Description
+**Focus Mode** helps you reclaim your attention. Define a list of distracting websites (like social media or news), and blocking them during your focus hours. When you try to visit them, you'll see a motivational quote instead.
 
-## ✨ Features
+### 🚀 Features
+- **Blocklist**: Add any URL to the block list.
+- **Toggle**: Easy On/Off switch for focus sessions.
+- **Timer**: (Optional) Set a duration for the block.
+- **Motivational Page**: Custom block page to get you back to work.
 
-- Block distracting websites during defined work hours  
-- Enable / disable Focus Mode anytime  
-- Emergency access for 10 minutes when required  
-- Daily block statistics with auto reset  
-- Works fully offline — no backend or account required  
+### 🛠️ Tech Stack
+- **HTML5**: Settings UI.
+- **JavaScript**: URL matching and tab updating.
+- **Chrome Extension (Manifest V3)**: declarativeNetRequest or Tabs update logic.
 
----
+### 📂 Folder Structure
+```
+focus-mode/
+├── icons/             # Icons
+├── background.js      # Blocker logic
+├── popup.html         # Toggle UI
+└── manifest.json      # Config
+```
 
-## 🚀 How to Install (Local)
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `focus-mode`.
 
-1. Open Chrome and go to: `chrome://extensions`
-2. Enable **Developer Mode** (top-right corner)
-3. Click **Load unpacked**
-4. Select the `focus-mode-extension` folder
+### 🧠 How It Works
+1.  **Listener**: `background.js` listens to `chrome.tabs.onUpdated`.
+2.  **Match**: Checks if the new URL is in the stored blocklist.
+3.  **Action**: If "Focus Mode" is active, it redirects the tab to `blocked.html` or closes it.
 
-The extension will now appear in your toolbar 🎉
+### 🔐 Permissions Explained
+- **`storage`**: To save the blocklist and state.
+- **`tabs`**: To monitor and redirect tabs.
 
----
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Focus Toggle](https://via.placeholder.com/600x400?text=Focus+Toggle)
 
-## 🛠 How to Use
+### 🔒 Privacy Policy
+- **Local**: Your blocklist is stored locally. We do not track your browsing.
 
-1. Click the Focus Mode icon
-2. Enable Focus Mode
-3. Set your work hours (e.g., 09:00 – 18:00)
-4. Add websites like `youtube.com`, `instagram.com`
-5. Start browsing — distractions will be blocked automatically
-
-To remove a site, simply click on it in the list.
-
----
-
-## 🌐 How to Publish to Chrome Web Store
-
-1. Visit the **Chrome Web Store Developer Dashboard**
-2. Pay the one-time $5 developer registration fee
-3. Zip the `focus-mode-extension` folder
-4. Upload the ZIP file
-5. Add:
-   - Extension name and description
-   - Screenshots (recommended: 1280×800)
-   - A 128×128 icon
-6. Submit for review and wait for approval
-
----
-
-## 🧩 Project Structure
-
-focus-mode-extension/
-├─ manifest.json
-├─ popup.html
-├─ popup.js
-├─ style.css
-├─ background.js
-├─ blocked.html
-└─ README.md
-
-
----
-
-## 💡 Tips
-
-- Use a clean **128×128 PNG icon**
-- Test blocking logic in Incognito mode
-- Increase the `version` in `manifest.json` before publishing updates
-- Test during and outside work hours to ensure correct behavior
-
----
-
-## 🔐 Privacy
-
-Focus Mode does **not collect, transmit, or track any personal data**.  
-All settings are stored locally in your browser using Chrome storage.
-
----
-
-## 📄 License
-
-This project is free for personal and educational use.  
-You may modify and extend it as you like.
-
----
-
-Happy focusing! 🚀
+### 📄 License
+This project is licensed under the **MIT License**.

@@ -1,59 +1,58 @@
-# Markdown Converter
+# 📝 Markdown Converter
 
-Convert Markdown quickly and accurately to formatted text.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Markdown Converter** is a dedicated tool for technical writers and developers. It allows you to write Markdown syntax and instantly preview it as formatted HTML. You can then copy the resulting HTML or formatted text for use in emails, blogs, or documentation.
 
-![Version](https://img.shields.io/badge/Version-2.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Live Preview**: See your Markdown render as you type.
+- **Syntax Support**: Headers, Lists, Bold, Italic, Code Blocks, Links, and Images.
+- **Copy HTML**: One-click button to copy the generated HTML code.
+- **Clean Interface**: Split-screen editor for maximum productivity.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Editor interface.
+- **CSS3**: Markdown styling.
+- **JavaScript (Vanilla)**: Markdown parsing engine (or Regex-based parser).
+- **Chrome Extension (Manifest V3)**: Extension platform.
 
-## 🚀 Features
-
-- **Deep Integration**: interacts directly with your current tab.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── icon16.png
-├── icon32.png
+MarkdownPreview/
+├── icon16.png        # Icons
 ├── icon48.png
-├── index.html
 ├── logo.png
-├── manifest.json
-├── parser.js
-├── popup.js
-└── style.css
+├── index.html        # Main editor UI
+├── manifest.json     # Settings
+├── script.js         # Converter logic
+└── style.css         # Editor styles
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  Clone the repository.
+2.  Navigate to `chrome://extensions/`.
+3.  Enable **Developer mode**.
 4.  Click **Load unpacked**.
-5.  Select the **MarkdownPreview** folder.
+5.  Select the `MarkdownPreview` folder.
+6.  Open the extension to start writing!
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **Input**: User types markdown in the left pane (`textarea`).
+2.  **Conversion**: `script.js` listens for input events and runs a parser function to convert Markdown symbols (like `**bold**`, `# Header`) into HTML tags (`<b>bold</b>`, `<h1>Header</h1>`).
+3.  **Output**: The resulting HTML is injected into the right pane (`div`) for display.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 🔐 Permissions Explained
+- **`clipboardWrite`**: To allow the "Copy" button to write the formatted HTML to your clipboard.
+- **`activeTab`**: Generic permission for popup actions.
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Editor View](https://via.placeholder.com/600x400?text=Editor+View)
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `clipboardWrite`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
+### 🔒 Privacy Policy
+- **Local Processing**: Your drafts are processed locally and are not saved to any server.
+- **Secure**: No external scripts are loaded.
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

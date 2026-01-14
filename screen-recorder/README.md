@@ -1,54 +1,52 @@
-# Simple Screen Recorder
+# 🎥 Simple Screen Recorder
 
-Record your screen, tab, or window easily.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Simple Screen Recorder** allows you to capture your screen activity with zero hassle. Record your entire desktop, a specific application window, or just a Chrome tab. Ideal for creating tutorials, reporting bugs, or saving video calls.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Flexible Capture**: Record Screen, Window, or Tab.
+- **Audio Support**: Record system audio or microphone.
+- **Instant Download**: Saves video as WebM format immediately after stopping.
+- **No Watermark**: Clean, professional recordings.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Control panel.
+- **JavaScript**: `getDisplayMedia` API and `MediaRecorder` API.
+- **Chrome Extension (Manifest V3)**: ActiveTab.
 
-## 🚀 Features
-
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+screen-recorder/
+├── manifest.json      # Config
+├── popup.html         # Controls
+├── popup.js           # Recording logic
+└── style.css          # Styles
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `screen-recorder`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **screen-recorder** folder.
+### 🧠 How It Works
+1.  **Stream**: Calls `navigator.mediaDevices.getDisplayMedia()` to prompt user for screen selection.
+2.  **Record**: output stream is fed into a `MediaRecorder` instance.
+3.  **Changes**: Chunks of data are pushed to an array.
+4.  **Save**: On stop, chunks are assembled into a `Blob` and downloaded.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`activeTab`**: To identify the source tab if "Current Tab" mode is selected.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Recorder Controls](https://via.placeholder.com/600x400?text=Recorder+Controls)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local Processing**: Video encoding happens in your browser.
+- **No Uploads**: Recordings are saved locally to your disk.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

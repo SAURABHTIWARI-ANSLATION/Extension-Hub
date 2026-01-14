@@ -1,62 +1,52 @@
-# Quick Search
+# 🔍 Quick Search
 
-Select text and search on multiple platforms instantly
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Quick Search** supercharges your browsing by allowing you to search selected text on multiple engines instantly. Highlight any text, right-click (or use a shortcut), and jump directly to results on Google, Wikipedia, YouTube, or Amazon.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Context Menu**: "Search on..." right-click option.
+- **Keyboard Shortcut**: `Ctrl+Shift+S` (or `Cmd+Shift+S`).
+- **Multiple Engines**: Configurable search providers.
+- **Popup Search**: Type directly in the popup for quick results.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Popup.
+- **JavaScript**: Tab creation logic.
+- **Chrome Extension (Manifest V3)**: Context Menus.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Context Menu**: Quick access via right-click.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── background.js
-├── content.js
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   └── icon48.png
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+quick-search/
+├── icons/             # Icons
+├── content.js         # Selection handler
+├── background.js      # Menu handler
+├── popup.html         # Search bar
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `quick-search`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **quick-search** folder.
+### 🧠 How It Works
+1.  **Selection**: User highlights text.
+2.  **Event**: On click, `background.js` constructs the search URL (e.g., `google.com/search?q=text`).
+3.  **Action**: Opens a new tab with the result.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`contextMenus`**: To add the search option to the right-click menu.
+- **`storage`**: To save your preferred search engines.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Search Menu](https://via.placeholder.com/600x400?text=Search+Menu)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **No Logs**: We do not log your search queries.
 
-This extension prioritizes your privacy:
-- `contextMenus`: Required for core functionality.
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

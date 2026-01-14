@@ -1,58 +1,52 @@
-# JSONBeautifyinator
+# 💻 JSON Beautifyinator
 
-Format, validate, and minimize JSON text with ease.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**JSON Beautifyinator** is a utility for developers dealing with raw JSON data. Paste your minified or messy JSON, and instantly beautify it with proper indentation and syntax highlighting. It also validates your JSON to catch errors.
 
-![Version](https://img.shields.io/badge/Version-1.1-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Beautify**: Formats valid JSON with 2-space or 4-space indentation.
+- **Minify**: Compresses JSON into a single line for production use.
+- **Validate**: Checks if the JSON is valid and reports syntax errors.
+- **Copy**: One-click copy for the result.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Editor layout.
+- **CSS3**: Syntax colors.
+- **JavaScript**: `JSON.parse` and `JSON.stringify`.
+- **Chrome Extension (Manifest V3)**: Popup action.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── icons
-│   ├── icon16.png
-│   ├── icon32.png
-│   └── icon48.png
-├── manifest.json
-├── popup.html
-├── popup.js
-└── styles.css
+json formatter/
+├── icons/             # Icons
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Open `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> ` json formatter` (Note: select the folder).
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the ** json formatter** folder.
+### 🧠 How It Works
+1.  **Parse**: Attempts to run `JSON.parse()` on input.
+2.  **Format**: If successful, runs `JSON.stringify(obj, null, 2)` to format.
+3.  **Error Handling**: Catches parsing errors and displays the error message to the user.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Operates locally on pasted text.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![JSON Editor](https://via.placeholder.com/600x400?text=JSON+Editor)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Client-Side**: Input data is processed in-memory and never sent to a server.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

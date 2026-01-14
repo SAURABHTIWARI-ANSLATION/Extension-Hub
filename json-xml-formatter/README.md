@@ -1,67 +1,61 @@
-# JSON/XML Formatter
+# 👩‍💻 JSON/XML Formatter
 
-Instantly format unformatted API responses with syntax highlighting
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**JSON/XML Formatter** is a developer's best friend. It automatically detects raw JSON or XML content returned by APIs and reformats it into a beautiful, readable, and collapsible tree view. Say goodbye to messy blobs of text and hello to structured data.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Auto-Detection**: Automatically runs when a page contains valid JSON or XML.
+- **Syntax Highlighting**: Color-coded keys, strings, numbers, and booleans.
+- **Collapsible Trees**: Expand or collapse objects and arrays for easier navigation.
+- **Clickable Links**: Detects URLs in the data and makes them clickable.
+- **Dark/Light Mode**: toggles between themes.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Structure.
+- **CSS3**: Syntax highlighting themes.
+- **JavaScript (Vanilla)**: Parsing and rendering logic.
+- **Chrome Extension (Manifest V3)**: Content scripts and background workers.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── background.js
-├── content-script.js
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   └── icon48.png
-├── manifest.json
-├── popup.css
-├── popup.html
-├── popup.js
-├── settings.html
-├── settings.js
-└── theme.css
+json-xml-formatter/
+├── assets/              # Static assets
+├── icons/               # Icons
+├── background.js        # Service worker
+├── content-script.js    # Logic to format page content
+├── manifest.json        # Config
+├── popup.html           # Settings popup
+├── theme.css            # Syntax highlighting styles
+└── settings.html        # Options page
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  Clone this repository.
+2.  Go to `chrome://extensions/`.
+3.  Turn on **Developer mode**.
 4.  Click **Load unpacked**.
-5.  Select the **json-xml-formatter** folder.
+5.  Select the `json-xml-formatter` folder.
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **Interception**: The extension checks the DOM or MIME type of the loaded page.
+2.  **Parsing**: If valid JSON/XML is found, it parses the text string into a JavaScript Object or DOM Tree.
+3.  **Rendering**: It replaces the raw text body with a structured HTML representation with event listeners for collapsing nodes.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 🔐 Permissions Explained
+- **`activeTab`**: To format the current tab.
+- **`host_permissions` ("<all_urls>")**: To run on any API endpoint or website serving raw data.
+- **`storage`**: To save your theme preferences (Dark/Light).
+- **`declarativeNetRequest`**: To modify headers if necessary for proper rendering (e.g., bypassing CSP for local styles).
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Formatted JSON](https://via.placeholder.com/600x400?text=Formatted+JSON)
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `storage`: Required for core functionality.
-- `scripting`: Required for core functionality.
-- `declarativeNetRequest`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
+### 🔒 Privacy Policy
+- **No Data Collection**: The formatting happens entirely client-side.
+- **Safe**: Your API data is never sent to us.
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

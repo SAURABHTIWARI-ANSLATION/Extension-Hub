@@ -1,12 +1,53 @@
-# CSS Background Generator
+# 🎨 Background Generator
 
-## Description
-This extension lets you generate customised or random background gradient as well as random background pictures. Additionally, it displays the hex code of the background colour gradient and url of the generated background image. 
+## 👨‍💻 Made by Saurabh Tiwari
 
-# Demo
-![Screenshot (319)](https://user-images.githubusercontent.com/80174214/159129978-97a479f3-e071-45b4-a401-0587b92403ae.png)
-![Screenshot (320)](https://user-images.githubusercontent.com/80174214/159129984-40b1ac1e-cb12-4e0e-b670-f9da6667f02c.png)
-![Screenshot (321)](https://user-images.githubusercontent.com/80174214/159129985-4d139c61-aaef-427a-b97d-cdb36d967f12.png)
-![Screenshot (322)](https://user-images.githubusercontent.com/80174214/159129987-e297448a-580b-417e-bdc7-99d0f97bfc6c.png)
-![Screenshot (323)](https://user-images.githubusercontent.com/80174214/159129989-ed9bff38-4704-4214-b992-fc8ddb43a2bc.png)
-![Screenshot (324)](https://user-images.githubusercontent.com/80174214/159129992-2419f387-634f-40a8-9938-705969342a67.png)
+### 🧩 Description
+**Background Generator** is a designated design tool for web developers. Create stunning CSS gradients, solid colors, and pattern backgrounds instantly. Experiment with colors and get the CSS code ready to copy-paste into your project.
+
+### 🚀 Features
+- **Gradient Builder**: Linear and Radial gradient support.
+- **Color Palettes**: Pre-selected harmonious color combinations.
+- **Live Preview**: See the background on the popup body.
+- **CSS Output**: One-click copy for `background: linear-gradient(...)`.
+
+### 🛠️ Tech Stack
+- **HTML5**: Controls.
+- **CSS3**: Gradient rendering.
+- **JavaScript**: Color manipulation.
+- **Chrome Extension (Manifest V3)**: Platform.
+
+### 📂 Folder Structure
+```
+CSS-Background-Generator/
+├── manifest.json      # Config
+├── popup.html         # Generator UI
+├── script.js          # Logic
+└── style.css          # Styling
+```
+
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Go to `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `CSS-Background-Generator`.
+
+### 🧠 How It Works
+1.  **Inputs**: Color pickers for Start and End colors.
+2.  **Logic**: JS listens for input changes and updates the `document.body.style.background`.
+3.  **Output**: Generates the corresponding CSS string and displays it in a text area.
+
+### 🔐 Permissions Explained
+- **`storage`**: To save your favorite gradients (if feature implemented).
+- **`activeTab`**: If it supports applying background to current page.
+
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Generator UI](https://via.placeholder.com/600x400?text=Generator+UI)
+
+### 🔒 Privacy Policy
+- **Client-Side**: All generation happens in the browser.
+- **No Data**: No designs are uploaded.
+
+### 📄 License
+This project is licensed under the **MIT License**.

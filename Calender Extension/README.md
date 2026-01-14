@@ -1,56 +1,50 @@
-# Dynamic Calendar
+# 📅 Dynamic Calendar
 
-A simple and useful Dynamic Calendar extension.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Dynamic Calendar** puts a fully functional calendar in your browser toolbar. Check dates, days, and plan your month without leaving your current tab. It updates dynamically to show the current day.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Month View**: Navigate previous and next months.
+- **Today Highlight**: Automatically highlights the current date.
+- **Dynamic Icon**: (Optional) The extension icon shows the current date.
+- **Minimalist**: Clean grid layout.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Grid structure.
+- **CSS3**: Calendar styling.
+- **JavaScript**: Date generation and navigation logic.
+- **Chrome Extension (Manifest V3)**: Popup.
 
-## 🚀 Features
-
-- **Simple & Lightweight**: Does exactly what it says efficiently.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── icon128.png
-├── index.html
-├── manifest.json
-├── script.js
-├── style.css
-└── test_logic.js
+Calender Extension/
+├── manifest.json      # Config
+├── index.html         # Calendar Grid
+├── script.js          # Logic
+└── style.css          # Styles
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `Calender Extension`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **Calender Extension** folder.
+### 🧠 How It Works
+1.  **Render**: JS looping through days of the month to build a grid.
+2.  **Navigation**: Buttons increment/decrement the `currentMonth` variable and re-render the grid.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Basic functionality only.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Calendar View](https://via.placeholder.com/600x400?text=Calendar+View)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **No Data**: We don't track your schedule.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

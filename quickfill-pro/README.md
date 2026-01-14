@@ -1,151 +1,56 @@
-⚡ QuickFill Pro – Smart Form Autofill Chrome Extension
+# ⚡ QuickFill Pro - Smart Form Autofill
 
-QuickFill Pro is a privacy-first Chrome extension that helps you instantly fill web forms using saved profiles.
-No backend. No tracking. No clutter. Just fast, smart autofill.
+## 👨‍💻 Made by Saurabh Tiwari
 
-🚀 Features
+### 🧩 Description
+**QuickFill Pro** helps you breeze through repetitive forms. Whether for testing, applying to jobs, or creating accounts, create profiles with predefined data and fill entire forms with a single click (or shortcut).
 
-⚡ One-click form autofill
+### 🚀 Features
+- **Multiple Profiles**: Create "Work", "Personal", or "Testing" profiles.
+- **Smart Matching**: Matches fields by Name, ID, or Label (e.g., "Full Name", "email").
+- **Shortcut**: `Ctrl+Shift+F` to fill instantly.
+- **Secure Storage**: Data is stored locally.
 
-👤 Multiple profiles support
+### 🛠️ Tech Stack
+- **HTML5**: Settings UI.
+- **JavaScript**: DOM traversal and heuristic matching.
+- **Chrome Extension (Manifest V3)**: Scripting.
 
-⭐ Set a default profile
-
-⌨️ Keyboard shortcut support
-
-🖱️ Right-click context menu
-
-🔐 Secure & privacy-focused
-
-💯 Works on real-world websites
-
-🧠 How It Works
-
-Save your profile(s) in the Options page
-
-Open any website with a form
-
-Trigger autofill using:
-
-Extension popup
-
-Keyboard shortcut
-
-Right-click menu
-
-QuickFill Pro intelligently detects form fields and fills only safe inputs.
-
-🔐 Privacy & Security
-
-QuickFill Pro is designed with privacy in mind:
-
-❌ No backend server
-
-❌ No data tracking
-
-❌ No analytics
-
-❌ No external APIs
-
-✅ All data stored locally in your browser
-
-✅ Passwords, OTPs, CVVs are never filled
-
-Your data stays on your device.
-
-📋 Supported Fields
-
-QuickFill Pro automatically fills:
-
-Name
-
-Email address
-
-Phone number
-
-Address
-
-And safely ignores:
-
-Password fields
-
-OTP / PIN fields
-
-Credit card numbers
-
-CVV / security codes
-
-⌨️ Keyboard Shortcut
-Ctrl + Shift + F   (Windows / Linux)
-Cmd  + Shift + F  (macOS)
-
-
-You can customize shortcuts at:
-
-chrome://extensions/shortcuts
-
-🛠 Installation
-
-For local installation and development, see
-👉 INSTALLATION.md
-
-📁 Project Structure
+### 📂 Folder Structure
+```
 quickfill-pro/
-├── manifest.json
-├── popup.html
-├── popup.css
-├── popup.js
-├── options.html
-├── options.css
-├── options.js
-├── content.js
-├── background.js
-├── icons/
-│   ├── icon16.png
-│   ├── icon48.png
-│   └── icon128.png
-├── README.md
-└── INSTALLATION.md
+├── icons/             # Icons
+├── popup.html         # Profile Manager
+├── background.js      # Shortcut handler
+├── options.html       # Full options
+└── manifest.json      # Config
+```
 
-🧪 Tested On
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `quickfill-pro`.
 
-Google forms
+### 🧠 How It Works
+1.  **Profiles**: User saves a JSON object `{name: "John", email: "john@doe.com"}`.
+2.  **Scan**: Content script scans inputs on the page.
+3.  **Match**: Fuzzy matches input `name` or `id` attributes against profile keys.
+4.  **Fill**: Sets the `value` property of the inputs.
 
-GitHub signup
+### 🔐 Permissions Explained
+- **`activeTab`**: To access forms on the current page.
+- **`scripting`**: To execute the filling logic.
+- **`storage`**: To save your profiles.
+- **`contextMenus`**: Right-click to fill.
 
-LinkedIn signup
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Profile Settings](https://via.placeholder.com/600x400?text=Profile+Settings)
 
-Job portals (Indeed, Naukri)
+### 🔒 Privacy Policy
+- **Local Encyption**: Profiles are stored in local storage.
+- **No Cloud**: Your personal data never leaves your browser.
 
-Contact forms
-
-Modern SPA websites
-
-❗ Limitations
-
-Some highly dynamic or shadow-DOM forms may not autofill
-
-Websites with heavy anti-automation may block autofill
-
-These are browser limitations, not bugs.
-
-🧩 Roadmap (Future Enhancements)
-
-Per-site autofill rules
-
-Field highlight animations
-
-Firefox support
-
-Profile import/export
-
-Advanced field mapping
-
-👨‍💻 Author
-
-Built with ❤️ by Ritik Bharatpure
-For learning, productivity, and real-world browser extension development.
-
-📄 License
-
-This project is intended for educational and personal productivity use.
+### 📄 License
+This project is licensed under the **MIT License**.

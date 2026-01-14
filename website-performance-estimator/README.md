@@ -1,56 +1,56 @@
-# Website Performance Estimator
+# 🚀 Website Performance Estimator
 
-Estimate website performance metrics instantly.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Website Performance Estimator** is a lightweight utility that gives you a quick snapshot of a webpage's performance. It analyzes the page load time and resource weight to give you immediate feedback on "speed" and "bloat".
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+Unlike heavy audits like Lighthouse, this tool is designed for instant, rough estimates to spot heavy pages at a glance.
 
-</div>
+### 🚀 Features
+- **Load Time Analysis**: Calculates how long the page took to load (using Navigation Timing API).
+- **Resource Weight**: Estimates the total size of resources on the page.
+- **Instant Feedback**: Simple "Good", "Fair", or "Poor" rating.
+- **Minimalist UI**: Clean and distraction-free popup.
 
-## 🚀 Features
+### 🛠️ Tech Stack
+- **HTML5**: UI structure.
+- **CSS3**: Styles.
+- **JavaScript (Vanilla)**: Performance API logic.
+- **Chrome Extension (Manifest V3)**: Core framework.
 
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── content.js
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+website-performance-estimator/
+├── manifest.json       # Config
+├── popup.css           # Styles
+├── popup.html          # UI
+└── popup.js            # Logic
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone this repo.
+2.  Navigate to `chrome://extensions/`.
+3.  Enable **Developer mode**.
+4.  Button **Load unpacked**.
+5.  Choose the `website-performance-estimator` directory.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **website-performance-estimator** folder.
+### 🧠 How It Works
+1.  **Timing API**: It uses `performance.timing` or `performance.getEntriesByType('navigation')` to calculate Load Time.
+2.  **Resource API**: It iterates through `performance.getEntriesByType('resource')` to sum up the transfer sizes of images, scripts, and CSS.
+3.  **Scoring**: It compares these values against thresholds (e.g., < 1s Load is Good) to display a status.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`activeTab`**: To query performance metrics of the current tab.
+- **`scripting`**: To execute the performance analysis script in the context of the page.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Performance Score](https://via.placeholder.com/600x400?text=Performance+Score)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **No External Requests**: All analysis is computed locally using browser APIs.
+- **No Tracking**: We do not store or share your performance data.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `scripting`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

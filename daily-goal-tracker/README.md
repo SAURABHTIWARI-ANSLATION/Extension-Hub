@@ -1,56 +1,54 @@
-# Daily Goal Tracker
+# 🎯 Daily Goal Tracker
 
-Track your daily goals and habits
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Daily Goal Tracker** is a minimalist productivity extension designed to help you focus on what matters. List your top 3-5 goals for the day, check them off as you go, and build a streak of productivity. It's your simple, digital daily planner that lives in your browser.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Task Management**: Add, edit, and delete daily goals.
+- **Progress Tracking**: Visual progress bar shows how much you've achieved.
+- **Daily Reset**: Goals can be set to reset automatically or manually.
+- **Persistent storage**: Your goals are saved even if you close the browser.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Task list interface.
+- **CSS3**: Styling.
+- **JavaScript (Vanilla)**: CRUD operations for tasks.
+- **Chrome Extension (Manifest V3)**: Storage and alarms.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── background.js
-├── manifest.json
-├── popup.html
-├── popup.js
-└── styles.css
+daily-goal-tracker/
+├── background.js      # Service worker
+├── manifest.json      # Config
+├── popup.html         # UI
+└── popup.js           # Logic
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  Download source code.
+2.  Go to `chrome://extensions`.
+3.  Switch on **Developer mode**.
 4.  Click **Load unpacked**.
-5.  Select the **daily-goal-tracker** folder.
+5.  Select the `daily-goal-tracker` directory.
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **UI**: A list of input fields or specific goal items.
+2.  **Storage**: Every change is saved to `chrome.storage.sync` or `local`.
+3.  **Alarms**: (Optional) Use `chrome.alarms` to send reminders or reset goals at midnight.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 🔐 Permissions Explained
+- **`storage`**: Essential to save your list of goals.
+- **`alarms`**: Used for reminders or daily reset functionality.
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Goal List](https://via.placeholder.com/600x400?text=Goal+List)
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- `alarms`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
+### 🔒 Privacy Policy
+- **Local Data**: Your goals are yours effectively. They are stored locally.
+- **No Cloud**: We do not sync your data to any external server.
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

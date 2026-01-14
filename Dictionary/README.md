@@ -1,56 +1,50 @@
-# Dictionary search
+# 📖 Dictionary Search
 
-A simple and useful Dictionary search extension.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Dictionary Search** is your instant vocabulary companion. Double-click any word on a webpage or type it into the popup to get definitions, synonyms, and pronunciation. Expand your vocabulary without breaking your reading flow.
 
-![Version](https://img.shields.io/badge/Version-0.0.1-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Double-Click Lookups**: (Optional) highlight word to define.
+- **Comprehensive Definitions**: Meanings, parts of speech, and examples.
+- **Audio Pronunciation**: Listen to the correct pronunciation.
+- **Synonyms**: Find similar words easily.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Popup.
+- **JavaScript**: Fetch API for Dictionary API.
+- **Chrome Extension (Manifest V2)**: (Legacy).
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── loading.svg
-├── logo.png
-├── manifest.json
-├── popup.html
-├── script.js
-└── styles.css
+Dictionary/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # API Logic
+└── logo.png           # Icon
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `Dictionary`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **Dictionary** folder.
+### 🧠 How It Works
+1.  **Query**: Sends the selected word to a Free Dictionary API.
+2.  **Response**: Parses JSON response containing definitions and audio links.
+3.  **Display**: Renders the result in a clean card format.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **Internet Access**: Implicitly required to query the API.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Definition Popup](https://via.placeholder.com/600x400?text=Definition+Popup)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Anonymous**: Lookups are not tied to your identity.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

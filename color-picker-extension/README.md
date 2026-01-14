@@ -1,59 +1,54 @@
-# Pixel Perfect Color Picker
+# 🎨 Pixel Perfect Color Picker
 
-Pick exact colors from any pixel on the screen. Get HEX, RGB, and HSL values instantly.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Pixel Perfect Color Picker** allows designers and developers to grab the exact color code of any pixel on their screen. Whether you need a specific shade of blue from an image or a button's background color, get the Hex, RGB, or HSL code instantly.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Eyedropper Tool**: Pick colors from anywhere in the browser window.
+- **Format Conversion**: Auto-converts to HEX, RGB, and HSL.
+- **Copy to Clipboard**: One-click copying.
+- **Recent Colors**: Remembers your recently picked colors.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Interface.
+- **CSS3**: Styling.
+- **JavaScript**: EyeDropper API integration.
+- **Chrome Extension (Manifest V3)**: Extension platform.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   ├── icon32.png
-│   └── icon48.png
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+color-picker-extension/
+├── icons/             # App icons
+├── popup.html         # Main UI
+├── popup.js           # Picking logic
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone this repository.
+2.  Navigate to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Select **Load unpacked**.
+5.  Choose `color-picker-extension`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **color-picker-extension** folder.
+### 🧠 How It Works
+1.  **API**: Uses the modern `EyeDropper` API built into Chromium browsers.
+2.  **Activation**: User clicks "Pick Color", which creates a magnifying lens cursor.
+3.  **Selection**: Clicking a pixel returns the color data.
+4.  **Display**: The extension parses the color and displays it in multiple formats.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`storage`**: To save your history of picked colors.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Color Picker](https://via.placeholder.com/600x400?text=Color+Picker)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **No Tracking**: We do not track what colors you pick or sites you visit.
+- **Local History**: Color history is stored locally.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

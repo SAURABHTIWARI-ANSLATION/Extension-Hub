@@ -1,60 +1,55 @@
-# Water Alert
+# 💧 Water Alert
 
-Smart hydration reminder with popup alert
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Water Alert** is your personal hydration coach. Spending hours at the screen often means forgetting to drink water. This extension sends you gentle, customizable reminders to stay hydrated, keeping you healthy and focused.
 
-![Version](https://img.shields.io/badge/Version-2.1-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Smart Reminders**: Set intervals (e.g., every 30 mins, 1 hour).
+- **Notification Popups**: Non-intrusive system notifications.
+- **Progress Tracking**: Log your glasses and see your daily intake.
+- **Custom Sounds**: Choose your alert tone.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: UI.
+- **CSS3**: Styling.
+- **JavaScript**: Alarms and storage.
+- **Chrome Extension (Manifest V3)**: Alarms API.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── alert.html
-├── alert.js
-├── background.js
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+water-alert /
+├── icons/             # Icons
+├── alert.html         # Notification UI
+├── background.js      # Scheduler
+├── popup.html         # Settings
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `water-alert `.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **water-alert ** folder.
+### 🧠 How It Works
+1.  **Scheduling**: Uses `chrome.alarms.create` to schedule recurring events.
+2.  **Trigger**: When alarm fires, `background.js` creates a `chrome.notifications` alert or opens a small window.
+3.  **Logging**: User interactions (drinking water) are saved to tracking history.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`alarms`**: Critical permission to run the timer in the background.
+- **`notifications`**: To show the hydration alert.
+- **`storage`**: To save your preferences and daily count.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Reminder Notification](https://via.placeholder.com/600x400?text=Reminder+Notification)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Health Data**: Logs are stored locally.
+- **Private**: We do not collect health info.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- `alarms`: Required for core functionality.
-- `notifications`: Required for core functionality.
-- `idle`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

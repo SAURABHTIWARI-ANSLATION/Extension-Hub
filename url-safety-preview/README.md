@@ -1,69 +1,56 @@
-# URL Safety Preview
+# 🛡️ URL Safety Preview
 
-Show safety scores before visiting shortened or suspicious links
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**URL Safety Preview** is your first line of defense against malicious websites. Before you visit a shortened or suspicious link, this extension scans it to provide a safety score and unmasks the destination URL. Browse with confidence knowing what lies ahead.
 
-![Version](https://img.shields.io/badge/Version-1.2.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Link Scanning**: Analyzes links for malware, phishing, and scam reports.
+- **Unshorten URLs**: Reveals the true destination of bit.ly or other short links.
+- **Safety Score**: Provides a clear 0-100 safety rating.
+- **Real-time Alerts**: Warnings appear before you navigate to dangerous sites.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Popup UI.
+- **CSS3**: Warning styles.
+- **JavaScript**: API integration for reputation checks.
+- **Chrome Extension (Manifest V3)**: WebNavigation and Notifications.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── background.js
-├── block.html
-├── block.js
-├── content-script.js
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   └── icon48.png
-├── manifest.json
-├── popup.css
-├── popup.html
-├── popup.js
-├── settings.html
-├── settings.js
-└── theme.css
+url-safety-preview/
+├── icons/             # Icons
+├── background.js      # Scanning service
+├── content-script.js  # Page interaction
+├── popup.html         # Status UI
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Toggle **Developer mode**.
+4.  Load unpacked -> `url-safety-preview`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **url-safety-preview** folder.
+### 🧠 How It Works
+1.  **Event**: Detects navigation events or link clicks.
+2.  **API Call**: Sends the target URL to a safety API (like Google Safe Browsing or VirusTotal, depending on implementation).
+3.  **Result**: Returns a JSON response with threat level.
+4.  **Action**: If malicious, it sends a notification or blocks the request.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`webNavigation`**: To monitor when you are about to visit a new site.
+- **`notifications`**: To alert you immediately if a site is unsafe.
+- **`activeTab`**: To show details for the current site.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Safety Report](https://via.placeholder.com/600x400?text=Safety+Report)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Anonymity**: URL checks are performed anonymously.
+- **No History**: We do not store your browsing history.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `storage`: Required for core functionality.
-- `webNavigation`: Required for core functionality.
-- `notifications`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

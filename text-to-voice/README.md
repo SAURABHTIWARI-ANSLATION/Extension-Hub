@@ -1,54 +1,52 @@
-# Text to Voice
+# 🗣️ Text to Voice
 
-Convert text into speech.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Text to Voice** brings your text to life. Paste any paragraph, article, or note, and listen to it using your browser's built-in text-to-speech engine. Perfect for proofreading, accessibility, or just resting your eyes.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Text-to-Speech**: High-quality speech synthesis.
+- **Playback Control**: Play, Pause, and Resume.
+- **Voice Selection**: Choose from available system voices.
+- **Adjustable Speed**: Control the rate of speech.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Interface.
+- **CSS3**: Styles.
+- **JavaScript**: Web Speech API (`SpeechSynthesis`).
+- **Chrome Extension (Manifest V3)**: Popup.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+text-to-voice/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Speech logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `text-to-voice`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **text-to-voice** folder.
+### 🧠 How It Works
+1.  **API**: Uses the `window.speechSynthesis` API.
+2.  **Voice Loading**: Fetches available voices from the operating system.
+3.  **Utterance**: Creates a `SpeechSynthesisUtterance` object with the user's text and preferences.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Uses standard Web APIs available to the popup.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Speech Controls](https://via.placeholder.com/600x400?text=Speech+Controls)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local**: Speech synthesis happens locally on your device (browser dependent).
+- **No Tracking**: We do not store your text.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

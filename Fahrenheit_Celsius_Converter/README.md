@@ -1,55 +1,53 @@
-# Fahrenheit_Celsius_Converter
+# 🌡️ Fahrenheit Celsius Converter
 
-Convert a Fahrenheit temperature to Celsius temperature or vice-versa
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Fahrenheit Celsius Converter** is a simple yet essential tool for anyone working with international temperature data. Instantly convert values between Fahrenheit (°F) and Celsius (°C) without opening a new tab or searching Google.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Bidirectional Conversion**: Type in either field to update the other.
+- **Instant Results**: Real-time calculation as you type.
+- **Decimal Precision**: Accurate to 2 decimal places.
+- **Clean UI**: No-nonsense interface.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Input fields.
+- **CSS3**: Layout.
+- **JavaScript (Vanilla)**: Conversion formulas.
+- **Chrome Extension (Manifest V3)**: Popup.
 
-## 🚀 Features
-
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── f-to-c.PNG
-├── manifest.json
-├── popup.html
-├── script.js
-└── style.css
+Fahrenheit_Celsius_Converter/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── script.js          # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repository.
+2.  Open `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `Fahrenheit_Celsius_Converter`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **Fahrenheit_Celsius_Converter** folder.
+### 🧠 How It Works
+1.  **Formulas**:
+    - `C = (F - 32) * 5/9`
+    - `F = (C * 9/5) + 32`
+2.  **Events**: Listens for `input` events on both fields to trigger the reverse calculation.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`activeTab`**: Generic permission, not strictly used for logic here.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Converter UI](https://via.placeholder.com/600x400?text=Converter+UI)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local**: All math happens on your device.
+- **Private**: No data collection.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

@@ -1,44 +1,54 @@
-# 📱 QR Code Generator Extension
+# 📱 QR Code Generator
 
-A premium, modern, and lightning-fast **QR Code Generator** browser extension. Designed with a beautiful "Sky Gradient" theme, this tool allows you to instantly generate, download, and share QR codes for any URL or text.
+## 👨‍💻 Made by Saurabh Tiwari
 
-![Extension Preview](./qr.png)
-*(Note: Replace `qr.png` with an actual screenshot of your new UI for the best effect)*
+### 🧩 Description
+**QR Code Generator** is a simple yet powerful Chrome extension that allows you to generate a QR code for the current page URL or any custom text instantly. Perfect for sharing links from your desktop to your mobile device without sending emails or messages to yourself.
 
-## ✨ Features
+### 🚀 Features
+- **Instant Generation**: Automatically generates a QR code for the current tab's URL upon opening.
+- **Custom Input**: Type any text or URL to generate a custom QR code.
+- **Offline Support**: Generates QR codes locally without needing an internet connection.
+- **Lightweight**: Minimalist design with zero bloat.
 
-- **🎨 Modern Premium UI**: Sleek "Sky Gradient" background with glassmorphism effects and smooth animations.
-- **⚡ Instant Generation**: Type anything, and the QR code updates instantly.
-- **📥 One-Click Download**: Save your QR code as a high-quality PNG image.
-- **📋 Smart Copy**: Copy the QR code image directly to your clipboard to paste in Slack, Discord, or Docs.
-- **✨ Input Visibility**: High-contrast, pill-shaped input box for effortless typing.
-- **🔄 Easy Reset**: "Clear" button to quickly reset the input and start over.
+### 🛠️ Tech Stack
+- **HTML5**: Popup structure.
+- **CSS3**: Styles.
+- **JavaScript (Vanilla)**: QR generation logic.
+- **Chrome Extension (Manifest V2)**: (Note: Legacy manifest, pending upgrade to V3).
 
-## 🚀 Installation Guide
+### 📂 Folder Structure
+```
+QR-Generator/
+├── manifest.json      # Extension configuration
+├── popup.html         # User interface
+├── popup.js           # Logic
+└── qr.png             # Icon
+```
 
-Since this is a developer version, you can install it via "Load Unpacked":
+### ⚙️ Installation (Developer Mode)
+1.  **Clone** the repository.
+2.  Open Chrome and navigate to `chrome://extensions/`.
+3.  Enable **Developer mode**.
+4.  Click **Load unpacked**.
+5.  Select the `QR-Generator` folder.
+6.  The extension is ready to use!
 
-1.  **Download/Clone** this repository to your computer.
-2.  Open your browser (Chrome, Edge, Brave, etc.) and go to `chrome://extensions`.
-3.  Enable **Developer Mode** (toggle in the top right corner).
-4.  Click **Load Unpacked**.
-5.  Select the folder where you saved this project (`QR-Generator`).
-6.  🎉 Done! Pin the extension to your toolbar for easy access.
+### 🧠 How It Works
+1.  **Input**: Takes the current tab URL or user input.
+2.  **Encoding**: Uses a JavaScript library (or API) to encode the text into a QR matrix.
+3.  **Rendering**: Renders the matrix as an image or canvas in the popup.
 
-## 🛠️ How to Use
+### 🔐 Permissions Explained
+- **`activeTab`** (Implicit): To get the URL of the current tab for default generation.
 
-1.  Click the extension icon in your browser toolbar.
-2.  **Type or Paste** any URL or text into the input box.
-3.  Click **Generate QR** (or just press Enter).
-4.  Use the **Copy** button to share it immediately, or **Download** to save it for later.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![QR Popup](https://via.placeholder.com/600x400?text=QR+Popup)
 
-## 💻 Tech Stack
+### 🔒 Privacy Policy
+- **No Tracking**: We do not track what you generate.
+- **Local Only**: All data stays on your device.
 
-- **HTML5**: Semantic and accessible structure.
-- **CSS3**: Variables, Flexbox, Gradients, and Animations.
-- **JavaScript (ES6+)**: Async/Await, Fetch API, and Clipboard API.
-- **API**: Uses the robust `goqr.me` / `qrserver` API for high-quality QR generation.
-
----
-
-Designed with ❤️ for a clutter-free web experience.
+### 📄 License
+This project is licensed under the **MIT License**.

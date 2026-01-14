@@ -1,59 +1,52 @@
-# CSS Specificity Calculator
+# 🧮 CSS Specificity Calculator
 
-Visualize and compare CSS selector specificity with detailed analysis
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**CSS Specificity Calculator** helps developers understand the "cascade" in Cascading Style Sheets. Enter a CSS selector, and get a visual breakdown of its specificity (IDs, Classes, Elements). Stop guessing why your styles aren't applying.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Visual Breakdown**: Specificity Graph or "0-0-0" score.
+- **Comparison**: Compare two selectors to see which one wins.
+- **History**: Keeps track of recent calculations.
+- **Educational**: Learn how specificity works as you use it.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Input UI.
+- **CSS3**: Visualization.
+- **JavaScript**: Parsing logic (Regex or Parser).
+- **Chrome Extension (Manifest V3)**: Storage.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   └── icon48.png
-├── manifest.json
-├── popup.css
-├── popup.html
-├── popup.js
-└── theme.css
+css-specificity-calculator/
+├── icons/             # Icons
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Calculation logic
+└── style.css          # Styles
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `css-specificity-calculator`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **css-specificity-calculator** folder.
+### 🧠 How It Works
+1.  **Parse**: Analyzes string for `#id`, `.class`, `[attr]`, and `tag`.
+2.  **Score**: Assigns values (ID=100, Class=10, Tag=1).
+3.  **Display**: Updates the UI with the calculated tuple (A, B, C).
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`storage`**: To save your calculation history.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Specificity Score](https://via.placeholder.com/600x400?text=Specificity+Score)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local**: Selectors are analyzed locally.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

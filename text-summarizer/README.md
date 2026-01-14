@@ -1,54 +1,53 @@
-# Text Summarizer
+# 📝 Text Summarizer
 
-Summarize long text into a short summary.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Text Summarizer** is a productivity tool intended to shorten long paragraphs of text into concise summaries. Paste any article, email, or report into the extension, and it will attempt to extract the key sentences to give you the gist of the content.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Simple Interface**: A distraction-free text area.
+- **Instant Summary**: Client-side processing for quick results.
+- **Copy to Clipboard**: Easily copy the generated summary.
+- **Offline Capable**: Works without an internet connection (depending on implementation).
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Text input and output areas.
+- **CSS3**: Basic styling.
+- **JavaScript (Vanilla)**: Text processing algorithms.
+- **Chrome Extension (Manifest V3)**: Deployment format.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+text-summarizer/
+├── manifest.json      # Extension settings
+├── popup.html         # User interface
+├── popup.js           # Summarization logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download or clone the repository.
+2.  Open Chrome and go to `chrome://extensions`.
+3.  Switch on **Developer mode**.
+4.  Select **Load unpacked**.
+5.  Browse to the `text-summarizer` folder.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **text-summarizer** folder.
+### 🧠 How It Works
+1.  **Input**: User pastes text into the popup.
+2.  **Processing**: The JavaScript logic splits the text into sentences and scores them based on keyword frequency or position (simple extractive summarization).
+3.  **Output**: It returns the top-ranked sentences as the summary.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: This extension operates entirely within the popup and requires no special permissions to access web pages.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Summarizer Interface](https://via.placeholder.com/600x400?text=Summarizer+Interface)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **100% Client-Side**: Your text is processed locally in your browser's memory.
+- **No Data Storage**: We do not save or upload your text.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.
