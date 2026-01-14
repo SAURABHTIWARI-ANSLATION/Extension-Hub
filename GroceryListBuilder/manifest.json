@@ -1,0 +1,8 @@
+{
+  "manifest_version": 3,
+  "name": "Grocery List Builder",
+  "version": "1.0.4",
+  "description": "Grocery List Builder with clean BMI-style UI",
+  "action": { "default_popup": "popup.html" },
+  "permissions": ["storage"]
+}
