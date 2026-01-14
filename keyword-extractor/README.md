@@ -1,6 +1,6 @@
-# Age Calculator
+# Keyword Extractor
 
-Calculate your exact age instantly.
+Extract top keywords from any page or text
 
 <div align="center">
 
@@ -11,17 +11,16 @@ Calculate your exact age instantly.
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Deep Integration**: interacts directly with your current tab.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.css
+├── popup.html
+└── popup.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +29,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **keyword-extractor** folder.
 
 ## 📖 How to Use
 
@@ -40,8 +39,8 @@ Calculate your exact age instantly.
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `activeTab`: Required for core functionality.
+- `scripting`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

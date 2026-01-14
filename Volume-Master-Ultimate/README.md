@@ -1,10 +1,10 @@
-# README.md Generator – Offline & Private
+# __MSG_app_name__
 
-Create professional README.md files from project descriptions. Runs entirely in your browser.
+__MSG_app_description__
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-2.4.0-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
@@ -12,21 +12,31 @@ Create professional README.md files from project descriptions. Runs entirely in 
 ## 🚀 Features
 
 - **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-- **Customizable**: Configure settings to your liking.
+- **Deep Integration**: interacts directly with your current tab.
 
 ## 📁 Project Structure
 
 ```
-├── README.md
-├── manifest.json
-├── options.css
-├── options.html
-├── options.js
-├── popup.css
-├── popup.html
-├── popup.js
-└── privacy.html
+├── _locales
+│   └── en
+├── css
+│   ├── font
+│   └── popup.css
+├── html
+│   ├── offscreen.html
+│   └── popup.html
+├── icon
+│   ├── icon-128.png
+│   ├── icon-16.png
+│   ├── icon-19.png
+│   ├── icon-32.png
+│   ├── icon-38.png
+│   └── icon-48.png
+├── js
+│   ├── offscreen.js
+│   ├── popup.js
+│   └── service-worker.js
+└── manifest.json
 ```
 
 ## 🛠️ Installation
@@ -35,7 +45,7 @@ Create professional README.md files from project descriptions. Runs entirely in 
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **readme-generator-extension-no-icons** folder.
+5.  Select the **Volume-Master-Ultimate** folder.
 
 ## 📖 How to Use
 
@@ -45,6 +55,10 @@ Create professional README.md files from project descriptions. Runs entirely in 
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
+- `activeTab`: Required for core functionality.
+- `offscreen`: Required for core functionality.
+- `tabCapture`: Required for core functionality.
+- `tabs`: Required for core functionality.
 - `storage`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.

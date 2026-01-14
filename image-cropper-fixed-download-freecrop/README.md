@@ -1,27 +1,27 @@
-# Age Calculator
+# Image Cropper
 
-Calculate your exact age instantly.
+Upload, crop freely and download images
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.1-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── cropper.min.css
+├── cropper.min.js
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.css
+├── popup.html
+└── popup.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +30,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **image-cropper-fixed-download-freecrop** folder.
 
 ## 📖 How to Use
 

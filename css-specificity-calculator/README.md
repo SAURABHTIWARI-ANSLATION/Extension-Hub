@@ -1,27 +1,31 @@
-# Age Calculator
+# CSS Specificity Calculator
 
-Calculate your exact age instantly.
+Visualize and compare CSS selector specificity with detailed analysis
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **Local Storage**: Saves your preferences locally.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── icons
+│   ├── icon128.png
+│   ├── icon16.png
+│   └── icon48.png
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.css
+├── popup.html
+├── popup.js
+└── theme.css
 ```
 
 ## 🛠️ Installation
@@ -30,7 +34,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **css-specificity-calculator** folder.
 
 ## 📖 How to Use
 
@@ -40,8 +44,7 @@ Calculate your exact age instantly.
 ## 🔐 Privacy & Permissions
 
 This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
+- `storage`: Required for core functionality.
 - ✅ **No Data Collection**: We do not track your browsing history or personal data.
 - ✅ **Local Processing**: All operations are performed locally on your device.
 

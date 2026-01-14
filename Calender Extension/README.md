@@ -1,10 +1,10 @@
-# Age Calculator
+# Dynamic Calendar
 
-Calculate your exact age instantly.
+A simple and useful Dynamic Calendar extension.
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
@@ -16,12 +16,12 @@ Calculate your exact age instantly.
 ## 📁 Project Structure
 
 ```
+├── icon128.png
 ├── index.html
-├── logo.png
 ├── manifest.json
-├── readme.md
 ├── script.js
-└── style.css
+├── style.css
+└── test_logic.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +30,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **Calender Extension** folder.
 
 ## 📖 How to Use
 

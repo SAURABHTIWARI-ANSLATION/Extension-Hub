@@ -1,6 +1,6 @@
-# Age Calculator
+# Violet Glow Cube Game
 
-Calculate your exact age instantly.
+A 3D Cube Game with a modern Violet Glow theme.
 
 <div align="center">
 
@@ -16,11 +16,11 @@ Calculate your exact age instantly.
 ## 📁 Project Structure
 
 ```
+├── icon.png
 ├── index.html
-├── logo.png
 ├── manifest.json
-├── readme.md
 ├── script.js
+├── script1.js
 └── style.css
 ```
 
@@ -30,7 +30,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **CubeGame** folder.
 
 ## 📖 How to Use
 

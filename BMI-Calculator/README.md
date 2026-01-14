@@ -1,25 +1,25 @@
-# Age Calculator
+# BMI Calculator
 
-Calculate your exact age instantly.
+A clean and modern BMI Calculator for checking your health stats uniquely.
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
+![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 </div>
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── Logo-code.png
+├── Profile.pdf
 ├── manifest.json
-├── readme.md
+├── popup.html
 ├── script.js
 └── style.css
 ```
@@ -30,7 +30,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **BMI-Calculator** folder.
 
 ## 📖 How to Use
 

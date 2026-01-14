@@ -1,6 +1,6 @@
-# Age Calculator
+# Text Summarizer
 
-Calculate your exact age instantly.
+Summarize long text into a short summary.
 
 <div align="center">
 
@@ -11,16 +11,14 @@ Calculate your exact age instantly.
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
 ├── manifest.json
-├── readme.md
-├── script.js
+├── popup.html
+├── popup.js
 └── style.css
 ```
 
@@ -30,7 +28,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **text-summarizer** folder.
 
 ## 📖 How to Use
 

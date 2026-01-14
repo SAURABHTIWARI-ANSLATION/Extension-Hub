@@ -1,6 +1,6 @@
-# Age Calculator
+# Quick Image Compressor
 
-Calculate your exact age instantly.
+Compress images locally in your browser without uploading.
 
 <div align="center">
 
@@ -11,17 +11,15 @@ Calculate your exact age instantly.
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
 ├── manifest.json
-├── readme.md
-├── script.js
-└── style.css
+├── popup.css
+├── popup.html
+└── popup.js
 ```
 
 ## 🛠️ Installation
@@ -30,7 +28,7 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **image-compressor** folder.
 
 ## 📖 How to Use
 

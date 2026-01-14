@@ -1,6 +1,6 @@
-# Age Calculator
+# Floating Analog Watch
 
-Calculate your exact age instantly.
+Shows a draggable analog watch on every webpage.
 
 <div align="center">
 
@@ -11,16 +11,15 @@ Calculate your exact age instantly.
 
 ## 🚀 Features
 
-- **Simple & Lightweight**: Does exactly what it says efficiently.
+- **User Friendly UI**: Easy-to-use popup interface.
 
 ## 📁 Project Structure
 
 ```
-├── index.html
-├── logo.png
+├── content.js
 ├── manifest.json
-├── readme.md
-├── script.js
+├── popup.html
+├── popup.js
 └── style.css
 ```
 
@@ -30,12 +29,12 @@ Calculate your exact age instantly.
 2.  Open Chrome and navigate to `chrome://extensions/`.
 3.  **Enable Developer Mode** (toggle in the top-right corner).
 4.  Click **Load unpacked**.
-5.  Select the **CalculateAge** folder.
+5.  Select the **analog-watch-extension** folder.
 
 ## 📖 How to Use
 
 1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+2.   navigate to a supported page to see it in action.
 
 ## 🔐 Privacy & Permissions
 
