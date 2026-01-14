@@ -1,64 +1,51 @@
-# __MSG_gmailcheck_name__
+# 📧 Gmail Analytics (Checker)
 
-__MSG_gmailcheck_description__
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Gmail Analytics** keeps you updated on your inbox without opening Gmail. See your unread count directly on the extension icon and get notified of new messages. It's a lightweight wrapper to keep you connected.
 
-![Version](https://img.shields.io/badge/Version-5.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Badge Count**: Shows unread email count on the toolbar icon.
+- **Preview**: Click to see a snippet of recent emails.
+- **Notifications**: Desktop alerts for new mail.
+- **Secure**: Uses official Gmail authentication cookies.
 
-</div>
+### 🛠️ Tech Stack
+- **JavaScript**: Fetching feed data.
+- **Chrome Extension (Manifest V3)**: Alarms for polling.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── _locales
-│   └── en
-├── background.js
-├── gmail_logged_in.png
-├── gmail_not_logged_in.png
-├── icon_128.png
-├── manifest.json
-├── offscreen.html
-├── offscreen.js
-├── popup.css
-├── popup.html
-└── popup.js
+GmailAnalytics/
+├── background.js      # Polling service
+├── popup.html         # Preview UI
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `GmailAnalytics`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **GmailAnalytics** folder.
+### 🧠 How It Works
+1.  **Polling**: Periodically fetches the Gmail Atom feed (`https://mail.google.com/mail/feed/atom`).
+2.  **Parsing**: XML parsing to extract unread count and latest 5 emails.
+3.  **Badge**: Updates `chrome.action.setBadgeText`.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`host_permissions`**: Access to `mail.google.com` to fetch the feed.
+- **`alarms`**: To schedule background checks.
+- **`offscreen`**: (Manifest V3) To parse DOM/XML in background if needed.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Inbox Preview](https://via.placeholder.com/600x400?text=Inbox+Preview)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Direct Connection**: Connects directly to Gmail. No middleman servers.
+- **Credentials**: Uses your existing browser session.
 
-This extension prioritizes your privacy:
-- `alarms`: Required for core functionality.
-- `offscreen`: Required for core functionality.
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

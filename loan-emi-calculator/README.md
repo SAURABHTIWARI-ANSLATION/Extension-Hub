@@ -1,54 +1,50 @@
-# Loan EMI Calculator
+# 🏦 Loan EMI Calculator
 
-Calculate EMI, total interest and total payment easily.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Loan EMI Calculator** is a straightforward financial utility. Calculate your Equated Monthly Installment (EMI) for any loan—home, car, or personal. See exactly how much you'll pay in total interest versus principal.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Accurate Formulas**: Uses standard banking formulas for EMI.
+- **Breakdown**: Shows Monthly Payment, Total Interest, and Total Amount Payable.
+- **Clean UI**: Simple input fields with clear results.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Calculator form.
+- **CSS3**: Styles.
+- **JavaScript (Vanilla)**: Financial math functions.
+- **Chrome Extension (Manifest V3)**: Platform.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+loan-emi-calculator/
+├── manifest.json      # Config
+├── popup.html         # UI
+└── popup.js           # Logic
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Go to `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `loan-emi-calculator`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **loan-emi-calculator** folder.
+### 🧠 How It Works
+1.  **Inputs**: Loan Amount (P), Interest Rate (R), Tenure (N).
+2.  **Calculation**: `E = P * r * (1+r)^n / ((1+r)^n - 1)`.
+3.  **Output**: Displays the calculated EMI and total summaries.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Runs entirely within the popup.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![EMI Result](https://via.placeholder.com/600x400?text=EMI+Result)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Finance Safe**: No financial data is sent to any server.
+- **Ephemeral**: Data clears when you close the popup.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

@@ -1,56 +1,49 @@
-# Image Cropper
+# ✂️ Image Cropper
 
-Upload, crop freely and download images
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Image Cropper** is a focused tool to trim your images. Upload an image, select the area you want to keep with a draggable overlay, and crop it instantly. Useful for profile pictures, thumbnails, or removing unwanted borders.
 
-![Version](https://img.shields.io/badge/Version-1.1-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Free Crop**: No aspect ratio restrictions.
+- **Drag & Resize**: Intuitive selection box.
+- **Zoom**: Zoom in for precision cropping.
+- **Download**: Save cropped result as PNG.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Canvas.
+- **JavaScript**: Cropping library (e.g., Cropper.js) or custom Canvas slicing.
+- **Chrome Extension (Manifest V3)**: Popup.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── cropper.min.css
-├── cropper.min.js
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+image-cropper-fixed-download-freecrop/
+├── manifest.json      # Config
+├── popup.html         # UI
+└── popup.js           # Logic
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `image-cropper-fixed-download-freecrop`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **image-cropper-fixed-download-freecrop** folder.
+### 🧠 How It Works
+1.  **Overlay**: Draws a crop box over the image.
+2.  **Coordinates**: Calculates the X, Y, Width, and Height of the box relative to the image.
+3.  **Slice**: Uses `context.drawImage(img, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)` to extract the region.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Local canvas operations.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Crop Interface](https://via.placeholder.com/600x400?text=Crop+Interface)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local**: Your photos stay on your device.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

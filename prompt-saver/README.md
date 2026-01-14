@@ -1,55 +1,52 @@
-# Prompt Saver
+# 💾 Prompt Saver
 
-Save and reuse your best prompts
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Prompt Saver** is your personal library for AI prompts. Stop rewriting the same ChatGPT or Midjourney prompts over and over. Save your best-engineered prompts here and access them instantly.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Save Prompts**: Title and Body storage.
+- **One-Click Copy**: Copy prompt to clipboard instantly.
+- **Search**: Filter your library to find the right prompt.
+- **Edit/Delete**: Manage your collection.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: List UI.
+- **CSS3**: Styles.
+- **JavaScript**: Storage and clipboard interactions.
+- **Chrome Extension (Manifest V3)**: Storage API.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+prompt-saver/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `prompt-saver`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **prompt-saver** folder.
+### 🧠 How It Works
+1.  **Storage**: Uses `chrome.storage` to persist an array of prompt objects.
+2.  **Clipboard**: Uses `navigator.clipboard.writeText()` to copy content.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`storage`**: To save your prompts permanently.
+- **`clipboardWrite`**: To copy prompts to your clipboard.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Prompt Library](https://via.placeholder.com/600x400?text=Prompt+Library)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local Storage**: Your prompts are stored on your device.
+- **No Sync**: We do not see or sync your prompts.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- `clipboardWrite`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

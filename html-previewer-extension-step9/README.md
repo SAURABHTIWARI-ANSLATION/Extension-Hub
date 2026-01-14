@@ -1,54 +1,53 @@
-# HTML Previewer Pro
+# 💻 HTML Previewer Pro
 
-Professional HTML, CSS & JS Previewer with live output, tabs, export and offline support.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**HTML Previewer Pro** is a robust real-time playground for web developers. Write HTML, CSS, and JavaScript in separate tabs and instantly glimpse the result in a live preview pane. It's like having a mini CodePen directly in your browser popup.
 
-![Version](https://img.shields.io/badge/Version-1.8-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Live Preview**: See changes as you type (or on run).
+- **Multi-Tab Editor**: Separate editors for HTML, CSS, and JS.
+- **Offline Support**: Code anywhere, no internet required.
+- **Export**: Save your creations as a `.html` file.
+- **Syntax Highlighting**: Clean, readable code editor interface.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Editor layout.
+- **CSS3**: Editor styling and output frame.
+- **JavaScript (Vanilla)**: Code injection and preview logic.
+- **Chrome Extension (Manifest V3)**: Extension platform.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+html-previewer-extension-step9/
+├── popup.html         # Main UI
+├── popup.js           # Editor logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  Clone repository.
+2.  Go to `chrome://extensions`.
+3.  Turn on **Developer mode**.
 4.  Click **Load unpacked**.
-5.  Select the **html-previewer-extension-step9** folder.
+5.  Select `html-previewer-extension-step9`.
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **Input**: User types code into three `textarea` elements.
+2.  **Assembly**: The extension combines the HTML, inserts the CSS into `<style>` tags, and the JS into `<script>` tags.
+3.  **Rendering**: The combined blob is injected into an `<iframe>` within the popup, effectively sandboxing the preview while allowing full rendering.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 🔐 Permissions Explained
+- **None**: This tool runs locally within the popup context.
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Code Editor](https://via.placeholder.com/600x400?text=Code+Editor)
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
+### 🔒 Privacy Policy
+- **Local Only**: Your code stays in your browser.
+- **No Uploads**: We never see your code.
 
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

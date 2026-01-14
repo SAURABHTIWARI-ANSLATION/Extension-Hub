@@ -1,45 +1,51 @@
-# JSON Formatter Extension
+# 🔧 JSON Formatter
 
-A clean, fast, and developer-focused JSON Formatter & Validator browser extension. Designed with a premium "Indigo Night" theme for a distraction-free experience.
+## 👨‍💻 Made by Saurabh Tiwari
 
-## Features
+### 🧩 Description
+**JSON Formatter** is a sleek, developer-focused utility. It takes messy JSON strings and transforms them into a clean, hierarchical tree view. Unlike other complicated tools, this one focuses on speed and readability.
 
-### 🛠 Core Tools
-- **Format / Beautify**: Instantly format messy JSON with syntax highlighting.
-- **Minify**: Compact JSON for production use / reducing payload size.
-- **Text to JSON**: 
-    - Converts **Loose JSON** (e.g., JS objects with unquoted keys `{key: 'val'}`) to valid JSON.
-    - Converts **Plain Text Lists** (newline separated) into JSON Arrays.
-- **Validate**: Real-time error handling with clear feedback for invalid JSON.
+### 🚀 Features
+- **Fast Parsing**: Handles large JSON files efficiently.
+- **Clean UI**: Minimalist design with syntax highlighting.
+- **Validation**: instantly alerts you to syntax errors in your JSON.
+- **Collapsible Nodes**: Navigate deep nested structures easily.
 
-### ⚡️ Workflow
-- **File Support**: Upload (`.json`, `.txt`) and Download formatted JSON files.
-- **Smart Actions**: One-click Copy, Clear, and Clipboard operations.
-- **Keyboard Shortcuts**: Press `Cmd/Ctrl + Enter` to instantly format.
+### 🛠️ Tech Stack
+- **HTML5**: UI.
+- **CSS3**: Styles.
+- **JavaScript**: Parsing logic.
+- **Chrome Extension (Manifest V3)**: Popup.
 
-### 🎨 Design
-- **Indigo Night Theme**: Deep indigo gradients and dark mode aesthetics.
-- **Developer Friendly**: Monospace fonts, high-contrast syntax highlighting (Keys: Indigo, Strings: Green).
-- **Privacy First**: Runs 100% offline in your browser. No data is sent to any server.
+### 📂 Folder Structure
+```
+JSONFileFormatter/
+├── manifest.json      # Config
+├── popup.html         # Viewer
+├── popup.js           # Logic
+└── style.css          # Styles
+```
 
-## Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `JSONFileFormatter`.
 
-1. **Clone or Download** this repository.
-2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable **Developer mode** (toggle in the top right).
-4. Click **Load unpacked**.
-5. Select the folder containing this extension.
+### 🧠 How It Works
+1.  **Input**: User pastes JSON.
+2.  **Process**: `JSON.parse()` validates structure.
+3.  **Render**: Recursive function builds a collapsible HTML list structure representing the object.
 
-## Usage Guide
+### 🔐 Permissions Explained
+- **None**: Runs locally.
 
-1. **Open the Extension**: Click the JSON icon in your browser toolbar.
-2. **Paste Content**: 
-    - Paste standard JSON, a JS object, or a list of items.
-3. **Choose Action**:
-    - **Format**: For standard JSON.
-    - **Text to JSON**: For JS objects or plain text lists.
-    - **Minify**: To compress the output.
-4. **Use Output**: Copy to clipboard or download as a `.json` file.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![JSON Tree](https://via.placeholder.com/600x400?text=JSON+Tree)
 
----
-*Built for developers who value speed and aesthetics.*
+### 🔒 Privacy Policy
+- **Local**: Data is processed in-memory.
+
+### 📄 License
+This project is licensed under the **MIT License**.

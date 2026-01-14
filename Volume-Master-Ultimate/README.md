@@ -1,74 +1,58 @@
-# __MSG_app_name__
+# 🔊 Volume Master Ultimate
 
-__MSG_app_description__
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Volume Master Ultimate** gives you complete control over your browser's audio. It allows you to boost the volume of any tab up to 600%, surpassing the standard 100% limit of your hardware. Perfect for quiet videos, low-quality audio streams, or just blasting your favorite tunes.
 
-![Version](https://img.shields.io/badge/Version-2.4.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Volume Boost**: Amplify audio up to 600%.
+- **Tab-Specific Control**: Adjust volume for each tab individually.
+- **Audio Visualizer**: Real-time visual feedback of audio levels.
+- **Granular Control**: Fine-tune volume levels with a precise slider.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Popup interface.
+- **CSS3**: Slider and visualizer styling.
+- **JavaScript (Vanilla)**: Web Audio API integration.
+- **Chrome Extension (Manifest V3)**: Uses offscreen documents for audio processing.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Deep Integration**: interacts directly with your current tab.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── _locales
-│   └── en
-├── css
-│   ├── font
-│   └── popup.css
-├── html
-│   ├── offscreen.html
+Volume-Master-Ultimate/
+├── icon/             # Icons
+├── html/             # UI files
 │   └── popup.html
-├── icon
-│   ├── icon-128.png
-│   ├── icon-16.png
-│   ├── icon-19.png
-│   ├── icon-32.png
-│   ├── icon-38.png
-│   └── icon-48.png
-├── js
-│   ├── offscreen.js
-│   ├── popup.js
+├── js/               # Logic
 │   └── service-worker.js
-└── manifest.json
+└── manifest.json     # Config
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  Download this repository.
+2.  Navigate to `chrome://extensions/`.
+3.  Switch on **Developer mode**.
 4.  Click **Load unpacked**.
-5.  Select the **Volume-Master-Ultimate** folder.
+5.  Select the `Volume-Master-Ultimate` folder.
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **Tab Capture**: The extension uses the `chrome.tabCapture` API to intercept the audio stream of the active tab.
+2.  **Audio Context**: It creates an `AudioContext` and passes the stream through a `GainNode`.
+3.  **Amplification**: The gain value is adjusted by the user slider (1.0 = 100%, 6.0 = 600%).
+4.  **Output**: The processed audio is connected back to the destination (your speakers).
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 🔐 Permissions Explained
+- **`activeTab`**: To control the audio of the current tab.
+- **`tabCapture`**: Essential to capture and manipulate the audio stream.
+- **`offscreen`**: Required in Manifest V3 to manipulate DOM-based audio APIs in the background.
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Volume Controller](https://via.placeholder.com/600x400?text=Volume+Controller)
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `offscreen`: Required for core functionality.
-- `tabCapture`: Required for core functionality.
-- `tabs`: Required for core functionality.
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
+### 🔒 Privacy Policy
+- **No Recording**: Audio is processed in real-time and never recorded.
+- **Local Only**: No audio data leaves your browser.
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

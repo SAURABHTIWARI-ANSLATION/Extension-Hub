@@ -1,26 +1,50 @@
-# Imaginator - Image Resizer Extension
+# 🖼️ Image Resizer
 
-A premium Chrome Extension to resize, compress, and convert images directly in your browser.
+## 👨‍💻 Made by Saurabh Tiwari
 
-## Features
+### 🧩 Description
+**Image Resizer** is a quick utility to resize images for web use. Don't open Photoshop just to shrink a photo. Drag and drop your image, set your target dimensions or percentage, and download the optimized file instantly.
 
-- **Drag & Drop Interface**: Simple and intuitive.
-- **Glassmorphism Design**: Modern, aesthetic UI.
-- **Client-Side Processing**: No data leaves your browser.
-- **Format Conversion**: Convert between JPG, PNG, and WEBP.
-- **Quality Control**: Adjust compression levels.
-- **Aspect Ratio Locking**: Resize intelligently.
+### 🚀 Features
+- **Drag & Drop**: Simple interface.
+- **Custom Dimensions**: Set Width/Height or Scale %.
+- **Format Support**: Supports JPG, PNG, WEBP.
+- **Quality Control**: Adjust compression level.
 
-## Installation
+### 🛠️ Tech Stack
+- **HTML5**: Canvas and UI.
+- **JavaScript**: HTML5 Canvas API for resizing.
+- **Chrome Extension (Manifest V3)**: Popup.
 
-1. Open Chrome and navigate to `chrome://extensions`.
-2. Enable **Developer Mode** (top right).
-3. Click **Load Unpacked**.
-4. Select the `image-resizer-extension` folder on your Desktop.
+### 📂 Folder Structure
+```
+image-resizer-extension/
+├── popup/             # UI files
+├── options/           # Settings
+└── manifest.json      # Config
+```
 
-## Usage
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `image-resizer-extension`.
 
-1. Click the extension icon.
-2. Drag and drop an image or click to upload.
-3. Adjust dimensions, format, and quality.
-4. Click **Process Image** to download the result.
+### 🧠 How It Works
+1.  **Input**: Reads file via `input[type=file]`.
+2.  **Canvas**: Draws image onto an off-screen `<canvas>`.
+3.  **Resize**: Resamples the canvas to new dimensions.
+4.  **Export**: Converts canvas back to Data URL/Blob and triggers download.
+
+### 🔐 Permissions Explained
+- **`downloads`**: To save the resized image to your disk.
+
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Resizer Tool](https://via.placeholder.com/600x400?text=Resizer+Tool)
+
+### 🔒 Privacy Policy
+- **Local**: Images are processed in-browser. No upload.
+
+### 📄 License
+This project is licensed under the **MIT License**.

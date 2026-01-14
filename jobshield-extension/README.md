@@ -1,65 +1,54 @@
-# JobShield: Job Scam Detector
+# 🛡️ JobShield - Job Scam Detector
 
-Real-time detection of fake and scam job postings
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**JobShield** protects job seekers from employment scams. It analyzes job postings on popular platforms (LinkedIn, Indeed, etc.) in real-time to detect red flags like suspicious domains, vague descriptions, or known scam patterns. Search for your dream job with peace of mind.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Real-Time Analysis**: Scans job posts as you browse.
+- **Risk Score**: Assigns a Low, Medium, or High risk rating.
+- **Red Flag Highlighting**: Visual alerts for suspicious keywords (e.g., "Wire transfer", "Easy money").
+- **Company Verification**: Cross-checks company names against known databases.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Popup and alerts.
+- **CSS3**: Styles.
+- **JavaScript**: Content analysis scripts.
+- **Chrome Extension (Manifest V3)**: Service workers and scripting.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── _locales
-│   └── en
-├── background.js
-├── content.js
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   └── icon48.png
-├── manifest.json
-├── popup.html
-├── popup.js
-└── styles.css
+jobshield-extension/
+├── icons/             # Icons
+├── content.js         # Page scanner
+├── background.js      # Analysis engine
+├── popup.html         # Status UI
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `jobshield-extension`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **jobshield-extension** folder.
+### 🧠 How It Works
+1.  **Scanning**: `content.js` reads the job title and description text from the DOM.
+2.  **Heuristics**: Checks for keyword density of scam phrases and verifies the posting domain.
+3.  **Alerting**: If the risk score exceeds a threshold, a warning banner is injected into the page.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`scripting`**: To inject the analyzer into job board websites.
+- **`activeTab`**: To access current job post content.
+- **`notifications`**: To send urgent security alerts.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Risk Warning](https://via.placeholder.com/600x400?text=Risk+Warning)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **No Storage**: We analyze text on the fly and do not store job application data.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `storage`: Required for core functionality.
-- `scripting`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

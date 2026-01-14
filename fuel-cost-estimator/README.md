@@ -1,54 +1,52 @@
-# Fuel Cost Estimator
+# ⛽ Fuel Cost Estimator
 
-Estimate fuel cost for your trip quickly.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Fuel Cost Estimator** is a handy utility for drivers and road trippers. It helps you quickly calculate the estimated fuel cost for a trip based on distance, fuel efficiency, and gas price. Plan your travel budget effectively with this simple browser extension.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Quick Calculation**: Enter Distance, Efficiency (MPG/KPL), and Price to get immediate results.
+- **Save Settings**: Remembers your vehicle's efficiency for future calculations.
+- **Currency Agnostic**: Works with any currency (USD, EUR, INR, etc.).
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Form structure.
+- **CSS3**: Styling.
+- **JavaScript (Vanilla)**: Calculation logic.
+- **Chrome Extension (Manifest V3)**: Extension framework.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+fuel-cost-estimator/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  Download or clone the repo.
+2.  Go to `chrome://extensions/`.
+3.  Toggle **Developer mode** on.
 4.  Click **Load unpacked**.
-5.  Select the **fuel-cost-estimator** folder.
+5.  Choose the `fuel-cost-estimator` folder.
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **Input**: User inputs Trip Distance, Fuel Efficiency, and Fuel Price.
+2.  **Formula**: `(Distance / Efficiency) * Price = Total Cost`.
+3.  **Storage**: Uses `chrome.storage` to save frequently used values like efficiency.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 🔐 Permissions Explained
+- **`storage`**: To save your vehicle's fuel efficiency so you don't have to type it every time.
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Calculator Interface](https://via.placeholder.com/600x400?text=Calculator+Interface)
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
+### 🔒 Privacy Policy
+- **Offline Tool**: No data is sent to the cloud.
+- **Private**: Your travel data is stored locally on your machine.
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

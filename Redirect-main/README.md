@@ -1,123 +1,51 @@
-# Link Redirect Trace
+# 🔗 Link Redirect Trace
 
-The all-in-one redirect path analyzer. It also analyzes protocol headers, REL-canonicals, robots.txt, backlink power, and trust!
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Link Redirect Trace** is an SEO power tool. Analyze the full path of a redirect chain, including HTTP headers, Status Codes (301, 302, 404, 500), and Rel-Canonicals. Inspect cookies and robots.txt rules to debug complex link issues.
 
-![Version](https://img.shields.io/badge/Version-1.1.5.27-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Full Trace**: Shows every hop in a redirect chain.
+- **Header Analysis**: Inspect HTTP response headers for every hop.
+- **SEO Metrics**: Checks for Robots.txt, Canonicals, and Backlink Power.
+- **Status Codes**: Clearly identifies 301 vs 302 redirects.
 
-</div>
+### 🛠️ Tech Stack
+- **JavaScript**: WebRequest API listeners.
+- **Chrome Extension (Manifest V3)**: WebRequest, Storage.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **Deep Integration**: interacts directly with your current tab.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── README.md
-├── css
-│   ├── fonts
-│   ├── fonts.css
-│   ├── popup.css
-│   └── style.css
-├── html
-│   ├── options.html
-│   └── popup.html
-├── img
-│   ├── arrow-mask.png
-│   ├── cookie.png
-│   ├── curved-shadow.png
-│   ├── icon-broken.png
-│   ├── icon-canonical.png
-│   ├── icon-cookie.png
-│   ├── icon-final.png
-│   ├── icon-follow.png
-│   ├── icon-index.png
-│   ├── icon-major.png
-│   ├── icon-nofollow.png
-│   ├── icon-noindex.png
-│   ├── icon-time.png
-│   ├── icon-warning-red.png
-│   ├── icon-warning-yellow.png
-│   ├── icon128.png
-│   ├── icon19.png
-│   ├── icon256.png
-│   ├── icon38.png
-│   ├── link-redirect-trace-logo.png
-│   ├── link-research-tool-logo.png
-│   ├── settings.png
-│   ├── shadow.png
-│   ├── star.png
-│   ├── templatePT.svg
-│   ├── toolbar
-│   ├── warning-red.png
-│   ├── warning-yellow.png
-│   ├── warning.png
-│   ├── white-arrow-down.png
-│   └── white-arrow-right.png
-├── js
-│   ├── App.js
-│   ├── Cache.js
-│   ├── ChromePlatformAnalytics.js
-│   ├── Helpers.js
-│   ├── Hop.js
-│   ├── IP.js
-│   ├── Icon.js
-│   ├── Path.js
-│   ├── RTIcon.js
-│   ├── RobotsImg.js
-│   ├── RobotsParser.js
-│   ├── RobotsTxt.js
-│   ├── Screenshot.js
-│   ├── SearchEngines.js
-│   ├── Tracer.js
-│   ├── UrlChecker.js
-│   ├── Warning.js
-│   ├── background.js
-│   ├── cs-page.js
-│   ├── lrt
-│   ├── options.js
-│   └── popup.js
-├── lib
-│   ├── jquery-3.6.1.min.js
-│   └── mustache-2.2.1.min.js
-├── manifest.json
-└── sw_background.js
+Redirect-main/
+├── html/              # UI
+├── js/                # Analysis scripts
+├── sw_background.js   # Service Worker
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `Redirect-main`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **Redirect-main** folder.
+### 🧠 How It Works
+1.  **Listen**: Background script listens to `chrome.webRequest.onBeforeRedirect` and `onHeadersReceived`.
+2.  **Record**: Logs every request details into an array associated with the tab.
+3.  **Visualize**: Popup queries this array to display the timeline of the redirect chain.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`webRequest`**: To capture headers and redirect events.
+- **`webNavigation`**: To track page transitions.
+- **`activeTab`**: To analyze the current page.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Trace Analysis](https://via.placeholder.com/600x400?text=Trace+Analysis)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Analysis Only**: Data is used for real-time analysis and is not stored remotely.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `tabs`: Required for core functionality.
-- `webRequest`: Required for core functionality.
-- `webNavigation`: Required for core functionality.
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

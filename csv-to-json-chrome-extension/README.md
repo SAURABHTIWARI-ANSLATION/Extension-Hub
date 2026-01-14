@@ -1,60 +1,52 @@
-# __MSG_extName__
+# 🔄 CSV to JSON Converter
 
-__MSG_extDesc__
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**CSV to JSON Converter** empowers developers to transform data formats instantly. Upload a CSV file or paste CSV text, and get clean, valid JSON output. It handles headers, custom delimiters, and nested structures.
 
-![Version](https://img.shields.io/badge/Version-1.4-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Drag & Drop**: Upload .csv files easily.
+- **Preview**: See the data before conversion.
+- **Download**: Save the result as a `.json` file.
+- **Options**: Configure separator (comma, semicolon, tab).
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: File API.
+- **CSS3**: Layout.
+- **JavaScript**: CSV parsing engine.
+- **Chrome Extension (Manifest V3)**: Options page.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-- **Customizable**: Configure settings to your liking.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── _locales
-│   └── en
-├── manifest.json
-├── options.html
-├── options.js
-├── popup.css
-├── popup.html
-├── popup.js
-└── worker.js
+csv-to-json-chrome-extension/
+├── popup.html         # Converter UI
+├── popup.js           # Logic
+├── options.html       # Settings
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `csv-to-json-chrome-extension`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **csv-to-json-chrome-extension** folder.
+### 🧠 How It Works
+1.  **Input**: Reads text or file stream.
+2.  **Split**: Splits lines by newline `\n` and values by delimiter `,`.
+3.  **Map**: Maps the first row as keys (headers) and subsequent rows as values to build Objects.
+4.  **Stringify**: Converts the array of objects to JSON string.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Local data transformation.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Conversion Result](https://via.placeholder.com/600x400?text=Conversion+Result)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Secure**: Data is processed in browser memory. No uploads.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

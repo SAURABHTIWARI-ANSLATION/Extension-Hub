@@ -1,188 +1,69 @@
-# WhatFont - Font Identifier Extension
+# 🔍 WhatFont - Font Identifier
 
-A powerful Chrome extension to identify fonts on any website with ease.
+## 👨‍💻 Made by Saurabh Tiwari
 
-## 🚀 Features
+### 🧩 Description
+**WhatFont** is the easiest way to identify fonts on web pages. Instead of inspecting elements via DevTools to find font families, simply hover over any text on a webpage, and WhatFont will instantly tell you the font name, size, weight, line height, and color.
 
-- **Hover Mode**: Simply hover over text to identify fonts instantly
-- **Click Mode**: Click on text elements to lock font information
-- **Scan Mode**: Scan entire page to find all unique fonts
-- **Detailed Info**: View font family, size, weight, style, color, and more
-- **CSS Export**: Copy font CSS properties directly
-- **Beautiful UI**: Modern, gradient-themed interface
-- **Multiple Themes**: Choose from various color schemes
+It's an essential utility for web designers, developers, and typographers who want to inspect web typography effortlessly.
 
-## 📁 Project Structure
+### 🚀 Features
+- **Hover Mode**: Instantly identify fonts by moving your mouse over text.
+- **Click Mode**: Click on any text to pin detailed font information.
+- **Scan All Mode**: Get a report of all fonts used on the current page.
+- **Detailed Info**: Shows Family, Style, Weight, Size, Line Height, and Hex Color.
+- **CSS Snippet**: One-click copy for the font's CSS rule.
+- **Dark/Light Theme**: Auto-adapts or uses a custom theme.
 
+### 🛠️ Tech Stack
+- **HTML5**: Popup structure.
+- **CSS3**: Styling for the popup and the injected tooltips.
+- **JavaScript (Vanilla)**: Detection and interaction logic.
+- **Chrome Extension (Manifest V3)**: Modern extension architecture.
+
+### 📂 Folder Structure
 ```
 whatfont-extension/
-├── manifest.json
-├── background.js
-├── content.js
-├── popup.html
-├── popup.js
-├── popup.css
-├── themes/
+├── images/                 # Icons and assets
+├── themes/                 # Theme stylesheets
 │   └── themes.css
-└── images/
-    ├── icon16.png
-    ├── icon48.png
-    └── icon128.png
+├── background.js           # Background service worker
+├── content.js              # Script injected into pages
+├── manifest.json           # Extension manifest
+├── popup.css               # Popup styling
+├── popup.html              # Popup UI
+└── popup.js                # Popup logic
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  **Clone** the repository.
+2.  Open Chrome to `chrome://extensions/`.
+3.  Turn on **Developer mode**.
+4.  Click **Load unpacked**.
+5.  Select the `whatfont-extension` folder.
+6.  Pin the extension and start inspecting fonts!
 
-### Step 1: Create Extension Icons
+### 🧠 How It Works
+1.  **Activation**: Clicking the extension icon or "Start Detection" injects a script.
+2.  **Event Listeners**: The script listens for `mouseover` and `click` events on DOM elements.
+3.  **Computation**: It uses `window.getComputedStyle(element)` to fetch typography properties.
+4.  **Display**: A custom tooltip is rendered in the DOM near your cursor with the font details.
 
-You need to create icon images. Here are your options:
+### 🔐 Permissions Explained
+- **`activeTab`**: Only runs on the tab you are currently using.
+- **`scripting`**: Required to inject the font detection tooltips and listeners.
+- **`storage`**: Saves your settings (e.g., theme, default mode).
+- **`host_permissions` ("<all_urls>")**: To allow font identification on any website.
 
-**Option A - Create Simple Icons:**
-Create three PNG images (16x16, 48x48, 128x128) with the letter "F" on a purple gradient background.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Hover Detection](https://via.placeholder.com/600x400?text=Hover+Detection)
+![Font Details](https://via.placeholder.com/600x400?text=Font+Details)
 
-**Option B - Use Online Icon Generator:**
-1. Go to https://www.favicon-generator.org/
-2. Upload any font-related image or create one
-3. Download and rename as `icon16.png`, `icon48.png`, `icon128.png`
-4. Place in `images/` folder
+### 🔒 Privacy Policy
+- **Respectful & Private**: We purely read the styling of the text you hover over.
+- **No Data Collected**: No text content or browsing data is sent anywhere.
+- **Zero Tracking**: No user tracking or analytics.
 
-**Option C - Use Placeholder:**
-Create a simple colored square as placeholder until you have proper icons.
-
-### Step 2: Set Up Files
-
-1. Create a new folder called `whatfont-extension`
-2. Create the following structure:
-
-```bash
-mkdir whatfont-extension
-cd whatfont-extension
-mkdir images themes
-```
-
-3. Create each file with the provided code:
-   - `manifest.json` - Extension configuration
-   - `background.js` - Service worker
-   - `content.js` - Font detection script
-   - `popup.html` - Extension popup interface
-   - `popup.js` - Popup logic
-   - `popup.css` - Popup styles
-   - `themes/themes.css` - Theme variables
-
-### Step 3: Load Extension in Chrome
-
-1. Open Chrome and navigate to `chrome://extensions/`
-2. Enable "Developer mode" (toggle in top-right)
-3. Click "Load unpacked"
-4. Select your `whatfont-extension` folder
-5. The extension should now appear in your toolbar!
-
-## 📖 How to Use
-
-### Quick Start
-
-1. **Click the WhatFont icon** in your browser toolbar
-2. **Toggle "Enable Hover Mode"** or click "Start Detection"
-3. **Hover over any text** on a webpage
-4. **View font details** in the floating panel
-
-### Detection Modes
-
-- **Hover**: Automatically detect fonts as you move your mouse
-- **Click**: Click on text to lock the detection panel
-- **Scan All**: Detect all unique fonts used on the current page
-
-### Settings
-
-- **Show download links**: Display links to find fonts on Google Fonts
-- **Show CSS code**: View copyable CSS properties
-- **Highlight detected text**: Visually highlight the text you're inspecting
-- **Panel position**: Choose where the detection panel appears
-
-## 🔧 Troubleshooting
-
-### Extension Not Working?
-
-1. **Refresh the page** after installing/updating the extension
-2. **Check Developer Mode** is enabled in `chrome://extensions/`
-3. **Verify all files** are in correct locations
-4. **Check console** (F12) for error messages
-
-### Can't Detect Fonts on Certain Pages?
-
-- Extension cannot work on Chrome internal pages (`chrome://` URLs)
-- Some websites may block extensions with Content Security Policy
-- Try refreshing the page after activating detection
-
-### Detection Panel Not Appearing?
-
-1. Make sure detection is activated (toggle should be ON)
-2. Try hovering over different text elements
-3. Check if the page has enough text content
-4. Verify content script loaded (check console)
-
-## 🎨 Customization
-
-### Change Theme Colors
-
-Edit `themes/themes.css` to customize colors:
-
-```css
-:root {
-  --theme-primary-btn-start: #8B5CF6; /* Change this */
-  --theme-primary-btn-end: #A78BFA;   /* And this */
-  /* ... more variables ... */
-}
-```
-
-### Modify Panel Style
-
-Edit the styles in `content.js` under the `injectStyles()` function.
-
-### Add New Detection Modes
-
-Extend the mode handling in `content.js` and add UI in `popup.html`.
-
-## 🐛 Known Issues
-
-- Very large pages may have slight delay in scan mode
-- Some dynamically loaded content may not be detected immediately
-- Extension requires page refresh after installation
-
-## 📝 Development Notes
-
-### Technologies Used
-
-- **Manifest V3**: Latest Chrome extension standard
-- **Vanilla JavaScript**: No frameworks, pure JS
-- **CSS Custom Properties**: For easy theming
-- **Chrome APIs**: Storage, Tabs, Runtime, Scripting
-
-### Key Files Explained
-
-- **manifest.json**: Defines extension permissions and structure
-- **background.js**: Service worker for background tasks
-- **content.js**: Injected into pages to detect fonts
-- **popup.js**: Handles UI interactions in extension popup
-- **themes.css**: CSS variables for consistent theming
-
-## 🚀 Future Enhancements
-
-Potential features to add:
-- Export detected fonts to JSON/CSV
-- Font comparison tool
-- Save favorite font combinations
-- Integration with more font services
-- Font pairing suggestions
-- History of detected fonts across sessions
-
-## 📄 License
-
-This project is open source and available for personal and commercial use.
-
-## 🤝 Contributing
-
-Feel free to fork, modify, and improve this extension!
-
----
-
-**Made with ❤️ for designers and developers**
+### 📄 License
+This project is licensed under the **MIT License**.

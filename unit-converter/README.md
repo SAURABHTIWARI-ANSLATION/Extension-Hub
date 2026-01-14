@@ -1,54 +1,50 @@
-# Quick Unit Converter
+# 📏 Quick Unit Converter
 
-Convert length, weight, and temperature units instantly.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Quick Unit Converter** is a handy reference tool for everyday conversions. No more Googling "cm to inches" or "kg to lbs". Access a fast, offline converter directly from your browser toolbar.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Multi-Category**: Length, Weight, Temperature, Area, Speed.
+- **Instant Calculation**: Results appear as you type.
+- **Swap**: Quickly reverse the conversion direction.
+- **Clean Design**: Focused and easy to use.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: UI.
+- **JavaScript**: Math logic.
+- **Chrome Extension (Manifest V3)**: Popup.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+unit-converter/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── script.js          # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Open `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `unit-converter`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **unit-converter** folder.
+### 🧠 How It Works
+1.  **Select**: User chooses category (e.g., Length).
+2.  **Input**: Enters value (e.g., 100).
+3.  **Convert**: Logic applies factor (e.g., `value * 0.3937` for cm to in).
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **None**: Local calculation.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Converter UI](https://via.placeholder.com/600x400?text=Converter+UI)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Offline**: No data tracking.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

@@ -1,55 +1,53 @@
-# Floating Analog Watch
+# ⌚ Floating Analog Watch
 
-Shows a draggable analog watch on every webpage.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Floating Analog Watch** adds a stylish, draggable analog clock to every webpage you visit. Never lose track of time while browsing in full-screen mode or reading long articles.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Always Visible**: Floats on top of page content.
+- **Draggable**: Move it anywhere on the screen.
+- **Real-Time**: Accurate analog movement (Hour, Minute, Second hands).
+- **Non-Intrusive**: Small footprint and transparent design.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Clock dial structure.
+- **CSS3**: Hand animations and positioning.
+- **JavaScript**: Time calculation and drag-and-drop logic.
+- **Chrome Extension (Manifest V3)**: Content scripts.
 
-## 🚀 Features
-
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── content.js
-├── manifest.json
-├── popup.html
-├── popup.js
-└── style.css
+analog-watch-extension/
+├── content.js         # Injection & Drag logic
+├── style.css          # Clock styling
+├── popup.html         # Settings
+└── manifest.json      # Config
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `analog-watch-extension`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **analog-watch-extension** folder.
+### 🧠 How It Works
+1.  **Injection**: On page load, `content.js` creates a DOM element (the clock) and appends it to `document.body`.
+2.  **Animation**: JavaScript updates the rotation degrees of the hands every second based on `new Date()`.
+3.  **Interaction**: Mouse events update the clock's `top` and `left` CSS properties to drag it.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`activeTab`**: To inject the clock into the current page.
+- **`host_permissions`**: To ensure the clock appears on all websites.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Watch on Page](https://via.placeholder.com/600x400?text=Watch+on+Page)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **No Tracking**: The clock does not read page content.
+- **Local**: Time is read from your system clock.
 
-This extension prioritizes your privacy:
-- **No Special Permissions**: This extension requires no special permissions to run.
-
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

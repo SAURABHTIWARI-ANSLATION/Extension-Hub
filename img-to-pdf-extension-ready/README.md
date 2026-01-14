@@ -1,56 +1,50 @@
-# Image to PDF Converter
+# 🖼️ Image to PDF Converter
 
-Convert images to PDF instantly. Offline, private, and fast.
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Image to PDF Converter** turns a collection of images into a single PDF document. Combine multiple screenshots, photos, or scans into a shareable PDF file in seconds.
 
-![Version](https://img.shields.io/badge/Version-1.1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Batch Upload**: Select multiple images at once.
+- **Ordering**: Reorder images before conversion.
+- **Settings**: Adjust page size (A4, Letter) and orientation.
+- **Instant Create**: Generates PDF using jsPDF or similar library.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: File input.
+- **JavaScript**: PDF generation (jspdf).
+- **Chrome Extension (Manifest V3)**: Popup.
 
-## 🚀 Features
-
-- **Local Storage**: Saves your preferences locally.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── README.txt
-├── jspdf.umd.min.js
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+img-to-pdf-extension-ready/
+├── manifest.json      # Config
+├── popup.html         # UI
+└── popup.js           # Conversion Logic
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `img-to-pdf-extension-ready`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **img-to-pdf-extension-ready** folder.
+### 🧠 How It Works
+1.  **Input**: Reads image files as Data URLs (base64).
+2.  **PDF**: Creates a new PDF instance.
+3.  **Loop**: Iterates through images, adding a new page for each and drawing the image.
+4.  **Save**: Outputs the PDF blob.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`storage`**: To briefly hold preferences.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![PDF Maker](https://via.placeholder.com/600x400?text=PDF+Maker)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Offline**: Conversion happens in the client.
 
-This extension prioritizes your privacy:
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

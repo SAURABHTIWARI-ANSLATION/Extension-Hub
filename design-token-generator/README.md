@@ -1,67 +1,74 @@
-# Design Token Generator
+# 🎨 Design Token Generator
 
-Extracts design system tokens from any website
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Design Token Generator** is a developer tool that bridges the gap between design and development. It automatically extracts design system tokens—like colors, typography, spacing, and shadows—from any live website and converts them into ready-to-use code formats.
 
-![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+Perfect for developers who need to replicate a design system or designers auditing a website's consistency.
 
-</div>
+### 🚀 Features
+- **Auto-Extraction**: Instantly scans CSS styles to find colors, fonts, spacing, and shadows.
+- **Multi-Format Export**: Export tokens as:
+    - CSS Variables (`:root`)
+    - Tailwind CSS Config
+    - JSON (Design System Standard)
+    - SCSS Variables
+    - Figma Tokens
+- **Customizable Scan**: Choose which categories to extract (e.g., only Colors).
+- **Preview**: View extracted tokens directly in the popup before exporting.
 
-## 🚀 Features
+### 🛠️ Tech Stack
+- **HTML5**: Structure.
+- **CSS3**: Styling for the popup interface.
+- **JavaScript (Vanilla)**: DOM analysis and format conversion logic.
+- **Chrome Extension (Manifest V3)**: Extension framework.
 
-- **Local Storage**: Saves your preferences locally.
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── background.js
-├── content.js
-├── icons
-│   ├── icon128.png
-│   ├── icon16.png
-│   └── icon48.png
-├── manifest.json
-├── popup.html
-├── popup.js
-├── styles
+design-token-generator/
+├── icons/                      # Extension icons
+├── styles/                     # CSS files
 │   ├── content.css
 │   └── popup.css
-└── templates
-    └── template-generator.js
+├── templates/                  # Output format templates
+│   └── template-generator.js
+├── background.js               # Service worker
+├── content.js                  # DOM extraction logic
+├── manifest.json               # Configuration
+├── popup.html                  # UI entry point
+└── popup.js                    # UI logic
 ```
 
-## 🛠️ Installation
-
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
+### ⚙️ Installation (Developer Mode)
+1.  **Clone** this repository.
+2.  Go to `chrome://extensions/` in Chrome.
+3.  Enable **Developer mode**.
 4.  Click **Load unpacked**.
-5.  Select the **design-token-generator** folder.
+5.  Select the `design-token-generator` folder.
+6.  Start extracting design tokens!
 
-## 📖 How to Use
+### 🧠 How It Works
+1.  **Injection**: The extension injects `content.js` into the active tab.
+2.  **Analysis**: The script iterates through the DOM and computed styles (using `getComputedStyle`) to aggregate unique colors, fonts, and spacing values.
+3.  **Processing**: It filters and sorts the data by usage frequency.
+4.  **Formatting**: The `template-generator.js` converts the raw data into your selected format (CSS, Tailwind, etc.).
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   navigate to a supported page to see it in action.
+### 🔐 Permissions Explained
+- **`activeTab`**: To access the DOM and styles of the current page.
+- **`scripting`**: To run the extraction scripts on the page.
+- **`storage`**: To save your export format preferences.
+- **`host_permissions` ("<all_urls>")**: Design tokens can be extracted from any website.
 
-## 🔐 Privacy & Permissions
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Scanner Interface](https://via.placeholder.com/600x400?text=Scanner+Interface)
+![Export Options](https://via.placeholder.com/600x400?text=Export+Options)
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `scripting`: Required for core functionality.
-- `storage`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
+### 🔒 Privacy Policy
+- **No Analytics**: We do not track your usage.
+- **No Servers**: All processing is done locally on your machine.
+- **No Data Sharing**: Extracted data stays in your browser.
 
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

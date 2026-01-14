@@ -1,61 +1,48 @@
-# Moving Car
+# 🚗 Moving Car Animation
 
-Amazing animation of a moving car
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Moving Car** is a delightful animation extension. Watch a car drive across your extension popup with smooth CSS animations. It serves as a great example of using CSS keyframes and animation properties within a browser extension context.
 
-![Version](https://img.shields.io/badge/Version-0.0.1-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Smooth Animation**: High-performance CSS-based movement.
+- **Looping**: Endless driving action.
+- **Custom Graphics**: Unique car and background assets.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Scene container.
+- **CSS3**: `@keyframes` for movement and wheel rotation.
+- **Chrome Extension (Manifest V2)**: Legacy structure.
 
-## 🚀 Features
-
-- **Deep Integration**: interacts directly with your current tab.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── background.jpg
-├── car_body.png
-├── car_wheel_left.png
-├── car_wheel_right.png
-├── index.html
-├── index.js
-├── manifest.json
-├── mycar.png
-├── sound.mp3
-├── style.css
-├── track_modern.png
-└── trees.png
+Moving_Car/
+├── manifest.json      # Config
+├── index.html         # Animation Stage
+├── style.css          # Animation Rules
+└── mycar.png          # Assets
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Download source.
+2.  Open `chrome://extensions`.
+3.  Turn on **Developer mode**.
+4.  Load unpacked -> `Moving_Car`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **Moving_Car** folder.
+### 🧠 How It Works
+1.  **Scene**: A `div` representing the road and another for the car.
+2.  **Animation**: CSS `transform: translateX()` moves the background or car to simulate speed.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`activeTab`**: Standard permission.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Car Animation](https://via.placeholder.com/600x400?text=Car+Animation)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **None**: It's just an animation. No data involved.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.

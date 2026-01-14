@@ -1,55 +1,53 @@
-# Keyword Extractor
+# 🗝️ Keyword Extractor
 
-Extract top keywords from any page or text
+## 👨‍💻 Made by Saurabh Tiwari
 
-<div align="center">
+### 🧩 Description
+**Keyword Extractor** is a powerful SEO and research tool. Instantly analyze the current webpage to find the most frequent and relevant keywords. Perfect for content creators, marketers, and students who need to grasp the core topics of a text quickly.
 
-![Version](https://img.shields.io/badge/Version-1.0-blue?style=flat-square)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+### 🚀 Features
+- **Frequency Analysis**: Counts word occurrences.
+- **Stop Word Removal**: Filters out common words (the, and, is) to focus on meaning.
+- **Top List**: Displays the top 10/20 keywords.
+- **Export**: Copy results to clipboard.
 
-</div>
+### 🛠️ Tech Stack
+- **HTML5**: Results view.
+- **JavaScript**: Text processing algorithms.
+- **Chrome Extension (Manifest V3)**: Scripting API.
 
-## 🚀 Features
-
-- **Deep Integration**: interacts directly with your current tab.
-- **User Friendly UI**: Easy-to-use popup interface.
-
-## 📁 Project Structure
-
+### 📂 Folder Structure
 ```
-├── manifest.json
-├── popup.css
-├── popup.html
-└── popup.js
+keyword-extractor/
+├── manifest.json      # Config
+├── popup.html         # UI
+├── popup.js           # Logic
+└── style.css          # Styling
 ```
 
-## 🛠️ Installation
+### ⚙️ Installation (Developer Mode)
+1.  Clone repo.
+2.  Go to `chrome://extensions`.
+3.  Enable **Developer mode**.
+4.  Load unpacked -> `keyword-extractor`.
 
-1.  **Download** or **Clone** this repository.
-2.  Open Chrome and navigate to `chrome://extensions/`.
-3.  **Enable Developer Mode** (toggle in the top-right corner).
-4.  Click **Load unpacked**.
-5.  Select the **keyword-extractor** folder.
+### 🧠 How It Works
+1.  **Extract**: `content.js` or `scripting.executeScript` grabs `document.body.innerText`.
+2.  **Clean**: Removes punctuation, numbers, and stop words.
+3.  **Count**: Maps words to frequency counts.
+4.  **Sort**: Orders by count and displays the top results.
 
-## 📖 How to Use
+### 🔐 Permissions Explained
+- **`activeTab`**: To read the content of the tab you are analyzing.
+- **`scripting`**: To execute the extraction script.
 
-1.  Click the extension icon (🧩) in your browser toolbar.
-2.   interact with the popup to get started.
+### 📸 Screenshots
+*(Placeholder for screenshots)*
+![Keyword List](https://via.placeholder.com/600x400?text=Keyword+List)
 
-## 🔐 Privacy & Permissions
+### 🔒 Privacy Policy
+- **Local**: Text analysis happens in your browser.
+- **No Data**: We do not store the analyzed text.
 
-This extension prioritizes your privacy:
-- `activeTab`: Required for core functionality.
-- `scripting`: Required for core functionality.
-- ✅ **No Data Collection**: We do not track your browsing history or personal data.
-- ✅ **Local Processing**: All operations are performed locally on your device.
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open issues or submit pull requests.
-
----
-
-<div align="center">
-Made with ❤️ by [Saurabh Tiwari](https://github.com/SAURABHTIWARI-ANSLATION)
-</div>
+### 📄 License
+This project is licensed under the **MIT License**.
