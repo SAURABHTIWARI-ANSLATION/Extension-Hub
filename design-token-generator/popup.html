@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="styles/popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Design Token Generator</h1>
+    
+    <div class="token-categories">
+      <label>
+        <input type="checkbox" id="colors" checked> Colors
+      </label>
+      <label>
+        <input type="checkbox" id="typography" checked> Typography
+      </label>
+      <label>
+        <input type="checkbox" id="spacing" checked> Spacing
+      </label>
+      <label>
+        <input type="checkbox" id="shadows" checked> Shadows
+      </label>
+    </div>
+    
+    <div class="export-format">
+      <h3>Export Format:</h3>
+      <select id="format">
+        <option value="css">CSS Variables</option>
+        <option value="tailwind">Tailwind Config</option>
+        <option value="json">Design System JSON</option>
+        <option value="scss">SCSS Variables</option>
+        <option value="figma">Figma Tokens</option>
+      </select>
+    </div>
+    
+    <button id="scanBtn" class="scan-btn">
+      🔍 Scan Current Page
+    </button>
+    
+    <div class="loading" id="loading" style="display: none;">
+      Scanning page for design tokens...
+    </div>
+    
+    <div id="results" class="results">
+      <textarea id="output" readonly placeholder="Extracted tokens will appear here..."></textarea>
+      
+      <div class="actions">
+        <button id="copyBtn" class="action-btn">📋 Copy</button>
+        <button id="downloadBtn" class="action-btn">💾 Download</button>
+        <button id="clearBtn" class="action-btn">🗑️ Clear</button>
+      </div>
+    </div>
+    
+    <div class="stats" id="stats"></div>
+  </div>
+
+  <!-- LOAD template-generator.js FIRST -->
+  <script src="templates/template-generator.js"></script>
+
+    <!-- THEN load popup.js -->
+  <script src="popup.js"></script>
+</body>
+</html>

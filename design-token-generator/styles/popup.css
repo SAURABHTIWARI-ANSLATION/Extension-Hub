@@ -1,0 +1,166 @@
+body {
+width: 400px;
+min-height: 500px;
+margin: 0;
+padding: 0;
+font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+background: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+color: #FFFFFF;
+}
+
+.container {
+padding: 20px;
+}
+
+h1 {
+font-size: 18px;
+margin: 0 0 20px 0;
+color: #FFFFFF;
+}
+
+.token-categories {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+margin-bottom: 20px;
+padding: 15px;
+background: rgba(30, 27, 75, 0.7);
+border: 1px solid #4F46E5;
+border-radius: 8px;
+backdrop-filter: blur(10px);
+}
+
+.token-categories label {
+display: flex;
+align-items: center;
+gap: 8px;
+cursor: pointer;
+color: #E0E7FF;
+}
+
+.export-format {
+margin-bottom: 20px;
+}
+
+.export-format h3 {
+margin: 0 0 8px 0;
+font-size: 14px;
+color: #E0E7FF;
+}
+
+#format {
+width: 100%;
+padding: 8px;
+border: 1px solid #4F46E5;
+border-radius: 4px;
+background: rgba(30, 27, 75, 0.8);
+color: #FFFFFF;
+font-size: 14px;
+}
+
+.scan-btn {
+width: 100%;
+padding: 12px;
+background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+color: white;
+border: none;
+border-radius: 8px;
+font-size: 16px;
+font-weight: 600;
+cursor: pointer;
+margin-bottom: 20px;
+transition: all 0.3s ease;
+box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+}
+
+.scan-btn:hover {
+transform: translateY(-2px);
+box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+}
+
+.scan-btn:active {
+transform: translateY(0);
+box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);
+}
+
+.loading {
+text-align: center;
+padding: 20px;
+color: #818CF8;
+font-style: italic;
+}
+
+.results {
+display: none;
+}
+
+#output {
+width: 100%;
+height: 200px;
+padding: 12px;
+border: 1px solid #4F46E5;
+border-radius: 8px;
+font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+font-size: 12px;
+resize: vertical;
+margin-bottom: 15px;
+background: rgba(2, 6, 23, 0.8);
+color: #FFFFFF;
+line-height: 1.5;
+}
+
+.actions {
+display: flex;
+gap: 10px;
+justify-content: center;
+}
+
+.action-btn {
+flex: 1;
+padding: 10px;
+background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+border: 1px solid #818CF8;
+border-radius: 6px;
+cursor: pointer;
+font-size: 14px;
+color: #FFFFFF;
+transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+transform: translateY(-1px);
+}
+
+.action-btn:active {
+transform: translateY(0);
+}
+
+.stats {
+margin-top: 15px;
+padding: 10px;
+background: rgba(99, 102, 241, 0.1);
+border-radius: 6px;
+font-size: 12px;
+color: #C4B5FD;
+border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Custom scrollbar for output textarea */
+#output::-webkit-scrollbar {
+width: 8px;
+}
+
+#output::-webkit-scrollbar-track {
+background: rgba(2, 6, 23, 0.5);
+border-radius: 4px;
+}
+
+#output::-webkit-scrollbar-thumb {
+background: #4F46E5;
+border-radius: 4px;
+}
+
+#output::-webkit-scrollbar-thumb:hover {
+background: #6366F1;
+}
