@@ -1,4 +1,3 @@
-// Reference elements explicitly
 const els = {
   interval: document.getElementById("interval"),
   goal: document.getElementById("goal"),
@@ -6,9 +5,8 @@ const els = {
   quietStart: document.getElementById("quietStart"),
   quietEnd: document.getElementById("quietEnd"),
   progress: document.getElementById("progress"),
-  progressFill: document.getElementById("progress-fill"), // New: for the visual bar
+  progressFill: document.getElementById("progress-fill"),
   streak: document.getElementById("streak"),
-  weekly: document.getElementById("weekly"),
   tip: document.getElementById("tip"),
   saveBtn: document.getElementById("save"),
   drinkBtn: document.getElementById("drink")
@@ -16,13 +14,12 @@ const els = {
 
 const tips = [
   "💧 Drink water before you feel thirsty.",
-  "🍼 Keep a reusable bottle on your desk at all times.",
-  "🌅 Start your day with a large glass of water.",
-  "🚶 Drink a glass after every break or walk."
+  "🍼 Keep a reusable bottle on your desk.",
+  "🌅 Start your day with a glass of water.",
+  "🚶 Drink a glass after every walk."
 ];
 
-// Initialize UI
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const data = await chrome.storage.sync.get([
     "interval", "goal", "hourly", "quietStart", "quietEnd"
   ]);
@@ -32,11 +29,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   els.hourly.checked = data.hourly || false;
   els.quietStart.value = data.quietStart || "";
   els.quietEnd.value = data.quietEnd || "";
-  
+
   render();
 });
 
-// Save Settings
 els.saveBtn.onclick = async () => {
   let interval = Number(els.interval.value);
   if (els.hourly.checked) interval = 60;
@@ -47,43 +43,31 @@ els.saveBtn.onclick = async () => {
     goal: Number(els.goal.value) || 3000,
     hourly: els.hourly.checked,
     quietStart: els.quietStart.value,
-    quietEnd: els.quietEnd.value,
+    quietEnd: els.quietEnd.value
   });
 
-  // UX Improvement: Visual feedback instead of alert
-  els.saveBtn.textContent = "Saved! ✓";
-  els.saveBtn.style.background = "#10b981";
-  setTimeout(() => {
-    els.saveBtn.textContent = "Save Settings";
-    els.saveBtn.style.background = "";
-  }, 1500);
-  
+  els.saveBtn.textContent = "Saved ✓";
+  setTimeout(() => els.saveBtn.textContent = "Save Settings", 1500);
+
   render();
 };
 
-// Add Water
 els.drinkBtn.onclick = async () => {
   const data = await chrome.storage.sync.get(["consumed"]);
-  const newTotal = (data.consumed || 0) + 250;
-  await chrome.storage.sync.set({ consumed: newTotal });
+  await chrome.storage.sync.set({ consumed: (data.consumed || 0) + 250 });
   render();
 };
 
-// Render Data
 async function render() {
-  const data = await chrome.storage.sync.get(["goal", "consumed", "streak", "weekly"]);
+  const data = await chrome.storage.sync.get(["goal", "consumed", "streak"]);
+
   const consumed = data.consumed || 0;
   const goal = data.goal || 3000;
-  
-  // Update Text
+
   els.progress.textContent = `${consumed} / ${goal} ml`;
-  els.streak.textContent = `🔥 Streak: ${data.streak || 0} days`;
-  els.weekly.textContent = `📊 Weekly: ${data.weekly || 0} ml`;
+  els.streak.textContent = `🔥 ${data.streak || 0} days`;
   els.tip.textContent = tips[Math.floor(Math.random() * tips.length)];
 
-  // Update Visual Progress Bar
-  if (els.progressFill) {
-    const percentage = Math.min((consumed / goal) * 100, 100);
-    els.progressFill.style.width = `${percentage}%`;
-  }
+  const percent = Math.min((consumed / goal) * 100, 100);
+  els.progressFill.style.width = `${percent}%`;
 }

@@ -1,20 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="card">
-    <header>
-      <h3>💧 Water Alert</h3>
-      <div id="streak" class="streak-badge">🔥 0 days</div>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Water Alert</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h3>💧 Water Alert</h3>
+    <div id="streak" class="streak-badge">🔥 0 days</div>
 
     <div class="stats-container">
-      <div class="progress-info">
-        <span id="progress">0 / 3000 ml</span>
-      </div>
+      <span id="progress">0 / 3000 ml</span>
       <div class="progress-bar-bg">
         <div id="progress-fill" class="progress-bar-fill"></div>
       </div>
@@ -24,39 +20,22 @@
 
     <hr />
 
-    <div class="settings-grid">
-      <div class="input-group">
-        <label for="interval">Reminder (min)</label>
-        <div class="row">
-          <input id="interval" type="number" min="1" placeholder="10" />
-          <label class="checkbox-label">
-            <input type="checkbox" id="hourly" /> Hourly
-          </label>
-        </div>
-      </div>
+    <label>Reminder Interval (min)</label>
+    <input id="interval" type="number" min="1" />
 
-      <div class="input-group">
-        <label for="goal">Daily Goal (ml)</label>
-        <input id="goal" type="number" placeholder="3000" />
-      </div>
+    <label> <input type="checkbox" id="hourly" /> Hourly </label>
 
-      <div class="input-group">
-        <label>Quiet Hours</label>
-        <div class="row">
-          <input id="quietStart" type="time" />
-          <span>to</span>
-          <input id="quietEnd" type="time" />
-        </div>
-      </div>
-    </div>
+    <label>Daily Goal (ml)</label>
+    <input id="goal" type="number" />
+
+    <label>Quiet Hours</label>
+    <input id="quietStart" type="time" />
+    <input id="quietEnd" type="time" />
 
     <button id="save" class="save-btn">Save Settings</button>
 
-    <footer>
-      <p id="tip"></p>
-    </footer>
-  </div>
+    <p id="tip"></p>
 
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>

@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Budget Planner Pro",
+  "version": "1.0",
+  "description": "Track expenses, view reports, export data, set alerts, and visualize spending.",
+  "permissions": ["storage", "alarms", "notifications", "downloads"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
