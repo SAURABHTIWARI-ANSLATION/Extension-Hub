@@ -1,7 +1,6 @@
 :root {
   --primary: #3b82f6;
   --primary-hover: #2563eb;
-  --success: #10b981;
   --bg: #ffffff;
   --text-main: #1e293b;
   --text-muted: #64748b;
@@ -9,78 +8,37 @@
 }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: system-ui, sans-serif;
   padding: 16px;
-  width: 280px;
-  background-color: var(--bg);
+  background: var(--bg);
   color: var(--text-main);
+  width: 280px;
   margin: 0;
 }
 
-h3 {
-  margin: 0 0 12px 0;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* Input & Button Base Styles */
-input[type="number"],
-input[type="time"] {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  box-sizing: border-box; /* Prevents width overflow */
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-input:focus {
-  border-color: var(--primary);
-}
+h3 { margin: 0 0 8px 0; }
 
 button {
   width: 100%;
-  margin-top: 10px;
   padding: 10px;
   border-radius: 8px;
   border: none;
-  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.1s, background-color 0.2s;
+  font-weight: 600;
 }
 
-button:active {
-  transform: scale(0.98);
-}
-
-/* Specific Button Themes */
 .primary-btn {
-  background-color: var(--primary);
+  background: var(--primary);
   color: white;
 }
 
 .primary-btn:hover {
-  background-color: var(--primary-hover);
+  background: var(--primary-hover);
 }
 
 .save-btn {
-  background-color: #f1f5f9;
-  color: var(--text-main);
+  background: #f1f5f9;
   border: 1px solid var(--border);
-}
-
-/* Progress Section */
-.stats-container {
-  margin: 16px 0;
-}
-
-#progress {
-  font-weight: bold;
-  font-size: 0.9rem;
 }
 
 .progress-bar-bg {
@@ -88,38 +46,28 @@ button:active {
   border-radius: 10px;
   height: 10px;
   width: 100%;
-  margin: 8px 0;
+  margin: 6px 0;
   overflow: hidden;
 }
 
 .progress-bar-fill {
   background: var(--primary);
   height: 100%;
-  width: 0%; 
-  border-radius: 10px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+  transition: width 0.4s ease;
 }
 
-/* Small Stats & Tips */
 .streak-badge {
   font-size: 0.8rem;
   color: #b45309;
   background: #fef3c7;
   padding: 2px 8px;
-  border-radius: 12px;
+  border-radius: 10px;
   width: fit-content;
 }
 
 #tip {
-  margin-top: 12px;
   font-size: 0.75rem;
   color: var(--text-muted);
-  font-style: italic;
-  line-height: 1.4;
-}
-
-hr {
-  border: 0;
-  border-top: 1px solid var(--border);
-  margin: 16px 0;
+  margin-top: 10px;
 }
