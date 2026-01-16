@@ -1,0 +1,94 @@
+/* Highlight styles */
+.simple-highlight {
+  transition: background-color 0.3s ease;
+  position: relative;
+}
+
+.simple-highlight:hover {
+  filter: brightness(1.1);
+}
+
+/* Color variations */
+.simple-highlight[data-color="yellow"] {
+  background-color: rgba(255, 235, 59, 0.3) !important;
+}
+
+.simple-highlight[data-color="green"] {
+  background-color: rgba(76, 175, 80, 0.3) !important;
+}
+
+.simple-highlight[data-color="blue"] {
+  background-color: rgba(33, 150, 243, 0.3) !important;
+}
+
+.simple-highlight[data-color="pink"] {
+  background-color: rgba(233, 30, 99, 0.3) !important;
+}
+
+.simple-highlight[data-color="red"] {
+  background-color: rgba(244, 67, 54, 0.3) !important;
+}
+
+/* Selection style when in highlight mode */
+body.simple-highlighter-cursor ::selection {
+  background-color: rgba(255, 235, 59, 0.5) !important;
+}
+
+body.simple-highlighter-cursor ::-moz-selection {
+  background-color: rgba(255, 235, 59, 0.5) !important;
+}
+
+/* Highlight styles */
+.simple-highlight {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  position: relative;
+  display: inline !important;
+  line-height: 1.6;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.simple-highlight:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  z-index: 1000;
+}
+
+/* Color variations with better opacity */
+.simple-highlight[data-color="yellow"] {
+  background-color: rgba(255, 235, 59, 0.45) !important;
+  border-bottom: 2px solid rgba(255, 193, 7, 0.7);
+}
+
+.simple-highlight[data-color="green"] {
+  background-color: rgba(76, 175, 80, 0.45) !important;
+  border-bottom: 2px solid rgba(56, 142, 60, 0.7);
+}
+
+.simple-highlight[data-color="blue"] {
+  background-color: rgba(33, 150, 243, 0.45) !important;
+  border-bottom: 2px solid rgba(25, 118, 210, 0.7);
+}
+
+.simple-highlight[data-color="pink"] {
+  background-color: rgba(233, 30, 99, 0.45) !important;
+  border-bottom: 2px solid rgba(194, 24, 91, 0.7);
+}
+
+.simple-highlight[data-color="red"] {
+  background-color: rgba(244, 67, 54, 0.45) !important;
+  border-bottom: 2px solid rgba(211, 47, 47, 0.7);
+}
+
+/* Selection style when in highlight mode */
+body.simple-highlighter-cursor ::selection {
+  background-color: rgba(255, 235, 59, 0.5) !important;
+}
+
+body.simple-highlighter-cursor ::-moz-selection {
+  background-color: rgba(255, 235, 59, 0.5) !important;
+}
+
+/* Make sure highlights don't break text flow */
+.simple-highlight br {
+  display: none;
+}

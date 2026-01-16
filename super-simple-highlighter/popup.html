@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🎨 Simple Highlighter</h1>
+      <div class="status">
+        <span id="statusText">Ready</span>
+        <div class="status-indicator" id="statusIndicator"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>📝 Highlight Mode</h3>
+      <div class="toggle-container">
+        <label class="toggle">
+          <input type="checkbox" id="highlightToggle">
+          <span class="toggle-slider"></span>
+        </label>
+        <span class="toggle-label">Enable Highlighting</span>
+      </div>
+      <p class="hint">Press <kbd>Ctrl+Shift+H</kbd> to toggle</p>
+    </div>
+
+    <div class="section">
+      <h3>🌈 Highlight Colors</h3>
+      <div class="color-palette">
+        <button class="color-btn yellow active" data-color="yellow">🟨</button>
+        <button class="color-btn green" data-color="green">🟩</button>
+        <button class="color-btn blue" data-color="blue">🟦</button>
+        <button class="color-btn pink" data-color="pink">🩷</button>
+        <button class="color-btn red" data-color="red">🟥</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>📋 Page Highlights</h3>
+      <div id="highlightsList" class="highlights-list">
+        <p class="empty-state">No highlights yet on this page</p>
+      </div>
+      <div class="actions">
+        <button id="clearPageBtn" class="btn secondary">Clear Page</button>
+        <button id="exportBtn" class="btn primary">Export All</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h3>⚙️ Settings</h3>
+      <div class="settings">
+        <label class="setting">
+          <input type="checkbox" id="autoRestore" checked>
+          <span>Auto-restore on page load</span>
+        </label>
+        <label class="setting">
+          <input type="checkbox" id="showTooltip" checked>
+          <span>Show highlight tooltips</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p class="tip">💡 Select text and click to highlight</p>
+      <p class="privacy">🔒 All data stays in your browser</p>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

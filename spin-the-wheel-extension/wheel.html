@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin The Wheel - Fullscreen</title>
+    <link rel="stylesheet" href="wheel.css">
+</head>
+<body>
+    <div class="wheel-container">
+        <div class="wheel-header">
+            <h1>🎡 Spin The Wheel</h1>
+            <button id="closeWheel" class="close-btn">×</button>
+        </div>
+        
+        <div class="wheel-wrapper">
+            <canvas id="wheelCanvas" width="600" height="600"></canvas>
+            <div class="wheel-center">
+                <div class="pointer"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="spin-controls">
+                <button id="spinBtn" class="spin-btn">SPIN!</button>
+                <div class="speed-control">
+                    <label>Spin Speed:</label>
+                    <input type="range" id="speedControl" min="1" max="10" value="5">
+                </div>
+            </div>
+            
+            <div class="result-display">
+                <h3>Result:</h3>
+                <div id="result" class="result-text">Click SPIN to start!</div>
+            </div>
+        </div>
+        
+        <div class="options-display">
+            <h3>Current Options:</h3>
+            <div id="currentOptions"></div>
+        </div>
+    </div>
+    
+    <script src="wheel.js"></script>
+</body>
+</html>

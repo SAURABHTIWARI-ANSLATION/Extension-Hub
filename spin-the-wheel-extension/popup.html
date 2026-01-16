@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin The Wheel</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Spin The Wheel</h1>
+        
+        <div class="options-section">
+            <h3>Wheel Options</h3>
+            <div class="options-list" id="optionsList">
+                <!-- Options will be dynamically added here -->
+            </div>
+            
+            <div class="input-group">
+                <input type="text" id="newOption" placeholder="Add new option...">
+                <button id="addOption">Add</button>
+            </div>
+            
+            <div class="button-group">
+                <button id="clearOptions" class="btn-secondary">Clear All</button>
+                <button id="randomOptions" class="btn-secondary">Add 5 Random</button>
+            </div>
+        </div>
+        
+        <div class="settings-section">
+            <div class="setting">
+                <label for="spinDuration">Spin Duration (seconds):</label>
+                <input type="range" id="spinDuration" min="3" max="10" value="5">
+                <span id="durationValue">5</span>
+            </div>
+            
+            <div class="color-picker">
+                <label>Wheel Colors:</label>
+                <div class="colors">
+                    <div class="color-option" style="background-color: #FF6B6B;" data-color="#FF6B6B"></div>
+                    <div class="color-option" style="background-color: #4ECDC4;" data-color="#4ECDC4"></div>
+                    <div class="color-option" style="background-color: #FFD166;" data-color="#FFD166"></div>
+                    <div class="color-option" style="background-color: #06D6A0;" data-color="#06D6A0"></div>
+                    <div class="color-option" style="background-color: #118AB2;" data-color="#118AB2"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button id="spinWheel" class="btn-primary">🎡 Spin The Wheel!</button>
+            <button id="openWheel" class="btn-secondary">Open Fullscreen Wheel</button>
+        </div>
+        
+        <div class="history-section">
+            <h3>Recent Results</h3>
+            <div id="historyList"></div>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
