@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "SEO Tracker",
+  "version": "1.0",
+  "description": "Analyze on-page SEO of any website",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}
