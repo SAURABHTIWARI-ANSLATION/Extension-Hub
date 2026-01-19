@@ -11,6 +11,26 @@ function getElement(id) {
     return el;
 }
 
+const CONFIG = {
+    NOTIFICATION_TIMEOUT: 3000, // 3 seconds
+    IMAGES_PER_PAGE: 9,
+    DEFAULT_QUALITY: 85,
+    DEFAULT_SETTINGS: {
+        folderName: 'ImageDownloads',
+        filenamePattern: '{index}_{name}',
+        convertWebP: 'none',
+        quality: 85,
+        filters: {
+            minWidth: 100,
+            minHeight: 100,
+            fileTypes: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+            skipAds: true,
+            skipIcons: true,
+            skipBlurry: false
+        }
+    }
+};
+
 const elements = {
     // Stats
     imagesFound: getElement('images-found'),
@@ -50,9 +70,9 @@ const elements = {
 let currentImages = [];
 let selectedImages = new Set();
 let currentPage = 1;
-const imagesPerPage = 9;
+const imagesPerPage = CONFIG.IMAGES_PER_PAGE;
 let currentDownloadManager = null;
-let imageFilter = null; // Will be initialized from filter-engine.js
+let imageFilter = null;
 let isScanning = false;
 
 // ========== INITIALIZATION ==========
@@ -105,8 +125,13 @@ function createSimpleImageFilter() {
 }
 
 function getFileExtension(url) {
-    const match = url.match(/\.([a-zA-Z0-9]+)(?:[?#]|$)/);
-    return match ? match[1].toLowerCase() : '';
+    try {
+        const match = url.match(/\.([a-zA-Z0-9]+)(?:[?#]|$)/);
+        return match ? match[1].toLowerCase() : '';
+    } catch (error) {
+        console.error('Error getting file extension:', error);
+        return '';
+    }
 }
 
 // ========== UI INITIALIZATION ==========
@@ -127,7 +152,7 @@ function initializeUI() {
     
     // Initialize other settings listeners
     document.querySelectorAll('input, select').forEach(element => {
-        if (element.id !== 'quality') { // Already handled
+        if (element.id !== 'quality') {
             element.addEventListener('change', saveSettings);
         }
     });
@@ -143,33 +168,37 @@ function loadSettings() {
         'filters'
     ], (result) => {
         try {
-            if (result.folderName) {
-                const input = document.getElementById('folder-name');
-                if (input) input.value = result.folderName;
-            }
+            // Set default values from CONFIG if not in storage
+            const settings = {
+                folderName: result.folderName || CONFIG.DEFAULT_SETTINGS.folderName,
+                filenamePattern: result.filenamePattern || CONFIG.DEFAULT_SETTINGS.filenamePattern,
+                convertWebP: result.convertWebP || CONFIG.DEFAULT_SETTINGS.convertWebP,
+                quality: result.quality || CONFIG.DEFAULT_SETTINGS.quality,
+                filters: result.filters || CONFIG.DEFAULT_SETTINGS.filters
+            };
             
-            if (result.filenamePattern) {
-                const select = document.getElementById('filename-pattern');
-                if (select) select.value = result.filenamePattern;
-            }
+            // Apply settings to UI
+            const folderInput = document.getElementById('folder-name');
+            if (folderInput) folderInput.value = settings.folderName;
             
-            if (result.convertWebP) {
-                const radio = document.querySelector(`input[name="convert"][value="${result.convertWebP}"]`);
-                if (radio) radio.checked = true;
-            }
+            const filenameSelect = document.getElementById('filename-pattern');
+            if (filenameSelect) filenameSelect.value = settings.filenamePattern;
             
-            if (result.quality) {
-                const slider = document.getElementById('quality');
-                const value = document.getElementById('quality-value');
-                if (slider) slider.value = result.quality;
-                if (value) value.textContent = `${result.quality}%`;
-            }
+            const convertRadio = document.querySelector(`input[name="convert"][value="${settings.convertWebP}"]`);
+            if (convertRadio) convertRadio.checked = true;
             
-            if (result.filters) {
-                applySavedFilters(result.filters);
+            const qualitySlider = document.getElementById('quality');
+            const qualityValue = document.getElementById('quality-value');
+            if (qualitySlider) qualitySlider.value = settings.quality;
+            if (qualityValue) qualityValue.textContent = `${settings.quality}%`;
+            
+            if (settings.filters) {
+                applySavedFilters(settings.filters);
             }
         } catch (error) {
             console.error('Error loading settings:', error);
+            // Apply default settings on error
+            applySavedFilters(CONFIG.DEFAULT_SETTINGS.filters);
         }
     });
 }
@@ -188,9 +217,7 @@ function applySavedFilters(filters) {
         
         if (filters.fileTypes && Array.isArray(filters.fileTypes)) {
             document.querySelectorAll('.checkbox-item input').forEach(cb => {
-                if (filters.fileTypes.includes(cb.value)) {
-                    cb.checked = true;
-                }
+                cb.checked = filters.fileTypes.includes(cb.value);
             });
         }
         
@@ -209,23 +236,25 @@ function applySavedFilters(filters) {
 
 function saveSettings() {
     try {
-        const folderName = document.getElementById('folder-name');
-        const filenamePattern = document.getElementById('filename-pattern');
+        const folderInput = document.getElementById('folder-name');
+        const filenameSelect = document.getElementById('filename-pattern');
         const convertRadio = document.querySelector('input[name="convert"]:checked');
-        const quality = document.getElementById('quality');
+        const qualitySlider = document.getElementById('quality');
         
         const settings = {
-            folderName: folderName ? folderName.value : '',
-            filenamePattern: filenamePattern ? filenamePattern.value : '{index}_{name}',
-            convertWebP: convertRadio ? convertRadio.value : 'none',
-            quality: quality ? quality.value : 85,
+            folderName: folderInput ? folderInput.value : CONFIG.DEFAULT_SETTINGS.folderName,
+            filenamePattern: filenameSelect ? filenameSelect.value : CONFIG.DEFAULT_SETTINGS.filenamePattern,
+            convertWebP: convertRadio ? convertRadio.value : CONFIG.DEFAULT_SETTINGS.convertWebP,
+            quality: qualitySlider ? qualitySlider.value : CONFIG.DEFAULT_SETTINGS.quality,
             filters: getCurrentFilters()
         };
         
         chrome.storage.sync.set(settings);
         console.log('Settings saved');
+        showNotification('Settings saved', 'success');
     } catch (error) {
         console.error('Error saving settings:', error);
+        showNotification('Error saving settings', 'error');
     }
 }
 
@@ -233,7 +262,7 @@ function getCurrentFilters() {
     const checkedTypes = [];
     try {
         document.querySelectorAll('.checkbox-item input:checked').forEach(cb => {
-            checkedTypes.push(cb.value);
+            if (cb.value) checkedTypes.push(cb.value);
         });
     } catch (error) {
         console.error('Error getting checked types:', error);
@@ -248,7 +277,7 @@ function getCurrentFilters() {
     return {
         minWidth: minWidth ? parseInt(minWidth.value) || 100 : 100,
         minHeight: minHeight ? parseInt(minHeight.value) || 100 : 100,
-        fileTypes: checkedTypes,
+        fileTypes: checkedTypes.length > 0 ? checkedTypes : CONFIG.DEFAULT_SETTINGS.filters.fileTypes,
         skipAds: skipAds ? skipAds.checked : true,
         skipIcons: skipIcons ? skipIcons.checked : true,
         skipBlurry: skipBlurry ? skipBlurry.checked : false
@@ -267,6 +296,7 @@ function scanCurrentPage() {
             console.error('No active tab found');
             setScanButtonState(false);
             isScanning = false;
+            showNotification('No active tab found', 'error');
             return;
         }
         
@@ -286,27 +316,26 @@ function scanCurrentPage() {
                 return;
             }
             
-            if (response && response.images) {
-                console.log(`Found ${response.images.length} images`);
-                
-                // Apply filters
-                const filteredImages = imageFilter.filterImages(response.images, getCurrentFilters());
-                currentImages = filteredImages;
-                selectedImages.clear();
-                currentPage = 1;
-                
-                updateImageGrid();
-                updateStats();
-                
-                if (filteredImages.length === 0) {
-                    showNotification('No images found after filtering', 'info');
-                }
-            } else {
-                console.log('No images found');
-                currentImages = [];
-                selectedImages.clear();
-                updateImageGrid();
-                updateStats();
+            // In scanCurrentPage function, around line 179-190:
+                if (response && response.images && response.images.length > 0) {
+                    console.log(`Found ${response.images.length} images`);
+                    
+                    // Don't apply filters on initial scan
+                    currentImages = response.images; // Use all images initially
+                    selectedImages.clear();
+                    currentPage = 1;
+                    
+                    updateImageGrid();
+                    updateStats();
+                    
+                    showNotification(`Found ${response.images.length} images`, 'info');
+                } else {
+                        console.log('No images found');
+                        showNotification('No images found on this page', 'info');
+                        currentImages = [];
+                        selectedImages.clear();
+                        updateImageGrid();
+                        updateStats();
             }
         });
     });
@@ -507,6 +536,11 @@ function toggleImageSelection(index) {
 }
 
 function selectAllImages() {
+    if (currentImages.length === 0) {
+        showNotification('No images to select', 'warning');
+        return;
+    }
+    
     for (let i = 0; i < currentImages.length; i++) {
         selectedImages.add(i);
     }
@@ -516,6 +550,11 @@ function selectAllImages() {
 }
 
 function clearSelection() {
+    if (selectedImages.size === 0) {
+        showNotification('No selection to clear', 'info');
+        return;
+    }
+    
     selectedImages.clear();
     updateImageGrid();
     updateStats();
@@ -536,10 +575,12 @@ function updatePagination() {
     
     if (elements.prevPage) {
         elements.prevPage.disabled = currentPage <= 1;
+        elements.prevPage.style.opacity = currentPage <= 1 ? '0.5' : '1';
     }
     
     if (elements.nextPage) {
         elements.nextPage.disabled = currentPage >= totalPages;
+        elements.nextPage.style.opacity = currentPage >= totalPages ? '0.5' : '1';
     }
 }
 
@@ -570,7 +611,9 @@ function updateStats() {
     
     if (elements.totalSize) {
         // Calculate total size
-        const totalSizeKB = currentImages.reduce((sum, img) => sum + (img.sizeKB || 100), 0);
+        const totalSizeKB = currentImages.reduce((sum, img) => {
+            return sum + (img.sizeKB || (img.width * img.height / 10000)); // Estimate size
+        }, 0);
         const totalSizeMB = (totalSizeKB / 1024).toFixed(1);
         elements.totalSize.textContent = `${totalSizeMB} MB`;
     }
@@ -608,7 +651,7 @@ async function startDownload(images) {
         folderName: document.getElementById('folder-name')?.value || generateFolderName(),
         filenamePattern: document.getElementById('filename-pattern')?.value || '{index}_{name}',
         convertTo: document.querySelector('input[name="convert"]:checked')?.value || 'none',
-        quality: parseInt(document.getElementById('quality')?.value || 85) / 100
+        quality: parseInt(document.getElementById('quality')?.value || CONFIG.DEFAULT_QUALITY) / 100
     };
     
     // Save settings
@@ -682,6 +725,8 @@ function cancelDownload() {
         currentDownloadManager.cancel();
         showProgress(false);
         showNotification('Download cancelled', 'warning');
+    } else {
+        showProgress(false);
     }
 }
 
@@ -823,6 +868,21 @@ function setupEventListeners() {
                 }
             });
         }
+    });
+    
+    // File type checkboxes
+    document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+            if (currentImages.length > 0) {
+                const filteredImages = imageFilter.filterImages(currentImages, getCurrentFilters());
+                currentImages = filteredImages;
+                selectedImages.clear();
+                currentPage = 1;
+                updateImageGrid();
+                updateStats();
+                showNotification('Filters applied', 'info');
+            }
+        });
     });
 }
 
