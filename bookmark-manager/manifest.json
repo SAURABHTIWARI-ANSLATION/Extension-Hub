@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Smart Bookmark Manager",
+  "version": "1.0",
+  "description": "Manage bookmarks and tab sessions category-wise.",
+  "permissions": [
+    "tabs",
+    "bookmarks",
+    "storage",
+    "history"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

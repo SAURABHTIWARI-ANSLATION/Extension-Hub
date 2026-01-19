@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bookmark Manager</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <h3>Bookmark Manager</h3>
+      <p class="subtitle">
+        Save tabs, organize bookmarks, and clean duplicates
+      </p>
+    </header>
+
+    <!-- Search -->
+    <section class="section">
+      <input
+        id="search"
+        type="text"
+        placeholder="Search bookmarks or browsing history"
+        autocomplete="off"
+      />
+    </section>
+
+    <!-- Sessions -->
+    <section class="section">
+      <h4>Tab Sessions</h4>
+      <button id="saveSession" class="primary">
+        Save current tabs
+      </button>
+      <button id="restoreSession" class="secondary">
+        Restore last session
+      </button>
+    </section>
+
+    <!-- Add Bookmark -->
+    <section class="section">
+      <h4>Add bookmark</h4>
+      <input
+        id="category"
+        type="text"
+        placeholder="Category (Work, Study, Learning...)"
+      />
+      <button id="addBookmark" class="primary">
+        Bookmark current page
+      </button>
+    </section>
+
+    <!-- Tools -->
+    <section class="section">
+      <h4>Cleanup tools</h4>
+      <button id="removeDuplicates" class="secondary">
+        Remove duplicate bookmarks
+      </button>
+      <button id="cleanFolders" class="secondary">
+        Delete empty folders
+      </button>
+    </section>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
