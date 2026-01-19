@@ -1,0 +1,107 @@
+/* BACKGROUND GRADIENT */
+body {
+  font-family: "Inter", Arial, sans-serif;
+  width: 330px;
+  padding: 20px;
+  margin: 0;
+  background: linear-gradient(180deg, #0b4dbd 0%, #1a73e8 100%);
+  color: #fff;
+}
+
+/* TITLE */
+h2 {
+  text-align: center;
+  margin-bottom: 8px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+/* DOMAIN LIST CARD */
+.list {
+  background: #ffffff;
+  padding: 12px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.18);
+  margin-bottom: 20px;
+  max-height: 230px;
+  overflow-y: auto;
+}
+
+/* DOMAIN ITEM CARD */
+.item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  background: #f5f7ff;
+  box-shadow: 0px 3px 12px rgba(0,0,0,0.08);
+  color: #1a1a1a;
+}
+
+/* STATUS COLORS */
+.green { border-left: 6px solid #4CAF50; }
+.yellow { border-left: 6px solid #f4b400; }
+.red { border-left: 6px solid #db4437; }
+
+/* TEXT INFO */
+.info {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* ICON BUTTONS */
+.icons span {
+  cursor: pointer;
+  margin-left: 10px;
+  font-size: 18px;
+  color: #1a1a1a;
+}
+
+.icons span:hover {
+  opacity: 0.6;
+}
+
+/* FORM CARD */
+.form-card {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 18px;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+}
+
+/* INPUT FIELDS */
+input {
+  width: 90%;
+  padding: 12px;
+  border-radius: 14px;
+  background: #f2f5fa;
+  border: none;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+/* MAIN BUTTON */
+button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(90deg, #0b57d0, #1a73e8);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.25);
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* CANCEL BUTTON */
+.cancel {
+  background: #ff5f5f !important;
+  box-shadow: 0px 4px 12px rgba(255,0,0,0.25);
+}
+
+/* HIDDEN */
+.hidden { display: none; }

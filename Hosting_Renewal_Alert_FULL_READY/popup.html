@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hosting Renewal Alert</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <h2>Hosting Renewal Alert</h2>
+  <div id="domainList" class="list"></div>
+
+  <button id="showFormBtn">+ Add Domain</button>
+
+  <div id="formContainer" class="form hidden">
+    <input id="domainName" type="text" placeholder="Domain (example.com)">
+    <input id="expiryDate" type="date">
+    <button id="saveBtn">Save</button>
+    <button id="cancelBtn" class="cancel">Cancel</button>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
