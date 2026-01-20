@@ -1,0 +1,120 @@
+:root {
+    /* Indigo Night Theme Tokens */
+    --bg-gradient-start: #1E1B4B;
+    --bg-gradient-end: #312E81;
+    --header-bg: #020617;
+    --primary-btn-start: #6366F1;
+    --primary-btn-end: #4F46E5;
+    --accent-color: #818CF8;
+    --text-primary: #FFFFFF;
+    --text-secondary: #E0E7FF;
+    --border-radius: 12px;
+    --spacing: 16px;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-primary);
+    width: 320px;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 90%;
+    max-width: 300px;
+    padding: var(--spacing);
+    text-align: center;
+}
+
+.header {
+    background: var(--header-bg);
+    padding: 12px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--text-primary);
+}
+
+.options {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius);
+    padding: var(--spacing);
+    margin-bottom: var(--spacing);
+    text-align: left;
+}
+
+.option {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+}
+
+.option label {
+    color: var(--text-secondary);
+    margin-left: 8px;
+    font-size: 0.95rem;
+}
+
+input[type="range"] {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.btn-primary, .btn-accent {
+    border: none;
+    padding: 12px 20px;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: var(--spacing);
+    transition: opacity 0.2s;
+}
+
+.btn-primary {
+    background: linear-gradient(to right, var(--primary-btn-start), var(--primary-btn-end));
+    color: white;
+}
+
+.btn-accent {
+    background: var(--accent-color);
+    color: var(--header-bg);
+}
+
+.btn-primary:hover, .btn-accent:hover {
+    opacity: 0.9;
+}
+
+.result {
+    display: flex;
+    gap: 8px;
+    margin-bottom: var(--spacing);
+}
+
+#password-output {
+    flex: 1;
+    padding: 12px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--accent-color);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+    font-size: 1rem;
+    text-align: center;
+}
+
+.hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    margin-top: 20px;
+}
