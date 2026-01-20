@@ -304,43 +304,54 @@ function scanCurrentPage() {
         
         // Send message to content script
         chrome.tabs.sendMessage(tabId, { action: 'scanImages' }, (response) => {
-            isScanning = false;
-            setScanButtonState(false);
-            
             if (chrome.runtime.lastError) {
-                console.error('Content script error:', chrome.runtime.lastError.message);
-                showNotification('Error: Content script not loaded on this page', 'error');
-                currentImages = [];
-                updateImageGrid();
-                updateStats();
-                return;
-            }
-            
-            // In scanCurrentPage function, around line 179-190:
-                if (response && response.images && response.images.length > 0) {
-                    console.log(`Found ${response.images.length} images`);
-                    
-                    // Don't apply filters on initial scan
-                    currentImages = response.images; // Use all images initially
-                    selectedImages.clear();
-                    currentPage = 1;
-                    
-                    updateImageGrid();
-                    updateStats();
-                    
-                    showNotification(`Found ${response.images.length} images`, 'info');
-                } else {
-                        console.log('No images found');
-                        showNotification('No images found on this page', 'info');
-                        currentImages = [];
-                        selectedImages.clear();
-                        updateImageGrid();
-                        updateStats();
+                console.log('Content script error details:', chrome.runtime.lastError);
+                console.log('Content script not loaded, injecting...');
+                
+                // Inject content script and retry
+                chrome.scripting.executeScript({
+                    target: { tabId: tabId },
+                    files: ['content/content.js']
+                }, () => {
+                    // Wait for content script to initialize
+                    setTimeout(() => {
+                        chrome.tabs.sendMessage(tabId, { action: 'scanImages' }, (response) => {
+                            handleScanResponse(response);
+                        });
+                    }, 300);
+                });
+            } else {
+                handleScanResponse(response);
             }
         });
     });
 }
 
+// Make sure this function is defined OUTSIDE scanCurrentPage
+function handleScanResponse(response) {
+    isScanning = false;
+    setScanButtonState(false);
+    
+    if (response && response.images && response.images.length > 0) {
+        console.log(`Found ${response.images.length} images`);
+        
+        currentImages = response.images;
+        selectedImages.clear();
+        currentPage = 1;
+        
+        updateImageGrid();
+        updateStats();
+        
+        showNotification(`Found ${response.images.length} images`, 'info');
+    } else {
+        console.log('No images found');
+        showNotification('No images found on this page', 'info');
+        currentImages = [];
+        selectedImages.clear();
+        updateImageGrid();
+        updateStats();
+    }
+}
 function setScanButtonState(scanning) {
     if (!elements.scanPageBtn) return;
     
@@ -464,7 +475,7 @@ function loadSingleImage(item, img) {
         showImageError(item, img, 'Load failed');
     };
     
-    imageElement.src = img.url;
+    imageElement.src = img.url|| img.src;
 }
 
 function showImageSuccess(item, src, img) {
@@ -475,7 +486,7 @@ function showImageSuccess(item, src, img) {
     imgElement.className = 'image-preview loaded';
     imgElement.src = src;
     imgElement.alt = img.alt || 'image';
-    imgElement.title = img.filename || '';
+    imgElement.title = img.filename || img.src || img.url || '';
     
     // Replace placeholder with image
     placeholder.replaceWith(imgElement);

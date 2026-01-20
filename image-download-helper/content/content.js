@@ -1,24 +1,44 @@
-// Content script for Image Download Helper
-// Enhanced version with better image detection and error handling
-
-console.log('✅ Image Download Helper content script loaded');
+(function() {
+    console.log('🖼️ Image Download Helper content script starting...');
+    
+    // Ensure we only run once per page
+    if (window.__imageHelperLoaded) {
+        console.log('Already loaded, skipping...');
+        return;
+    }
+    window.__imageHelperLoaded = true;
+})();
 
 // ========== MESSAGE HANDLER ==========
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log('Received message:', request.action);
     
     if (request.action === 'scanImages') {
-        // Force load lazy images first
+        // Special handling for Poki
+        if (window.location.hostname.includes('poki.com')) {
+            console.log('Poki.com detected, using enhanced loading...');
+            
+            forceLoadAllImages().then(() => {
+                setTimeout(() => {
+                    const images = extractAllImagesPoki();
+                    console.log(`Found ${images.length} images on Poki`);
+                    sendResponse({ images: images });
+                }, 1000);
+            });
+            
+            return true;
+        }
+        
+        // Normal handling for other sites
         forceLoadLazyImages();
         
-        // Small delay to let images load
         setTimeout(() => {
             const images = extractAllImages();
             console.log(`Found ${images.length} images`);
             sendResponse({ images: images });
         }, 300);
         
-        return true; // Keep message channel open
+        return true;
     }
     
     if (request.action === 'highlightImages') {
@@ -122,6 +142,7 @@ function createImageData(element, src, id, type = 'img') {
     return {
         id: `${type}-${id}`,
         url: src,
+        src: src,
         alt: element.alt || element.title || filename,
         title: element.title || '',
         width: getImageDimension(element, 'width'),
@@ -132,6 +153,20 @@ function createImageData(element, src, id, type = 'img') {
         element: element,
         domain: extractDomain(src),
         extension: getFileExtension(src)
+    };
+}
+
+function standardizeImageData(image) {
+    return {
+        url: image.url || image.src || '',  
+        src: image.src || image.url || '',  
+        alt: image.alt || '',
+        width: image.width || 0,
+        height: image.height || 0,
+        filename: image.filename || extractFilename(image.url || image.src || ''),
+        sizeKB: image.sizeKB || 50,
+        type: image.type || 'unknown',
+        id: image.id || Date.now() + Math.random()
     };
 }
 
@@ -215,6 +250,7 @@ function createBackgroundImageData(el, url, index) {
     return {
         id: `bg-${index}`,
         url: makeAbsoluteUrl(url),
+        src: makeAbsoluteUrl(url), 
         alt: 'background image',
         title: '',
         width: el.offsetWidth || 0,
@@ -495,6 +531,161 @@ function forceLoadLazyImages() {
     }, 100);
 }
 
+// ========== ENHANCED LAZY LOADING FOR POKI ==========
+function forceLoadAllImages() {
+    console.log('Forcing all images to load on Poki.com...');
+    
+    // 1. Remove lazy attributes
+    document.querySelectorAll('img[loading="lazy"], [loading="lazy"] img').forEach(img => {
+        img.loading = 'eager';
+        img.removeAttribute('loading');
+    });
+    
+    // 2. Convert data-src to src
+    document.querySelectorAll('[data-src], [data-lazy]').forEach(el => {
+        const src = el.dataset.src || el.dataset.lazy;
+        if (src && el.tagName === 'IMG') {
+            el.src = src;
+        } else if (src) {
+            el.style.backgroundImage = `url(${src})`;
+        }
+    });
+    
+    // 3. Scroll simulation for lazy loading
+    const scrollSteps = 5;
+    let currentStep = 0;
+    
+    function scrollPage() {
+        window.scrollTo(0, (document.body.scrollHeight / scrollSteps) * currentStep);
+        currentStep++;
+        
+        if (currentStep <= scrollSteps) {
+            setTimeout(scrollPage, 300);
+        } else {
+            // Return to top
+            setTimeout(() => window.scrollTo(0, 0), 500);
+        }
+    }
+    
+    scrollPage();
+    
+    // 4. Wait for images to load
+    return new Promise(resolve => {
+        setTimeout(resolve, 2000);
+    });
+}
+
+// ========== POKI-SPECIFIC IMAGE EXTRACTION ==========
+function extractAllImagesPoki() {
+    const images = [];
+    
+    // Poki specific selectors
+    const pokiSelectors = [
+        'img[src*="img.poki.com"]',
+        'img[src*="cdn-cgi/image"]',
+        '.game-item img',
+        '.game-thumbnail img',
+        '[class*="game"] img',
+        '[data-testid*="game"] img',
+        'picture img',
+        'source[srcset*="poki.com"]'
+    ];
+    
+    pokiSelectors.forEach(selector => {
+        document.querySelectorAll(selector).forEach((img, index) => {
+            try {
+                const src = getPokiImageSource(img);
+                if (src && isValidImageUrl(src)) {
+                    const imageData = createPokiImageData(img, src, index);
+                    images.push(imageData);
+                }
+            } catch (error) {
+                console.warn('Error processing Poki image:', error);
+            }
+        });
+    });
+    
+    // Also check for background images in game cards
+    document.querySelectorAll('[class*="game"], [class*="card"]').forEach(el => {
+        const style = window.getComputedStyle(el);
+        const bgImage = style.backgroundImage;
+        
+        if (bgImage && bgImage !== 'none') {
+            const urlMatch = bgImage.match(/url\(['"]?(.*?)['"]?\)/);
+            if (urlMatch && urlMatch[1] && urlMatch[1].includes('poki.com')) {
+                images.push({
+                    url: makeAbsoluteUrl(urlMatch[1]),
+                    alt: el.getAttribute('alt') || 'Poki game',
+                    width: el.offsetWidth || 300,
+                    height: el.offsetHeight || 200,
+                    type: 'background'
+                });
+            }
+        }
+    });
+    
+    return filterAndCleanImages(images);
+}
+
+function getPokiImageSource(img) {
+    // Priority for Poki images
+    const srcsets = [
+        img.dataset.srcset,
+        img.srcset,
+        img.dataset.src,
+        img.dataset.original,
+        img.currentSrc,
+        img.src
+    ];
+    
+    for (const srcset of srcsets) {
+        if (!srcset) continue;
+        
+        // Get the highest quality version
+        if (srcset.includes(',')) {
+            const sources = srcset.split(',');
+            // Find the highest resolution
+            for (let i = sources.length - 1; i >= 0; i--) {
+                const source = sources[i].trim();
+                const parts = source.split(' ');
+                if (parts.length >= 2) {
+                    const url = parts[0];
+                    if (url.includes('poki.com') && isValidImageUrl(url)) {
+                        return url;
+                    }
+                }
+            }
+        } else if (srcset.includes('poki.com') && isValidImageUrl(srcset)) {
+            return srcset;
+        }
+    }
+    
+    return img.src || img.currentSrc;
+}
+
+function createPokiImageData(img, src, index) {
+    // Extract game name
+    let gameName = img.alt || '';
+    if (!gameName) {
+        const parent = img.closest('[class*="game"], [class*="card"]');
+        if (parent) {
+            gameName = parent.getAttribute('aria-label') || 
+                       parent.textContent.trim().substring(0, 50) || 
+                       `poki-game-${index}`;
+        }
+    }
+    
+    return {
+        url: makeAbsoluteUrl(src),
+        alt: gameName,
+        title: img.title || gameName,
+        width: img.naturalWidth || img.width || 300,
+        height: img.naturalHeight || img.height || 200,
+        filename: `poki_${gameName.replace(/[^a-z0-9]/gi, '_')}_${index}.jpg`,
+        sizeKB: estimateImageSize(img),
+        type: 'poki-game'
+    };
+}
 // ========== DEBUG/UI FUNCTIONS ==========
 function highlightImagesOnPage() {
     document.querySelectorAll('img').forEach(img => {
