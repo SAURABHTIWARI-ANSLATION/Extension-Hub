@@ -1,25 +1,28 @@
 body {
   width: 300px;
-  padding: 14px;
   margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  padding: 14px;
+  font-family: system-ui, sans-serif;
   background: #ffffff;
   color: #111;
 }
 
-/* Headings */
-h3 {
-  margin: 0 0 10px;
+header h3 {
+  margin: 0;
   font-size: 16px;
+}
+
+header p {
+  margin: 4px 0 12px;
+  font-size: 12px;
+  color: #555;
 }
 
 h4 {
   margin: 14px 0 6px;
   font-size: 13px;
-  font-weight: 600;
 }
 
-/* Inputs */
 input {
   width: 100%;
   padding: 7px;
@@ -34,12 +37,11 @@ input:focus {
   border-color: #111;
 }
 
-/* Buttons */
 button {
   width: 100%;
   padding: 8px;
-  font-size: 13px;
   margin-top: 6px;
+  font-size: 13px;
   border: none;
   border-radius: 4px;
   background: #111;
@@ -47,34 +49,16 @@ button {
   cursor: pointer;
 }
 
-button:hover {
-  opacity: 0.9;
-}
-
-button:active,
-button.active {
-  transform: scale(0.98);
-}
-
-/* Secondary buttons */
 button.secondary {
   background: #fff;
   color: #111;
   border: 1px solid #ccc;
 }
 
-button.secondary:hover {
-  background: #f5f5f5;
+button:hover {
+  opacity: 0.9;
 }
 
-/* Layout spacing */
 section {
   margin-bottom: 12px;
-}
-
-/* Accessibility */
-button:focus,
-input:focus {
-  outline: 2px solid #000;
-  outline-offset: 1px;
 }

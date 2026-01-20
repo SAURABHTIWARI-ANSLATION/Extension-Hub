@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Incognito Settings</title>
+</head>
+<body>
+
+  <h3>Incognito Settings</h3>
+
+  <label>
+    <input type="checkbox" id="fullscreen" />
+    Open incognito in fullscreen
+  </label><br /><br />
+
+  <label>
+    <input type="checkbox" id="clearHistory" />
+    Automatically remove URL from history
+  </label><br /><br />
+
+  <label>
+    <input type="checkbox" id="closeTab" />
+    Close regular tab after opening incognito
+  </label>
+
+  <script>
+    const defaults = {
+      fullscreen: false,
+      clearHistory: true,
+      closeOriginalTab: false
+    };
+
+    chrome.storage.local.get("settings", (res) => {
+      const s = res.settings || defaults;
+      fullscreen.checked = s.fullscreen;
+      clearHistory.checked = s.clearHistory;
+      closeTab.checked = s.closeOriginalTab;
+    });
+
+    document.querySelectorAll("input").forEach(input => {
+      input.addEventListener("change", () => {
+        chrome.storage.local.set({
+          settings: {
+            fullscreen: fullscreen.checked,
+            clearHistory: clearHistory.checked,
+            closeOriginalTab: closeTab.checked
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

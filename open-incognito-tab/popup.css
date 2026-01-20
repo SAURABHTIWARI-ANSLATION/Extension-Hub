@@ -1,0 +1,37 @@
+body {
+  width: 260px;
+  padding: 14px;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #ffffff;
+  color: #111;
+}
+
+h3 {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 9px;
+  font-size: 13px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.settings {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  text-align: center;
+  color: #555;
+  text-decoration: none;
+}

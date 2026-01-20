@@ -1,4 +1,4 @@
-<!doctype html>
+ <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -8,50 +8,40 @@
   </head>
 
   <body>
-    <header class="header">
+    <header>
       <h3>Bookmark Manager</h3>
-      <p class="subtitle">
-        Save tabs, organize bookmarks, and clean duplicates
-      </p>
+      <p>Save tabs, organize bookmarks, and clean duplicates</p>
     </header>
 
-    <!-- Search -->
-    <section class="section">
+    <section>
       <input
         id="search"
         type="text"
-        placeholder="Search bookmarks or browsing history"
+        placeholder="Search bookmarks or history"
         autocomplete="off"
       />
     </section>
 
-    <!-- Sessions -->
-    <section class="section">
+    <section>
       <h4>Tab Sessions</h4>
-      <button id="saveSession" class="primary">
-        Save current tabs
-      </button>
+      <button id="saveSession">Save current tabs</button>
       <button id="restoreSession" class="secondary">
         Restore last session
       </button>
     </section>
 
-    <!-- Add Bookmark -->
-    <section class="section">
-      <h4>Add bookmark</h4>
+    <section>
+      <h4>Add Bookmark</h4>
       <input
         id="category"
         type="text"
         placeholder="Category (Work, Study, Learning...)"
       />
-      <button id="addBookmark" class="primary">
-        Bookmark current page
-      </button>
+      <button id="addBookmark">Bookmark current page</button>
     </section>
 
-    <!-- Tools -->
-    <section class="section">
-      <h4>Cleanup tools</h4>
+    <section>
+      <h4>Cleanup Tools</h4>
       <button id="removeDuplicates" class="secondary">
         Remove duplicate bookmarks
       </button>
@@ -61,5 +51,7 @@
     </section>
 
     <script src="popup.js"></script>
+    <script src="sessions.js"></script>
+    <script src="bookmarks.js"></script>
   </body>
 </html>
