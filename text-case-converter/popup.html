@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="sky-gradient">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Case Converter</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔄 Text Case Converter</h1>
+            <p class="subtitle">Convert text between different cases</p>
+        </header>
+
+        <!-- Mode Selection -->
+        <div class="mode-selection">
+            <div class="mode-tabs">
+                <button class="mode-tab active" data-mode="scan">🔍 Scan Page</button>
+                <button class="mode-tab" data-mode="manual">✏️ Manual Input</button>
+                <button class="mode-tab" data-mode="selection">👆 Selected Text</button>
+            </div>
+        </div>
+
+        <!-- Scan Mode Content -->
+        <div id="scan-mode" class="mode-content active">
+            <div class="status-section">
+                <div class="status-indicator" id="status-indicator"></div>
+                <p id="status-text">Ready to scan</p>
+            </div>
+
+            <button id="scan-btn" class="btn-primary">
+                <span class="btn-icon">🔍</span> Scan Current Page
+            </button>
+
+            <div class="scan-results">
+                <label>Found on Page:</label>
+                <div class="text-items" id="text-items">
+                    <div class="no-text">No text found yet. Click Scan above.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Manual Mode Content -->
+        <div id="manual-mode" class="mode-content">
+            <div class="input-section">
+                <label>Enter Text to Convert:</label>
+                <textarea id="manual-text" placeholder="Type or paste your text here..."></textarea>
+                <button id="use-text-btn" class="btn-accent">
+                    <span class="btn-icon">✓</span> Use This Text
+                </button>
+            </div>
+        </div>
+
+        <!-- Selection Mode Content -->
+        <div id="selection-mode" class="mode-content">
+            <div class="selection-info">
+                <p>Select text on the page, then click below:</p>
+                <button id="get-selection-btn" class="btn-primary">
+                    <span class="btn-icon">👆</span> Get Selected Text
+                </button>
+            </div>
+        </div>
+
+        <!-- Common Conversion Area (Visible in all modes) -->
+        <div class="conversion-area">
+            <div class="current-text-section">
+                <label>Text to Convert:</label>
+                <div class="text-preview" id="text-preview">
+                    No text selected. Choose a mode above.
+                </div>
+                <div class="source-info" id="source-info"></div>
+            </div>
+
+            <div class="options">
+                <p class="section-title">Convert to:</p>
+                <div class="buttons">
+                    <button class="case-btn" data-case="upper">UPPERCASE</button>
+                    <button class="case-btn" data-case="lower">lowercase</button>
+                    <button class="case-btn" data-case="title">Title Case</button>
+                    <button class="case-btn" data-case="sentence">Sentence case</button>
+                    <button class="case-btn" data-case="camel">camelCase</button>
+                    <button class="case-btn" data-case="pascal">PascalCase</button>
+                    <button class="case-btn" data-case="snake">snake_case</button>
+                    <button class="case-btn" data-case="kebab">kebab-case</button>
+                </div>
+            </div>
+
+            <div class="converted-text-section">
+                <label>Converted Text:</label>
+                <div class="text-output" id="text-output">
+                    Converted text will appear here...
+                </div>
+            </div>
+
+            <div class="actions">
+                <button id="apply-btn" class="btn-accent" disabled>
+                    <span class="btn-icon">✓</span> Apply to Original
+                </button>
+                <button id="copy-btn" class="btn-secondary">
+                    <span class="btn-icon">📋</span> Copy to Clipboard
+                </button>
+                <button id="clear-btn" class="btn-secondary">
+                    <span class="btn-icon">🗑️</span> Clear All
+                </button>
+            </div>
+        </div>
+
+        <div class="settings">
+            <label class="toggle">
+                <input type="checkbox" id="auto-scan-toggle" checked>
+                <span class="toggle-slider"></span>
+                Auto-detect selection
+            </label>
+        </div>
+
+        <p class="hint">
+            Works on: Web pages, Google Docs, Sheets, Text areas
+        </p>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
