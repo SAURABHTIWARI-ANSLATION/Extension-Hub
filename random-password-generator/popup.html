@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="indigo-night">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🔐 Password Generator</h1>
+        </header>
+
+        <div class="options">
+            <div class="option">
+                <label for="length">Length: <span id="length-value">12</span></label>
+                <input type="range" id="length" min="8" max="32" value="12">
+            </div>
+            <div class="option">
+                <input type="checkbox" id="uppercase" checked>
+                <label for="uppercase">Uppercase (A-Z)</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="lowercase" checked>
+                <label for="lowercase">Lowercase (a-z)</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="numbers" checked>
+                <label for="numbers">Numbers (0-9)</label>
+            </div>
+            <div class="option">
+                <input type="checkbox" id="symbols" checked>
+                <label for="symbols">Symbols (!@#$%)</label>
+            </div>
+        </div>
+
+        <button id="generate-btn" class="btn-primary">Generate Password</button>
+
+        <div class="result">
+            <input type="text" id="password-output" readonly>
+            <button id="copy-btn" class="btn-accent">Copy</button>
+        </div>
+
+        <p class="hint">Passwords are generated locally and never sent online.</p>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
