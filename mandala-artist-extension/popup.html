@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mandala Artist</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="popup.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <h1>🎨 Mandala Artist</h1>
+      <p class="subtitle">Create symmetrical art with ease</p>
+    </header>
+    
+    <div class="quick-settings">
+      <button id="startDrawing" class="btn-primary">
+        <span class="icon">✏️</span> Start Drawing
+      </button>
+      
+      <button id="openCanvas" class="btn-secondary">
+        <span class="icon">🖼️</span> Open Canvas
+      </button>
+    </div>
+    
+    <div class="settings-section">
+      <h3>Quick Settings</h3>
+      
+      <div class="form-group">
+        <label for="symmetry">Symmetry:</label>
+        <select id="symmetry">
+          <option value="4">4-fold</option>
+          <option value="6" selected>6-fold</option>
+          <option value="8">8-fold</option>
+          <option value="12">12-fold</option>
+          <option value="16">16-fold</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label for="brushSize">Brush Size:</label>
+        <input type="range" id="brushSize" min="1" max="50" value="10">
+        <span id="brushSizeValue">10</span>
+      </div>
+      
+      <div class="form-group">
+        <label for="brushColor">Brush Color:</label>
+        <input type="color" id="brushColor" value="#ff6b6b">
+      </div>
+    </div>
+    
+    <div class="patterns-section">
+      <h3>Quick Patterns</h3>
+      <div class="patterns-grid">
+        <div class="pattern-item" data-pattern="radial">Radial</div>
+        <div class="pattern-item" data-pattern="circular">Circular</div>
+        <div class="pattern-item" data-pattern="flower">Flower</div>
+        <div class="pattern-item" data-pattern="geometric">Geometric</div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <button id="openOptions" class="btn-link">⚙️ Options</button>
+      <button id="clearCanvas" class="btn-danger">🗑️ Clear</button>
+    </div>
+  </div>
+</body>
+</html>

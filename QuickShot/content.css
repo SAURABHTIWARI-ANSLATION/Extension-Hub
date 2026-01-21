@@ -1,3 +1,145 @@
-/* QuickShot Content Scripts */
-/* Overlay styles are currently injected via JS for dynamic control, 
-   but this file is reserved for future global styles. */
+/* QuickShot Selection Overlay - Ocean Theme */
+
+/* Selection overlay styles */
+#qs-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 2147483647 !important;
+  cursor: crosshair !important;
+  background: radial-gradient(circle at center, 
+    rgba(10, 77, 191, 0.1) 0%,
+    rgba(10, 77, 191, 0.2) 100%) !important;
+  backdrop-filter: blur(2px) !important;
+  pointer-events: all !important;
+  box-sizing: border-box !important;
+}
+
+/* Selection box */
+#qs-overlay .selection-box {
+  position: absolute !important;
+  border: 3px solid #64B5F6 !important;
+  background: rgba(100, 181, 246, 0.15) !important;
+  pointer-events: none !important;
+  box-shadow: 
+    0 0 0 1px rgba(255, 255, 255, 0.3),
+    0 0 20px rgba(100, 181, 246, 0.5),
+    inset 0 0 20px rgba(100, 181, 246, 0.2) !important;
+  transition: all 0.1s ease !important;
+}
+
+/* Selection box corners */
+#qs-overlay .selection-box::before,
+#qs-overlay .selection-box::after {
+  content: '' !important;
+  position: absolute !important;
+  width: 20px !important;
+  height: 20px !important;
+  border: 3px solid #64B5F6 !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Top-left corner */
+#qs-overlay .selection-box::before {
+  top: -10px !important;
+  left: -10px !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+
+/* Bottom-right corner */
+#qs-overlay .selection-box::after {
+  bottom: -10px !important;
+  right: -10px !important;
+  border-left: none !important;
+  border-top: none !important;
+}
+
+/* Size indicator */
+#qs-overlay .size-indicator {
+  position: absolute !important;
+  bottom: -30px !important;
+  right: 0 !important;
+  background: rgba(10, 61, 145, 0.9) !important;
+  color: white !important;
+  padding: 4px 8px !important;
+  border-radius: 4px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  pointer-events: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Instructions */
+#qs-overlay .instructions {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: rgba(10, 61, 145, 0.9) !important;
+  color: white !important;
+  padding: 16px 24px !important;
+  border-radius: 12px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(100, 181, 246, 0.3) !important;
+}
+
+#qs-overlay .instructions h3 {
+  margin: 0 0 8px 0 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #64B5F6 !important;
+}
+
+#qs-overlay .instructions p {
+  margin: 4px 0 !important;
+  opacity: 0.9 !important;
+}
+
+/* Cancel button */
+#qs-overlay .cancel-btn {
+  position: absolute !important;
+  top: 20px !important;
+  right: 20px !important;
+  background: rgba(10, 61, 145, 0.9) !important;
+  color: white !important;
+  border: 1px solid rgba(100, 181, 246, 0.3) !important;
+  padding: 8px 16px !important;
+  border-radius: 6px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 13px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+}
+
+#qs-overlay .cancel-btn:hover {
+  background: rgba(10, 61, 145, 1) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+/* Animation for selection */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+#qs-overlay .selection-box {
+  animation: pulse 2s infinite ease-in-out !important;
+}
+
+/* Prevent text selection during drag */
+#qs-overlay * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}

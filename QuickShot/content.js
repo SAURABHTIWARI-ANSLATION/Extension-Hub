@@ -1,35 +1,46 @@
+
+// Add this at the VERY TOP
+console.log('🚀 QUICKSHOT CONTENT SCRIPT LOADED on page:', window.location.href);
+
 // Listen for the chrome message from background
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log('📨 Content script received message:', request.action);
+    
     if (request.action === 'QS_START_SELECTION') {
+        console.log('✅ Starting selection overlay...');
         startSelectionOverlay();
-        sendResponse({ status: 'ok' });
+        sendResponse({ status: 'ok', message: 'Selection started' });
+        return true;
     }
-    // Return true if we needed async response, but here sync is fine
+    
+    // Add this to handle any other messages
+    console.log('⚠️ Unknown action received:', request.action);
+    sendResponse({ status: 'error', message: 'Unknown action' });
+    return true;
 });
 
-// Also keep the window message listener just in case, but it's less reliable for this
-window.addEventListener('message', (event) => {
-    if (event.data.type === 'QS_START_SELECTION') {
-        startSelectionOverlay();
-    }
-}, false);
-
 function startSelectionOverlay() {
-    if (document.getElementById('qs-overlay')) return; // Already active
+    console.log('🎯 Executing startSelectionOverlay()');
+    if (document.getElementById('qs-overlay')) {
+        console.log('⚠️ Overlay already exists, removing old one');
+        document.getElementById('qs-overlay').remove();
+    }
+
+    console.log('🎯 Starting selection overlay...');
 
     const overlay = document.createElement('div');
     overlay.id = 'qs-overlay';
-    // Inline styles to ensure it overrides specific site CSS
     overlay.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
         width: 100vw;
         height: 100vh;
-        z-index: 2147483647; 
+        z-index: 2147483647;
         cursor: crosshair;
         background-color: rgba(0,0,0,0.3);
         box-sizing: border-box;
+        user-select: none;
     `;
 
     document.body.appendChild(overlay);
@@ -39,28 +50,73 @@ function startSelectionOverlay() {
     selectionBox.style.cssText = `
         position: absolute;
         border: 2px dashed #fff;
-        background-color: rgba(255, 255, 255, 0.2);
+        background-color: rgba(100, 181, 246, 0.2);
         pointer-events: none;
+        box-shadow: 0 0 0 1px rgba(255,255,255,0.5);
     `;
     overlay.appendChild(selectionBox);
 
+    // Add instructions
+    const instructions = document.createElement('div');
+    instructions.style.cssText = `
+        position: absolute;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        pointer-events: none;
+    `;
+    instructions.textContent = 'Drag to select area • Press ESC to cancel';
+    overlay.appendChild(instructions);
+
+    // Add cancel button
+    const cancelBtn = document.createElement('button');
+    cancelBtn.textContent = '✕ Cancel';
+    cancelBtn.style.cssText = `
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: Arial, sans-serif;
+        font-size: 13px;
+        z-index: 2147483648;
+    `;
+    cancelBtn.addEventListener('click', () => {
+        document.body.removeChild(overlay);
+    });
+    overlay.appendChild(cancelBtn);
+
     overlay.addEventListener('mousedown', (e) => {
-        // Prevent default text selection
         e.preventDefault();
+        e.stopPropagation();
+        
         startX = e.clientX;
         startY = e.clientY;
         isDragging = true;
+        
         selectionBox.style.left = startX + 'px';
         selectionBox.style.top = startY + 'px';
         selectionBox.style.width = '0px';
         selectionBox.style.height = '0px';
+        
+        instructions.textContent = 'Release mouse to capture';
     });
 
     overlay.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
+        
         const currentX = e.clientX;
         const currentY = e.clientY;
-
         const width = Math.abs(currentX - startX);
         const height = Math.abs(currentY - startY);
         const left = Math.min(currentX, startX);
@@ -70,32 +126,62 @@ function startSelectionOverlay() {
         selectionBox.style.height = height + 'px';
         selectionBox.style.left = left + 'px';
         selectionBox.style.top = top + 'px';
+        
+        // Update instructions with size
+        instructions.textContent = `${width} × ${height} pixels • Release to capture`;
     });
 
-    overlay.addEventListener('mouseup', async (e) => {
+    overlay.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        
         isDragging = false;
         const rect = selectionBox.getBoundingClientRect();
-
-        // Remove overlay immediately
+        
+        // Remove overlay
         document.body.removeChild(overlay);
 
-        if (rect.width < 5 || rect.height < 5) return; // Ignore tiny clicks
+        if (rect.width < 10 || rect.height < 10) {
+            console.log('⚠️ Selection too small, ignoring');
+            return;
+        }
 
-        // Wait a small delay to ensure the browser repaints without the overlay
-        setTimeout(() => {
-            const coords = {
-                x: rect.left * window.devicePixelRatio,
-                y: rect.top * window.devicePixelRatio,
-                width: rect.width * window.devicePixelRatio,
-                height: rect.height * window.devicePixelRatio
-            };
+        console.log('📏 Selected area:', rect);
 
-            // Send coords to background to capture
-            chrome.runtime.sendMessage({
-                action: 'selection_completed',
-                coords: coords
-            });
+        // CRITICAL FIX: Add scroll position to coordinates
+        // This ensures coordinates are relative to the entire page, not just viewport
+        const coords = {
+            x: Math.round(rect.left + window.scrollX),  // Add scrollX
+            y: Math.round(rect.top + window.scrollY),   // Add scrollY
+            width: Math.round(rect.width),
+            height: Math.round(rect.height),
+            devicePixelRatio: window.devicePixelRatio,
+            scrollX: window.scrollX,
+            scrollY: window.scrollY
+        };
 
-        }, 250);
+        console.log('📤 Sending coordinates to background:', coords);
+
+        // Send coords to background
+        chrome.runtime.sendMessage({
+            action: 'selection_completed',
+            coords: coords
+        });
+    });
+
+    // ESC key to cancel
+    const handleKeyDown = (e) => {
+        if (e.key === 'Escape') {
+            document.body.removeChild(overlay);
+            document.removeEventListener('keydown', handleKeyDown);
+        }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+
+    // Clean up event listener on removal
+    overlay.addEventListener('remove', () => {
+        document.removeEventListener('keydown', handleKeyDown);
     });
 }
+
+// For debugging
+console.log('✅ QuickShot content script loaded');

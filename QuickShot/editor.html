@@ -5,49 +5,267 @@
     <meta charset="UTF-8">
     <title>QuickShot Editor</title>
     <link rel="stylesheet" href="editor.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Loading animation */
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 
 <body>
-    <div class="editor-container">
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div>Loading Editor...</div>
+    </div>
+
+    <div class="editor-container" style="display: none;">
+        <!-- Left Sidebar - Tools -->
         <aside class="toolbar">
-            <div class="tool-group">
-                <button class="tool-btn active" data-tool="select" title="Select/Move">✋</button>
-                <button class="tool-btn" data-tool="pen" title="Freehand Pen">✏️</button>
-                <button class="tool-btn" data-tool="arrow" title="Draw Arrow">↗️</button>
-                <button class="tool-btn" data-tool="rect" title="Draw Rectangle">⬜</button>
-                <button class="tool-btn" data-tool="text" title="Add Text">T</button>
+            <div class="toolbar-header">
+                <h2>✏️ Tools</h2>
+                <div class="toolbar-subtitle">QuickShot Editor</div>
             </div>
 
-            <div class="separator"></div>
-
-            <div class="tool-group colors">
-                <div class="color-swatch active" style="background: #ef4444;" data-color="#ef4444"></div>
-                <div class="color-swatch" style="background: #eab308;" data-color="#eab308"></div>
-                <div class="color-swatch" style="background: #22c55e;" data-color="#22c55e"></div>
-                <div class="color-swatch" style="background: #3b82f6;" data-color="#3b82f6"></div>
-                <div class="color-swatch" style="background: #ffffff;" data-color="#ffffff"></div>
-                <div class="color-swatch" style="background: #000000;" data-color="#000000"></div>
+            <div class="toolbar-section">
+                <div class="section-header">Selection & Drawing</div>
+                <div class="tools-grid">
+                    <button class="tool-btn active" data-tool="select" title="Select/Move">
+                        <span class="icon">✋</span>
+                        <span class="label">Select</span>
+                    </button>
+                    <button class="tool-btn" data-tool="pen" title="Freehand Pen">
+                        <span class="icon">✏️</span>
+                        <span class="label">Pen</span>
+                    </button>
+                    <button class="tool-btn" data-tool="arrow" title="Draw Arrow">
+                        <span class="icon">↗️</span>
+                        <span class="label">Arrow</span>
+                    </button>
+                    <button class="tool-btn" data-tool="rect" title="Draw Rectangle">
+                        <span class="icon">⬜</span>
+                        <span class="label">Rectangle</span>
+                    </button>
+                    <button class="tool-btn" data-tool="circle" title="Draw Circle">
+                        <span class="icon">⭕</span>
+                        <span class="label">Circle</span>
+                    </button>
+                    <button class="tool-btn" data-tool="line" title="Draw Line">
+                        <span class="icon">📏</span>
+                        <span class="label">Line</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="separator"></div>
-
-            <div class="tool-group">
-                <button class="tool-btn" id="btn-undo" title="Undo (Ctrl+Z)">↩️</button>
+            <div class="toolbar-section">
+                <div class="section-header">Text & Shapes</div>
+                <div class="tools-grid">
+                    <button class="tool-btn" data-tool="text" title="Add Text">
+                        <span class="icon">T</span>
+                        <span class="label">Text</span>
+                    </button>
+                    <button class="tool-btn" data-tool="blur" title="Blur Area">
+                        <span class="icon">🌀</span>
+                        <span class="label">Blur</span>
+                    </button>
+                    <button class="tool-btn" data-tool="highlight" title="Highlight">
+                        <span class="icon">🟡</span>
+                        <span class="label">Highlight</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="bottom-actions">
-                <button id="btn-copy" class="action-btn secondary">Copy</button>
-                <button id="btn-download" class="action-btn primary">Download</button>
+            <div class="toolbar-section">
+                <div class="section-header">Colors</div>
+                <div class="colors-grid">
+                    <div class="color-swatch active" style="background: #ef4444;" data-color="#ef4444" title="Red"></div>
+                    <div class="color-swatch" style="background: #f97316;" data-color="#f97316" title="Orange"></div>
+                    <div class="color-swatch" style="background: #eab308;" data-color="#eab308" title="Yellow"></div>
+                    <div class="color-swatch" style="background: #22c55e;" data-color="#22c55e" title="Green"></div>
+                    <div class="color-swatch" style="background: #0ea5e9;" data-color="#0ea5e9" title="Light Blue"></div>
+                    <div class="color-swatch" style="background: #3b82f6;" data-color="#3b82f6" title="Blue"></div>
+                    <div class="color-swatch" style="background: #8b5cf6;" data-color="#8b5cf6" title="Purple"></div>
+                    <div class="color-swatch" style="background: #ec4899;" data-color="#ec4899" title="Pink"></div>
+                    <div class="color-swatch" style="background: #ffffff; border: 1px solid #cbd5e1;" data-color="#ffffff" title="White"></div>
+                    <div class="color-swatch" style="background: #000000;" data-color="#000000" title="Black"></div>
+                    <div class="color-swatch" style="background: #64748b;" data-color="#64748b" title="Gray"></div>
+                    <div class="color-swatch" style="background: #475569;" data-color="#475569" title="Dark Gray"></div>
+                </div>
+                
+                <div class="color-picker-container">
+                    <input type="color" id="custom-color" value="#3b82f6">
+                    <label for="custom-color">Custom Color</label>
+                </div>
+            </div>
+
+            <div class="toolbar-section">
+                <div class="section-header">Brush Size</div>
+                <div class="brush-controls">
+                    <div class="brush-preview">
+                        <div class="brush-circle" id="brush-preview-circle"></div>
+                    </div>
+                    <input type="range" id="brush-size" min="1" max="50" value="3">
+                    <span id="brush-size-value">3px</span>
+                </div>
+            </div>
+
+            <div class="toolbar-section">
+                <div class="section-header">Opacity</div>
+                <div class="opacity-controls">
+                    <input type="range" id="opacity-slider" min="10" max="100" value="100">
+                    <span id="opacity-value">100%</span>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="btn-undo" class="action-btn secondary" title="Undo (Ctrl+Z)">
+                    <span class="btn-icon">↩️</span>
+                    Undo
+                </button>
+                <button id="btn-redo" class="action-btn secondary" title="Redo (Ctrl+Y)">
+                    <span class="btn-icon">↪️</span>
+                    Redo
+                </button>
+                <button id="btn-clear" class="action-btn secondary" title="Clear Canvas">
+                    <span class="btn-icon">🗑️</span>
+                    Clear
+                </button>
+                <button id="btn-copy" class="action-btn primary">
+                    <span class="btn-icon">📋</span>
+                    Copy to Clipboard
+                </button>
+                <button id="btn-download" class="action-btn primary">
+                    <span class="btn-icon">💾</span>
+                    Download Image
+                </button>
+                <button id="btn-share" class="action-btn secondary">
+                    <span class="btn-icon">📤</span>
+                    Share
+                </button>
             </div>
         </aside>
 
+        <!-- Main Canvas Area -->
         <main class="canvas-area">
+            <!-- Canvas Controls -->
+            <div class="canvas-controls">
+                <button id="btn-zoom-in" class="control-btn" title="Zoom In (Ctrl +)">➕</button>
+                <button id="btn-zoom-out" class="control-btn" title="Zoom Out (Ctrl -)">➖</button>
+                <button id="btn-zoom-reset" class="control-btn" title="Reset Zoom">↺</button>
+                <button id="btn-fit-to-screen" class="control-btn" title="Fit to Screen">⛶</button>
+                <div class="zoom-display" id="zoom-level">100%</div>
+            </div>
+
+            <!-- Canvas Wrapper -->
             <div class="canvas-wrapper">
                 <canvas id="editor-canvas"></canvas>
+                
+                <!-- Grid Overlay (optional) -->
+                <div class="grid-overlay" id="grid-overlay"></div>
+                
+                <!-- Selection Rectangle (for select tool) -->
+                <div class="selection-rectangle" id="selection-rectangle" style="display: none;"></div>
+            </div>
+
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-info">
+                    <span id="cursor-position">X: 0, Y: 0</span>
+                    <span id="canvas-size">0 × 0</span>
+                    <span id="tool-status">Select Tool</span>
+                </div>
+                <div class="status-actions">
+                    <button id="btn-grid-toggle" class="status-btn" title="Toggle Grid">#</button>
+                    <button id="btn-ruler-toggle" class="status-btn" title="Toggle Ruler">📏</button>
+                    <div class="save-status" id="save-status">Auto-saved</div>
+                </div>
             </div>
         </main>
     </div>
+
+    <!-- Text Input Modal -->
+    <div class="modal" id="text-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Text</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="text-input" placeholder="Enter your text here..." rows="4"></textarea>
+                <div class="text-controls">
+                    <select id="font-family">
+                        <option value="Inter, sans-serif">Inter</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="Courier New, monospace">Monospace</option>
+                    </select>
+                    <input type="number" id="font-size" min="8" max="72" value="24" placeholder="Size">
+                </div>
+                <div class="modal-actions">
+                    <button id="text-cancel" class="btn-secondary">Cancel</button>
+                    <button id="text-apply" class="btn-primary">Add Text</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="modal" id="share-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Image</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="share-options">
+                    <button class="share-option" data-platform="twitter">
+                        <span class="icon">🐦</span> Twitter
+                    </button>
+                    <button class="share-option" data-platform="discord">
+                        <span class="icon">💬</span> Discord
+                    </button>
+                    <button class="share-option" data-platform="slack">
+                        <span class="icon">💼</span> Slack
+                    </button>
+                    <button class="share-option" data-platform="download">
+                        <span class="icon">📥</span> Download
+                    </button>
+                </div>
+                <div class="share-link">
+                    <input type="text" id="share-url" readonly placeholder="Image will be uploaded...">
+                    <button id="copy-link" class="btn-secondary">Copy Link</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="editor.js"></script>
 </body>
 
