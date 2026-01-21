@@ -2,51 +2,60 @@
   "manifest_version": 3,
   "name": "QuickShot - Advanced Screen Capture",
   "version": "2.0.0",
-  "description": "Capture visible parts, full pages, or selected areas. Edit and share instantly.",
+  "description": "Capture visible parts or selected areas. Edit and share instantly.",
+
   "permissions": [
     "activeTab",
     "scripting",
     "storage",
     "downloads",
-    "tabs"
+    "tabs",
+    "notifications"
   ],
+
   "host_permissions": [
     "<all_urls>"
   ],
+
   "action": {
     "default_popup": "popup.html",
-    "default_title": "QuickShot"
-  },
-  "background": {
-    "service_worker": "background.js"
-  },
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ],
-      "css": [
-        "content.css"
-      ]
+    "default_title": "QuickShot",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
     }
-  ],
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+
   "commands": {
     "capture_visible": {
       "suggested_key": {
         "default": "Alt+Shift+1",
         "mac": "MacCtrl+Shift+1"
       },
-      "description": "Capture Visible Part"
+      "description": "Capture visible screen"
     },
     "capture_selection": {
       "suggested_key": {
         "default": "Alt+Shift+3",
         "mac": "MacCtrl+Shift+3"
       },
-      "description": "Capture Selection"
+      "description": "Capture selected area"
     }
+  },
+
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }

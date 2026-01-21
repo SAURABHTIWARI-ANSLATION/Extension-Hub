@@ -1,73 +1,167 @@
 # 📸 QuickShot - Advanced Screen Capture
 
-## 👨‍💻 Made by Saurabh Tiwari
+## 👨‍💻 Developed with ❤️
 
 ### 🧩 Description
-**QuickShot** is a professional-grade screen capture and annotation tool for Chrome. Designed for speed and precision, it allows you to capture exactly what you need—whether it's a specific button, the visible viewport, or (coming soon) the entire scrolling page—and edit it instantly.
+**QuickShot** is a professional screen capture and annotation tool for Chrome. Designed for speed and precision, it allows you to capture exactly what you need and edit it instantly with a beautiful, modern interface.
 
 ### 🚀 Features
-- **3 Capture Modes**:
-    - **Visible Part**: Instant snapshot of what you see.
-    - **Selected Area**: Drag-to-select specific region.
-    - **Full Page**: (Beta) Captures the entire document.
-    - **Light Theme**: Clean, modern interface designed for clarity.
+- **Capture Modes**:
+    - **Visible Screen**: Instant snapshot of current tab
+    - **Selected Area**: Drag-to-select specific region
+    - **Crosshair Selection**: Precise area selection with overlay
 - **Powerful Editor**:
-    - **Annotation Tools**: Pen, Arrow, Rectangle, Text.
-    - **Color Palette**: Choose from vibrant presets.
-    - **Undo Support**: Mistakes happen; fix them with `Ctrl+Z`.
-- **Shortcuts**: Power user friendly.
-    - `Alt+Shift+1`: Visible
-    - `Alt+Shift+2`: Full Page
-    - `Alt+Shift+3`: Selection
-- **Privacy First**: Everything stays local. Use the clipboard or download to disk.
+    - **Drawing Tools**: Pen, Arrow, Rectangle, Circle, Line
+    - **Text Tool**: Add annotations with custom fonts
+    - **Color Palette**: 12 vibrant colors + custom picker
+    - **Undo/Redo**: Full history support (Ctrl+Z/Ctrl+Y)
+    - **Brush Controls**: Adjustable size and opacity
+- **Smart Features**:
+    - **Zoom Controls**: Pinch to zoom, fit to screen
+    - **Grid Overlay**: Alignment assistance
+    - **Auto-save**: Never lose your work
+    - **Keyboard Shortcuts**: Power user friendly
+- **Export Options**:
+    - **Copy to Clipboard**: One-click copy
+    - **Download PNG**: High-quality export
+    - **Multiple Formats**: PNG with quality control
+
+### 🎨 UI Theme
+- **Clean Light Theme**: Modern, professional interface
+- **Ocean Blue Accents**: Consistent color scheme
+- **Responsive Design**: Works on all screen sizes
+- **Accessibility**: Keyboard navigation & focus states
 
 ### 🛠️ Tech Stack
-- **Manifest V3**: Future-proof extension architecture.
-- **HTML5 Canvas**: High-performance rendering for the editor.
-- **Service Worker**: Efficient background processing.
-- **Modern CSS**: Glassmorphism UI and responsive layout.
+- **Manifest V3**: Modern Chrome extension architecture
+- **HTML5 Canvas**: High-performance image rendering
+- **Service Workers**: Background processing
+- **CSS Variables**: Theme system with custom properties
+- **ES6 Classes**: Modular, maintainable JavaScript
+- **Chrome APIs**: Native browser integration
 
-### 📂 Folder Structure
-```
-QuickShot/
-├── manifest.json      # Config & Hotkeys
-├── popup.html         # Control Center
-├── popup.js           # Interactive UI Logic
-├── background.js      # Capture Orchestrator
-├── content.js         # Selection Overlay
-├── editor.html        # Image Editor UI
-├── editor.js          # Canvas Drawing Engine
-└── style.css          # Global Styles
-```
+### 📂 Project Structure
+quickshot/
+├── manifest.json # Extension configuration
+├── popup.html # Main popup interface
+├── popup.js # Popup interactions
+├── style.css # Popup & shared styles
+├── background.js # Background service worker
+├── content.js # Selection overlay script
+├── content.css # Overlay styles
+├── editor.html # Full-featured editor
+├── editor.css # Editor styles (Light Theme)
+├── editor.js # Canvas drawing engine
+├── icons/
+│ ├── icon16.png # Extension icon (16px)
+│ ├── icon48.png # Extension icon (48px)
+│ └── icon128.png # Extension icon (128px)
+└── README.md # This file
 
-### ⚙️ Installation (Developer Mode)
-1.  Clone this repository.
-2.  Open Chrome and navigate to `chrome://extensions`.
-3.  Toggle **Developer mode** (top right).
-4.  Click **Load unpacked**.
-5.  Select the `QuickShot` folder.
+text
+
+### ⚙️ Installation
+#### Developer Mode (Local)
+1. **Clone or download** this repository
+2. **Open Chrome** and navigate to `chrome://extensions/`
+3. **Enable Developer mode** (toggle in top right)
+4. **Click "Load unpacked"**
+5. **Select the project folder**
+
+#### From Chrome Web Store (Coming Soon)
+1. Visit Chrome Web Store
+2. Search for "QuickShot"
+3. Click "Add to Chrome"
 
 ### 🧠 How It Works
-1.  **Trigger**: User clicks the popup or hits a usage shortcut (e.g., `Alt+Shift+3`).
-2.  **Capture**:
-    - **Visible**: `background.js` calls `captureVisibleTab`.
-    - **Selection**: `content.js` injects an overlay. User drags a box. `content.js` sends coordinates to `background.js`, which captures the tab and crops it to your selection.
-3.  **Edit**: The captured image is sent to `editor.html` via `chrome.storage.local`.
-4.  **Annotate**: The editor typically uses the HTML Canvas API to overlay drawing paths on top of the image.
-5.  **Export**: The final canvas state is converted to a Blob/DataURL for download.
+1. **Capture**:
+   - Click extension icon or use shortcut (Alt+Shift+1/3)
+   - For selection: Drag crosshair to select area
+   - Capture is saved locally
 
-### 🔐 Permissions Explained
-- **`activeTab`**: To capture screenshots of the current tab.
-- **`scripting`**: To inject the selection overlay.
-- **`storage`**: To pass image data between the background script and the editor.
-- **`downloads`**: To save your creations.
+2. **Edit**:
+   - Automatically opens in editor
+   - Use toolbar tools to annotate
+   - Adjust colors, brush size, opacity
 
-### 📸 Screenshots
-*(Placeholder)*
-![Editor Interface](https://via.placeholder.com/600x400?text=QuickShot+Editor)
+3. **Export**:
+   - Copy to clipboard (Ctrl+C)
+   - Download as PNG (Ctrl+S)
+   - Share directly (optional)
 
-### 🔒 Privacy Policy
-- **100% Local**: No images are uploaded to any server. Your screenshots never leave your device.
+### ⌨️ Keyboard Shortcuts
+| Action | Shortcut | Description |
+|--------|----------|-------------|
+| Visible Capture | Alt+Shift+1 | Capture current tab |
+| Selection | Alt+Shift+3 | Select area to capture |
+| Undo | Ctrl+Z | Undo last action |
+| Redo | Ctrl+Y / Ctrl+Shift+Z | Redo last action |
+| Copy | Ctrl+C | Copy image to clipboard |
+| Save | Ctrl+S | Download image |
+| Close Popup | Escape | Close extension popup |
+
+### 🔐 Privacy & Security
+- **100% Local Processing**: All images stay on your device
+- **No Data Collection**: We don't track or store your screenshots
+- **No Internet Required**: Works completely offline
+- **Open Source**: Transparent codebase
+
+### 🎯 Use Cases
+- **Documentation**: Capture and annotate screenshots for guides
+- **Bug Reporting**: Highlight issues with arrows and text
+- **Design Feedback**: Mark up designs and layouts
+- **Education**: Create instructional materials
+- **Personal Use**: Save and organize screenshots
+
+### 🚀 Performance
+- **Fast Capture**: Near-instant screenshot capture
+- **Smooth Drawing**: Optimized canvas rendering
+- **Low Memory**: Efficient image processing
+- **Responsive UI**: Smooth animations and interactions
+
+### 🔧 Technical Details
+- **Canvas Resolution**: Maintains original image quality
+- **Image Format**: PNG with lossless compression
+- **Undo Stack**: 50-step history
+- **Zoom Range**: 10% to 500%
+- **Brush Sizes**: 1px to 50px
+- **Color Support**: RGB, HEX, and custom colors
+
+### 📱 Compatibility
+- **Chrome**: Version 88+
+- **Edge**: Version 88+ (Chromium-based)
+- **Brave**: Version 1.20+
+- **Operating Systems**: Windows, macOS, Linux, ChromeOS
+
+### 🤝 Contributing
+Contributions are welcome! Please follow these steps:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+### 🐛 Reporting Issues
+Found a bug? Please report it:
+1. Check existing issues
+2. Provide detailed reproduction steps
+3. Include Chrome version and OS
+4. Add screenshots if possible
 
 ### 📄 License
-This project is licensed under the **MIT License**.
+This project is licensed under the **MIT License** - see the LICENSE file for details.
+
+### 🙏 Acknowledgments
+- **Icons**: Custom designed for QuickShot
+- **Fonts**: Inter font family by Rasmus Andersson
+- **Color Palette**: Based on Material Design colors
+- **Inspiration**: Modern screenshot tools and user feedback
+
+### 📞 Support
+- **Documentation**: This README
+- **Issues**: GitHub Issues tab
+- **Email**: Available via GitHub profile
+
+---
+
+**QuickShot** - Because every screenshot deserves to be perfect! ✨
