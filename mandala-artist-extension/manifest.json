@@ -16,22 +16,25 @@
   
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "scripting"
   ],
   
-  "background": {
-    "service_worker": "background.js"
-  },
+  "host_permissions": [
+    "<all_urls>"
+  ],
   
-  "options_page": "options.html",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/mandala-canvas.js"],
+      "css": ["content/mandala-canvas.css"]
+    }
+  ],
   
   "web_accessible_resources": [
     {
-      "resources": [
-        "assets/*",
-        "content/*",
-        "lib/*"
-      ],
+      "resources": ["content/*"],
       "matches": ["<all_urls>"]
     }
   ],
