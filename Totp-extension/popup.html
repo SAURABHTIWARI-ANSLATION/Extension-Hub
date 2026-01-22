@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><img src="assets/icon.png" class="logo"> TOTP Authenticator</h1>
+      <button id="add-account" class="add-btn">+ Add Account</button>
+    </header>
+    
+    <div class="search-container">
+      <input type="text" id="search" placeholder="Search accounts..." autocomplete="off">
+    </div>
+    
+    <div id="accounts-list" class="accounts-list">
+      <!-- Accounts will be dynamically loaded here -->
+      <div class="empty-state">
+        <p>No accounts added yet</p>
+        <p>Click "+ Add Account" to get started</p>
+      </div>
+    </div>
+    
+    <!-- Add Account Modal -->
+    <div id="add-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add TOTP Account</h2>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="add-form">
+            <div class="form-group">
+              <label for="account-name">Account Name</label>
+              <input type="text" id="account-name" placeholder="e.g., GitHub, Gmail" required>
+            </div>
+            <div class="form-group">
+              <label for="secret-key">Secret Key</label>
+              <div class="secret-input-container">
+                <input type="text" id="secret-key" placeholder="Enter base32 secret" required>
+                <button type="button" id="show-secret" class="toggle-btn">Show</button>
+              </div>
+              <small class="hint">Enter the base32 secret from your 2FA setup</small>
+            </div>
+            <div class="form-group">
+              <label for="issuer">Issuer (Optional)</label>
+              <input type="text" id="issuer" placeholder="Company/Service name">
+            </div>
+            <div class="form-group">
+              <button type="submit" class="submit-btn">Add Account</button>
+              <button type="button" class="cancel-btn">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="totp.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
