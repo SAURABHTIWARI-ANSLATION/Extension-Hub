@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mandala Artist - Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🎨 Mandala Artist Settings</h1>
+      <p class="subtitle">Customize your mandala drawing experience</p>
+    </header>
+    
+    <div class="settings-grid">
+      <!-- General Settings -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">⚙️</span>
+          <h2>General Settings</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="autoSave">
+            <input type="checkbox" id="autoSave" checked>
+            <span class="label-text">Auto-save drawings</span>
+          </label>
+          <div class="hint">Automatically save your work every few minutes</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="autoSaveInterval">Auto-save interval (minutes):</label>
+          <div class="input-with-unit">
+            <input type="range" id="autoSaveInterval" min="1" max="30" value="5">
+            <span id="autoSaveValue" class="unit">5</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="defaultSymmetry">Default symmetry:</label>
+          <select id="defaultSymmetry">
+            <option value="2">2-fold</option>
+            <option value="4">4-fold</option>
+            <option value="6" selected>6-fold</option>
+            <option value="8">8-fold</option>
+            <option value="12">12-fold</option>
+            <option value="16">16-fold</option>
+            <option value="24">24-fold</option>
+            <option value="32">32-fold</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="defaultBrushSize">Default brush size:</label>
+          <div class="input-with-unit">
+            <input type="range" id="defaultBrushSize" min="1" max="50" value="10">
+            <span id="brushSizeValue" class="unit">10</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="defaultBrushColor">Default brush color:</label>
+          <input type="color" id="defaultBrushColor" value="#ff6b6b">
+        </div>
+      </section>
+      
+      <!-- Canvas Settings -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">🖼️</span>
+          <h2>Canvas Settings</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="canvasBgColor">Default canvas background:</label>
+          <input type="color" id="canvasBgColor" value="#ffffff">
+        </div>
+        
+        <div class="form-group">
+          <label for="enableGrid">
+            <input type="checkbox" id="enableGrid" checked>
+            <span class="label-text">Show symmetry grid by default</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="showCenterPoint">
+            <input type="checkbox" id="showCenterPoint" checked>
+            <span class="label-text">Show center point indicator</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="gridColor">Grid color:</label>
+          <input type="color" id="gridColor" value="#667eea">
+        </div>
+        
+        <div class="form-group">
+          <label for="gridOpacity">Grid opacity:</label>
+          <div class="input-with-unit">
+            <input type="range" id="gridOpacity" min="10" max="100" value="30">
+            <span id="gridOpacityValue" class="unit">30%</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="defaultZoom">Default zoom level:</label>
+          <div class="input-with-unit">
+            <input type="range" id="defaultZoom" min="25" max="400" value="100">
+            <span id="zoomValue" class="unit">100%</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Brush Settings -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">🖌️</span>
+          <h2>Brush Settings</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="enablePressure">
+            <input type="checkbox" id="enablePressure">
+            <span class="label-text">Enable pressure sensitivity (tablets)</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="smoothDrawing">
+            <input type="checkbox" id="smoothDrawing" checked>
+            <span class="label-text">Enable smooth drawing</span>
+          </label>
+          <div class="hint">Reduces jagged lines for smoother drawing</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="brushDecimation">Brush smoothing level:</label>
+          <div class="input-with-unit">
+            <input type="range" id="brushDecimation" min="0" max="10" value="2">
+            <span id="brushDecimationValue" class="unit">2</span>
+          </div>
+          <div class="hint">Higher values = smoother but slower drawing</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="defaultBrushType">Default brush type:</label>
+          <select id="defaultBrushType">
+            <option value="pencil">Pencil</option>
+            <option value="circle" selected>Circle</option>
+            <option value="spray">Spray</option>
+            <option value="pattern">Pattern</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="brushOpacity">Default brush opacity:</label>
+          <div class="input-with-unit">
+            <input type="range" id="brushOpacity" min="10" max="100" value="100">
+            <span id="brushOpacityValue" class="unit">100%</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Color Palette -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">🎨</span>
+          <h2>Color Palette</h2>
+        </div>
+        
+        <div class="form-group">
+          <label>Favorite Color Palettes</label>
+          <div class="palettes-grid">
+            <div class="palette-item active" data-palette="warm">
+              <div class="palette-preview" style="background: linear-gradient(135deg, #FF6B6B, #FF8E53, #FFD166, #EF476F, #FF9A76)"></div>
+              <span class="palette-name">Warm</span>
+            </div>
+            <div class="palette-item" data-palette="cool">
+              <div class="palette-preview" style="background: linear-gradient(135deg, #4ECDC4, #45B7D1, #96CEB4, #118AB2, #06D6A0)"></div>
+              <span class="palette-name">Cool</span>
+            </div>
+            <div class="palette-item" data-palette="pastel">
+              <div class="palette-preview" style="background: linear-gradient(135deg, #FFEAA7, #DDA0DD, #98D8D8, #FFB6C1, #C5E1A5)"></div>
+              <span class="palette-name">Pastel</span>
+            </div>
+            <div class="palette-item" data-palette="vibrant">
+              <div class="palette-preview" style="background: linear-gradient(135deg, #FF0055, #00D4AA, #FF9500, #5856D6, #FF2D55)"></div>
+              <span class="palette-name">Vibrant</span>
+            </div>
+            <div class="palette-item" data-palette="mandala">
+              <div class="palette-preview" style="background: linear-gradient(135deg, #E63946, #F1FAEE, #A8DADC, #457B9D, #1D3557)"></div>
+              <span class="palette-name">Mandala</span>
+            </div>
+            <div class="palette-item" data-palette="rainbow">
+              <div class="palette-preview" style="background: linear-gradient(135deg, #FF0000, #FF8800, #FFFF00, #00FF00, #0088FF, #0000FF, #8800FF)"></div>
+              <span class="palette-name">Rainbow</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="randomColors">
+            <input type="checkbox" id="randomColors">
+            <span class="label-text">Enable random colors by default</span>
+          </label>
+          <div class="hint">Each stroke will use a random color from selected palette</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="colorCycleSpeed">Color cycle speed (random mode):</label>
+          <div class="input-with-unit">
+            <input type="range" id="colorCycleSpeed" min="1" max="10" value="3">
+            <span id="colorCycleValue" class="unit">3</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Shadow & Effects -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">🌑</span>
+          <h2>Shadow & Effects</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="enableShadows">
+            <input type="checkbox" id="enableShadows" checked>
+            <span class="label-text">Enable shadows by default</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="shadowColor">Default shadow color:</label>
+          <input type="color" id="shadowColor" value="#000000">
+        </div>
+        
+        <div class="form-group">
+          <label for="shadowBlur">Shadow blur:</label>
+          <div class="input-with-unit">
+            <input type="range" id="shadowBlur" min="0" max="50" value="10">
+            <span id="shadowBlurValue" class="unit">10</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="shadowOpacity">Shadow opacity:</label>
+          <div class="input-with-unit">
+            <input type="range" id="shadowOpacity" min="10" max="100" value="30">
+            <span id="shadowOpacityValue" class="unit">30%</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="enableGlow">
+            <input type="checkbox" id="enableGlow">
+            <span class="label-text">Enable glow effect</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="glowColor">Glow color:</label>
+          <input type="color" id="glowColor" value="#ffffff">
+        </div>
+        
+        <div class="form-group">
+          <label for="glowSize">Glow size:</label>
+          <div class="input-with-unit">
+            <input type="range" id="glowSize" min="1" max="20" value="5">
+            <span id="glowSizeValue" class="unit">5</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Patterns & Templates -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">🔷</span>
+          <h2>Patterns & Templates</h2>
+        </div>
+        
+        <div class="form-group">
+          <label>Quick-access patterns:</label>
+          <div class="patterns-grid">
+            <div class="pattern-item active" data-pattern="radial">
+              <div class="pattern-preview radial"></div>
+              <span class="pattern-name">Radial</span>
+            </div>
+            <div class="pattern-item" data-pattern="circular">
+              <div class="pattern-preview circular"></div>
+              <span class="pattern-name">Circular</span>
+            </div>
+            <div class="pattern-item" data-pattern="flower">
+              <div class="pattern-preview flower"></div>
+              <span class="pattern-name">Flower</span>
+            </div>
+            <div class="pattern-item" data-pattern="spiral">
+              <div class="pattern-preview spiral"></div>
+              <span class="pattern-name">Spiral</span>
+            </div>
+            <div class="pattern-item" data-pattern="geometric">
+              <div class="pattern-preview geometric"></div>
+              <span class="pattern-name">Geometric</span>
+            </div>
+            <div class="pattern-item" data-pattern="mandala">
+              <div class="pattern-preview mandala"></div>
+              <span class="pattern-name">Mandala</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="autoApplyPattern">
+            <input type="checkbox" id="autoApplyPattern">
+            <span class="label-text">Auto-apply selected pattern on new canvas</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="patternOpacity">Pattern opacity:</label>
+          <div class="input-with-unit">
+            <input type="range" id="patternOpacity" min="10" max="100" value="70">
+            <span id="patternOpacityValue" class="unit">70%</span>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Export & Storage -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">💾</span>
+          <h2>Export & Storage</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="exportFormat">Default export format:</label>
+          <select id="exportFormat">
+            <option value="png" selected>PNG (High Quality)</option>
+            <option value="jpg">JPG (Compressed)</option>
+            <option value="svg">SVG (Vector)</option>
+            <option value="json">JSON (Editable)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="exportQuality">Export quality (for JPG):</label>
+          <div class="input-with-unit">
+            <input type="range" id="exportQuality" min="1" max="100" value="90">
+            <span id="exportQualityValue" class="unit">90%</span>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="storageLimit">Storage limit (MB):</label>
+          <div class="input-with-unit">
+            <input type="range" id="storageLimit" min="10" max="1000" value="100">
+            <span id="storageLimitValue" class="unit">100 MB</span>
+          </div>
+          <div class="hint">Maximum space for saved drawings</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="autoBackup">Auto-backup frequency:</label>
+          <select id="autoBackup">
+            <option value="0">Never</option>
+            <option value="5">Every 5 minutes</option>
+            <option value="15" selected>Every 15 minutes</option>
+            <option value="30">Every 30 minutes</option>
+            <option value="60">Every hour</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="exportFileName">Default export filename:</label>
+          <input type="text" id="exportFileName" value="mandala-{date}" placeholder="mandala-{date}">
+          <div class="hint">Available variables: {date}, {time}, {symmetry}, {pattern}</div>
+        </div>
+      </section>
+      
+      <!-- Advanced Settings -->
+      <section class="settings-section">
+        <div class="section-header">
+          <span class="icon">🔧</span>
+          <h2>Advanced Settings</h2>
+        </div>
+        
+        <div class="form-group">
+          <label for="performanceMode">
+            <input type="checkbox" id="performanceMode">
+            <span class="label-text">Performance mode</span>
+          </label>
+          <div class="hint">Reduces visual quality for better performance on slow devices</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="undoSteps">Undo/Redo steps:</label>
+          <div class="input-with-unit">
+            <input type="range" id="undoSteps" min="10" max="200" value="50">
+            <span id="undoStepsValue" class="unit">50</span>
+          </div>
+          <div class="hint">Maximum number of undo steps</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="autoCenter">
+            <input type="checkbox" id="autoCenter" checked>
+            <span class="label-text">Auto-center new drawings</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="enableMirroring">
+            <input type="checkbox" id="enableMirroring" checked>
+            <span class="label-text">Enable mirror drawing by default</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="enableSnapping">
+            <input type="checkbox" id="enableSnapping">
+            <span class="label-text">Enable grid snapping</span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label for="snapTolerance">Snap tolerance (pixels):</label>
+          <div class="input-with-unit">
+            <input type="range" id="snapTolerance" min="1" max="20" value="5">
+            <span id="snapToleranceValue" class="unit">5</span>
+          </div>
+        </div>
+      </section>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button id="saveBtn" class="btn btn-primary">
+        <span class="btn-icon">💾</span> Save Settings
+      </button>
+      <button id="resetBtn" class="btn btn-secondary">
+        <span class="btn-icon">🔄</span> Reset to Defaults
+      </button>
+      <button id="exportSettingsBtn" class="btn btn-outline">
+        <span class="btn-icon">📤</span> Export Settings
+      </button>
+      <button id="importSettingsBtn" class="btn btn-outline">
+        <span class="btn-icon">📥</span> Import Settings
+      </button>
+      <button id="clearStorageBtn" class="btn btn-danger">
+        <span class="btn-icon">🗑️</span> Clear All Data
+      </button>
+    </div>
+    
+    <!-- Status Message -->
+    <div id="statusMessage" class="status-message"></div>
+    
+    <!-- Storage Info -->
+    <div class="storage-info">
+      <div class="storage-progress">
+        <div class="progress-bar" id="storageProgress"></div>
+      </div>
+      <div class="storage-text">
+        <span id="storageUsed">0 MB</span> used of <span id="storageTotal">100 MB</span>
+      </div>
+    </div>
+    
+    <footer class="footer">
+      <p>Mandala Artist Extension v1.0.0</p>
+      <p class="hint">Settings are automatically saved to your browser</p>
+    </footer>
+  </div>
+  
+  <!-- Import Settings Modal -->
+  <div id="importModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Import Settings</h3>
+        <button class="modal-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <textarea id="importJson" placeholder="Paste your settings JSON here..."></textarea>
+        <div class="modal-actions">
+          <button id="confirmImport" class="btn btn-primary">Import</button>
+          <button id="cancelImport" class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>

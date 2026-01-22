@@ -1,76 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quick Link Manager</title>
-    <link rel="stylesheet" href="popup.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quick Link Manager</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="themes.css" />
+  <link rel="stylesheet" href="popup.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  />
 </head>
-<body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1><i class="fas fa-link"></i> Link Manager</h1>
-            <p class="subtitle">Instagram Bio for Desktop</p>
-        </div>
 
-        <!-- Search Bar -->
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search links...">
-            <button id="clearSearch" class="icon-btn">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+<body data-theme="sky-gradient">
+  <div class="container">
 
-        <!-- Links Container -->
-        <div class="links-container">
-            <!-- Links will be dynamically added here -->
-        </div>
-
-        <!-- Empty State -->
-        <div id="emptyState" class="empty-state">
-            <i class="fas fa-plus-circle"></i>
-            <h3>No links added yet</h3>
-            <p>Click "Add Current Page" to add your first link</p>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="action-buttons">
-            <button id="addCurrent" class="btn-primary">
-                <i class="fas fa-plus"></i> Add Current Page
-            </button>
-            <button id="openAll" class="btn-secondary">
-                <i class="fas fa-external-link-alt"></i> Open All
-            </button>
-        </div>
-
-        <!-- Categories Section -->
-        <div class="categories">
-            <h3><i class="fas fa-tags"></i> Quick Categories</h3>
-            <div class="category-tags">
-                <button class="category-tag active" data-category="all">All</button>
-                <button class="category-tag" data-category="work">Work</button>
-                <button class="category-tag" data-category="social">Social</button>
-                <button class="category-tag" data-category="shopping">Shopping</button>
-                <button class="category-tag" data-category="entertainment">Entertainment</button>
-            </div>
-        </div>
-
-        <!-- Stats -->
-        <div class="stats">
-            <div class="stat-item">
-                <i class="fas fa-link"></i>
-                <span id="totalLinks">0</span> Links
-            </div>
-            <div class="stat-item">
-                <i class="fas fa-layer-group"></i>
-                <span id="totalCategories">4</span> Categories
-            </div>
-        </div>
+    <!-- Header -->
+    <div class="header">
+      <h1><i class="fas fa-link"></i> Link Manager</h1>
     </div>
 
-    <script src="popup.js"></script>
+    <!-- Search Bar -->
+    <div class="search-container">
+      <i class="fas fa-search"></i>
+      <input type="text" id="searchInput" placeholder="Search links..." />
+      <button id="clearSearch" class="icon-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Links Container -->
+    <div class="links-container">
+      <!-- Links will be dynamically added here -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="empty-state">
+      <i class="fas fa-plus-circle"></i>
+      <h3>No links added yet</h3>
+      <p>Click "Add Current Page" to add your first link</p>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button id="addCurrent" class="btn-primary">
+        <i class="fas fa-plus"></i> Add Current Page
+      </button>
+      <button id="openAll" class="btn-secondary">
+        <i class="fas fa-external-link-alt"></i> Open All
+      </button>
+    </div>
+
+    <!-- Categories Section -->
+    <div class="categories">
+      <h3><i class="fas fa-tags"></i> Quick Categories</h3>
+      <div class="category-tags">
+        <button class="category-tag active" data-category="all">All</button>
+        <button class="category-tag" data-category="work">Work</button>
+        <button class="category-tag" data-category="social">Social</button>
+        <button class="category-tag" data-category="shopping">Shopping</button>
+        <button class="category-tag" data-category="entertainment">Entertainment</button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-item">
+        <i class="fas fa-link"></i>
+        <span id="totalLinks">0</span> Links
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-layer-group"></i>
+        <span id="totalCategories">4</span> Categories
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Script -->
+  <script src="popup.js"></script>
 </body>
 </html>

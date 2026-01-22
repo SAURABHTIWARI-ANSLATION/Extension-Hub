@@ -1,0 +1,26 @@
+/* Sky Gradient Theme - For beginner-friendly tools & daily utilities */
+:root {
+  /* Color Tokens - Sky Gradient Theme */
+  --background-gradient: linear-gradient(135deg, #0284C7 0%, #7DD3FC 100%);
+  --header-top-bar: #0369A1;
+  --primary-button-gradient: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+  --accent-color: #BAE6FD;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0F2FE;
+
+  /* Extended Tokens for Components */
+  --card-background: #FFFFFF;
+  --card-shadow: 0 10px 30px rgba(2, 132, 199, 0.15);
+  --border-color: #E0F2FE;
+  --hover-background: #F0F9FF;
+  --stat-background: #F8FAFC;
+
+  /* Interactive States */
+  --button-hover-shadow: 0 5px 15px rgba(14, 165, 233, 0.3);
+  --link-hover-transform: translateX(5px);
+}
+
+/* Apply theme via data attribute for future theme switching */
+[data-theme="sky-gradient"] {
+  /* Inherits all :root variables */
+}
