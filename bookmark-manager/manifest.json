@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Bookmark Manager",
+  "version": "1.0",
+  "description": "Manage bookmarks and tab sessions locally with search and cleanup tools.",
+  "permissions": [
+    "tabs",
+    "bookmarks",
+    "history",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}

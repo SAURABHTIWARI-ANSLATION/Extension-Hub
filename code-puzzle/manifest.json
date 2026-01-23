@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Code Puzzle Generator",
+  "description": "Daily JavaScript & Python mini coding challenges with difficulty levels and streak tracking",
+  "version": "2.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["storage"]
+  
+}

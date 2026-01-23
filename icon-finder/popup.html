@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Icon Finder Pro</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h2>🎨 Icon Finder</h2>
+      <span id="iconCount">Ready</span>
+    </header>
+
+    <div class="actions">
+      <button id="scanBtn" class="primary">Scan Page</button>
+      <button id="downloadAll" class="secondary" disabled>Download ZIP</button>
+    </div>
+
+    <div class="filters">
+      <label>
+        <input type="checkbox" id="filterSvg" checked />
+        SVGs
+      </label>
+      <label>
+        <input type="checkbox" id="filterImg" checked />
+        Images (PNG/WebP)
+      </label>
+    </div>
+
+    <div id="icons" class="icons-grid"></div>
+    <div id="status" class="status">Click "Scan Page" to start</div>
+
+    <script src="jszip.min.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Open Incognito Tab",
+  "version": "1.0",
+  "description": "Open current tab in incognito mode instantly with privacy options.",
+  "permissions": [
+    "tabs",
+    "history",
+    "contextMenus",
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "commands": {
+    "open-incognito": {
+      "suggested_key": {
+        "default": "Alt+I",
+        "mac": "Option+I"
+      },
+      "description": "Open current tab in incognito"
+    }
+  }
+}
