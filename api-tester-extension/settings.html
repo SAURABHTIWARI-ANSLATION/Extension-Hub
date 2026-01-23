@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester - Settings</title>
+    <link rel="stylesheet" href="themes.css">
+    <style>
+        /* Settings Page Specific Styles */
+        .settings-container {
+            width: 500px;
+            padding: 20px;
+            background: var(--bg-color);
+            min-height: 100vh;
+            background: var(--body-bg);
+        }
+        
+        .settings-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 10px;
+        }
+        
+        .settings-header h1 {
+            color: var(--text-primary);
+            font-size: 24px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+        
+        .settings-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--section-bg);
+            border: 1px solid var(--section-border);
+            color: var(--text-primary);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            box-shadow: var(--section-shadow);
+        }
+        
+        .back-btn:hover {
+            background: var(--history-hover);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateX(-2px);
+        }
+        
+        .back-btn::before {
+            content: "←";
+            font-size: 16px;
+        }
+        
+        .theme-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 15px;
+            margin-bottom: 25px;
+            background: var(--info-light);
+            border-radius: 12px;
+            font-size: 14px;
+            color: var(--info-color);
+            border: 1px solid rgba(14, 165, 233, 0.2);
+        }
+        
+        .theme-icon {
+            font-size: 20px;
+        }
+        
+        .theme-name {
+            font-weight: 600;
+            color: var(--info-color);
+        }
+        
+        .theme-desc {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+        
+        .settings-section {
+            background: var(--section-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--section-border);
+            box-shadow: var(--section-shadow);
+        }
+        
+        .settings-section h3 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent-light);
+        }
+        
+        .settings-section h3::before {
+            content: "";
+            width: 4px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 2px;
+        }
+        
+        .setting-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--section-border);
+        }
+        
+        .setting-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .setting-label {
+            display: block;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .setting-description {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 54px;
+            height: 28px;
+        }
+        
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--input-border);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        
+        .select-wrapper select {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            color: var(--input-text);
+            font-size: 14px;
+            appearance: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: var(--input-shadow);
+        }
+        
+        .select-wrapper select:focus {
+            border-color: var(--input-border-focus);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+        }
+        
+        .select-wrapper::after {
+            content: "▼";
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 12px;
+        }
+        
+        .save-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(14, 165, 233, 0.3);
+            letter-spacing: 0.5px;
+        }
+        
+        .save-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(14, 165, 233, 0.4);
+        }
+        
+        .save-btn:active {
+            transform: translateY(0);
+        }
+        
+        .reset-btn {
+            width: 100%;
+            padding: 12px;
+            background: var(--section-bg);
+            border: 1px solid var(--section-border);
+            color: var(--text-secondary);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 12px;
+        }
+        
+        .reset-btn:hover {
+            background: var(--history-hover);
+            border-color: var(--text-muted);
+            color: var(--text-primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 550px) {
+            .settings-container {
+                width: 100%;
+                padding: 15px;
+            }
+            
+            .settings-section {
+                padding: 20px;
+            }
+            
+            .back-btn {
+                top: 15px;
+                left: 15px;
+                padding: 8px 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <button class="back-btn" id="backBtn">Back</button>
+        
+        <div class="settings-header">
+            <h1>⚙️ API Tester Settings</h1>
+            <p>Customize your testing experience</p>
+        </div>
+        
+        <!-- Theme Indicator (No Selection Needed) -->
+        <div class="theme-indicator">
+            <div class="theme-icon">🎨</div>
+            <div>
+                <div class="theme-name">Light Sky Theme</div>
+                <div class="theme-desc">Clean, professional look for API testing</div>
+            </div>
+        </div>
+        
+        <!-- Display Settings -->
+        <div class="settings-section">
+            <h3>Display Settings</h3>
+            
+            <div class="setting-item">
+                <label class="setting-label">Auto-format JSON responses</label>
+                <p class="setting-description">Automatically format JSON responses for better readability</p>
+                <label class="switch">
+                    <input type="checkbox" id="autoFormat" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">Show response time</label>
+                <p class="setting-description">Display request duration in milliseconds</p>
+                <label class="switch">
+                    <input type="checkbox" id="showResponseTime" checked>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">Auto-copy successful responses</label>
+                <p class="setting-description">Automatically copy 2xx responses to clipboard</p>
+                <label class="switch">
+                    <input type="checkbox" id="autoCopy">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">History retention limit</label>
+                <p class="setting-description">Maximum number of requests to keep in history</p>
+                <div class="select-wrapper">
+                    <select id="historyLimit">
+                        <option value="10">10 requests</option>
+                        <option value="20" selected>20 requests</option>
+                        <option value="50">50 requests</option>
+                        <option value="100">100 requests</option>
+                        <option value="0">Unlimited</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Request Settings -->
+        <div class="settings-section">
+            <h3>Request Settings</h3>
+            
+            <div class="setting-item">
+                <label class="setting-label">Default request timeout</label>
+                <p class="setting-description">Maximum time to wait for a response (seconds)</p>
+                <div class="select-wrapper">
+                    <select id="requestTimeout">
+                        <option value="30">30 seconds</option>
+                        <option value="60" selected>60 seconds</option>
+                        <option value="120">120 seconds</option>
+                        <option value="300">5 minutes</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="setting-item">
+                <label class="setting-label">Default Content-Type header</label>
+                <p class="setting-description">Pre-filled Content-Type for new requests</p>
+                <div class="select-wrapper">
+                    <select id="defaultContentType">
+                        <option value="application/json" selected>application/json</option>
+                        <option value="application/xml">application/xml</option>
+                        <option value="text/plain">text/plain</option>
+                        <option value="application/x-www-form-urlencoded">form-urlencoded</option>
+                        <option value="multipart/form-data">multipart/form-data</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <button class="save-btn" id="saveSettings">💾 Save Settings</button>
+        <button class="reset-btn" id="resetSettings">🔄 Reset to Defaults</button>
+    </div>
+    
+    <script src="settings.js"></script>
+</body>
+</html>
