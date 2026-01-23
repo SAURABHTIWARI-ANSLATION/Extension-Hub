@@ -93,7 +93,7 @@ git commit -m "Your message here"
 git checkout main
 git pull origin main
 git checkout raman-ans/new-feature
-bbr# PUSH:
+bbrgit # PUSH:
 git push origin raman-ans/new-feature
 ```
 
