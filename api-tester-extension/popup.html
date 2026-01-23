@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tester Pro</title>
+    <link rel="stylesheet" href="themes.css"> <!-- Theme system -->
+</head>
+<body data-theme="ocean-blue">
+    <div class="container">
+        <header class="theme-header">
+            <div class="header-left">
+                <h1> API Tester Pro</h1>
+                <p class="subtitle">Professional REST API Testing Tool</p>
+            </div>
+            <button id="settingsBtn" class="theme-settings-btn" title="Settings">
+                ⚙️
+            </button>
+        </header>
+
+        <!-- Request Section -->
+        <div class="section theme-section">
+            <div class="request-controls">
+                <select id="method" class="method-select theme-select">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                    <option value="PUT">PUT</option>
+                    <option value="DELETE">DELETE</option>
+                    <option value="PATCH">PATCH</option>
+                </select>
+                <input type="text" id="url" class="url-input theme-input" 
+                       placeholder="https://jsonplaceholder.typicode.com/posts/1" 
+                       value="https://jsonplaceholder.typicode.com/posts/1">
+                <button id="send" class="send-btn theme-primary-btn">Send</button>
+            </div>
+
+            <!-- Headers -->
+            <div class="headers-section">
+                <h3 class="theme-section-title">
+                    Headers 
+                    <span class="toggle" id="toggleHeaders">[+]</span>
+                </h3>
+                <div id="headersContainer" class="collapsed">
+                    <div class="header-row">
+                        <input type="text" class="header-key theme-input" 
+                               placeholder="Content-Type" value="Content-Type">
+                        <input type="text" class="header-value theme-input" 
+                               placeholder="application/json" value="application/json">
+                        <button class="remove-header theme-secondary-btn">✕</button>
+                    </div>
+                </div>
+                <button id="addHeader" class="add-btn theme-secondary-btn">
+                    Add Header
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="body-section">
+                <h3 class="theme-section-title">
+                    Body 
+                    <span class="toggle" id="toggleBody">[+]</span>
+                </h3>
+                <div id="bodyContainer" class="collapsed">
+                    <select id="bodyType" class="theme-select">
+                        <option value="json">JSON</option>
+                        <option value="text">Text</option>
+                        <option value="form">Form Data</option>
+                    </select>
+                    <textarea id="requestBody" class="body-textarea theme-textarea" 
+                              placeholder='{"key": "value"}'></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Response Section -->
+        <div class="section theme-section">
+            <h3 class="theme-section-title">Response</h3>
+            <div class="response-info theme-response-info">
+                <div class="status">
+                    Status: 
+                    <span id="statusCode" class="status-code">-</span>
+                    <span id="statusText" class="status-text"></span>
+                </div>
+                <div class="time">
+                    Time: <span id="responseTime" class="theme-accent">-</span>ms
+                </div>
+                <div class="size">
+                    Size: <span id="responseSize" class="theme-accent">-</span>
+                </div>
+            </div>
+            
+            <div class="response-tabs">
+                <button class="tab theme-tab active" data-tab="body">Body</button>
+                <button class="tab theme-tab" data-tab="headers">Headers</button>
+                <button class="tab theme-tab" data-tab="raw">Raw</button>
+            </div>
+            
+            <div class="tab-content active" id="bodyTab">
+                <div class="format-controls">
+                    <button id="formatJson" class="theme-secondary-btn">Format JSON</button>
+                    <button id="copyResponse" class="theme-secondary-btn">Copy Response</button>
+                    <button id="clearResponse" class="theme-secondary-btn">Clear</button>
+                </div>
+                <pre id="responseBody" class="response-body theme-code"></pre>
+            </div>
+            
+            <div class="tab-content" id="headersTab">
+                <pre id="responseHeaders" class="response-body theme-code"></pre>
+            </div>
+            
+            <div class="tab-content" id="rawTab">
+                <pre id="rawResponse" class="response-body theme-code"></pre>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div class="section theme-section">
+            <div class="section-header">
+                <h3 class="theme-section-title">History</h3>
+                <button id="clearHistory" class="clear-btn theme-secondary-btn">
+                    Clear
+                </button>
+            </div>
+            <div id="historyList" class="history-list">
+                <!-- History items will appear here -->
+            </div>
+        </div>
+
+        <!-- Theme Indicator -->
+        <div class="theme-indicator">
+            <span class="theme-name">Ocean Blue</span>
+            <span class="theme-dot" style="background: #2196F3;"></span>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading-overlay theme-loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Sending request...</div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
