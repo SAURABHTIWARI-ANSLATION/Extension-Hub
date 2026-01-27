@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SaaS URL Shortener</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <img src="logo.png" alt="Logo" class="logo-icon">
+            <h1>URL Shortener</h1>
+        </header>
+
+        <!-- Main Card -->
+        <div class="card input-section">
+            <div class="input-wrapper">
+                <input type="url" id="myurl" placeholder="Paste long URL here..." autocomplete="off">
+            </div>
+
+            <button id="shortURL" class="btn-primary">
+                <span class="btn-text">Shorten URL</span>
+                <div class="loading-spinner d-hide"></div>
+            </button>
+
+            <!-- Status Message Area -->
+            <div id="status-msg" class="status-message d-hide"></div>
+
+            <!-- Result Card (Initially Hidden) -->
+            <div id="result-card" class="result-card d-hide">
+                <span class="short-url"></span>
+                <button class="btn-icon copy-btn" title="Copy to clipboard">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- History Section -->
+        <div id="history-section" class="history-section d-hide">
+            <h2>Recent Links</h2>
+            <div class="history-list" id="history-list">
+                <!-- History Items injected via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>
