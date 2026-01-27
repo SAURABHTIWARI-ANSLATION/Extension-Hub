@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html data-theme="ocean-blue">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Theme Selector -->
+  <div class="theme-selector">
+    <div class="theme-btn" style="background: #2196F3;" data-theme="ocean-blue" title="Ocean Blue"></div>
+    <div class="theme-btn" style="background: #14B8A6;" data-theme="mint-teal" title="Mint Teal"></div>
+    <div class="theme-btn" style="background: #6366F1;" data-theme="indigo-night" title="Indigo Night"></div>
+  </div>
+  
+  <!-- Header -->
+  <div class="header">
+    <h3>GitIgnore Generator</h3>
+    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">
+      Generate .gitignore files instantly
+    </p>
+  </div>
+  
+  <!-- Main Controls -->
+  <div class="control-group">
+    <label for="techSelect">Select Technologies:</label>
+    <select id="techSelect" multiple style="height: 100px;">
+      <option value="node">Node.js</option>
+      <option value="python">Python</option>
+      <option value="react">React</option>
+      <option value="next">Next.js</option>
+      <option value="java">Java</option>
+      <option value="php">PHP</option>
+      <option value="go">Go</option>
+      <option value="rust">Rust</option>
+      <option value="docker">Docker</option>
+    </select>
+    <small style="color: var(--text-secondary);">Hold Ctrl/Cmd to select multiple</small>
+  </div>
+  
+  <div class="control-group">
+    <label for="platformSelect">Deployment Platform:</label>
+    <select id="platformSelect">
+      <option value="general">General</option>
+      <option value="vercel">Vercel</option>
+      <option value="netlify">Netlify</option>
+      <option value="github">GitHub Pages</option>
+      <option value="aws">AWS</option>
+      <option value="firebase">Firebase</option>
+    </select>
+  </div>
+  
+  <button id="generateBtn" class="btn-primary">Generate .gitignore</button>
+  
+  <!-- Output Section -->
+  <div id="output" style="display: none;">
+    <div class="control-group">
+      <label>Generated .gitignore:</label>
+      <textarea id="gitignoreContent" rows="10"></textarea>
+    </div>
+    <div style="display: flex; gap: 8px; margin-top: var(--spacing-sm);">
+      <button id="copyBtn" class="btn-secondary" style="flex: 1;">Copy to Clipboard</button>
+      <button id="downloadBtn" class="btn-secondary" style="flex: 1;">Download File</button>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
