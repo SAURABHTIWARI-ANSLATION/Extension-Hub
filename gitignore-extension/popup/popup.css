@@ -1,0 +1,213 @@
+/* ===== BASE THEME SYSTEM ===== */
+:root {
+  /* Common variables (never change) */
+  --font-primary: 'Segoe UI', system-ui, sans-serif;
+  --font-size-sm: 12px;
+  --font-size-md: 14px;
+  --font-size-lg: 18px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --border-radius: 8px;
+  --border-radius-sm: 4px;
+}
+
+/* ===== THEME 1: OCEAN BLUE (Default for Developer Tools) ===== */
+[data-theme="ocean-blue"] {
+  --bg-gradient: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
+  --header-bg: #0A3D91;
+  --primary-btn: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+  --primary-btn-hover: linear-gradient(135deg, #1976D2 0%, #1E88E5 100%);
+  --accent-color: #64B5F6;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CFE8FF;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --container-bg: rgba(255, 255, 255, 0.08);
+  --shadow: 0 4px 12px rgba(10, 61, 145, 0.25);
+}
+
+/* ===== THEME 2: MINT TEAL ===== */
+[data-theme="mint-teal"] {
+  --bg-gradient: linear-gradient(135deg, #0F766E 0%, #2DD4BF 100%);
+  --header-bg: #115E59;
+  --primary-btn: linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%);
+  --primary-btn-hover: linear-gradient(135deg, #0D9488 0%, #14B8A6 100%);
+  --accent-color: #5EEAD4;
+  --text-primary: #ECFEFF;
+  --text-secondary: #FFFFFF;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --container-bg: rgba(255, 255, 255, 0.08);
+  --shadow: 0 4px 12px rgba(17, 94, 89, 0.25);
+}
+
+/* ===== THEME 3: INDIGO NIGHT ===== */
+[data-theme="indigo-night"] {
+  --bg-gradient: linear-gradient(135deg, #1E1B4B 0%, #312E81 100%);
+  --header-bg: #020617;
+  --primary-btn: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  --primary-btn-hover: linear-gradient(135deg, #4F46E5 0%, #4338CA 100%);
+  --accent-color: #818CF8;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0E7FF;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --container-bg: rgba(255, 255, 255, 0.08);
+  --shadow: 0 4px 12px rgba(30, 27, 75, 0.35);
+}
+
+/* ===== THEME 4: SKY GRADIENT ===== */
+[data-theme="sky-gradient"] {
+  --bg-gradient: linear-gradient(135deg, #0284C7 0%, #7DD3FC 100%);
+  --header-bg: #0369A1;
+  --primary-btn: linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%);
+  --primary-btn-hover: linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%);
+  --accent-color: #BAE6FD;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0F2FE;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --container-bg: rgba(255, 255, 255, 0.08);
+  --shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+}
+
+/* ===== THEME 5: VIOLET GLOW ===== */
+[data-theme="violet-glow"] {
+  --bg-gradient: linear-gradient(135deg, #6D28D9 0%, #A78BFA 100%);
+  --header-bg: #4C1D95;
+  --primary-btn: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  --primary-btn-hover: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%);
+  --accent-color: #C4B5FD;
+  --text-primary: #FFFFFF;
+  --text-secondary: #F5F3FF;
+  --border-color: rgba(255, 255, 255, 0.15);
+  --container-bg: rgba(255, 255, 255, 0.08);
+  --shadow: 0 4px 12px rgba(109, 40, 217, 0.25);
+}
+
+/* ===== COMPONENT STYLES USING CSS VARIABLES ===== */
+body {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-md);
+  color: var(--text-primary);
+  background: var(--bg-gradient);
+  margin: 0;
+  padding: var(--spacing-lg);
+  min-width: 320px;
+  min-height: 300px;
+}
+
+.header {
+  background: var(--header-bg);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-lg);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.control-group {
+  background: var(--container-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.control-group label {
+  display: block;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+select, textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  padding: var(--spacing-sm);
+  font-family: 'Consolas', monospace;
+  font-size: var(--font-size-sm);
+}
+
+select:focus, textarea:focus {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--primary-btn);
+  color: var(--text-primary);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  font-size: var(--font-size-md);
+}
+
+.btn-primary:hover {
+  background: var(--primary-btn-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.btn-secondary {
+  background: var(--container-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+}
+
+/* Theme selector */
+.theme-selector {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+}
+
+.theme-btn {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  margin: 2px;
+}
+
+.theme-btn.active {
+  border-color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+/* Accessibility: High contrast for better readability */
+select option {
+  background: var(--header-bg);
+  color: var(--text-primary);
+}
+
+/* Ensure proper spacing for compact popup */
+#output {
+  margin-top: var(--spacing-xl);
+  background: var(--container-bg);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+}
