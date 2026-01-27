@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Word Typing Practice</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link
+		href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap"
+		rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="app-container">
+		<header class="app-header">
+			<div class="header-content">
+				<h1>Word Typing Practice</h1>
+				<div class="timer-controls">
+					<button class="timer-btn active" data-time="2">2m</button>
+					<button class="timer-btn" data-time="3">3m</button>
+					<button class="timer-btn" data-time="4">4m</button>
+					<button class="timer-btn" data-time="5">5m</button>
+				</div>
+			</div>
+		</header>
+
+		<main class="game-container">
+			<div class="stats-bar">
+				<div class="stat-item">
+					<span class="stat-label">Time</span>
+					<span class="stat-value" id="timer">02:00</span>
+				</div>
+				<div class="stat-item" id="wpm-stat">
+					<span class="stat-label">WPM</span>
+					<span class="stat-value" id="wpm">0</span>
+				</div>
+				<div class="stat-item" id="accuracy-stat">
+					<span class="stat-label">Accuracy</span>
+					<span class="stat-value" id="accuracy">100%</span>
+				</div>
+				<div class="stat-item" id="errors-stat">
+					<span class="stat-label">Errors</span>
+					<span class="stat-value" id="error-count">0</span>
+				</div>
+			</div>
+
+			<div class="typing-area-wrapper">
+				<div id="word-display" class="word-display">
+					<!-- Words injected via JS -->
+				</div>
+
+				<div class="input-container">
+					<input type="text" id="input-field" class="input-field" placeholder="Start typing..."
+						autocomplete="off" spellcheck="false">
+				</div>
+
+				<div class="focus-overlay" id="focus-overlay">
+					<p>Click to Focus</p>
+				</div>
+			</div>
+
+			<div class="action-bar">
+				<button id="restart-btn" class="btn">Restart</button>
+			</div>
+		</main>
+
+		<!-- Result Modal -->
+		<div id="result-modal" class="modal-overlay hidden">
+			<div class="modal-content">
+				<h2>Time's Up!</h2>
+				<div class="result-stats">
+					<div class="result-item">
+						<span class="result-label">WPM</span>
+						<span class="result-value" id="final-wpm">0</span>
+					</div>
+					<div class="result-item">
+						<span class="result-label">Accuracy</span>
+						<span class="result-value" id="final-accuracy">0%</span>
+					</div>
+					<div class="result-item">
+						<span class="result-label">Errors</span>
+						<span class="result-value" id="final-errors">0</span>
+					</div>
+					<div class="result-item">
+						<span class="result-label">Chars</span>
+						<span class="result-value" id="final-chars">0</span>
+					</div>
+				</div>
+				<button id="modal-restart-btn" class="btn primary-btn">Play Again</button>
+			</div>
+		</div>
+
+		<script src="script.js"></script>
+	</div>
+</body>
+
+</html>
