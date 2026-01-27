@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tab Manager Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-layer-group"></i> Tab Manager Pro</h1>
+                <p class="subtitle">Manage your tabs efficiently</p>
+            </div>
+            <div class="header-stats">
+                <div class="stat">
+                    <span class="stat-label">Tabs:</span>
+                    <span class="stat-value" id="tabCount">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Windows:</span>
+                    <span class="stat-value" id="windowCount">0</span>
+                </div>
+            </div>
+        </header>
+
+       <!-- Search & Filter -->
+            <div class="search-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search tabs by title or URL...">
+                    <button id="clearSearch" class="icon-btn" title="Clear search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All Tabs</button>
+                    <button class="filter-btn" data-filter="pinned">Pinned</button>
+                    <button class="filter-btn" data-filter="audio">Playing Audio</button>
+                    <button class="filter-btn" data-filter="duplicate">Duplicates</button>
+                </div>
+            </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+            <div class="action-buttons">
+                <button id="closeDuplicates" class="action-btn danger">
+                    <i class="fas fa-clone"></i> Close Duplicates
+                </button>
+                <button id="groupByDomain" class="action-btn primary">
+                    <i class="fas fa-object-group"></i> Group by Domain
+                </button>
+                <button id="suspendInactive" class="action-btn warning">
+                    <i class="fas fa-pause"></i> Suspend Inactive
+                </button>
+                <button id="closeAll" class="action-btn danger">
+                    <i class="fas fa-times-circle"></i> Close All Tabs
+                </button>
+                <button id="saveSession" class="action-btn success">
+                    <i class="fas fa-save"></i> Save Session
+                </button>
+                <button id="muteAll" class="action-btn secondary">
+                    <i class="fas fa-volume-mute"></i> Mute All
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs List -->
+        <div class="tabs-section">
+            <div class="section-header">
+                <h3><i class="fas fa-folder-open"></i> Open Tabs</h3>
+                <div class="sort-controls">
+                    <select id="sortBy" class="sort-select">
+                        <option value="title">Sort by Title</option>
+                        <option value="domain">Sort by Domain</option>
+                        <option value="recent">Most Recent</option>
+                        <option value="oldest">Oldest First</option>
+                    </select>
+                    <button id="selectAll" class="icon-btn" title="Select all">
+                        <i class="fas fa-check-square"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="tabsContainer" class="tabs-container">
+                <!-- Tabs will be loaded here -->
+                <div class="empty-state" id="emptyState">
+                    <i class="fas fa-inbox"></i>
+                    <h4>No tabs found</h4>
+                    <p>Open some tabs to manage them here</p>
+                </div>
+            </div>
+            
+            <div class="selection-actions" id="selectionActions">
+                <span id="selectedCount">0 tabs selected</span>
+                <div class="selection-buttons">
+                    <button id="closeSelected" class="btn-small danger">
+                        <i class="fas fa-times"></i> Close Selected
+                    </button>
+                    <button id="groupSelected" class="btn-small primary">
+                        <i class="fas fa-object-group"></i> Group Selected
+                    </button>
+                    <button id="pinSelected" class="btn-small secondary">
+                        <i class="fas fa-thumbtack"></i> Pin Selected
+                    </button>
+                    <button id="clearSelection" class="btn-small">
+                        Clear Selection
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Memory Stats -->
+        <div class="stats-section">
+            <h3><i class="fas fa-chart-pie"></i> Memory Stats</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon memory">
+                        <i class="fas fa-memory"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-title">Estimated Memory</div>
+                        <div class="stat-value" id="memoryUsage">-- MB</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon cpu">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-title">CPU Impact</div>
+                        <div class="stat-value" id="cpuImpact">--</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon savings">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-title">Potential Savings</div>
+                        <div class="stat-value" id="potentialSavings">-- MB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <button id="openDashboard" class="footer-btn">
+                    <i class="fas fa-tachometer-alt"></i> Dashboard
+                </button>
+            </div>
+            <div class="footer-right">
+                <span class="last-updated" id="lastUpdated">Just now</span>
+            </div>
+        </footer>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Loading tabs...</div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmModal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalTitle">Confirm Action</h3>
+                <p id="modalMessage">Are you sure you want to perform this action?</p>
+                <div class="modal-actions">
+                    <button id="modalConfirm" class="btn-primary">Confirm</button>
+                    <button id="modalCancel" class="btn-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
