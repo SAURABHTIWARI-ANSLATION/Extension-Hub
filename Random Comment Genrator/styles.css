@@ -1,0 +1,234 @@
+:root {
+    /* Background Gradient */
+    --bg-gradient-start: #6D28D9;
+    --bg-gradient-end: #A78BFA;
+
+    /* UI Element Colors */
+    --header-bg: #4C1D95;
+    --btn-primary-start: #F0ABFC;
+    /* Fuchsia 300 - Bright Pop */
+    --btn-primary-end: #D946EF;
+    /* Fuchsia 500 - Deep Magic */
+    --accent-color: #C4B5FD;
+
+    /* Text Colors */
+    --text-primary: #FFFFFF;
+    --text-secondary: #F5F3FF;
+    --text-muted: rgba(245, 243, 255, 0.75);
+
+    /* Glassmorphism */
+    --glass-bg: rgba(76, 29, 149, 0.3);
+    /* Tinted for better contrast on light gradient */
+    --glass-border: rgba(196, 181, 253, 0.3);
+
+    --font-main: 'Quicksand', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 320px;
+    font-family: var(--font-main);
+    background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    overflow: hidden;
+    /* Prevent scrollbars during animations */
+}
+
+/* Header: Soft magical entry animation */
+header {
+    background-color: var(--header-bg);
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideDownFade 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    z-index: 10;
+}
+
+header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-primary);
+    text-shadow: 0 0 10px rgba(196, 181, 253, 0.5);
+    letter-spacing: 0.5px;
+}
+
+/* Main Content */
+main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    perspective: 1000px;
+}
+
+/* Comment Area: Float-in and glow on generation */
+.comment-box {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 24px;
+    font-size: 19px;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--text-secondary);
+    min-height: 140px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+
+    /* Initial State */
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    animation: floatIn 0.5s ease-out 0.2s forwards;
+}
+
+/* The active animation class triggered by JS */
+.comment-box.animate {
+    animation: magicalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.comment-box span {
+    display: inline;
+}
+
+/* Footer Actions */
+.actions {
+    padding: 24px;
+    display: flex;
+    gap: 12px;
+    background: linear-gradient(to top, rgba(76, 29, 149, 0.2), transparent);
+}
+
+.btn {
+    border: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 15px;
+}
+
+/* Primary Button: Responsive glow + scale feedback */
+.btn.primary {
+    flex: 2;
+    background: linear-gradient(135deg, var(--btn-primary-start), var(--btn-primary-end));
+    color: var(--text-primary);
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Flowing shine effect */
+.btn.primary::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: 0.5s;
+}
+
+.btn.primary:hover::after {
+    left: 100%;
+}
+
+.btn.primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.6);
+    filter: brightness(1.05);
+}
+
+.btn.primary:active {
+    transform: scale(0.96);
+    box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
+}
+
+/* Secondary Actions: Minimal utility motion */
+.btn.secondary {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--accent-color);
+    color: var(--accent-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.btn.secondary:hover {
+    background: rgba(196, 181, 253, 0.15);
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+
+.btn.secondary:active {
+    transform: scale(0.97);
+}
+
+/* Keyframes */
+
+@keyframes slideDownFade {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes floatIn {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes magicalPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+        box-shadow: 0 0 0 rgba(196, 181, 253, 0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(196, 181, 253, 0.4);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+}
