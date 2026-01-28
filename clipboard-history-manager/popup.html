@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard History</title>
+    <link rel="stylesheet" href="popup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1><i class="fas fa-clipboard-list"></i> Clipboard</h1>
+                <div class="stats">
+                    <span id="itemCount">0</span> items • 
+                    <span id="totalSaves">0</span> total
+                </div>
+            </div>
+            <div class="header-right">
+                <button id="settingsBtn" class="icon-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+                <button id="clearAllBtn" class="icon-btn danger" title="Clear All">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Search clipboard history...">
+            <div class="search-actions">
+                <button id="filterBtn" class="icon-btn small" title="Filters">
+                    <i class="fas fa-filter"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Panel -->
+        <div id="filterPanel" class="filter-panel">
+            <div class="filter-options">
+                <label class="filter-option">
+                    <input type="checkbox" id="filterText" checked> Text
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" id="filterLinks" checked> Links
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" id="filterCode" checked> Code
+                </label>
+                <label class="filter-option">
+                    <input type="checkbox" id="filterToday"> Today Only
+                </label>
+            </div>
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="empty-state">
+            <img src="images/empty-state.svg" alt="Empty clipboard" width="100">
+            <h3>Clipboard History is Empty</h3>
+            <p>Copy some text or links to see them here!</p>
+            <button id="testCopyBtn" class="secondary-btn">
+                <i class="fas fa-magic"></i> Try Demo Copy
+            </button>
+        </div>
+
+        <!-- Clipboard Items List -->
+        <div id="clipboardList" class="clipboard-list"></div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <button id="pinModeBtn" class="action-btn">
+                <i class="far fa-star"></i> Pinned
+            </button>
+            <button id="frequentBtn" class="action-btn">
+                <i class="fas fa-chart-line"></i> Frequent
+            </button>
+            <button id="recentBtn" class="action-btn active">
+                <i class="fas fa-history"></i> Recent
+            </button>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cog"></i> Settings</h2>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <h3>General</h3>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="autoSave" checked>
+                            Automatically save copied items
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="number" id="maxItems" min="10" max="200" value="50">
+                            Maximum items to store
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="notifications" checked>
+                            Show notifications on save
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Privacy</h3>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="encryption">
+                            Enable encryption (beta)
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label>
+                            <input type="checkbox" id="clearOnExit">
+                            Clear history on browser exit
+                        </label>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Keyboard Shortcuts</h3>
+                    <div class="shortcut-item">
+                        <span>Open Clipboard History:</span>
+                        <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd>
+                    </div>
+                    <div class="shortcut-item">
+                        <span>Manual Save:</span>
+                        <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="saveSettings" class="primary-btn">Save Settings</button>
+                <button id="resetSettings" class="secondary-btn">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

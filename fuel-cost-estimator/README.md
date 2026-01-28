@@ -1,6 +1,5 @@
 # ⛽ Fuel Cost Estimator
 
-## 👨‍💻 Made by Saurabh Tiwari
 
 ### 🧩 Description
 **Fuel Cost Estimator** is a handy utility for drivers and road trippers. It helps you quickly calculate the estimated fuel cost for a trip based on distance, fuel efficiency, and gas price. Plan your travel budget effectively with this simple browser extension.

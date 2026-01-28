@@ -1,6 +1,5 @@
 # 💰 Digital Wallet Tracker
 
-## 👨‍💻 Made by Saurabh Tiwari
 
 ### 🧩 Description
 **Digital Wallet Tracker** is a personal finance extension. Track your daily expenses and income streams directly from your browser. With a simple dashboard, stay on top of your budget without needing complex spreadsheet software.

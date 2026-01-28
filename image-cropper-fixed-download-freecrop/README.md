@@ -1,7 +1,5 @@
 # ✂️ Image Cropper
 
-## 👨‍💻 Made by Saurabh Tiwari
-
 ### 🧩 Description
 **Image Cropper** is a focused tool to trim your images. Upload an image, select the area you want to keep with a draggable overlay, and crop it instantly. Useful for profile pictures, thumbnails, or removing unwanted borders.
 
