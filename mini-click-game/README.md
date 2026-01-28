@@ -1,7 +1,5 @@
 # 🖱️ Mini Click Game
 
-## 👨‍💻 Made by Saurabh Tiwari
-
 ### 🧩 Description
 **Mini Click Game** is a fun challenge to test your finger speed. How many times can you click in 10 seconds? Challenge your friends or just try to beat your own high score during a quick break.
 
