@@ -1,6 +1,5 @@
 # 📄 PDF Previewer
 
-## 👨‍💻 Made by Saurabh Tiwari
 
 ### 🧩 Description
 **PDF Previewer** streamlines your document workflow. Instead of downloading PDFs to view them, this extension opens them in a lightweight, built-in viewer directly within your browser. Perfect for quick checks of invoices, papers, or manuals.
