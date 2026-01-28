@@ -1,7 +1,5 @@
 # 💻 HTML Previewer Pro
 
-## 👨‍💻 Made by Saurabh Tiwari
-
 ### 🧩 Description
 **HTML Previewer Pro** is a robust real-time playground for web developers. Write HTML, CSS, and JavaScript in separate tabs and instantly glimpse the result in a live preview pane. It's like having a mini CodePen directly in your browser popup.
 
