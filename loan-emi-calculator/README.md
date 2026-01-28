@@ -1,6 +1,5 @@
 # 🏦 Loan EMI Calculator
 
-## 👨‍💻 Made by Saurabh Tiwari
 
 ### 🧩 Description
 **Loan EMI Calculator** is a straightforward financial utility. Calculate your Equated Monthly Installment (EMI) for any loan—home, car, or personal. See exactly how much you'll pay in total interest versus principal.
