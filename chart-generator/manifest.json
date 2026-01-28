@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Chart Generator from Data",
+  
+  "version": "1.5",
+  "description": "Extract data from webpages and generate charts.",
+  "permissions": [
+    "activeTab",
+    "downloads",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
