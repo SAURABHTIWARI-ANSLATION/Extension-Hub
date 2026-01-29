@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Quiz Generator",
-  "short_name": "QuizGen",
-  "version": "1.0",
-  "description": "Create, customize, and share quizzes instantly with ease.",
+  "name": "Feature ROI Pro",
+  "short_name": "ROI Pro",
+  "version": "1.1",
+  "description": "Calculate, compare, and track ROI for product features to support smarter decisions.",
 
   "permissions": [
     "storage"
@@ -23,18 +23,6 @@
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "viewer.html",
-        "viewer.js"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
 
   "minimum_chrome_version": "114"
 }

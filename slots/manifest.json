@@ -1,23 +1,46 @@
 {
   "manifest_version": 3,
-  "name": "Free-Slots - Simple Scheduler",
+  "name": "Free-Slots – Simple Scheduler",
+  "short_name": "Free Slots",
   "version": "1.0",
-  "description": "Share your availability instantly in Gmail and LinkedIn without APIs or backend.",
-  "permissions": ["storage", "activeTab", "scripting"],
+  "description": "Instantly share your availability in Gmail and LinkedIn messages—no APIs, no backend.",
+
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+
   "host_permissions": [
     "https://mail.google.com/*",
     "https://www.linkedin.com/*"
   ],
+
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
   "content_scripts": [
     {
       "matches": [
         "https://mail.google.com/*",
         "https://www.linkedin.com/*"
       ],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "run_at": "document_idle"
     }
-  ]
+  ],
+
+  "minimum_chrome_version": "114"
 }
