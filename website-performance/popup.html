@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Website Performance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h3 class="title">🚀 Performance Estimator</h3>
+      <p class="subtitle">Analyze speed & weight of current website</p>
+    </header>
+
+    <section class="card">
+      <button id="analyzeBtn" class="primary">Analyze This Page</button>
+      <div id="status" class="status">Idle</div>
+      <div id="result" class="result" aria-live="polite"></div>
+    </section>
+
+    <footer class="footer">
+      <small>Private • Offline • No tracking</small>
+    </footer>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
