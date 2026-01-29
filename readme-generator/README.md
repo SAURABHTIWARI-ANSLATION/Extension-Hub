@@ -1,51 +1,191 @@
-# 📝 README.md Generator
+# README Generator Chrome Extension
 
-## 👨‍💻 Made by Saurabh Tiwari
+privacy
 
-### 🧩 Description
-**README.md Generator** is the very tool used to document projects like this one! It provides a template-based interface to generate professional, standard-compliant `README.md` files for your GitHub projects. Fill in the blanks, and get perfect Markdown instantly.
+📘 README.md Generator – Offline & Private
 
-### 🚀 Features
-- **Templates**: Structured sections for Features, Installation, Tech Stack, etc.
-- **Live Preview**: See how the markdown renders.
-- **One-Click Copy**: Grab the raw markdown code.
-- **Offline**: Works entirely without an internet connection.
+A fast, modern, and privacy-focused Chrome Extension that generates high-quality README.md files instantly from project descriptions.
+Everything runs 100% locally inside your browser — no servers, no data collection.
 
-### 🛠️ Tech Stack
-- **HTML5**: Form inputs.
-- **CSS3**: Styles.
-- **JavaScript**: String concatenation and template logic.
-- **Chrome Extension (Manifest V3)**: Popup.
+✨ Features
+📝 Instant README Generation
 
-### 📂 Folder Structure
-```
-readme-generator-extension-no-icons/
-├── popup.html         # Generator Form
-├── popup.js           # Template Logic
-├── options.html       # Settings
-└── manifest.json      # Config
-```
+Paste your project details → get a clean, formatted README preview in real-time.
+The UI includes a live preview panel:
 
-### ⚙️ Installation (Developer Mode)
-1.  Clone repo.
-2.  Go to `chrome://extensions`.
-3.  Enable **Developer mode**.
-4.  Load unpacked -> `readme-generator-extension-no-icons`.
 
-### 🧠 How It Works
-1.  **Input**: User fills defined text fields (Title, Description, etc.).
-2.  **Generate**: JS replaces placeholders in a Markdown string template with user input.
-3.  **Output**: Displays the result in a text area.
+popup
 
-### 🔐 Permissions Explained
-- **`storage`**: To verify or save your default templates.
+🎨 Beautiful Dual-Theme UI (Dark & Light)
 
-### 📸 Screenshots
-*(Placeholder for screenshots)*
-![Generator UI](https://via.placeholder.com/600x400?text=Generator+UI)
+Switch between Dark and Light themes with a single click.
+Theme variables come from your CSS system:
 
-### 🔒 Privacy Policy
-- **Private**: No data collection. Generates text locally.
 
-### 📄 License
-This project is licensed under the **MIT License**.
+popup
+
+🧩 Template Support
+
+Choose between:
+
+Standard Template
+
+Minimal Template
+
+Available from the dropdown menu:
+
+
+popup
+
+💾 Local Settings Storage
+
+The extension saves:
+
+Selected theme
+
+Selected template
+
+Onboarding status
+
+All via chrome.storage.sync:
+
+
+options
+
+📥 Export & Copy
+
+Copy README to clipboard
+
+Download README as .md file
+Buttons are enabled dynamically based on input:
+
+
+popup
+
+🔒 100% Local. 0% Tracking.
+
+Your privacy policy clearly states no data collection:
+
+
+privacy
+
+📂 Project Structure
+README-Generator/
+│── manifest.json
+│── popup.html
+│── popup.css
+│── popup.js
+│── options.html
+│── options.css
+│── options.js
+│── privacy.html
+│── icons/
+│     ├── icon16.png
+│     ├── icon48.png
+│     ├── icon128.png
+
+🧠 How It Works
+1️⃣ Enter Project Description
+
+Users paste project text into a <textarea> input.
+
+2️⃣ Choose Template
+
+From the dropdown (standard or minimal).
+
+3️⃣ Generate README
+
+The extension formats a Markdown README and displays it in the preview panel.
+
+4️⃣ Export
+
+Users can:
+
+Copy the README text
+
+Download as .md
+
+
+popup
+
+⚙️ Options Page
+
+The extension includes a dedicated Options Page where users can:
+
+Change theme
+
+Change default template
+
+Reset onboarding
+
+Built using options.html:
+
+
+options
+
+
+Styled with options.css:
+
+
+options
+
+
+Logic implemented in options.js:
+
+
+options
+
+📜 Manifest (MV3)
+
+Your extension uses Manifest V3 with popup and options page support:
+
+
+manifest
+
+{
+  "manifest_version": 3,
+  "name": "README.md Generator – Offline & Private",
+  "description": "Create professional README.md files from project descriptions. Runs entirely in your browser.",
+  "version": "1.0.0",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html"
+}
+
+🚀 Installation (Developer Mode)
+
+Open Chrome → chrome://extensions/
+
+Enable Developer Mode
+
+Click Load unpacked
+
+Select the project folder
+
+🛠 Technologies Used
+
+HTML5
+
+CSS3 (Theme Variables)
+
+JavaScript (DOM + Markdown Generator)
+
+Chrome Storage API
+
+Manifest V3
+
+🌟 Future Enhancements
+
+More README templates
+
+AI-powered improvement suggestions
+
+GitHub-optimized badges and sections
+
+Local templates library
+
+📄 License
+
+MIT — open-source and free to modify.
