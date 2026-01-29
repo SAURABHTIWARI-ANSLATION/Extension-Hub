@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Water Alert</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="alert">
+    <div class="header">
+      <div class="icon">💧</div>
+      <div>
+        <h3>Time to Hydrate</h3>
+        <div id="streak-text">🔥 0 Day Streak</div>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div class="progress-header">
+        <span>Daily Progress</span>
+        <span id="percent-text">0%</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div id="progress-fill" class="progress-bar-fill"></div>
+      </div>
+      <p id="status-text">0 / 3000 ml</p>
+    </div>
+
+    <div class="button-group">
+      <button id="snooze">Snooze</button>
+      <button id="drink" class="primary-btn">I Drank 250ml</button>
+    </div>
+
+    <script src="alert.js"></script>
+  </body>
+</html>
