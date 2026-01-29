@@ -1,7 +1,5 @@
 # 🔄 CSV to JSON Converter
 
-## 👨‍💻 Made by Saurabh Tiwari
-
 ### 🧩 Description
 **CSV to JSON Converter** empowers developers to transform data formats instantly. Upload a CSV file or paste CSV text, and get clean, valid JSON output. It handles headers, custom delimiters, and nested structures.
 
