@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Eye Guardian: Auto Mode",
+  "version": "1.0",
+  "description": "Protects eyes with Warm/Cool filters and Auto-Night mode.",
+  "permissions": ["scripting", "activeTab"],
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  }
+}

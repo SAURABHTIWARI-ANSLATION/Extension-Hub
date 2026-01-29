@@ -5,35 +5,42 @@
 <title>README Generator</title>
 <link rel="stylesheet" href="popup.css">
 </head>
-<body class="dark">
-<div class="app">
-<header>
-<h1>README.md Generator</h1>
-<div class="controls">
-<select id="templateSelect">
-<option value="standard">Standard</option>
-<option value="minimal">Minimal</option>
-</select>
-<button id="themeToggle">🌙</button>
-</div>
-</header>
 
-<div class="content">
-<section class="panel">
-<textarea id="projectInput" placeholder="Paste your project description here..."></textarea>
-<button id="generateBtn" disabled>Generate README</button>
-</section>
+<body>
+<div class="container">
 
-<section class="panel preview">
-<pre id="previewArea">Paste a project description to begin…</pre>
-<div class="actions">
-<button id="copyBtn" disabled>Copy</button>
-<button id="downloadBtn" disabled>Download</button>
-</div>
-</section>
-</div>
+    <div class="icon-wrapper">
+        <img src="icons/icon128.png" class="top-icon">
+    </div>
 
-<footer id="footerText">100% Local • No Tracking</footer>
+    <h1 class="title">README Generator</h1>
+    <p class="subtitle">Create your professional README.md</p>
+
+    <label class="label">Project Description</label>
+    <textarea id="projectInput" placeholder="Paste description..."></textarea>
+
+    <label class="label">Template</label>
+    <select id="templateSelect">
+        <option value="standard">Standard</option>
+        <option value="minimal">Minimal</option>
+    </select>
+
+    <button id="generateBtn" disabled>GENERATE README →</button>
+
+    <!-- ✅ NEW CLEAR BUTTON -->
+    <button id="clearBtn" class="clear-btn">CLEAR ✖</button>
+
+    <div class="result-box">
+        <pre id="previewArea">Paste a project description to begin…</pre>
+
+        <div class="actions">
+            <button id="copyBtn" disabled>Copy</button>
+            <button id="downloadBtn" disabled>Download</button>
+        </div>
+    </div>
+
+    <footer>© 2026 README Generator</footer>
+
 </div>
 <script src="popup.js"></script>
 </body>

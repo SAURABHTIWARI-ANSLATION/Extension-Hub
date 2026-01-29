@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 320px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #0047AB, #007BFF);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 25px 15px;
+    }
+
+    /* Header Icon */
+    .icon-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .icon-circle img {
+      width: 38px;
+      opacity: 0.9;
+    }
+
+    h2 {
+      margin: 8px 0 5px 0;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0 0 20px 0;
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    /* White Card */
+    .card {
+      width: 90%;
+      background: white;
+      border-radius: 15px;
+      padding: 20px 18px;
+      color: #333;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .slider-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      cursor: pointer;
+    }
+
+    /* Buttons */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 15px;
+      transition: 0.25s;
+      color: white;
+    }
+
+    #applyBtn {
+      background: #005eff;
+    }
+
+    #autoBtn {
+      background: #28a745;
+    }
+
+    #resetBtn {
+      background: #6c757d;
+    }
+
+    button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Icon -->
+  <div class="icon-circle">
+    <img src="icons/icon128.png">
+  </div>
+
+  <!-- Title -->
+  <h2>Eye Guardian</h2>
+  <p>Protect your eyes with smart screen warmth</p>
+
+  <!-- Card -->
+  <div class="card">
+
+    <div>
+      <div class="slider-labels">
+        <span style="color:#0047AB;">COOL</span>
+        <span style="color:#ff8c00;">WARM</span>
+      </div>
+      <input type="range" id="tempSlider" min="-50" max="50" value="0">
+    </div>
+
+    <button id="applyBtn">Apply Manual Mode</button>
+    <button id="autoBtn">Auto Night Mode (6PM - 6AM)</button>
+    <button id="resetBtn">Turn Off / Reset</button>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

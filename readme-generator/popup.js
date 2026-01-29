@@ -1,21 +1,104 @@
-const body=document.body,input=document.getElementById("projectInput"),
-gen=document.getElementById("generateBtn"),pre=document.getElementById("previewArea"),
-copy=document.getElementById("copyBtn"),down=document.getElementById("downloadBtn"),
-theme=document.getElementById("themeToggle"),tpl=document.getElementById("templateSelect"),
-footer=document.getElementById("footerText");
-let out="";
-chrome.storage.sync.get(["theme","template","visited"],d=>{
-if(d.theme==="light")body.classList.add("light");
-if(d.template)tpl.value=d.template;
-if(!d.visited){footer.textContent="👋 Paste a project description to generate README";chrome.storage.sync.set({visited:true})}
+const body = document.body,
+      input = document.getElementById("projectInput"),
+      gen = document.getElementById("generateBtn"),
+      pre = document.getElementById("previewArea"),
+      copy = document.getElementById("copyBtn"),
+      down = document.getElementById("downloadBtn"),
+      tpl = document.getElementById("templateSelect");
+
+let out = "";
+
+// Load saved settings
+chrome.storage.sync.get(["theme", "template", "visited"], d => {
+    if (d.template) tpl.value = d.template;
 });
-input.oninput=()=>{const v=input.value.trim().length>=30;gen.disabled=!v;gen.classList.toggle("active",v)};
-gen.onclick=()=>{out=makeReadme(input.value,tpl.value);pre.textContent=out;copy.disabled=down.disabled=false;copy.classList.add("active");down.classList.add("active")};
-copy.onclick=async()=>{await navigator.clipboard.writeText(out);flash(copy,"Copied ✓")};
-down.onclick=()=>{const b=new Blob([out],{type:"text/markdown"});const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="README.md";a.click();flash(down,"Saved ✓")};
-theme.onclick=()=>{body.classList.toggle("light");const t=body.classList.contains("light")?"light":"dark";chrome.storage.sync.set({theme:t});theme.textContent=t==="light"?"☀️":"🌙"};
-tpl.onchange=()=>chrome.storage.sync.set({template:tpl.value});
-function makeReadme(t,m){const l=t.split("\n")[0]||"Project Title";const d=t.split("\n").slice(0,3).join(" ");const f=t.split("\n").filter(x=>x.match(/^[-*•]/)).map(x=>"- "+x.replace(/^[-*•]/,"").trim()).join("\n");
-if(m==="minimal")return "# "+l+"\n\n"+d+"\n\n"+f;
-return "# "+l+"\n\n## Description\n"+d+"\n\n## Features\n"+(f||"- Feature one")+"\n\n## License\nMIT"};
-function flash(b,t){const o=b.textContent;b.textContent=t;setTimeout(()=>b.textContent=o,1200)}
+
+// Enable Generate button when enough text
+input.oninput = () => {
+    const valid = input.value.trim().length >= 30;
+    gen.disabled = !valid;
+    gen.classList.toggle("active", valid);
+};
+
+// Generate README
+gen.onclick = () => {
+    out = makeReadme(input.value, tpl.value);
+    pre.textContent = out;
+
+    copy.disabled = down.disabled = false;
+    copy.classList.add("active");
+    down.classList.add("active");
+};
+
+// Copy button
+copy.onclick = async () => {
+    await navigator.clipboard.writeText(out);
+    flash(copy, "Copied ✓");
+};
+
+// Download README.md
+down.onclick = () => {
+    const blob = new Blob([out], { type: "text/markdown" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "README.md";
+    a.click();
+    flash(down, "Saved ✓");
+};
+
+// Save template change
+tpl.onchange = () => chrome.storage.sync.set({ template: tpl.value });
+
+// Build README
+function makeReadme(text, mode) {
+    const title = text.split("\n")[0] || "Project Title";
+    const desc = text.split("\n").slice(0, 3).join(" ");
+    const features = text
+        .split("\n")
+        .filter(x => x.match(/^[-*•]/))
+        .map(x => "- " + x.replace(/^[-*•]/, "").trim())
+        .join("\n");
+
+    if (mode === "minimal")
+        return "# " + title + "\n\n" + desc + "\n\n" + features;
+
+    return (
+        "# " + title +
+        "\n\n## Description\n" + desc +
+        "\n\n## Features\n" + (features || "- Feature one") +
+        "\n\n## License\nMIT"
+    );
+}
+
+// Button flash animation
+function flash(btn, text) {
+    const old = btn.textContent;
+    btn.textContent = text;
+    setTimeout(() => (btn.textContent = old), 1200);
+}
+
+/*  
+-----------------------------------------------------
+      CLEAR BUTTON — FULLY FIXED & WORKING NOW
+-----------------------------------------------------
+*/
+
+document.addEventListener("DOMContentLoaded", () => {
+    const clearBtn = document.getElementById("clearBtn");
+
+    if (clearBtn) {
+        clearBtn.onclick = () => {
+            input.value = "";
+            pre.textContent = "Paste a project description to begin…";
+
+            gen.disabled = true;
+            gen.classList.remove("active");
+
+            copy.disabled = true;
+            copy.classList.remove("active");
+
+            down.disabled = true;
+            down.classList.remove("active");
+        };
+    }
+});
