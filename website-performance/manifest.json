@@ -1,13 +1,17 @@
 {
   "manifest_version": 3,
-  "name": "Quick Unit Converter",
-  "short_name": "Unit Converter",
+  "name": "Website Performance Estimator",
+  "short_name": "Perf Estimator",
   "version": "1.0",
-  "description": "Quickly convert length, weight, and temperature units right from your browser.",
+  "description": "Quickly estimate website performance metrics for the current page.",
+
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
 
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Quick Unit Converter",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",

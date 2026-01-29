@@ -1,13 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Quick Unit Converter",
-  "short_name": "Unit Converter",
+  "name": "Floating Analog Watch",
+  "short_name": "Analog Watch",
   "version": "1.0",
-  "description": "Quickly convert length, weight, and temperature units right from your browser.",
+  "description": "Displays a draggable floating analog watch on every webpage.",
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["style.css"],
+      "run_at": "document_idle"
+    }
+  ],
 
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Quick Unit Converter",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
