@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="popup-container">
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" data-tab="player">Player</button>
+            <button class="tab" data-tab="library">Library</button>
+            <button class="tab" data-tab="playlists">Playlists</button>
+        </div>
+        
+        <!-- Player Tab -->
+        <div id="player-tab" class="tab-content">
+            <!-- Now Playing -->
+            <div class="compact-player">
+                <div class="now-playing-compact">
+                    <div class="album-art-small" id="album-art-small">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="track-info-compact">
+                        <h4 id="current-track-small">No track selected</h4>
+                        <p id="current-artist-small">Select a song to play</p>
+                    </div>
+                </div>
+                
+                <!-- Progress -->
+                <div class="progress-compact">
+                    <div class="progress-bar-compact">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <div class="time-display">
+                        <span id="current-time-small">0:00</span>
+                        <span id="total-time-small">0:00</span>
+                    </div>
+                </div>
+                
+                <!-- Controls -->
+                <div class="controls-compact">
+                    <button class="control-btn-small" id="prev-btn-small">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button class="control-btn-small play-btn-small" id="play-btn-small">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="control-btn-small" id="next-btn-small">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                </div>
+                
+                <!-- Volume -->
+                <div class="volume-compact">
+                    <i class="fas fa-volume-down"></i>
+                    <input type="range" class="volume-slider-compact" id="volume-slider-small" min="0" max="100" value="50">
+                    <i class="fas fa-volume-up"></i>
+                </div>
+            </div>
+            
+            <!-- Stats -->
+            <div class="stats-compact">
+                <div class="stat-compact">
+                    <span class="stat-number-compact" id="total-tracks-small">0</span>
+                    <span class="stat-label-compact">Tracks</span>
+                </div>
+                <div class="stat-compact">
+                    <span class="stat-number-compact" id="playlist-count-small">0</span>
+                    <span class="stat-label-compact">Playlists</span>
+                </div>
+                <div class="stat-compact">
+                    <span class="stat-number-compact" id="total-size-small">0</span>
+                    <span class="stat-label-compact">MB</span>
+                </div>
+            </div>
+            
+            <!-- Quick Upload -->
+            <div class="upload-section-compact">
+                <input type="file" id="file-input-small" accept="audio/*" multiple class="file-input-hidden">
+                <button class="upload-btn-compact" id="upload-btn-small">
+                    <i class="fas fa-plus"></i> Add Music Files
+                </button>
+                <p style="text-align: center; font-size: 11px; color: #6c757d; margin: 0;">
+                    Supports: MP3, WAV, OGG, M4A
+                </p>
+            </div>
+        </div>
+        
+        <!-- Library Tab -->
+        <div id="library-tab" class="tab-content" style="display: none;">
+            <div class="track-list-compact" id="track-list-small">
+                <div class="empty-state-compact">
+                    <i class="fas fa-music"></i>
+                    <p>No tracks yet</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Playlists Tab -->
+        <div id="playlists-tab" class="tab-content" style="display: none;">
+            <div class="playlist-section-compact">
+                <button class="upload-btn-compact" id="new-playlist-btn-small" style="margin-bottom: 12px;">
+                    <i class="fas fa-plus"></i> New Playlist
+                </button>
+                <div class="playlist-list-compact" id="playlist-list-small">
+                    <div class="empty-state-compact">
+                        <i class="fas fa-list-alt"></i>
+                        <p>No playlists yet</p>
+                        <p style="font-size: 12px; margin-top: 8px;">Click "New Playlist" to create one</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer-compact">
+            <i class="fas fa-shield-alt"></i> All music stays locally in your browser
+        </div>
+    </div>
+    
+    <!-- Hidden audio player -->
+    <audio id="audio-player-small" style="display: none;"></audio>
+    
+    <script src="popup.js"></script>
+</body>
+</html>
