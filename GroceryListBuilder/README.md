@@ -1,5 +1,7 @@
 # 🛒 Grocery List Builder
 
+## 👨‍💻 Made by Saurabh Tiwari
+
 ### 🧩 Description
 **Grocery List Builder** is a clean and simple shopping companion. Organize your grocery needs before you head to the store. With a modern, intuitive interface, adding and checking off items is satisfying and efficient.
 
@@ -15,7 +17,7 @@
 - **JavaScript (Vanilla)**: List logic and storage.
 - **Chrome Extension (Manifest V3)**: Storage.
 
-### 📂 Folder Structure
+### 📂 Folder Structure  
 ```
 GroceryListBuilder/
 ├── manifest.json      # Config

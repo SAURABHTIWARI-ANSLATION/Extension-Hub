@@ -1,134 +1,90 @@
-# 🔐 Message Encryptor & Decryptor (Chrome Extension)
+📩 Message Encryptor & Decryptor
 
-**Message Encryptor & Decryptor** is a lightweight Chrome extension that lets you securely **encrypt and decrypt text messages** directly in your browser using strong AES encryption.  
-Ideal for protecting sensitive notes, passwords, or private messages — all **offline**.
+Securely encrypt and decrypt any message using AES encryption — fast, offline, and private.
 
----
+🚀 Features
 
-## 🧩 Description
+✔ AES-256 Encryption & Decryption (Powered by CryptoJS)
+✔ Instant Message Encryption
+✔ Instant Message Decryption
+✔ Copy to Clipboard with animation
+✔ Clear Input & Output
+✔ Beautiful Modern UI with blue gradient
+✔ Fully Offline — no API required
+✔ Fast and Lightweight
 
-This extension allows you to:
-- Encrypt plain text into unreadable cipher text
-- Decrypt previously encrypted text back to its original form
-- Copy results instantly with one click
+📂 File Structure
+/YourExtension/
+│── manifest.json
+│── popup.html
+│── popup.js
+│── crypto.js
+│── icons/
+│     ├── icon16.png
+│     ├── icon48.png
+│     ├── icon128.png
 
-All encryption happens **locally** using a built-in secret key.  
-No data is sent to any server.
+🧠 How It Works
 
----
-
-## 🚀 Features
-
-- 🔒 **AES Encryption**
-  - Uses industry-standard AES encryption (via CryptoJS)
-- 🔓 **Instant Decryption**
-  - Decrypt encrypted text with one click
-- 📋 **Copy to Clipboard**
-  - Quickly copy encrypted or decrypted output
-- 🧹 **Clear Button**
-  - Reset inputs instantly
-- 🎨 **Modern UI**
-  - Clean, card-based interface with smooth feedback
-- 🌐 **Offline First**
-  - Works without internet
-
----
-
-## 🛠️ Tech Stack
-
-- **HTML5** – Popup structure
-- **CSS3** – Modern gradient UI
-- **JavaScript (Vanilla)** – Logic
-- **CryptoJS** – AES encryption
-- **Chrome Extension (Manifest V3)**
-
----
-
-## 📂 Folder Structure
-
-message-encryptor/
-├── manifest.json # Extension config
-├── popup.html # UI
-├── popup.js # Encryption / decryption logic
-├── crypto.js # CryptoJS library
-└── icons/
-├── icon16.png
-├── icon48.png
-└── icon128.png
+The extension uses an internal secret encryption key stored inside JavaScript to securely encrypt and decrypt text.
+Encryption logic from your code:
 
 
----
+popup
 
-## ⚙️ Installation (Developer Mode)
+It runs AES:
 
-1. Download or clone this repository
-2. Open Chrome and go to `chrome://extensions`
-3. Enable **Developer mode** (top-right)
-4. Click **Load unpacked**
-5. Select the project folder
+CryptoJS.AES.encrypt(message, SECRET_KEY)
+CryptoJS.AES.decrypt(encrypted, SECRET_KEY)
 
-The extension icon will appear in your toolbar 🔐
 
----
+CryptoJS library is included inside the extension:
 
-## 🧠 How It Works
 
-1. **Input**
-   - User enters a message or encrypted text
-2. **Encryption**
-   - Uses `CryptoJS.AES.encrypt(text, SECRET_KEY)`
-3. **Decryption**
-   - Uses `CryptoJS.AES.decrypt(cipher, SECRET_KEY)`
-4. **Output**
-   - Result is shown and auto-selected for easy copying
+crypto
 
-> 🔑 The secret key is **internally defined** and hidden from the UI.
+🛠 Installation (Developer Mode)
 
----
+Download the project folder.
 
-## 🔐 Permissions Explained
+Open Chrome → go to:
 
-| Permission | Reason |
-|---------|-------|
-| None | Runs fully inside the popup |
+chrome://extensions/
 
-No page access. No tracking.
 
----
+Enable Developer Mode (top-right).
 
-## 🔒 Privacy Policy
+Click Load Unpacked.
 
-- ✅ No data collection
-- ✅ No analytics
-- ✅ No network requests
-- ✅ Everything runs locally
+Select your extension folder.
 
-Your messages never leave your browser.
+The extension will now appear in your browser toolbar.
 
----
+🧪 Usage
 
-## ⚠️ Security Note
+Open the extension popup.
 
-- This tool is ideal for **casual / personal encryption**
-- Not recommended for military-grade or enterprise security use
-- Anyone with the same secret key can decrypt the message
+Type your message in the input box.
 
----
+Click ENCRYPT → encrypted string appears.
 
-## 📸 Screenshots
+Click DECRYPT to restore original text.
 
-*(Add screenshots here for Chrome Web Store listing)*
+Use Copy to copy output.
 
----
+Use Clear to reset both fields.
 
-## 📄 License
+UI reference from your popup:
 
-MIT License  
-Free to use, modify, and distribute.
 
----
+popup
 
-## 👨‍💻 Author
+🔒 Security Note
 
-**Message Encryptor & Decryptor**  
-Built for privacy-focused users who want simplicity with security.
+The secret key is internal, so only the extension can encrypt/decrypt correctly.
+
+Works fully offline — your data never leaves your device.
+
+📜 manifest.json
+
+manifest
