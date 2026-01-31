@@ -1,0 +1,516 @@
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-color: #1a1a2e;
+      --header-bg: #0f3460;
+      --card-bg: #16213e;
+      --border-color: #2d4059;
+      --text-primary: #ffffff;
+      --text-secondary: #b8c1ec;
+      --accent-blue: #4361ee;
+      --accent-green: #4cc9f0;
+      --accent-red: #f72585;
+      --toggle-bg: #2d4059;
+      --toggle-checked: #4cc9f0;
+    }
+
+    body {
+      width: 400px;
+      max-height: 600px;
+      background: var(--bg-color);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .header {
+      background: var(--header-bg);
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .title-icon {
+      font-size: 18px;
+    }
+
+    .stats {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .enabled-dot {
+      background: var(--accent-green);
+    }
+
+    .disabled-dot {
+      background: var(--accent-red);
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .search-box {
+      flex: 1;
+      position: relative;
+    }
+
+    #search {
+      width: 100%;
+      padding: 10px 16px 10px 36px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 13px;
+    }
+
+    #search::placeholder {
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-secondary);
+      opacity: 0.6;
+    }
+
+    .filter-btn {
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Extensions List */
+    .extensions-list {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    /* Extension Item - Clean like screenshot */
+    .extension-item {
+      display: flex;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s;
+    }
+
+    .extension-item:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-1px);
+    }
+
+    .extension-item.disabled {
+      opacity: 0.7;
+    }
+
+    .extension-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      margin-right: 12px;
+      flex-shrink: 0;
+      background: white;
+      padding: 2px;
+    }
+
+    .extension-name {
+      flex: 1;
+      font-size: 14px;
+      color: var(--text-primary);
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .extension-item.disabled .extension-name {
+      color: var(--text-secondary);
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--toggle-bg);
+      transition: .3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: var(--toggle-checked);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(20px);
+    }
+
+    /* Actions */
+    .actions {
+      padding: 16px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 10px;
+      background: var(--header-bg);
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .disable-btn {
+      background: rgba(247, 37, 133, 0.1);
+      color: var(--accent-red);
+      border: 1px solid rgba(247, 37, 133, 0.3);
+    }
+
+    .enable-btn {
+      background: rgba(76, 201, 240, 0.1);
+      color: var(--accent-green);
+      border: 1px solid rgba(76, 201, 240, 0.3);
+    }
+
+    .action-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 12px;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .empty-subtext {
+      font-size: 12px;
+      opacity: 0.6;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    /* Scrollbar */
+    .extensions-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .extensions-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .extensions-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+    }
+
+    .extensions-list::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Refresh Button */
+    #refresh {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    #refresh:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Filter Dropdown */
+    .filter-dropdown {
+      position: relative;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      min-width: 120px;
+      z-index: 1000;
+      margin-top: 4px;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-item {
+      padding: 10px 16px;
+      color: var(--text-secondary);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+
+    .dropdown-item.active {
+      color: var(--accent-green);
+    }
+        /* Remove Button */
+    .remove-btn {
+      background: none;
+      border: none;
+      color: var(--accent-red);
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 4px;
+      opacity: 0.7;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 8px;
+    }
+
+    .remove-btn:hover {
+      opacity: 1;
+      background: rgba(247, 37, 133, 0.1);
+      transform: scale(1.1);
+    }
+    
+    .remove-all-btn {
+      background: rgba(247, 37, 133, 0.2);
+      color: var(--accent-red);
+      border: 1px solid rgba(247, 37, 133, 0.4);
+    }
+
+    .remove-all-btn:hover {
+      background: rgba(247, 37, 133, 0.3);
+    }
+
+    .extension-actions {
+      display: flex;
+      align-items: center;
+    }
+
+    /* Confirm Delete Dialog */
+    .confirm-dialog {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .confirm-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      max-width: 320px;
+      width: 100%;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .confirm-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .confirm-message {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .confirm-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .confirm-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .confirm-cancel {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+    }
+
+    .confirm-cancel:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .confirm-delete {
+      background: var(--accent-red);
+      color: white;
+    }
+
+    .confirm-delete:hover {
+      opacity: 0.9;
+    }
+
+    .extension-warning {
+      font-size: 11px;
+      color: var(--accent-red);
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+  
