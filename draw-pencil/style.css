@@ -1,0 +1,22 @@
+
+#magic-pencil-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999999;
+  background: transparent;
+  pointer-events: none;
+}
+
+#magic-pencil-toolbar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(30,30,30,0.95);
+  color: white;
+  padding: 8px;
+  border-radius: 10px;
+  display: flex;
+  gap: 6px;
+  z-index: 1000000;
+}
