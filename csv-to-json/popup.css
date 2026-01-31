@@ -53,7 +53,7 @@ header {
 select,
 input,
 pre {
-  width: 100%;
+  width: 95%;
   margin: 6px 0;
   padding: 11px;
   background: var(--card);

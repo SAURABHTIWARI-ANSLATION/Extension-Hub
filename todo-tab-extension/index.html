@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo Tab</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <h1><i class="fas fa-check-circle"></i> Todo Tab</h1>
+                <p class="tagline">Identify your tasks faster through activity based colour coding</p>
+            </div>
+            <div class="header-right">
+                <div class="privacy-badge">
+                    <i class="fas fa-lock"></i> Privacy First
+                </div>
+                <button class="icon-btn" id="theme-toggle" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Quick Stats -->
+            <div class="quick-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-count">0</span>
+                    <span class="stat-label">Total</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="pending-count">0</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="today-count">0</span>
+                    <span class="stat-label">Today</span>
+                </div>
+            </div>
+
+            <!-- Add Todo Section -->
+            <div class="add-todo-section">
+                <div class="input-wrapper">
+                    <input type="text" id="todo-input" placeholder="Add a new task...">
+                    <button id="add-btn" class="add-button">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                </div>
+                
+                <div class="color-picker">
+                    <div class="color-options">
+                        <button class="color-btn" data-color="#4CAF50" data-label="Work">
+                            <div class="color-dot" style="background-color: #4CAF50;"></div>
+                            <span>Work</span>
+                        </button>
+                        <button class="color-btn" data-color="#2196F3" data-label="Personal">
+                            <div class="color-dot" style="background-color: #2196F3;"></div>
+                            <span>Personal</span>
+                        </button>
+                        <button class="color-btn" data-color="#FF9800" data-label="Urgent">
+                            <div class="color-dot" style="background-color: #FF9800;"></div>
+                            <span>Urgent</span>
+                        </button>
+                        <button class="color-btn" data-color="#9C27B0" data-label="Ideas">
+                            <div class="color-dot" style="background-color: #9C27B0;"></div>
+                            <span>Ideas</span>
+                        </button>
+                        <button class="color-btn" data-color="#F44336" data-label="Important">
+                            <div class="color-dot" style="background-color: #F44336;"></div>
+                            <span>Important</span>
+                        </button>
+                        <button class="color-btn" data-color="#607D8B" data-label="General">
+                            <div class="color-dot" style="background-color: #607D8B;"></div>
+                            <span>General</span>
+                        </button>
+                    </div>
+                    <div class="selected-label">
+                        Selected: <span id="selected-label" class="selected-label-text">Work</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Todo List -->
+            <div class="todo-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-list-check"></i> Your Tasks</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" data-filter="all">All</button>
+                        <button class="filter-tab" data-filter="pending">Pending</button>
+                        <button class="filter-tab" data-filter="completed">Completed</button>
+                        <button class="filter-tab" data-filter="today">Today</button>
+                    </div>
+                </div>
+
+                <div class="todo-list" id="todo-list">
+                    <!-- Tasks will be added here dynamically -->
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>No tasks yet</h3>
+                        <p>Start by adding your first task above</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="action-buttons">
+                    <button id="clear-completed" class="action-btn secondary">
+                        <i class="fas fa-check-double"></i> Clear Completed
+                    </button>
+                    <button id="export-btn" class="action-btn secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button id="import-btn" class="action-btn secondary">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+            </div>
+
+            <!-- Privacy Note -->
+            <div class="privacy-note">
+                <i class="fas fa-shield-alt"></i>
+                <p><strong>Your privacy is protected</strong> – All data stays in your browser. We never see your tasks.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal" id="import-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-import"></i> Import Tasks</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <textarea id="import-data" placeholder="Paste your exported JSON data here..."></textarea>
+                <p class="modal-hint">Export your data from another todo app or backup file.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-import" class="btn secondary">Cancel</button>
+                <button id="confirm-import" class="btn primary">Import Tasks</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

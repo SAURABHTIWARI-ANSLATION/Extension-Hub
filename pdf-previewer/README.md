@@ -1,48 +1,141 @@
-# 📄 PDF Previewer
+popup
+
+📄 PDF Previewer (Chrome Extension)
+
+A fast and simple Chrome Extension that allows you to instantly preview PDF files directly inside the popup using Chrome’s built-in PDF viewer.
+No uploads, no servers — everything works locally and offline.
+
+✨ Features
+📥 Open PDF Instantly
+
+Select any PDF file from your device → preview loads immediately.
+Uses Chrome's native embed viewer for smooth display.
 
 
-### 🧩 Description
-**PDF Previewer** streamlines your document workflow. Instead of downloading PDFs to view them, this extension opens them in a lightweight, built-in viewer directly within your browser. Perfect for quick checks of invoices, papers, or manuals.
+popup
 
-### 🚀 Features
-- **Instant View**: Opens local or remote PDFs immediately.
-- **No Download Required**: View online PDFs without cluttering your Downloads folder.
-- **Zoom/Rotate**: Standard PDF manipulation controls.
-- **Dark Mode**: Compatiable with dark themes (if supported).
+⚡ Completely Offline
 
-### 🛠️ Tech Stack
-- **HTML5**: Embed container.
-- **JavaScript**: Handling blob URLs.
-- **Chrome Extension (Manifest V3)**: Popup action.
+Your PDF files never leave your computer.
+No backend, no API, no internet required.
 
-### 📂 Folder Structure
-```
-pdf-previewer-final/
-├── manifest.json      # Config
-├── popup.html         # Viewer container
-├── popup.js           # Logic
-└── style.css          # Styles
-```
+🎨 Beautiful Blue UI
 
-### ⚙️ Installation (Developer Mode)
-1.  Clone repo.
-2.  Go to `chrome://extensions`.
-3.  Enable **Developer mode**.
-4.  Load unpacked -> `pdf-previewer-final`.
+A polished, modern design with:
 
-### 🧠 How It Works
-1.  **Input**: User selects a file or provides a URL.
-2.  **Embedding**: Uses `<embed>` or `<iframe>` with the PDF MIME type to trigger Chrome's native PDF viewing engine inside the popup or a new tab.
+Gradient blue background
 
-### 🔐 Permissions Explained
-- **None**: Uses standard browser capabilities.
+Stylish buttons
 
-### 📸 Screenshots
-*(Placeholder for screenshots)*
-![PDF Viewer](https://via.placeholder.com/600x400?text=PDF+Viewer)
+Smooth shadows
 
-### 🔒 Privacy Policy
-- **Local**: Your documents stay on your machine.
+Rounded preview frame
 
-### 📄 License
-This project is licensed under the **MIT License**.
+
+popup
+
+📄 Large Preview Window
+
+The viewer displays PDFs inside a 400px high preview box, perfect for reading inside popup.
+
+
+popup
+
+📂 Project Structure
+PDF-Previewer/
+│── manifest.json
+│── popup.html
+│── popup.css
+│── popup.js
+│── icons/
+│     ├── icon16.png
+│     ├── icon48.png
+│     ├── icon128.png
+
+🧠 How It Works
+1️⃣ Select a File
+
+User clicks Select PDF File → hidden input opens the file picker.
+
+
+popup
+
+2️⃣ File Validation
+
+Only PDF files are accepted:
+
+if (!file || file.type !== "application/pdf") return;
+
+
+popup
+
+3️⃣ Generate Preview URL
+
+Uses URL.createObjectURL() to generate a secure local blob for display.
+
+
+popup
+
+4️⃣ Embed Viewer
+
+The preview is shown inside an <embed> element.
+
+
+popup
+
+📜 Manifest (MV3)
+
+Your extension uses a popup-only configuration.
+
+
+manifest
+
+{
+  "manifest_version": 3,
+  "name": "PDF Previewer",
+  "version": "1.0",
+  "description": "Preview PDF files instantly using Chrome's built-in PDF viewer.",
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
+
+🔧 Technologies Used
+
+HTML5
+
+CSS3
+
+JavaScript
+
+Chrome Extension Manifest V3
+
+Chrome Native PDF Viewer (embed)
+
+🚀 Installation (Developer Mode)
+
+Go to chrome://extensions/
+
+Enable Developer mode
+
+Click Load Unpacked
+
+Select the extension folder
+
+The extension will now appear in your Chrome toolbar.
+
+🌟 Future Improvements
+
+Drag-and-drop PDF support
+
+Thumbnail preview mode
+
+Dark/light theme toggle
+
+Zoom controls
+
+PDF page navigation
+
+📄 License
+
+MIT — free to use and modify.

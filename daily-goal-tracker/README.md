@@ -1,54 +1,153 @@
-# 🎯 Daily Goal Tracker
+🎯 Daily Goal Tracker — Chrome Extension
 
-## 👨‍💻 Made by Saurabh Tiwari
+A beautifully designed, productivity-focused Chrome extension that helps you set daily goals, track your progress, maintain a streak, and view history — all with an elegant dark UI and seamless syncing.
 
-### 🧩 Description
-**Daily Goal Tracker** is a minimalist productivity extension designed to help you focus on what matters. List your top 3-5 goals for the day, check them off as you go, and build a streak of productivity. It's your simple, digital daily planner that lives in your browser.
+🚀 Features
 
-### 🚀 Features
-- **Task Management**: Add, edit, and delete daily goals.
-- **Progress Tracking**: Visual progress bar shows how much you've achieved.
-- **Daily Reset**: Goals can be set to reset automatically or manually.
-- **Persistent storage**: Your goals are saved even if you close the browser.
+✔️ Add daily goals easily
 
-### 🛠️ Tech Stack
-- **HTML5**: Task list interface.
-- **CSS3**: Styling.
-- **JavaScript (Vanilla)**: CRUD operations for tasks.
-- **Chrome Extension (Manifest V3)**: Storage and alarms.
+🔥 Streak tracking — build your consistency
 
-### 📂 Folder Structure
-```
-daily-goal-tracker/
-├── background.js      # Service worker
-├── manifest.json      # Config
-├── popup.html         # UI
-└── popup.js           # Logic
-```
+🕒 Auto-reset daily goals using Chrome Alarms
+(resets completed tasks every new day)
 
-### ⚙️ Installation (Developer Mode)
-1.  Download source code.
-2.  Go to `chrome://extensions`.
-3.  Switch on **Developer mode**.
-4.  Click **Load unpacked**.
-5.  Select the `daily-goal-tracker` directory.
+📅 Smart History — shows your last accomplishments
 
-### 🧠 How It Works
-1.  **UI**: A list of input fields or specific goal items.
-2.  **Storage**: Every change is saved to `chrome.storage.sync` or `local`.
-3.  **Alarms**: (Optional) Use `chrome.alarms` to send reminders or reset goals at midnight.
+📝 Working / Complete status per goal
 
-### 🔐 Permissions Explained
-- **`storage`**: Essential to save your list of goals.
-- **`alarms`**: Used for reminders or daily reset functionality.
+🗑️ Remove individual goals
 
-### 📸 Screenshots
-*(Placeholder for screenshots)*
-![Goal List](https://via.placeholder.com/600x400?text=Goal+List)
+🌙 Modern dark theme with beautiful UI & animations
 
-### 🔒 Privacy Policy
-- **Local Data**: Your goals are yours effectively. They are stored locally.
-- **No Cloud**: We do not sync your data to any external server.
+🔄 Chrome Storage Sync support — your goals travel with you
 
-### 📄 License
-This project is licensed under the **MIT License**.
+⚙️ Lightweight, fast, offline
+
+📦 Project Structure
+extension/
+│── manifest.json
+│── background.js
+│── popup.html
+│── popup.js
+│── styles.css
+│── icons/
+│     ├── icon16.png
+│     ├── icon48.png
+│     ├── icon128.png
+
+🖥️ How It Works
+⭐ 1. Add Your Daily Goals
+
+Use the input bar to add tasks you want to complete today.
+
+🔄 2. Track Progress
+
+Each goal has a status selector:
+
+Working
+
+Complete
+
+🔥 3. Streak System
+
+Your streak increases only once per day when all completed tasks are cleared.
+
+🕒 4. Automatic Daily Reset
+
+The extension runs a reset check every hour (via alarms) and:
+
+Logs completed tasks into history
+
+Clears daily goals
+
+Updates streak
+
+(Logic handled in background.js)
+
+🗂️ 5. History
+
+Shows the most recent completed tasks (auto-grouped by date).
+
+🌙 UI & Theme
+
+Your extension uses a premium dark-mode interface:
+
+Soft gradients
+
+Smooth animations
+
+Highlighted primary blue elements
+
+Glass-like card UI
+
+Custom list animations
+
+Clean minimalistic layout
+
+🔧 Manifest (V3)
+
+Based on your uploaded manifest.json:
+
+{
+  "manifest_version": 3,
+  "name": "Daily Goal Tracker",
+  "version": "1.0",
+  "description": "Track your daily goals and habits",
+  "permissions": ["storage", "alarms"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
+
+
+manifest
+
+🛠️ Technologies Used
+
+JavaScript (ES6)
+
+Chrome Storage API
+
+Chrome Alarms API
+
+Service Worker (background.js)
+
+HTML5
+
+CSS3 (modern dark UI)
+
+📥 Installation (Developer Mode)
+
+Download this repository
+
+Open Chrome → chrome://extensions/
+
+Enable Developer Mode
+
+Click Load Unpacked
+
+Select the extension folder
+
+Done! You're ready to focus 🔥
+
+🤝 Contribution
+
+Want to improve this extension?
+Pull requests and feature suggestions are welcome!
+
+📄 License
+
+Released under MIT License — free to use and modify.

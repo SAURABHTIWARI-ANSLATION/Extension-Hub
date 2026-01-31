@@ -1,51 +1,165 @@
-# 💻 HTML Previewer Pro
+🌐 HTML Previewer Pro
 
-### 🧩 Description
-**HTML Previewer Pro** is a robust real-time playground for web developers. Write HTML, CSS, and JavaScript in separate tabs and instantly glimpse the result in a live preview pane. It's like having a mini CodePen directly in your browser popup.
+A powerful, modern, offline HTML/CSS/JS previewer built directly into a Chrome Extension.
+Write code → Preview instantly → Export as an HTML file.
 
-### 🚀 Features
-- **Live Preview**: See changes as you type (or on run).
-- **Multi-Tab Editor**: Separate editors for HTML, CSS, and JS.
-- **Offline Support**: Code anywhere, no internet required.
-- **Export**: Save your creations as a `.html` file.
-- **Syntax Highlighting**: Clean, readable code editor interface.
+Fast. Clean. Professional.
 
-### 🛠️ Tech Stack
-- **HTML5**: Editor layout.
-- **CSS3**: Editor styling and output frame.
-- **JavaScript (Vanilla)**: Code injection and preview logic.
-- **Chrome Extension (Manifest V3)**: Extension platform.
+✨ Features
+🧩 Multi-Language Code Tabs
 
-### 📂 Folder Structure
-```
-html-previewer-extension-step9/
-├── popup.html         # Main UI
-├── popup.js           # Editor logic
-└── style.css          # Styling
-```
+Switch between three languages:
 
-### ⚙️ Installation (Developer Mode)
-1.  Clone repository.
-2.  Go to `chrome://extensions`.
-3.  Turn on **Developer mode**.
-4.  Click **Load unpacked**.
-5.  Select `html-previewer-extension-step9`.
+HTML
 
-### 🧠 How It Works
-1.  **Input**: User types code into three `textarea` elements.
-2.  **Assembly**: The extension combines the HTML, inserts the CSS into `<style>` tags, and the JS into `<script>` tags.
-3.  **Rendering**: The combined blob is injected into an `<iframe>` within the popup, effectively sandboxing the preview while allowing full rendering.
+CSS
 
-### 🔐 Permissions Explained
-- **None**: This tool runs locally within the popup context.
+JavaScript
 
-### 📸 Screenshots
-*(Placeholder for screenshots)*
-![Code Editor](https://via.placeholder.com/600x400?text=Code+Editor)
+Tabs include active indicators and smooth UI transitions.
 
-### 🔒 Privacy Policy
-- **Local Only**: Your code stays in your browser.
-- **No Uploads**: We never see your code.
 
-### 📄 License
-This project is licensed under the **MIT License**.
+popup
+
+⚡ Live Preview (Instant Rendering)
+
+One-click Run button updates the <iframe> preview with your latest HTML, CSS & JS.
+Uses MV3-friendly sandboxed preview via srcdoc.
+
+
+popup
+
+💾 Auto-Save Code (LocalStorage)
+
+Your code is automatically saved:
+
+HTML
+
+CSS
+
+JS
+
+Reloading the extension restores your last session.
+
+
+popup
+
+📤 Export as HTML File
+
+Download the combined output as a standalone:
+
+project.html
+
+
+with embedded CSS & JS.
+
+
+popup
+
+🧹 Clear Editor
+
+Instantly clear only the current active tab’s code.
+
+🎨 Clean Gradient UI
+
+A modern blue gradient, floating cards, and smooth visual hierarchy create a premium coding environment.
+
+
+popup
+
+📂 Project Structure
+HTML-Previewer-Pro/
+│── manifest.json
+│── popup.html
+│── popup.css
+│── popup.js
+│── icons/
+│     ├── icon16.png
+│     ├── icon48.png
+│     ├── icon128.png
+
+🧠 How It Works
+1. Choose a Tab
+
+Switch between HTML, CSS, and JS.
+
+2. Write Code
+
+The editor updates and auto-saves.
+
+3. Preview
+
+Press Run to render inside the iframe.
+
+4. Export
+
+Press Export to download a complete HTML file containing:
+
+HTML
+
+<style> CSS
+
+<script> JS
+
+5. Clear Code
+
+Press Clear to remove code from the active tab.
+
+🗂 Manifest (MV3)
+
+Your extension uses Manifest V3 with a simple popup-based UI:
+
+
+manifest
+
+{
+  "manifest_version": 3,
+  "name": "HTML Previewer Pro",
+  "version": "1.8",
+  "description": "Professional HTML, CSS & JS Previewer with live output, tabs, export and offline support.",
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
+
+🔌 Technologies Used
+
+HTML5
+
+CSS3
+
+JavaScript
+
+LocalStorage
+
+Chrome Extensions (MV3)
+
+iframe srcdoc rendering
+
+🚀 Installation (Developer Mode)
+
+Go to chrome://extensions/
+
+Enable Developer Mode
+
+Click Load Unpacked
+
+Select the extension folder
+
+The extension will appear in your Chrome toolbar.
+
+📈 Possible Future Upgrades
+
+Dark mode toggle
+
+Code auto-formatting
+
+Syntax highlighting
+
+Download as ZIP project
+
+Templates (Boilerplate HTML)
+
+📄 License
+
+MIT License — free for personal & commercial use.
