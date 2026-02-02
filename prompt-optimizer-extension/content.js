@@ -45,17 +45,22 @@ function extractCurrentPrompt() {
             'div[contenteditable="true"][data-id]',
             'div.ProseMirror',
             'textarea',
-            '[contenteditable="true"]'
+            '[contenteditable="true"]',
+            '.placeholder' // Check for placeholder text to avoid extracting it
         ];
         
         for (const selector of selectors) {
             try {
                 const elements = document.querySelectorAll(selector);
-                console.log(`  Trying selector: ${selector}, found: ${elements.length}`);
                 
                 for (const element of elements) {
+                    // Skip if it's a hidden element or a placeholder
+                    if (element.classList.contains('placeholder') || element.getAttribute('placeholder') === element.textContent) {
+                        continue;
+                    }
+
                     // Get text from textarea or contenteditable
-                    const text = element.value || element.textContent || element.innerText || '';
+                    const text = element.value || (element.tagName === 'DIV' ? element.innerText : element.textContent) || '';
                     
                     if (text.trim() && text.length > 0) {
                         prompt = text.trim();
@@ -101,14 +106,15 @@ function extractCurrentPrompt() {
             '.ql-editor',
             '[contenteditable="true"]',
             'textarea',
-            'rich-textarea'
+            'rich-textarea',
+            '.input-area'
         ];
         
         for (const selector of selectors) {
             const element = document.querySelector(selector);
             if (element) {
-                const text = element.textContent || element.innerText || element.value || '';
-                if (text.trim()) {
+                const text = element.innerText || element.textContent || element.value || '';
+                if (text.trim() && !text.includes('Enter a prompt here')) {
                     prompt = text.trim();
                     console.log('✅ Found via:', selector);
                     break;

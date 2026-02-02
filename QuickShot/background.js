@@ -79,6 +79,20 @@ async function captureVisible() {
 
     console.log('🖼️ Capturing visible tab:', tab.url);
 
+    // Wait if tab is loading
+    if (tab.status === 'loading') {
+      await new Promise(resolve => {
+        chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+          if (tabId === tab.id && info.status === 'complete') {
+            chrome.tabs.onUpdated.removeListener(listener);
+            resolve();
+          }
+        });
+        // Timeout after 2s
+        setTimeout(resolve, 2000);
+      });
+    }
+
     const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, {
       format: 'png'
     });

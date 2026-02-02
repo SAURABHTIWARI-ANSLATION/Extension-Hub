@@ -147,11 +147,10 @@ function startSelectionOverlay() {
 
         console.log('📏 Selected area:', rect);
 
-        // CRITICAL FIX: Add scroll position to coordinates
-        // This ensures coordinates are relative to the entire page, not just viewport
+        // Send viewport-relative coordinates for cropping the viewport screenshot
         const coords = {
-            x: Math.round(rect.left + window.scrollX),  // Add scrollX
-            y: Math.round(rect.top + window.scrollY),   // Add scrollY
+            x: Math.round(rect.left),
+            y: Math.round(rect.top),
             width: Math.round(rect.width),
             height: Math.round(rect.height),
             devicePixelRatio: window.devicePixelRatio,
