@@ -32,22 +32,37 @@ let settings = {
     specifyFormat: true
 };
 
+const TONE_SAMPLES = {
+    professional: "I would appreciate your assistance in [task]. Please provide a comprehensive and well-structured response.",
+    friendly: "Hey! Could you help me with this? [task] I'd really appreciate your thoughts!",
+    creative: "Let's think creatively about this: [task]. Feel free to explore innovative approaches.",
+    concise: "[task]. Please provide a direct, concise response."
+};
+
 // Load saved state on startup
 loadSavedState();
+updateToneSample();
 
 // Character count with color coding
 promptInput.addEventListener('input', function() {
     const count = this.value.length;
     charCount.textContent = count;
     
+    // Use theme-aware classes instead of hardcoded colors
     if (count < 10) {
-        charCount.style.color = '#EF4444';
+        charCount.className = 'char-count error';
     } else if (count < 50) {
-        charCount.style.color = '#F59E0B';
+        charCount.className = 'char-count warning';
     } else {
-        charCount.style.color = '#10B981';
+        charCount.className = 'char-count success';
     }
 });
+
+function updateToneSample() {
+    if (toneSample) {
+        toneSample.textContent = TONE_SAMPLES[currentTone] || TONE_SAMPLES.professional;
+    }
+}
 
 // ✅ FIXED: Extract from page
 extractBtn.addEventListener('click', async function() {
@@ -64,19 +79,14 @@ extractBtn.addEventListener('click', async function() {
             return;
         }
         
-        console.log('🌐 Current tab:', tab.url);
-        
-        // Check if we're on an AI platform
-        const isAIPlatform = tab.url && (
-            tab.url.includes('chat.openai.com') ||
-            tab.url.includes('claude.ai') ||
-            tab.url.includes('bard.google.com') ||
-            tab.url.includes('copilot.microsoft.com')
-        );
-        
-        if (!isAIPlatform) {
-            showNotification('Please open ChatGPT, Claude, or another AI chat', 'warning');
-            return;
+        // Try to inject content script first to be safe
+        try {
+            await chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                files: ['content.js']
+            });
+        } catch (e) {
+            console.log('Content script already present or cannot inject');
         }
         
         // Send message to content script
@@ -117,6 +127,7 @@ toneButtons.forEach(button => {
         this.classList.add('active');
         currentTone = this.dataset.tone;
         console.log('🎨 Tone changed to:', currentTone);
+        updateToneSample();
     });
 });
 
@@ -474,6 +485,11 @@ function displayResults(original, optimized) {
     optimizedOutput.textContent = optimized;
     appliedTone.textContent = getToneName(currentTone);
     
+    // Update tone sample in results
+    if (toneSample) {
+        toneSample.textContent = TONE_SAMPLES[currentTone].replace('[task]', 'your prompt');
+    }
+    
     // Display improvements
     improvementsList.innerHTML = '';
     if (window.currentImprovements) {
@@ -576,7 +592,7 @@ function saveToHistory(original, optimized, isRegenerate = false) {
 
 // Load saved state
 function loadSavedState() {
-    chrome.storage.local.get(['optimizationHistory', 'promptSettings', 'stats'], (data) => {
+    chrome.storage.local.get(['optimizationHistory', 'promptSettings', 'stats', 'lastSelection'], (data) => {
         if (data.optimizationHistory) {
             optimizationHistory = data.optimizationHistory;
         }
@@ -592,6 +608,15 @@ function loadSavedState() {
         if (data.stats) {
             promptsOptimized.textContent = data.stats.promptsOptimized || 0;
             timeSaved.textContent = data.stats.timeSaved || 0;
+        }
+
+        // ✅ FIXED: Handle selection from context menu
+        if (data.lastSelection) {
+            promptInput.value = data.lastSelection;
+            promptInput.dispatchEvent(new Event('input'));
+            // Clear it so it doesn't reappear
+            chrome.storage.local.remove('lastSelection');
+            showNotification('📋 Loaded selected text!', 'success');
         }
     });
 }

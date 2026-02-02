@@ -123,6 +123,20 @@ textarea:focus {
     font-size: var(--font-size-sm);
     color: #666;
     margin-top: var(--layout-spacing-xs);
+    transition: color 0.3s ease;
+}
+
+.char-count.error {
+    color: #EF4444 !important;
+    font-weight: 600;
+}
+
+.char-count.warning {
+    color: #F59E0B !important;
+}
+
+.char-count.success {
+    color: #10B981 !important;
 }
 
 .quick-actions {
