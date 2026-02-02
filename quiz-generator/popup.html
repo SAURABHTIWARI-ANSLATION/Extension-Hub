@@ -4,8 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quiz Generator</title>
+
+  <!-- ✅ THIS WAS MISSING -->
   <link rel="stylesheet" href="popup.css" />
 </head>
+
 <body>
   <main class="app">
 
@@ -20,31 +23,31 @@
       <h3>Create Question</h3>
 
       <div class="field">
-        <label for="question">Question</label>
-        <input id="question" placeholder="Enter your question here" autocomplete="off" />
+        <label>Question</label>
+        <input id="question" placeholder="Enter your question" />
       </div>
 
       <div class="options">
         <div class="field">
-          <label for="opt1">Option A</label>
-          <input id="opt1" placeholder="First option" />
+          <label>Option A</label>
+          <input id="opt1" />
         </div>
         <div class="field">
-          <label for="opt2">Option B</label>
-          <input id="opt2" placeholder="Second option" />
+          <label>Option B</label>
+          <input id="opt2" />
         </div>
         <div class="field">
-          <label for="opt3">Option C</label>
-          <input id="opt3" placeholder="Third option" />
+          <label>Option C</label>
+          <input id="opt3" />
         </div>
         <div class="field">
-          <label for="opt4">Option D</label>
-          <input id="opt4" placeholder="Fourth option" />
+          <label>Option D</label>
+          <input id="opt4" />
         </div>
       </div>
 
       <div class="field">
-        <label for="answer">Correct Answer</label>
+        <label>Correct Answer</label>
         <select id="answer">
           <option value="">Select correct option</option>
           <option value="0">A</option>
@@ -67,14 +70,14 @@
     <!-- Share -->
     <section class="card">
       <h3>Share Quiz</h3>
-      <button id="share" class="secondary">🔗 Generate Share Link</button>
-      <input id="shareLink" readonly placeholder="Share link will appear here" />
+      <button id="share" class="secondary">Generate Share Link</button>
+      <input id="shareLink" readonly />
     </section>
 
     <!-- Import -->
     <section class="card">
       <h3>Import Quiz</h3>
-      <input id="importLink" placeholder="Paste shared quiz link here" />
+      <input id="importLink" placeholder="Paste quiz link" />
       <button id="import" class="secondary">Import Quiz</button>
     </section>
 
