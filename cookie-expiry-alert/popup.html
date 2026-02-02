@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cookie Expiry Alert</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🍪 Cookie Expiry Monitor</h1>
+      <div class="toggle-container">
+        <label class="switch">
+          <input type="checkbox" id="enableToggle" checked>
+          <span class="slider"></span>
+        </label>
+        <span id="toggleLabel">Enabled</span>
+      </div>
+    </header>
+
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search cookies by name or domain...">
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <span class="stat-label">Total Cookies:</span>
+        <span class="stat-value" id="totalCount">0</span>
+      </div>
+      <div class="stat-item critical">
+        <span class="stat-label">Expiring Soon:</span>
+        <span class="stat-value" id="expiringSoon">0</span>
+      </div>
+    </div>
+
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="critical">Critical</button>
+      <button class="filter-btn" data-filter="warning">Warning</button>
+      <button class="filter-btn" data-filter="soon">Soon</button>
+      <button class="filter-btn" data-filter="session">Session</button>
+    </div>
+
+    <div id="cookieList" class="cookie-list">
+      <div class="loading">Loading cookies...</div>
+    </div>
+
+    <div class="footer">
+      <button id="refreshBtn">🔄 Refresh</button>
+      <button id="settingsBtn">⚙️ Settings</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
