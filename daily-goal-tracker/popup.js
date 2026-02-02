@@ -57,14 +57,14 @@ const GoalApp = {
     return `
       <li class="goal-item ${goal.status === "complete" ? "done" : ""}">
         <span class="text">${this.escapeHTML(goal.text)}</span>
-        <select class="status-dropdown" data-index="${index}">
-          <option value="working" ${
-            goal.status === "working" ? "selected" : ""
-          }>Working</option>
-          <option value="complete" ${
-            goal.status === "complete" ? "selected" : ""
-          }>Complete</option>
-        </select>
+        <div class="status-options">
+          <button class="status-btn working ${
+            goal.status === "working" ? "active" : ""
+          }" data-index="${index}" data-status="working">Working</button>
+          <button class="status-btn complete ${
+            goal.status === "complete" ? "active" : ""
+          }" data-index="${index}" data-status="complete">Done</button>
+        </div>
         <button class="remove-btn" data-index="${index}">🗑️</button>
       </li>
     `;
@@ -183,11 +183,15 @@ const GoalApp = {
 
     // List clicks (Delegation)
     this.elements.list.onclick = (e) => {
-      const index = e.target.dataset.index;
+      const target = e.target.closest("button");
+      if (!target) return;
+
+      const index = target.dataset.index;
       if (index === undefined) return;
-      if (e.target.classList.contains("status-dropdown")) {
-        this.updateStatus(parseInt(index), e.target.value);
-      } else if (e.target.classList.contains("remove-btn")) {
+
+      if (target.classList.contains("status-btn")) {
+        this.updateStatus(parseInt(index), target.dataset.status);
+      } else if (target.classList.contains("remove-btn")) {
         this.removeGoal(parseInt(index));
       }
     };
