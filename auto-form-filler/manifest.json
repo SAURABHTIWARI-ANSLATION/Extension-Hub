@@ -2,7 +2,20 @@
   "manifest_version": 3,
   "name": "Smart Auto Form Filler",
   "version": "2.0",
+  "description": "Automatically fill forms with saved data in one click.",
   "permissions": ["activeTab", "storage"],
-  "action": { "default_popup": "popup.html" },
-  "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }]
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
 }
