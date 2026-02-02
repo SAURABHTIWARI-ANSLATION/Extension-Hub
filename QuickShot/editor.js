@@ -24,6 +24,13 @@ class QuickShotEditor {
         this.snapshot = null;
         this.selectedArea = null;
         
+        // Panning state
+        this.isPanning = false;
+        this.panStartX = 0;
+        this.panStartY = 0;
+        this.scrollLeftStart = 0;
+        this.scrollTopStart = 0;
+        
         // Text state
         this.textMode = false;
         this.textX = 0;
@@ -119,10 +126,11 @@ class QuickShotEditor {
                 let sx = 0, sy = 0;
                 
                 if (cropCoords) {
-                    width = cropCoords.width;
-                    height = cropCoords.height;
-                    sx = cropCoords.x;
-                    sy = cropCoords.y;
+                    const dpr = cropCoords.devicePixelRatio || 1;
+                    width = cropCoords.width * dpr;
+                    height = cropCoords.height * dpr;
+                    sx = cropCoords.x * dpr;
+                    sy = cropCoords.y * dpr;
                 }
                 
                 // Set canvas dimensions
@@ -154,6 +162,7 @@ class QuickShotEditor {
         this.canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
         this.canvas.addEventListener('mouseup', this.handleMouseUp.bind(this));
         this.canvas.addEventListener('mouseout', this.handleMouseOut.bind(this));
+        this.canvas.addEventListener('contextmenu', e => e.preventDefault());
         
         // Touch events for mobile
         this.canvas.addEventListener('touchstart', this.handleTouchStart.bind(this));
@@ -287,8 +296,24 @@ class QuickShotEditor {
         this.lastX = this.startX;
         this.lastY = this.startY;
         
+        // Panning with middle click or right click
+        if (e.button === 1 || e.button === 2) {
+            this.isPanning = true;
+            this.panStartX = e.clientX;
+            this.panStartY = e.clientY;
+            this.scrollLeftStart = this.canvas.parentElement.scrollLeft;
+            this.scrollTopStart = this.canvas.parentElement.scrollTop;
+            this.canvas.style.cursor = 'grabbing';
+            return;
+        }
+
         this.isDrawing = true;
         
+        if (this.currentTool === 'select') {
+            // Check if we clicked on the background to start a new selection
+            this.clearSelection();
+        }
+
         // Save snapshot for preview
         this.snapshot = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
         
@@ -308,6 +333,14 @@ class QuickShotEditor {
         // Update cursor position display
         this.updateCursorPosition(currentX, currentY);
         
+        if (this.isPanning) {
+            const dx = e.clientX - this.panStartX;
+            const dy = e.clientY - this.panStartY;
+            this.canvas.parentElement.scrollLeft = this.scrollLeftStart - dx;
+            this.canvas.parentElement.scrollTop = this.scrollTopStart - dy;
+            return;
+        }
+
         if (!this.isDrawing) return;
         
         switch(this.currentTool) {
@@ -329,6 +362,12 @@ class QuickShotEditor {
             case 'select':
                 this.previewSelection(currentX, currentY);
                 break;
+            case 'blur':
+                this.previewBlur(currentX, currentY);
+                break;
+            case 'highlight':
+                this.previewHighlight(currentX, currentY);
+                break;
         }
         
         this.lastX = currentX;
@@ -336,6 +375,12 @@ class QuickShotEditor {
     }
     
     handleMouseUp() {
+        if (this.isPanning) {
+            this.isPanning = false;
+            this.canvas.style.cursor = 'grab';
+            return;
+        }
+
         if (!this.isDrawing) return;
         
         this.isDrawing = false;
@@ -362,6 +407,14 @@ class QuickShotEditor {
                 break;
             case 'select':
                 this.finalizeSelection();
+                break;
+            case 'blur':
+                this.drawBlur(this.startX, this.startY, this.lastX - this.startX, this.lastY - this.startY);
+                this.saveState();
+                break;
+            case 'highlight':
+                this.drawHighlight(this.startX, this.startY, this.lastX - this.startX, this.lastY - this.startY);
+                this.saveState();
                 break;
         }
         
@@ -529,13 +582,17 @@ class QuickShotEditor {
     }
     
     previewSelection(x, y) {
-        this.restoreSnapshot();
         const selectionRect = document.getElementById('selection-rectangle');
         if (selectionRect) {
-            const width = Math.abs(x - this.startX);
-            const height = Math.abs(y - this.startY);
-            const left = Math.min(x, this.startX);
-            const top = Math.min(y, this.startY);
+            const width = Math.abs(x - this.startX) * this.zoomLevel;
+            const height = Math.abs(y - this.startY) * this.zoomLevel;
+            
+            // We need to find the position relative to the canvas-wrapper
+            const rect = this.canvas.getBoundingClientRect();
+            const wrapperRect = this.canvas.parentElement.getBoundingClientRect();
+            
+            const left = (Math.min(x, this.startX) * this.zoomLevel) + (rect.left - wrapperRect.left);
+            const top = (Math.min(y, this.startY) * this.zoomLevel) + (rect.top - wrapperRect.top);
             
             selectionRect.style.display = 'block';
             selectionRect.style.width = width + 'px';
@@ -547,20 +604,27 @@ class QuickShotEditor {
     
     finalizeSelection() {
         const selectionRect = document.getElementById('selection-rectangle');
-        if (selectionRect) {
-            selectionRect.style.display = 'none';
+        if (selectionRect && selectionRect.style.display !== 'none') {
+            const width = parseFloat(selectionRect.style.width) / this.zoomLevel;
+            const height = parseFloat(selectionRect.style.height) / this.zoomLevel;
             
-            const rect = selectionRect.getBoundingClientRect();
-            const canvasRect = this.canvas.getBoundingClientRect();
+            // Calculate canvas-relative coordinates
+            const rect = this.canvas.getBoundingClientRect();
+            const wrapperRect = this.canvas.parentElement.getBoundingClientRect();
+            const left = (parseFloat(selectionRect.style.left) - (rect.left - wrapperRect.left)) / this.zoomLevel;
+            const top = (parseFloat(selectionRect.style.top) - (rect.top - wrapperRect.top)) / this.zoomLevel;
             
-            this.selectedArea = {
-                x: rect.left - canvasRect.left,
-                y: rect.top - canvasRect.top,
-                width: rect.width,
-                height: rect.height
-            };
-            
-            console.log('Selection made:', this.selectedArea);
+            if (width > 5 && height > 5) {
+                this.selectedArea = {
+                    x: left,
+                    y: top,
+                    width: width,
+                    height: height
+                };
+                console.log('Selection made:', this.selectedArea);
+            } else {
+                this.clearSelection();
+            }
         }
     }
     
@@ -587,8 +651,6 @@ class QuickShotEditor {
     }
     
     addText(text, x = this.textX, y = this.textY) {
-        this.saveState();
-        
         const fontFamily = document.getElementById('font-family')?.value || 'Inter, sans-serif';
         const fontSize = parseInt(document.getElementById('font-size')?.value || '24');
         
@@ -598,6 +660,64 @@ class QuickShotEditor {
         this.ctx.fillText(text, x, y);
         
         this.saveState();
+    }
+    
+    previewBlur(x, y) {
+        this.restoreSnapshot();
+        const w = x - this.startX;
+        const h = y - this.startY;
+        
+        this.ctx.save();
+        this.ctx.beginPath();
+        this.ctx.rect(this.startX, this.startY, w, h);
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        this.ctx.stroke();
+        this.ctx.fillStyle = 'rgba(255,255,255,0.2)';
+        this.ctx.fill();
+        this.ctx.restore();
+    }
+    
+    drawBlur(x, y, w, h) {
+        // Handle negative w/h
+        if (w < 0) { x += w; w = Math.abs(w); }
+        if (h < 0) { y += h; h = Math.abs(h); }
+        
+        if (w < 1 || h < 1) return;
+
+        const tempCanvas = document.createElement('canvas');
+        tempCanvas.width = w;
+        tempCanvas.height = h;
+        const tempCtx = tempCanvas.getContext('2d');
+        
+        tempCtx.drawImage(this.canvas, x, y, w, h, 0, 0, w, h);
+        
+        this.ctx.save();
+        this.ctx.filter = 'blur(8px)';
+        this.ctx.drawImage(tempCanvas, x, y);
+        this.ctx.restore();
+        
+        // Draw border to clean up edges
+        this.ctx.strokeStyle = 'rgba(0,0,0,0.05)';
+        this.ctx.strokeRect(x, y, w, h);
+    }
+    
+    previewHighlight(x, y) {
+        this.restoreSnapshot();
+        const w = x - this.startX;
+        const h = y - this.startY;
+        
+        this.ctx.save();
+        this.ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
+        this.ctx.fillRect(this.startX, this.startY, w, h);
+        this.ctx.restore();
+    }
+    
+    drawHighlight(x, y, w, h) {
+        this.ctx.save();
+        this.ctx.fillStyle = 'rgba(255, 255, 0, 0.4)';
+        this.ctx.fillRect(x, y, w, h);
+        this.ctx.restore();
     }
     
     // Tool Management
@@ -615,7 +735,7 @@ class QuickShotEditor {
         // Update cursor
         switch(tool) {
             case 'select':
-                this.canvas.style.cursor = 'default';
+                this.canvas.style.cursor = 'grab';
                 break;
             case 'pen':
                 this.canvas.style.cursor = 'crosshair';
@@ -717,8 +837,7 @@ class QuickShotEditor {
     }
     
     clearCanvas() {
-        if (confirm('Are you sure you want to clear the canvas? This cannot be undone.')) {
-            this.saveState();
+        if (confirm('Are you sure you want to clear the canvas?')) {
             this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
             this.saveState();
         }
