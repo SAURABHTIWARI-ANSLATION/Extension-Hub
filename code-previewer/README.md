@@ -1,7 +1,8 @@
-🌐 HTML Previewer Pro
+🌐 Code Previewer – Chrome Extension
 
-A powerful, modern, offline HTML/CSS/JS previewer built directly into a Chrome Extension.
-Write code → Preview instantly → Export as an HTML file.
+A powerful, modern, offline HTML/CSS/JS previewer built directly inside a Chrome Extension.
+
+Write code → Preview instantly → Export as a complete HTML file.
 
 Fast. Clean. Professional.
 
@@ -16,22 +17,15 @@ CSS
 
 JavaScript
 
-Tabs include active indicators and smooth UI transitions.
-
-
-popup
+Each tab includes active indicators and smooth UI transitions.
 
 ⚡ Live Preview (Instant Rendering)
 
-One-click Run button updates the <iframe> preview with your latest HTML, CSS & JS.
-Uses MV3-friendly sandboxed preview via srcdoc.
-
-
-popup
+One-click Run button updates the preview using a sandboxed iframe with srcdoc, fully MV3-compatible.
 
 💾 Auto-Save Code (LocalStorage)
 
-Your code is automatically saved:
+Your project is continuously saved:
 
 HTML
 
@@ -39,36 +33,33 @@ CSS
 
 JS
 
-Reloading the extension restores your last session.
-
-
-popup
+Reloading the extension instantly restores your last session.
 
 📤 Export as HTML File
 
-Download the combined output as a standalone:
+Download a complete output file:
 
 project.html
 
 
-with embedded CSS & JS.
+This export contains:
 
+Your HTML content
 
-popup
+Embedded <style> section for CSS
+
+Embedded <script> section for JS
 
 🧹 Clear Editor
 
-Instantly clear only the current active tab’s code.
+Clear code per tab without affecting the other two languages.
 
-🎨 Clean Gradient UI
+🎨 Beautiful Gradient UI
 
-A modern blue gradient, floating cards, and smooth visual hierarchy create a premium coding environment.
-
-
-popup
+Clean blue-gradient theme, floating card UI, and polished coding layout.
 
 📂 Project Structure
-HTML-Previewer-Pro/
+Code-Previewer/
 │── manifest.json
 │── popup.html
 │── popup.css
@@ -79,44 +70,28 @@ HTML-Previewer-Pro/
 │     ├── icon128.png
 
 🧠 How It Works
-1. Choose a Tab
 
+Choose a Tab
 Switch between HTML, CSS, and JS.
 
-2. Write Code
+Write Your Code
+The editor auto-saves in real-time.
 
-The editor updates and auto-saves.
+Preview Output
+Click Run to render the preview instantly.
 
-3. Preview
+Export Project
+Download your fully combined HTML file.
 
-Press Run to render inside the iframe.
-
-4. Export
-
-Press Export to download a complete HTML file containing:
-
-HTML
-
-<style> CSS
-
-<script> JS
-
-5. Clear Code
-
-Press Clear to remove code from the active tab.
+Clear Code
+Remove code only from the active tab.
 
 🗂 Manifest (MV3)
-
-Your extension uses Manifest V3 with a simple popup-based UI:
-
-
-manifest
-
 {
   "manifest_version": 3,
-  "name": "HTML Previewer Pro",
+  "name": "Code Previewer",
   "version": "1.8",
-  "description": "Professional HTML, CSS & JS Previewer with live output, tabs, export and offline support.",
+  "description": "Professional HTML, CSS & JS previewer with live output, tabs, export, and full offline support.",
   "action": {
     "default_popup": "popup.html"
   }
@@ -134,11 +109,11 @@ LocalStorage
 
 Chrome Extensions (MV3)
 
-iframe srcdoc rendering
+iframe srcdoc live rendering
 
 🚀 Installation (Developer Mode)
 
-Go to chrome://extensions/
+Open chrome://extensions/
 
 Enable Developer Mode
 
@@ -146,19 +121,21 @@ Click Load Unpacked
 
 Select the extension folder
 
-The extension will appear in your Chrome toolbar.
+The Code Previewer icon will appear in your toolbar
 
 📈 Possible Future Upgrades
 
-Dark mode toggle
+Dark mode
 
-Code auto-formatting
+Auto code formatting
 
 Syntax highlighting
 
 Download as ZIP project
 
-Templates (Boilerplate HTML)
+HTML/CSS/JS templates
+
+Multi-file editing
 
 📄 License
 

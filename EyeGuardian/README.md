@@ -1,113 +1,177 @@
-📄 Image to PDF Converter — Chrome Extension
+🔵 Eye Guardian: Auto Mode — Chrome Extension
 
-Convert any image into a high-quality PDF instantly — offline, fast, and secure.
+A smart, lightweight eye-protection tool that applies Warm/Cool screen filters and Auto-Night mode directly inside your browser. Designed with a beautiful blue-gradient UI, smooth overlays, and modern controls.
 
-This Chrome extension allows users to upload images (JPG, PNG, JPEG, WEBP) and convert them to a PDF document directly inside the browser without sending any data to external servers.
+Protect your eyes during late-night browsing and reduce screen strain instantly.
 
-🚀 Features
+✨ Features
+🎨 Adjustable Warm/Cool Filter
 
-🖼️ Convert Images to PDF in one click
+Use the slider to apply a custom screen tint:
 
-⚡ Fast & Offline — No internet required
+Warm (Orange) → Great for night use
 
-🛡️ 100% Private — Your files never leave your device
+Cool (Blue) → Reduces eye fatigue in bright environments
 
-🌗 Clean UI with Blue Gradient Theme
+0 Level → Turns off the filter
 
-📁 Download-ready PDF output
+🌙 Auto Night Mode (6PM – 6AM)
 
-🧩 Works on Chrome, Edge & Brave
+One click automatically applies warm mode only during night hours.
+Logic based on your system time.
+(Handled in popup.js logic) 
 
-📦 Project Structure
-📁 Image-to-PDF-Extension
-│── manifest.json
-│── popup.html
-│── popup.js
-│── icon16.png
-│── icon48.png
-│── icon128.png
-│── styles.css (optional)
+popup
 
-🔧 Installation (Developer Mode)
+♻️ Toggle & Reset
 
-Download or clone this repository.
+Instantly remove the overlay and return to normal mode.
+Works on all standard websites.
 
-Open Chrome → go to:
-chrome://extensions/
+🔒 Safe Execution
 
-Enable Developer mode (top-right corner)
+Built-in checks prevent running on restricted pages like:
 
-Click Load unpacked
+chrome://*
 
-Select the project folder
-→ Your extension will be installed.
+edge://*
 
-🛠️ How It Works
+⚡ Modern & Lightweight
 
-Open the extension
+No background service worker
 
-Upload your image
+Runs only when the user interacts
 
-The tool converts it to a PDF internally (offline)
+Minimal permissions: "scripting" + "activeTab" only 
 
-Click Download PDF
+manifest
 
-Done!
+🎨 Beautiful UI
 
-🧿 Icons
+From your popup:
 
-Your extension uses a consistent blue theme:
+Premium blue gradient background
 
-icon16.png
+Rounded white control card
 
-icon48.png
+Clean modern slider
 
-icon128.png
+Smooth button animations
 
-(Background removed as requested)
+Centered “icon circle” design
+(Defined in popup.html) 
 
-🔐 Permissions
-"permissions": []
+popup
 
+📂 Project Structure
+EyeGuardian/
+│── manifest.json      # Permissions + popup config
+│── popup.html         # UI + layout
+│── popup.js           # Filter logic + Auto mode + Reset
+│── icons/
+│     ├── icon16.png
+│     ├── icon48.png
+│     └── icon128.png
 
-This extension does NOT use any special or dangerous permissions.
+🧠 How It Works
+1️⃣ Apply Manual Mode
 
-📜 Manifest (V3)
+User moves the slider → clicks Apply Manual Mode →
+injectFilter() sends value to the active tab via chrome.scripting.executeScript to update the overlay.
+(From popup.js) 
+
+popup
+
+2️⃣ Auto Night Mode
+
+Checks system hour →
+
+If 6PM–6AM → applies warm tint
+
+Otherwise → sets filter to neutral
+
+3️⃣ Overlay Rendering in Webpage
+
+applyOverlayColor() creates or updates a fullscreen transparent overlay:
+
+Uses rgba() colors
+
+Smooth transition
+
+mix-blend-mode: multiply for eye-friendly tint
+Runs inside the webpage via injection.
+(From popup.js) 
+
+popup
+
+4️⃣ Reset
+
+Removes overlay div from DOM.
+
+🔧 Manifest (V3)
+
+Directly from your file:
+
 {
   "manifest_version": 3,
-  "name": "Image to PDF Converter",
-  "description": "Convert images to PDF instantly. Offline, private, and fast.",
-  "version": "1.3.0",
-  "permissions": [],
+  "name": "Eye Guardian: Auto Mode",
+  "version": "1.0",
+  "description": "Protects eyes with Warm/Cool filters and Auto-Night mode.",
+  "permissions": ["scripting", "activeTab"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
   "action": {
     "default_popup": "popup.html"
-  },
-  "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
   }
 }
 
-🧑‍💻 Technologies Used
 
-HTML5
+manifest
 
-CSS3 (Blue Gradient Theme)
+🚀 Installation (Developer Mode)
 
-JavaScript
+Download or clone project
 
-Chrome Extension API (Manifest V3)
+Open Chrome → chrome://extensions
 
-📥 Download PDF Generation
+Enable Developer Mode
 
-PDF is generated using the browser's built-in canvas rendering — no external libraries required.
+Click Load unpacked
 
-🤝 Contribution
+Select your extension folder
 
-Want to improve this project?
-Pull requests are welcome!
+Done! The Eye Guardian icon will appear in your toolbar.
+
+🛠 Technologies Used
+
+HTML5 (Popup UI)
+
+CSS3 (Blue gradient, modern card layout)
+
+JavaScript (Overlay logic, auto mode)
+
+Chrome Extensions API
+
+Manifest V3
+
+chrome.scripting.executeScript
+
+🧿 Usage
+Apply Warm/Cool
+
+Use slider → press Apply Manual Mode
+
+Enable Auto Night Mode
+
+Click → Automatically adjusts filter based on time
+
+Reset
+
+Removes overlay and returns to default mode
 
 📄 License
 
-This project is licensed under MIT License — free for personal and commercial use.
+MIT — free to use, modify, and publish.
