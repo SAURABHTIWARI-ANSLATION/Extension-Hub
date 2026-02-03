@@ -1,50 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" data-theme="sky-gradient">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Temperature Converter</title>
+  <title>Fahrenheit Celsius Converter</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <header>
-    <h1>Fahrenheit → Celsius</h1>
+  <div class="theme-selector" style="display: none;">
+    <!-- Hidden for single-theme extension, but part of the system -->
+  </div>
+  
+  <header class="header">
+    <div class="header-icon">🌡️</div>
+    <h1>Temperature Converter</h1>
+    <p class="subtitle">Fahrenheit ⇄ Celsius</p>
   </header>
 
-  <div class="container">
-
+  <main class="container">
+    <!-- Unit Toggle -->
     <div class="toggle-container">
       <span class="toggle-label active" id="label-f">°F</span>
       <label class="switch">
-        <input type="checkbox" id="unit-toggle">
+        <input type="checkbox" id="unit-toggle" aria-label="Toggle conversion direction">
         <span class="slider"></span>
       </label>
       <span class="toggle-label" id="label-c">°C</span>
     </div>
 
+    <!-- Input Section -->
     <div class="input-group">
-      <label for="input-value" id="input-label">Enter Fahrenheit</label>
+      <label for="input-value" id="input-label">Enter Temperature</label>
       <div class="input-wrapper">
-        <input type="number" id="input-value" placeholder="0" autofocus>
+        <input type="number" id="input-value" placeholder="0" autofocus step="any" 
+               aria-describedby="conversion-info">
         <span class="unit-label" id="input-unit">°F</span>
+      </div>
+      <div class="input-hint" id="input-hint">Type to see instant conversion</div>
+    </div>
+
+    <!-- Conversion Arrow -->
+    <div class="arrow-indicator" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <path d="M12 5V19M12 19L19 12M12 19L5 12" stroke="currentColor" stroke-width="2" 
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <!-- Result Section -->
+    <div class="result-area" aria-live="polite">
+      <div class="result-label">Converted Value</div>
+      <div class="result-display">
+        <span class="result-value" id="output-value">--</span>
+        <span class="result-unit" id="output-unit">°C</span>
+      </div>
+      <div class="conversion-info" id="conversion-info" aria-live="polite"></div>
+      <div class="temperature-scale" id="temperature-scale"></div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="button-group">
+      <button class="btn-primary" id="convert-btn">
+        <span class="btn-icon">⚡</span>
+        Convert
+      </button>
+      <button class="btn-secondary" id="swap-btn" title="Swap conversion direction">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M7 16V4M7 4L3 8M7 4L11 8M17 8V20M17 20L21 16M17 20L13 16" 
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Swap
+      </button>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="quick-reference">
+      <div class="ref-title">Common Temperatures</div>
+      <div class="ref-items">
+        <button class="ref-item" data-f="32" data-c="0">
+          <span class="ref-icon">❄️</span>
+          <div>
+            <div class="ref-temp">0°C = 32°F</div>
+            <div class="ref-desc">Water Freezes</div>
+          </div>
+        </button>
+        <button class="ref-item" data-f="212" data-c="100">
+          <span class="ref-icon">🔥</span>
+          <div>
+            <div class="ref-temp">100°C = 212°F</div>
+            <div class="ref-desc">Water Boils</div>
+          </div>
+        </button>
+        <button class="ref-item" data-f="98.6" data-c="37">
+          <span class="ref-icon">😊</span>
+          <div>
+            <div class="ref-temp">37°C = 98.6°F</div>
+            <div class="ref-desc">Body Temperature</div>
+          </div>
+        </button>
       </div>
     </div>
 
-    <div class="result-area">
-      <span class="result-value" id="output-value">--</span>
-      <span class="result-unit" id="output-unit">°C</span>
-    </div>
-
-    <button class="convert-btn" id="convert-btn">Convert</button>
-
+    <!-- Secondary Actions -->
     <div class="secondary-actions">
-      <button class="reset-btn" id="reset-btn">Clear / Reset</button>
+      <button class="btn-text" id="reset-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+          <path d="M19 7L9 17M9 7L19 17" stroke="currentColor" stroke-width="2" 
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Clear All
+      </button>
     </div>
-  </div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-text">Built with ❤️ for developers</div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
-
 </html>
