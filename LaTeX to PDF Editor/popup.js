@@ -212,7 +212,37 @@ Worked on cool things.
     // --- Advanced LaTeX Parsing Logic ---
     const parseLatexToHtml = (fullLatex) => {
 
-        // 1. EXTRACT BODY (Critical: Ignore Preamble definitions)
+        // 1. EXTRACT PREAMBLE DATA (title, author, date)
+        let title = '';
+        let author = '';
+        let date = '';
+        
+        // Extract title
+        const titleMatch = fullLatex.match(/\\title\{([^}]+)\}/);
+        if (titleMatch) {
+            title = titleMatch[1];
+        }
+        
+        // Extract author
+        const authorMatch = fullLatex.match(/\\author\{([^}]+)\}/);
+        if (authorMatch) {
+            author = authorMatch[1];
+        }
+        
+        // Extract date
+        const dateMatch = fullLatex.match(/\\date\{([^}]+)\}/);
+        if (dateMatch) {
+            date = dateMatch[1];
+            // Handle \today command
+            if (date === '\\today') {
+                const today = new Date();
+                const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                               'July', 'August', 'September', 'October', 'November', 'December'];
+                date = `${months[today.getMonth()]} ${today.getDate()}, ${today.getFullYear()}`;
+            }
+        }
+
+        // 2. EXTRACT BODY (Critical: Ignore Preamble definitions)
         let body = fullLatex;
         const beginDocIndex = body.indexOf('\\begin{document}');
         if (beginDocIndex !== -1) {
@@ -223,20 +253,44 @@ Worked on cool things.
             body = body.substring(0, endDocIndex);
         }
 
-        // 2. PRE-PROCESS CLEANUP
+        // 3. REMOVE title, author, date commands from body (they're already extracted)
+        body = body.replace(/\\title\{[^}]*\}/g, '');
+        body = body.replace(/\\author\{[^}]*\}/g, '');
+        body = body.replace(/\\date\{[^}]*\}/g, '');
+
+        // 4. HANDLE \maketitle - Replace with formatted title block
+        if (body.includes('\\maketitle')) {
+            let titleBlock = '';
+            if (title || author || date) {
+                titleBlock = '<div class="title-block" style="text-align: center; margin-bottom: 2em;">';
+                if (title) {
+                    titleBlock += `<h1 style="font-size: 1.5em; font-weight: bold; margin-bottom: 0.5em;">${title}</h1>`;
+                }
+                if (author) {
+                    titleBlock += `<div style="font-size: 1em; margin-bottom: 0.3em;">${author}</div>`;
+                }
+                if (date) {
+                    titleBlock += `<div style="font-size: 0.9em; margin-bottom: 1em;">${date}</div>`;
+                }
+                titleBlock += '</div>';
+            }
+            body = body.replace(/\\maketitle/g, titleBlock);
+        }
+
+        // 5. PRE-PROCESS CLEANUP
         body = body.replace(/%.*$/gm, ''); // Remove comments
 
         // Fix: Correctly handle LaTeX pipe (\|) and math pipe ($|$)
         // The previous regex /\\|/g matched "\" OR "" (empty), causing global pipe insertion.
-        body = body.replace(/\\\|/g, '&#124;');
+        body = body.replace(/\\\\/g, '&#124;');
         body = body.replace(/\$\|\$/g, '&#124;');
-
+        
         body = body.replace(/\\centering/g, ''); // Handled by container usually
         body = body.replace(/\\hfill/g, ''); // Filler
         body = body.replace(/\\vspace\{.*?\}/g, ''); // Spacing
         body = body.replace(/\\,/g, ' '); // Small space
-
-        // 3. HELPER: Replace Commands with Balanced Braces
+        
+        // 6. HELPER: Replace Commands with Balanced Braces
         // handling nested {} like \cmd{\textbf{A}}{\href{B}}
         const replaceMacro = (text, cmdName, argCount, formatter) => {
             let result = "";
@@ -302,7 +356,7 @@ Worked on cool things.
             return result;
         };
 
-        // 4. APPLY MACROS (Order matters: most specific first)
+        // 7. APPLY MACROS (Order matters: most specific first)
 
         // Resume Subheading: \resumeSubheading{Title}{Loc}{Role}{Date}
         body = replaceMacro(body, '\\resumeSubheading', 4, (title, loc, role, date) => {
@@ -330,7 +384,7 @@ Worked on cool things.
         body = replaceMacro(body, '\\href', 2, (url, text) => `<a href="${url}" target="_blank">${text}</a>`);
         body = replaceMacro(body, '\\section', 1, (text) => `<h2>${text}</h2>`);
 
-        // 5. ENVIRONMENTS & LISTS (Regex is okay here as structure markers)
+        // 8. ENVIRONMENTS & LISTS (Regex is okay here as structure markers)
         body = body.replace(/\\begin\{itemize\}(\[.*?\])?/g, '<ul>');
         body = body.replace(/\\end\{itemize\}/g, '</ul>');
         body = body.replace(/\\resumeSubHeadingListStart/g, '<ul class="resume-list">');
@@ -345,7 +399,7 @@ Worked on cool things.
         body = body.replace(/\\begin\{center\}/g, '<div style="text-align: center;">');
         body = body.replace(/\\end\{center\}/g, '</div>');
 
-        // 6. SC Shape & Sizes (Simple Regex fallback)
+        // 9. SC Shape & Sizes (Simple Regex fallback)
         body = body.replace(/\\scshape/g, ''); // CSS Small-caps class logic is hard via regex, just stripping for clean text or wrapping?
         // Let's assume the user uses \textbf{\scshape Name}, our recursion handles textbf, scshape remains inside. 
         // We can wrap the whole body in specific logic, but stripping \scshape usually looks cleaner than broken tags.
@@ -354,7 +408,7 @@ Worked on cool things.
         body = body.replace(/\\large/g, '<span style="font-size: 14px">');
         body = body.replace(/\\small/g, '<span style="font-size: 11px">');
 
-        // 7. Cleanup remaining artifacts
+        // 10. Cleanup remaining artifacts
         body = body.replace(/\\\\/g, '<br>');
         body = body.replace(/\\/g, ''); // Remove stray backslashes
         body = body.replace(/[{}]/g, ''); // Remove stray braces (after macros consumed them)
