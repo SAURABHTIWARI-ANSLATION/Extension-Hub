@@ -1,4 +1,4 @@
-# Fairy Comment Generator Chrome Extension ✨🧚‍♀️
+# Random Comment Generator Chrome Extension ✨🧚‍♀️
 
 A magical Chrome extension that generates whimsical, fairy-like comments for social media, blogs, or any online platform. Perfect for when you need something enchanting to say!
 
