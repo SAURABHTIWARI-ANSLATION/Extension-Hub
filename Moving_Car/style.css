@@ -151,28 +151,42 @@ body {
     /* Blue tint for traffic */
 }
 
-/* Fix Wheels */
-.wheel1 img {
+/* Fix Wheels - Properly aligned with car body */
+.wheel1,
+.wheel2 {
     position: absolute;
-    /* Changed to absolute relative to .car */
+    bottom: 0;
+    /* Align to bottom of car */
+}
+
+.wheel1 img {
+    position: relative;
     width: 45px;
     /* Sized for 200px car */
-    bottom: 0px;
-    /* Align to bottom of car */
-    left: 28px;
-    /* Adjusted visually */
-    top: auto;
+    height: 45px;
+    display: block;
     animation: rotate linear 0.2s infinite;
 }
 
 .wheel2 img {
-    position: absolute;
-    width: 48px;
-    bottom: 2px;
-    left: 135px;
-    /* Adjusted visually */
-    top: auto;
+    position: relative;
+    width: 45px;
+    height: 45px;
+    display: block;
     animation: rotate linear 0.2s infinite;
+}
+
+/* Position wheel containers */
+.wheel1 {
+    left: 25px;
+    /* Left wheel position */
+    bottom: 5px;
+}
+
+.wheel2 {
+    left: 130px;
+    /* Right wheel position */
+    bottom: 5px;
 }
 
 @keyframes rotate {
