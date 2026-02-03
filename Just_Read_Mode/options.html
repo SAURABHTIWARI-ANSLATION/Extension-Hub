@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Just Read - Settings</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Just Read Settings</h1>
+            <p class="subtitle">Customize your reading experience</p>
+        </header>
+
+        <main>
+            <section class="settings-section">
+                <h2>Appearance</h2>
+                
+                <div class="setting-group">
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="autoDarkMode">
+                            <span class="label-text">Auto dark mode (follow system preference)</span>
+                        </label>
+                        <p class="description">Automatically switch to dark mode based on your system settings</p>
+                    </div>
+                    
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="serifFont">
+                            <span class="label-text">Use serif font for reading</span>
+                        </label>
+                        <p class="description">Uses Georgia/Times New Roman instead of sans-serif</p>
+                    </div>
+                    
+                    <div class="setting">
+                        <label for="fontSize">Default font size:</label>
+                        <select id="fontSize">
+                            <option value="small">Small (16px)</option>
+                            <option value="medium">Medium (18px)</option>
+                            <option value="large">Large (20px)</option>
+                            <option value="xlarge">Extra Large (22px)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting">
+                        <label for="lineHeight">Line height:</label>
+                        <select id="lineHeight">
+                            <option value="1.4">Compact (1.4)</option>
+                            <option value="1.6" selected>Standard (1.6)</option>
+                            <option value="1.8">Comfortable (1.8)</option>
+                            <option value="2.0">Spacious (2.0)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting">
+                        <label for="themeColor">Theme color:</label>
+                        <input type="color" id="themeColor" value="#4285f4">
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2>Content</h2>
+                
+                <div class="setting-group">
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="removeImages">
+                            <span class="label-text">Remove images in reading mode</span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="removeAds">
+                            <span class="label-text">Remove advertisements</span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="removeSidebars">
+                            <span class="label-text">Remove sidebars</span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="keepLinks">
+                            <span class="label-text">Keep hyperlinks active</span>
+                        </label>
+                        <p class="description">Disable to make all links non-clickable</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2>Keyboard Shortcuts</h2>
+                <div class="shortcuts-info">
+                    <p>Default keyboard shortcuts:</p>
+                    <ul>
+                        <li><strong>Ctrl+Shift+R</strong> (Windows/Linux) or <strong>Cmd+Shift+R</strong> (Mac) - Toggle reading mode</li>
+                        <li><strong>ESC</strong> - Exit reading mode</li>
+                        <li><strong>Ctrl++</strong> or <strong>Ctrl+-</strong> - Adjust font size</li>
+                        <li><strong>Ctrl+D</strong> - Toggle dark mode</li>
+                    </ul>
+                    <p class="note">Note: To change keyboard shortcuts, visit <a href="#" id="keyboardSettingsLink">chrome://extensions/shortcuts</a></p>
+                </div>
+            </section>
+
+            <section class="settings-section">
+                <h2>Advanced</h2>
+                
+                <div class="setting-group">
+                    <div class="setting">
+                        <label>
+                            <input type="checkbox" id="autoEnable">
+                            <span class="label-text">Auto-enable on article pages</span>
+                        </label>
+                        <p class="description">Automatically activate reading mode on detected article pages</p>
+                    </div>
+                    
+                    <div class="setting">
+                        <label for="contentSelectors">Custom content selectors:</label>
+                        <textarea id="contentSelectors" rows="4" placeholder="article, .post-content, .story, #main-content"></textarea>
+                        <p class="description">CSS selectors (comma-separated) to identify article content</p>
+                    </div>
+                    
+                    <div class="setting">
+                        <label for="excludeDomains">Exclude domains:</label>
+                        <textarea id="excludeDomains" rows="3" placeholder="youtube.com, netflix.com, mail.google.com"></textarea>
+                        <p class="description">Domains where reading mode should not be available</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="actions">
+                <button id="saveBtn" class="btn-primary">Save Settings</button>
+                <button id="resetBtn" class="btn-secondary">Reset to Defaults</button>
+                <button id="exportBtn" class="btn-secondary">Export Settings</button>
+                <button id="importBtn" class="btn-secondary">Import Settings</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+            
+            <div class="status" id="statusMessage"></div>
+        </footer>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html>
