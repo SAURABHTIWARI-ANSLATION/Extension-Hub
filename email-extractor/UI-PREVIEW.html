@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Extractor Pro - UI Showcase</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 50%, #ec4899 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .showcase {
+      max-width: 1200px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 60px;
+    }
+
+    .header h1 {
+      font-size: 56px;
+      font-weight: 900;
+      margin-bottom: 16px;
+      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      letter-spacing: -1px;
+    }
+
+    .header p {
+      font-size: 24px;
+      opacity: 0.95;
+      font-weight: 500;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 20px;
+      border-radius: 20px;
+      margin-top: 20px;
+      backdrop-filter: blur(10px);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .demo-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+
+    @media (max-width: 1000px) {
+      .demo-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .demo-box {
+      background: white;
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .demo-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .extension-preview {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    .features-list {
+      display: grid;
+      gap: 20px;
+    }
+
+    .feature {
+      display: flex;
+      align-items: start;
+      gap: 16px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+      border-radius: 12px;
+      border: 2px solid #d1e0ff;
+      transition: all 0.3s;
+    }
+
+    .feature:hover {
+      transform: translateX(8px);
+      border-color: #667eea;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .feature-icon {
+      font-size: 32px;
+      flex-shrink: 0;
+    }
+
+    .feature-content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #667eea;
+      margin-bottom: 6px;
+    }
+
+    .feature-content p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.5;
+    }
+
+    .cta {
+      background: white;
+      border-radius: 24px;
+      padding: 50px;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .cta h2 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #1f2937;
+      margin-bottom: 20px;
+    }
+
+    .cta p {
+      font-size: 18px;
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    .install-steps {
+      text-align: left;
+      max-width: 600px;
+      margin: 0 auto 30px;
+      background: #f9fafb;
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    .install-steps ol {
+      margin-left: 20px;
+    }
+
+    .install-steps li {
+      margin-bottom: 12px;
+      font-size: 15px;
+      color: #4b5563;
+      line-height: 1.6;
+    }
+
+    .install-steps code {
+      background: #667eea;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .download-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(102, 126, 234, 0.6);
+    }
+
+    /* Inline extension preview */
+    .ext-container {
+      width: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .ext-inner {
+      background: #f8f9fa;
+      margin: 2px;
+      border-radius: 15px;
+      overflow: hidden;
+    }
+
+    .ext-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 24px 20px;
+      color: white;
+      box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .ext-logo {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      backdrop-filter: blur(10px);
+    }
+
+    .ext-header-text h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .ext-header-text p {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .ext-stats {
+      margin: 20px;
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-around;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .ext-stat {
+      text-align: center;
+    }
+
+    .ext-stat-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .ext-stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+      margin-bottom: 4px;
+    }
+
+    .ext-stat-label {
+      font-size: 12px;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .ext-action {
+      padding: 0 20px 20px;
+    }
+
+    .ext-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .ext-emails {
+      background: white;
+      margin: 0 20px 20px;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .ext-emails-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, #f9fafb, white);
+    }
+
+    .ext-emails-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .ext-clear-btn {
+      padding: 6px 12px;
+      background: transparent;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      color: #ef4444;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .ext-email-list {
+      padding: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .ext-email-item {
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+      border: 1px solid #d1e0ff;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .ext-email-text {
+      font-size: 13px;
+      color: #1f2937;
+      font-family: 'Courier New', monospace;
+      font-weight: 500;
+      word-break: break-all;
+    }
+
+    .ext-email-domain {
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .ext-copy-btn {
+      padding: 6px 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .ext-bottom {
+      padding: 16px 20px 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .ext-btn-secondary {
+      padding: 12px;
+      background: white;
+      color: #667eea;
+      border: 2px solid #667eea;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="showcase">
+    <div class="header">
+      <h1>📧 Email Extractor Pro</h1>
+      <p>Beautiful Chrome Extension with Individual Copy Buttons</p>
+      <div class="badge">✨ Version 2.0 - Stunning UI Update</div>
+    </div>
+
+    <div class="demo-container">
+      <!-- Extension Preview -->
+      <div class="demo-box">
+        <div class="demo-title">🎨 Live Extension Preview</div>
+        <div class="extension-preview">
+          <div class="ext-container">
+            <div class="ext-inner">
+              <div class="ext-header">
+                <div class="ext-logo">📧</div>
+                <div class="ext-header-text">
+                  <h1>Email Extractor</h1>
+                  <p>Find & Copy Emails Instantly</p>
+                </div>
+              </div>
+
+              <div class="ext-stats">
+                <div class="ext-stat">
+                  <div class="ext-stat-icon">📊</div>
+                  <div class="ext-stat-value">5</div>
+                  <div class="ext-stat-label">Emails Found</div>
+                </div>
+                <div class="ext-stat">
+                  <div class="ext-stat-icon">🌐</div>
+                  <div class="ext-stat-value">3</div>
+                  <div class="ext-stat-label">Unique Domains</div>
+                </div>
+              </div>
+
+              <div class="ext-action">
+                <button class="ext-btn">📥 Extract Emails from Page</button>
+              </div>
+
+              <div class="ext-emails">
+                <div class="ext-emails-header">
+                  <h3>Extracted Emails</h3>
+                  <button class="ext-clear-btn">🗑️ Clear All</button>
+                </div>
+                <div class="ext-email-list">
+                  <div class="ext-email-item">
+                    <div class="ext-email-text">john.doe@<span class="ext-email-domain">example.com</span></div>
+                    <button class="ext-copy-btn">📋 Copy</button>
+                  </div>
+                  <div class="ext-email-item">
+                    <div class="ext-email-text">sarah.smith@<span class="ext-email-domain">company.org</span></div>
+                    <button class="ext-copy-btn">📋 Copy</button>
+                  </div>
+                  <div class="ext-email-item">
+                    <div class="ext-email-text">contact@<span class="ext-email-domain">business.net</span></div>
+                    <button class="ext-copy-btn">📋 Copy</button>
+                  </div>
+                  <div class="ext-email-item">
+                    <div class="ext-email-text">info@<span class="ext-email-domain">example.com</span></div>
+                    <button class="ext-copy-btn">📋 Copy</button>
+                  </div>
+                  <div class="ext-email-item">
+                    <div class="ext-email-text">support@<span class="ext-email-domain">company.org</span></div>
+                    <button class="ext-copy-btn">📋 Copy</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ext-bottom">
+                <button class="ext-btn-secondary">📋 Copy All</button>
+                <button class="ext-btn-secondary">📤 Export CSV</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="demo-box">
+        <div class="demo-title">✨ Amazing Features</div>
+        <div class="features-list">
+          <div class="feature">
+            <div class="feature-icon">📋</div>
+            <div class="feature-content">
+              <h3>Individual Copy Buttons</h3>
+              <p>Each email has its own copy button with visual "Copied!" feedback</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🎨</div>
+            <div class="feature-content">
+              <h3>Beautiful Modern UI</h3>
+              <p>Stunning gradient design with smooth animations and professional look</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">📊</div>
+            <div class="feature-content">
+              <h3>Live Statistics</h3>
+              <p>Real-time count of emails and unique domains extracted</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">💾</div>
+            <div class="feature-content">
+              <h3>Auto-Save Storage</h3>
+              <p>All emails automatically saved and persist across browser sessions</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-content">
+              <h3>Smart Detection</h3>
+              <p>Finds emails in text, HTML, mailto links, and filters out placeholders</p>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">📥</div>
+            <div class="feature-content">
+              <h3>CSV Export</h3>
+              <p>Export all emails to CSV format with email and domain columns</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Installation CTA -->
+    <div class="cta">
+      <h2>🚀 Ready to Install?</h2>
+      <p>Get started in under 2 minutes!</p>
+      
+      <div class="install-steps">
+        <ol>
+          <li>Extract the ZIP file to a folder</li>
+          <li>Open Chrome and go to <code>chrome://extensions/</code></li>
+          <li>Enable <strong>Developer mode</strong> (top-right toggle)</li>
+          <li>Click <strong>Load unpacked</strong> and select the folder</li>
+          <li>Click the extension icon in your toolbar to start! 🎉</li>
+        </ol>
+      </div>
+
+      <button class="download-btn" onclick="alert('Download the email-extractor-extension.zip file!')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <polyline points="7 10 12 15 17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Download Extension ZIP
+      </button>
+    </div>
+  </div>
+</body>
+</html>
