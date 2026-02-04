@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+
+  <!-- EXTENSION ICONS -->
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/icon16.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="icons/icon48.png">
+  <link rel="icon" type="image/png" sizes="128x128" href="icons/icon128.png">
+
+  <style>
+    body {
+      width: 320px;
+      padding: 0;
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #0d47a1 0%, #1976d2 40%, #2196f3 100%);
+      color: white;
+    }
+
+    .container {
+      padding: 25px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 10px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0 0 5px 0;
+      font-weight: 600;
+      color: white;
+    }
+
+    .subtitle {
+      font-size: 12px;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .mode-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .mode-btn.active {
+      background: white;
+      color: #667eea;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .mode-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .control-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 15px;
+    }
+
+    .brightness-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .brightness-value {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 13px;
+    }
+
+    .brightness-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.2);
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .brightness-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .brightness-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .brightness-slider::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: white;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .status {
+      text-align: center;
+      font-size: 13px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .status-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4ade80;
+      box-shadow: 0 0 8px #4ade80;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <img src="icons/icon48.png" class="header-icon" alt="Universal Dark Mode Icon">
+      <h1>Universal Dark Theme</h1>
+      <div class="subtitle">Transform any website</div>
+    </div>
+
+    <div class="mode-buttons">
+      <button class="mode-btn" id="lightModeBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        Light
+      </button>
+
+      <button class="mode-btn" id="darkModeBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        Dark
+      </button>
+    </div>
+
+    <div class="control-card">
+      <div class="brightness-label">
+        <span>💡 Brightness</span>
+        <span class="brightness-value" id="brightnessValue">100%</span>
+      </div>
+      <input type="range" min="1" max="100" value="100" class="brightness-slider" id="brightnessSlider">
+    </div>
+
+    <div class="status" id="status">
+      <span class="status-icon"></span>
+      <span id="statusText">Ready</span>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
