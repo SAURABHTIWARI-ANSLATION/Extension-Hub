@@ -1,20 +1,21 @@
 {
-"manifest_version":2 ,
-    "name": "Word Typing",
-    "description":"Type The Word Check the points!!",
-    "version": "1.0.0" ,
-    "background" : {
-        "page" : "index.html",
-        "script": "script.js"
-      },
-    "browser_action":{
-        "default_title" : "Word Typing Game",
-        "default_popup":"index.html"
-    },
-    "icons":{"128":"logo.png"},
+  "manifest_version": 3,
+  "name": "Word Typing",
+  "description": "Type the word and check your points!",
+  "version": "1.0.0",
 
-    "permissions":["activeTab","storage"],
+  "action": {
+    "default_title": "Word Typing Game",
+    "default_popup": "index.html"
+  },
 
-    "options_page": "index.html"   
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
 
+  "permissions": [
+    "storage"
+  ]
 }

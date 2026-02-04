@@ -1,4 +1,4 @@
- <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -10,18 +10,24 @@
   <body>
     <header>
       <h3>Bookmark Manager</h3>
-      <p>Save tabs, organize bookmarks, and clean duplicates</p>
+      <p>Save tabs, organize bookmarks, clean clutter</p>
     </header>
 
+    <!-- Status -->
+    <div id="status" aria-live="polite"></div>
+
+    <!-- Search -->
     <section>
       <input
         id="search"
         type="text"
-        placeholder="Search bookmarks or history"
+        placeholder="Search bookmarks…"
         autocomplete="off"
       />
+      <ul id="results"></ul>
     </section>
 
+    <!-- Sessions -->
     <section>
       <h4>Tab Sessions</h4>
       <button id="saveSession">Save current tabs</button>
@@ -30,16 +36,13 @@
       </button>
     </section>
 
+    <!-- Add Bookmark -->
     <section>
       <h4>Add Bookmark</h4>
-      <input
-        id="category"
-        type="text"
-        placeholder="Category (Work, Study, Learning...)"
-      />
-      <button id="addBookmark">Bookmark current page</button>
+      <button id="openBookmarkOverlay">Bookmark current page</button>
     </section>
 
+    <!-- Cleanup -->
     <section>
       <h4>Cleanup Tools</h4>
       <button id="removeDuplicates" class="secondary">
@@ -49,6 +52,25 @@
         Delete empty folders
       </button>
     </section>
+
+    <!-- Bookmark Overlay -->
+    <div id="bookmarkOverlay" class="overlay hidden">
+      <div class="overlay-content">
+        <h4>Add Bookmark</h4>
+
+        <input
+          id="category"
+          type="text"
+          placeholder="Category (Work, Study, Learning)"
+          autocomplete="off"
+        />
+
+        <div class="overlay-actions">
+          <button id="confirmAddBookmark">Save</button>
+          <button id="cancelOverlay" class="secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
 
     <script src="popup.js"></script>
     <script src="sessions.js"></script>
