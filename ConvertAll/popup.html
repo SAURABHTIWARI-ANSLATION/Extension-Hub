@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Unit Converter</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1 class="app-title">ConvertAll</h1>
+  </header>
+
+  <main class="glass-panel">
+    <section class="form-group">
+      <label for="category">Measurement Category</label>
+      <select id="category" aria-label="Select Category"></select>
+    </section>
+
+    <div class="conversion-section">
+      <div class="unit-row">
+        <div class="form-group">
+          <label for="inputValue">Amount</label>
+          <input type="number" id="inputValue" placeholder="0.00" step="any" inputmode="decimal" />
+        </div>
+        <div class="form-group">
+          <label for="fromUnit">From Unit</label>
+          <select id="fromUnit"></select>
+        </div>
+      </div>
+
+      <div class="middle-divider">
+        <button id="swapBtn" class="swap-btn" type="button" title="Swap Units">⇄</button>
+      </div>
+
+      <div class="unit-row">
+        <div class="form-group">
+          <label for="outputValue">Result</label>
+          <input type="text" id="outputValue" readonly placeholder="Result" />
+        </div>
+        <div class="form-group">
+          <label for="toUnit">To Unit</label>
+          <select id="toUnit"></select>
+        </div>
+      </div>
+    </div>
+
+    <button id="copyBtn" class="btn-primary" type="button">
+      📋 Copy to Clipboard
+    </button>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

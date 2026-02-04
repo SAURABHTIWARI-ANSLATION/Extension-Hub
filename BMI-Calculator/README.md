@@ -1,52 +1,86 @@
-# ⚖️ BMI Calculator
+⚖️ BMI Calculator
+👨‍💻 Made by Saurabh Tiwari
+🧩 Description
 
-## 👨‍💻 Made by Saurabh Tiwari
+BMI Calculator is a clean, modern, and easy-to-use tool to track your Body Mass Index (BMI).
+Enter your height, weight, age, and gender, and instantly get your BMI score along with a clear health category (Underweight, Normal, Overweight, Obesity, etc.).
+It’s a simple and useful utility for health-conscious users.
 
-### 🧩 Description
-**BMI Calculator** is a clean, modern, and easy-to-use tool to track your Body Mass Index (BMI). Enter your weight and height, and instantly get your BMI score and category (Userweight, Normal, Overweight, etc.). It's a great little utility for health-conscious users.
+🚀 Features
 
-### 🚀 Features
-- **Instant Calculation**: Enter standard or metric units (depending on settings).
-- **Health Category**: Tells you if you are in a healthy range.
-- **Modern UI**: Clean design with clear typography.
-- **Privacy First**: No data is ever stored remotely.
+Instant Calculation: Calculate BMI in real time.
 
-### 🛠️ Tech Stack
-- **HTML5**: Input form.
-- **CSS3**: Styles.
-- **JavaScript (Vanilla)**: BMI Formula logic.
-- **Chrome Extension (Manifest V3)**: Extension platform.
+Age Input Support: Accepts valid age range for better health context.
 
-### 📂 Folder Structure
-```
+Gender Selection: Male / Female / Other (for informative guidance).
+
+Health Category: Clearly shows BMI category.
+
+Smart Validation: Prevents invalid or unrealistic inputs.
+
+Modern UI: Clean design with clear typography and smooth UX.
+
+Privacy First: No data is stored or sent anywhere.
+
+🛠️ Tech Stack
+
+HTML5: Input form and structure.
+
+CSS3: Styling and animations.
+
+JavaScript (Vanilla): BMI calculation and validation logic.
+
+Chrome Extension (Manifest V3): Extension platform.
+
+📂 Folder Structure
 BMI-Calculator/
-├── manifest.json      # Config
-├── popup.html         # UI
-├── script.js          # Logic
-└── style.css          # Styling
-```
+├── manifest.json # Extension config
+├── popup.html # UI
+├── script.js # Logic
+└── style.css # Styling
 
-### ⚙️ Installation (Developer Mode)
-1.  Clone the repository.
-2.  Open `chrome://extensions/`.
-3.  Enable **Developer mode**.
-4.  Select **Load unpacked**.
-5.  Choose the `BMI-Calculator` folder.
+⚙️ Installation (Developer Mode)
 
-### 🧠 How It Works
-1.  **Input**: User enters Height (cm/in) and Weight (kg/lbs).
-2.  **Formula**: Calculates `Weight / (Height * Height)` (adjusted for units).
-3.  **Display**: Updates the DOM with the result and color-coded category.
+Clone the repository.
 
-### 🔐 Permissions Explained
-- **None**: Does not require any special permissions to run.
+Open chrome://extensions/.
 
-### 📸 Screenshots
-*(Placeholder for screenshots)*
-![BMI Calculator](https://via.placeholder.com/600x400?text=BMI+Calculator)
+Enable Developer mode.
 
-### 🔒 Privacy Policy
-- **Zero Data Collection**: Your health data is calculated temporarily and never stored.
+Click Load unpacked.
 
-### 📄 License
-This project is licensed under the **MIT License**.
+Select the BMI-Calculator folder.
+
+🧠 How It Works
+
+Input: User enters Height, Weight, Age, and Gender.
+
+Formula:
+
+BMI = Weight / (Height × Height)
+
+(Height converted to meters)
+
+Display: Shows BMI value, category, and helpful health note.
+
+🔐 Permissions Explained
+
+None: The extension does not require any permissions.
+
+📸 Screenshots
+
+(Placeholder for screenshots)
+
+🔒 Privacy Policy
+
+Zero Data Collection
+
+No tracking
+
+No storage
+
+Works completely offline
+
+📄 License
+
+This project is licensed under the MIT License.
