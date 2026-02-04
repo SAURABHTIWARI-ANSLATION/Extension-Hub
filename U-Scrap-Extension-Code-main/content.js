@@ -1,434 +1,376 @@
-// content.js — Enhanced FULL PAGE deep scraper with autoscroll + idle wait + speed control
+// content.js — Deep & Powerful Web Scraper
 (() => {
-  let isScrapingActive = false;
-  let scrapedItems = [];
-  let currentScrapeType = "full-page";
-  let currentScrapeSpeed = "medium";
-
-  // Speed settings (delay in ms)
-  const speedSettings = {
-    slow: 1000,
-    medium: 500,
-    fast: 200
+  // --- Configuration & State ---
+  const CONFIG = {
+    SCROLL_DELAY: 500,
+    MAX_SCROLLS: 20, // Limit auto-scroll to avoid infinite loops
+    MIN_TEXT_LENGTH: 3,
+    TIMEOUT: 15000 // 15s timeout for operations
   };
 
-  // Messaging helpers
-  function sendMessage(payload) {
-    try { chrome.runtime.sendMessage(payload); } catch (e) {}
-  }
-  function sendProgress(current, total) {
-    sendMessage({ action: "scrapingProgress", progress: { current, total } });
-  }
+  let state = {
+    isScraping: false,
+    scrolledCount: 0
+  };
 
-  // ===== Utilities =====
-  const text = (el) => (el ? (el.textContent || "").trim() : "");
-  const getAttr = (el, a) => (el ? el.getAttribute(a) || "" : "");
+  // --- Core Utilities ---
 
-  // Visibility check
-  function isVisible(el) {
-    if (!el || el.nodeType !== 1) return false;
-    const style = window.getComputedStyle(el);
-    if (style.display === "none" || style.visibility === "hidden" || style.opacity === "0") return false;
+  /**
+   * Safe text extraction with whitespace normalization
+   */
+  const getText = (el) => {
+    if (!el) return "";
+    // Handle inputs/textareas
+    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return el.value || "";
+    // Handle images with alt
+    if (el.tagName === 'IMG') return el.alt || "";
+    
+    return (el.innerText || el.textContent || "")
+      .replace(/[\n\r\t]+/g, " ") // Replace newlines/tabs with space
+      .replace(/\s{2,}/g, " ")   // Collapse multiple spaces
+      .trim();
+  };
+
+  /**
+   * Check if an element is genuinely visible to the user
+   */
+  const isVisible = (el) => {
+    if (!el) return false;
+    // Fast checks
+    if (el.style && (el.style.display === 'none' || el.style.visibility === 'hidden')) return false;
+    if (el.hasAttribute('hidden')) return false;
+    
+    // Expensive check
     const rect = el.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return false;
-    if (rect.bottom < 0 || rect.top > (window.innerHeight || 0) + 200) {
-      // allow offscreen a bit for virtualized lists
+    return rect.width > 0 && rect.height > 0 && rect.top < window.innerHeight * 2; // Allow some off-screen buffer
+  };
+
+  /**
+   * Get absolute URL from relative path
+   */
+  const getAbsoluteUrl = (url) => {
+    if (!url) return "";
+    try {
+      return new URL(url, window.location.href).href;
+    } catch (e) {
+      return url;
     }
-    return true;
-  }
+  };
 
-  // Text walker (captures visible text nodes, includes shadow DOM)
-  function collectVisibleText(root = document) {
-    const chunks = [];
+  // --- Deep Extraction Modules ---
 
-    function walk(node) {
-      // Traverse shadow DOM if present
-      if (node && node.shadowRoot) {
-        walk(node.shadowRoot);
-      }
+  const Extractors = {
+    
+    /**
+     * Extract Page Metadata (SEO, OpenGraph, Twitter, JSON-LD)
+     */
+    metadata: (doc) => {
+      const meta = {
+        title: doc.title,
+        url: window.location.href,
+        domain: window.location.hostname,
+        description: "",
+        keywords: [],
+        author: "",
+        openGraph: {},
+        twitter: {},
+        jsonLd: []
+      };
 
-      // For roles/regions that often contain dynamic content
-      if (
-        node instanceof Element &&
-        ["main","article","section","div"].includes(node.tagName.toLowerCase())
-      ) {
-        const role = (node.getAttribute("role") || "").toLowerCase();
-        const isFeed = role === "feed" || role === "log" || role === "main" || role === "region";
-        if (isFeed && isVisible(node)) {
-          const tw = document.createTreeWalker(node, NodeFilter.SHOW_TEXT, {
-            acceptNode: (t) => {
-              const parent = t.parentElement;
-              if (!parent) return NodeFilter.FILTER_REJECT;
-              if (!isVisible(parent)) return NodeFilter.FILTER_REJECT;
-              const val = (t.nodeValue || "").replace(/\s+/g, " ").trim();
-              if (val.length < 2) return NodeFilter.FILTER_REJECT;
-              return NodeFilter.FILTER_ACCEPT;
-            }
-          });
-          let n;
-          while ((n = tw.nextNode())) {
-            chunks.push((n.nodeValue || "").replace(/\s+/g, " ").trim());
-          }
+      // Standard Meta Tags
+      const descEl = doc.querySelector('meta[name="description"]');
+      if (descEl) meta.description = descEl.content;
+
+      const keywordsEl = doc.querySelector('meta[name="keywords"]');
+      if (keywordsEl) meta.keywords = keywordsEl.content.split(',').map(k => k.trim());
+
+      const authorEl = doc.querySelector('meta[name="author"]');
+      if (authorEl) meta.author = authorEl.content;
+
+      // OpenGraph & Twitter
+      doc.querySelectorAll('meta[property^="og:"], meta[name^="twitter:"]').forEach(tag => {
+        const key = tag.getAttribute('property') || tag.getAttribute('name');
+        const value = tag.getAttribute('content');
+        if (key && value) {
+          if (key.startsWith('og:')) meta.openGraph[key.replace('og:', '')] = value;
+          if (key.startsWith('twitter:')) meta.twitter[key.replace('twitter:', '')] = value;
         }
-      }
-    }
-
-    walk(document.documentElement);
-
-    // fallback: whole doc tree (still visibility aware)
-    const twAll = document.createTreeWalker(document.body || document.documentElement, NodeFilter.SHOW_TEXT, {
-      acceptNode: (t) => {
-        const p = t.parentElement;
-        if (!p) return NodeFilter.FILTER_REJECT;
-        if (!isVisible(p)) return NodeFilter.FILTER_REJECT;
-        const s = (t.nodeValue || "").replace(/\s+/g, " ").trim();
-        if (s.length < 2) return NodeFilter.FILTER_REJECT;
-        return NodeFilter.FILTER_ACCEPT;
-      }
-    });
-    let n;
-    while ((n = twAll.nextNode())) {
-      const s = (n.nodeValue || "").replace(/\s+/g, " ").trim();
-      chunks.push(s);
-      if (chunks.length > 20000) break; // hard cap to avoid runaway on huge pages
-    }
-
-    // de-dup neighboring repeats
-    const result = [];
-    for (let i = 0; i < chunks.length; i++) {
-      if (i === 0 || chunks[i] !== chunks[i - 1]) result.push(chunks[i]);
-    }
-    return result.join("\n");
-  }
-
-  // Parse LD+JSON safely
-  function parseLdJson(doc) {
-    return Array.from(doc.querySelectorAll('script[type="application/ld+json"]'))
-      .map((s) => {
-        try { return JSON.parse(s.textContent || "{}"); } catch { return null; }
-      })
-      .filter(Boolean);
-  }
-
-  // Extract full page structured object
-  function extractFullPage(doc, url) {
-    const meta = {};
-    doc.querySelectorAll("meta[name], meta[property]").forEach((m) => {
-      const k = (m.getAttribute("name") || m.getAttribute("property") || "").toLowerCase();
-      if (k) meta[k] = getAttr(m, "content");
-    });
-
-    const headings = Array.from(doc.querySelectorAll("h1,h2,h3,h4,h5,h6")).map((h) => ({
-      tag: h.tagName.toLowerCase(),
-      text: text(h).slice(0, 500)
-    }));
-
-    const paragraphs = Array.from(doc.querySelectorAll("p"))
-      .map((p) => text(p))
-      .filter((t) => t && t.split(" ").length >= 5)
-      .slice(0, 500);
-
-    const lists = Array.from(doc.querySelectorAll("ul,ol")).slice(0, 100).map((list) => {
-      const items = Array.from(list.querySelectorAll(":scope > li")).map((li) => text(li)).filter(Boolean);
-      return items.slice(0, 300);
-    });
-
-    const tables = Array.from(doc.querySelectorAll("table")).slice(0, 50).map((table) => {
-      const rows = Array.from(table.querySelectorAll("tr")).map((tr) =>
-        Array.from(tr.querySelectorAll("th,td")).map((td) => text(td))
-      );
-      return rows.slice(0, 400);
-    });
-
-    const images = Array.from(doc.images)
-      .slice(0, 500)
-      .map((img) => ({ src: img.src, alt: img.alt || "" }));
-
-    const allLinks = Array.from(doc.querySelectorAll("a[href]"))
-      .map((a) => a.href)
-      .filter((h) => h && h.startsWith("http"))
-      .slice(0, 4000);
-
-    const origin = new URL(url).origin;
-    const internal = allLinks.filter((h) => h.startsWith(origin));
-    const external = allLinks.filter((h) => !h.startsWith(origin));
-
-    const ldjson = parseLdJson(doc);
-
-    const title = (doc.querySelector("h1") && text(doc.querySelector("h1"))) || doc.title || "";
-    const description = meta["description"] || meta["og:description"] || "";
-
-    // big visible text blob (chat-like UIs benefit)
-    const fullText = collectVisibleText(doc);
-
-    // quick "cards" from repeated items (optional)
-    const quickItems = extractCardsLite(doc).slice(0, 200);
-
-    // Extract forms
-    const forms = Array.from(doc.querySelectorAll("form")).map((form) => {
-      const inputs = Array.from(form.querySelectorAll("input, textarea, select")).map((input) => ({
-        name: input.name || "",
-        type: input.type || "",
-        placeholder: input.placeholder || "",
-        required: input.required || false
-      }));
-      return {
-        action: form.action || "",
-        method: form.method || "GET",
-        inputs
-      };
-    });
-
-    // Extract iframes
-    const iframes = Array.from(doc.querySelectorAll("iframe")).map((iframe) => ({
-      src: iframe.src || "",
-      title: iframe.title || "",
-      width: iframe.width || "",
-      height: iframe.height || ""
-    }));
-
-    // Extract videos
-    const videos = Array.from(doc.querySelectorAll("video")).map((video) => {
-      const sources = Array.from(video.querySelectorAll("source")).map((source) => ({
-        src: source.src || "",
-        type: source.type || ""
-      }));
-      return {
-        src: video.src || "",
-        poster: video.poster || "",
-        sources,
-        controls: video.controls || false,
-        autoplay: video.autoplay || false
-      };
-    });
-
-    // Extract audio
-    const audios = Array.from(doc.querySelectorAll("audio")).map((audio) => {
-      const sources = Array.from(audio.querySelectorAll("source")).map((source) => ({
-        src: source.src || "",
-        type: source.type || ""
-      }));
-      return {
-        src: audio.src || "",
-        sources,
-        controls: audio.controls || false,
-        autoplay: audio.autoplay || false
-      };
-    });
-
-    return {
-      url,
-      title,
-      description,
-      meta,
-      headings,
-      paragraphs,
-      lists,
-      tables,
-      images,
-      links: { internal, external },
-      ldjson,
-      fullText,          // <— THE BIG ONE for "same-to-same description"
-      quickItems,
-      forms,
-      iframes,
-      videos,
-      audios,
-      scrapedAt: new Date().toISOString()
-    };
-  }
-
-  // Lightweight repeated cards finder
-  function extractCardsLite(doc) {
-    const candidates = Array.from(doc.querySelectorAll(
-      [
-        "article",
-        "li",
-        "div[class*='card']",
-        "div[class*='item']",
-        "div[class*='product']",
-        "div[class*='listing']",
-        "div[class*='result']",
-        "div[data-testid*='card']"
-      ].join(",")
-    ));
-    const uniq = new Set();
-    const items = [];
-
-    const pickTitle = (el) =>
-      text(el.querySelector("h1")) || text(el.querySelector("h2")) || text(el.querySelector("h3")) ||
-      getAttr(el.querySelector("a[title]"), "title") || "";
-
-    const pickDesc = (el) => {
-      const d = text(el.querySelector("p")) || text(el.querySelector("[data-description]")) || "";
-      return d;
-    };
-
-    const pickLink = (el) => {
-      const a = el.querySelector("a[href]") || el.closest("a[href]") || document.querySelector("link[rel='canonical']");
-      return a ? a.href : location.href;
-    };
-
-    const pickImage = (el) => {
-      const img = el.querySelector("img") || el.querySelector("[data-src]");
-      return img ? img.src || getAttr(img, "data-src") : "";
-    };
-
-    for (const el of candidates) {
-      if (!isVisible(el)) continue;
-      const title = pickTitle(el);
-      const url = pickLink(el);
-      const image = pickImage(el);
-      const description = pickDesc(el);
-      const key = `${title}|${url}|${image}`.slice(0, 520);
-      if (!title && !image && !description) continue;
-      if (uniq.has(key)) continue;
-      uniq.add(key);
-      items.push({ title, description, url, image, containerTag: el.tagName.toLowerCase() });
-      if (items.length >= 2000) break;
-    }
-    return items;
-  }
-
-  // Extract list items (existing functionality)
-  function extractListItems(doc) {
-    // This would implement the existing list scraping logic
-    // For now, we'll just return the full page data as a simplified approach
-    return [extractFullPage(doc, location.href)];
-  }
-
-  // Extract detail pages (existing functionality)
-  function extractDetailPages(doc) {
-    // This would implement the existing detail page scraping logic
-    // For now, we'll just return the full page data as a simplified approach
-    return [extractFullPage(doc, location.href)];
-  }
-
-  // Auto-scroll to bottom (to load infinite content)
-  async function autoScroll(maxSteps = 40, stepPx = 1200, pauseMs = 400) {
-    // Adjust pause based on speed setting
-    const adjustedPause = speedSettings[currentScrapeSpeed] || pauseMs;
-    
-    let lastY = -1;
-    for (let i = 0; i < maxSteps; i++) {
-      if (!isScrapingActive) return;
-      window.scrollBy(0, stepPx);
-      await new Promise(r => setTimeout(r, adjustedPause));
-      const y = window.scrollY;
-      if (y === lastY) break; // reached bottom
-      lastY = y;
-    }
-    // scroll back to top for extraction if needed
-    window.scrollTo({ top: 0 });
-  }
-
-  // Wait for "DOM idle" (no mutations for a short window)
-  async function waitForDomIdle(timeoutMs = 8000, quietMs = 800) {
-    // Adjust quiet time based on speed setting
-    const adjustedQuiet = Math.max(200, speedSettings[currentScrapeSpeed] || quietMs);
-    const adjustedTimeout = Math.min(15000, timeoutMs + (speedSettings.slow - speedSettings[currentScrapeSpeed]));
-    
-    return new Promise((resolve) => {
-      let timer = null;
-      let done = false;
-      const start = Date.now();
-
-      const settle = () => {
-        if (done) return;
-        done = true;
-        obs.disconnect();
-        resolve();
-      };
-
-      const obs = new MutationObserver(() => {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => {
-          if (Date.now() - start >= 50 && !done) settle();
-        }, adjustedQuiet);
       });
 
-      obs.observe(document.documentElement, { childList: true, subtree: true, attributes: true, characterData: true });
+      // JSON-LD Structured Data
+      doc.querySelectorAll('script[type="application/ld+json"]').forEach(script => {
+        try {
+          const json = JSON.parse(script.textContent);
+          meta.jsonLd.push(json);
+        } catch (e) {
+          // Ignore parse errors
+        }
+      });
 
-      // safety timeout
-      setTimeout(() => settle(), adjustedTimeout);
-      // kick initial quiet window
-      timer = setTimeout(() => settle(), adjustedQuiet);
+      return meta;
+    },
+
+    /**
+     * Extract Main Content Text (Smart heuristic)
+     */
+    content: (doc) => {
+      // Try to find the main article/content container
+      const candidates = ['article', 'main', '[role="main"]', '#content', '.content', '.post', '.article'];
+      let mainEl = null;
+
+      for (const selector of candidates) {
+        const el = doc.querySelector(selector);
+        if (el && isVisible(el) && el.innerText.length > 200) {
+          mainEl = el;
+          break;
+        }
+      }
+
+      // Fallback to body if no main container found
+      const target = mainEl || doc.body;
+      
+      // Extract paragraphs
+      const paragraphs = Array.from(target.querySelectorAll('p'))
+        .filter(p => isVisible(p))
+        .map(p => getText(p))
+        .filter(t => t.length > CONFIG.MIN_TEXT_LENGTH);
+
+      // Extract headers
+      const headings = Array.from(target.querySelectorAll('h1, h2, h3, h4, h5, h6'))
+        .filter(h => isVisible(h))
+        .map(h => ({
+          tag: h.tagName.toLowerCase(),
+          text: getText(h)
+        }));
+
+      return {
+        hasMainContainer: !!mainEl,
+        headings,
+        paragraphs,
+        fullText: getText(target).substring(0, 50000) // Limit to 50k chars
+      };
+    },
+
+    /**
+     * Extract Links (Internal, External, Social, Emails)
+     */
+    links: (doc) => {
+      const allLinks = Array.from(doc.querySelectorAll('a[href]'));
+      const origin = window.location.origin;
+      
+      const internal = new Set();
+      const external = new Set();
+      const social = new Set();
+      const emails = new Set();
+      const phones = new Set();
+
+      // Common social domains
+      const socialDomains = ['facebook.com', 'twitter.com', 'linkedin.com', 'instagram.com', 'youtube.com', 'pinterest.com', 'tiktok.com'];
+
+      allLinks.forEach(a => {
+        const href = a.href.trim();
+        if (!href || href.startsWith('javascript:')) return;
+
+        if (href.startsWith('mailto:')) {
+          emails.add(href.replace('mailto:', ''));
+        } else if (href.startsWith('tel:')) {
+          phones.add(href.replace('tel:', ''));
+        } else {
+          try {
+            const urlObj = new URL(href);
+            if (socialDomains.some(d => urlObj.hostname.includes(d))) {
+              social.add(href);
+            } else if (urlObj.origin === origin) {
+              internal.add(href);
+            } else {
+              external.add(href);
+            }
+          } catch (e) {
+            // Invalid URL
+          }
+        }
+      });
+
+      // Regex for emails in text (fallback)
+      const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+      const text = doc.body.innerText;
+      const foundEmails = text.match(emailRegex) || [];
+      foundEmails.forEach(e => emails.add(e));
+
+      return {
+        internal: Array.from(internal).slice(0, 500),
+        external: Array.from(external).slice(0, 500),
+        social: Array.from(social),
+        emails: Array.from(emails),
+        phones: Array.from(phones)
+      };
+    },
+
+    /**
+     * Extract Media (Images, Videos, Audios)
+     */
+    media: (doc) => {
+      const images = Array.from(doc.querySelectorAll('img'))
+        .filter(img => isVisible(img) && img.naturalWidth > 50 && img.naturalHeight > 50)
+        .map(img => ({
+          src: getAbsoluteUrl(img.currentSrc || img.src || img.dataset.src), // Handle lazy load
+          alt: img.alt || "",
+          width: img.naturalWidth,
+          height: img.naturalHeight
+        })).slice(0, 100);
+
+      const videos = Array.from(doc.querySelectorAll('video, iframe[src*="youtube"], iframe[src*="vimeo"]'))
+        .map(v => ({
+          src: getAbsoluteUrl(v.src || v.currentSrc),
+          poster: getAbsoluteUrl(v.poster),
+          type: v.tagName.toLowerCase()
+        }));
+      
+      const audios = Array.from(doc.querySelectorAll('audio'))
+        .map(a => ({
+          src: getAbsoluteUrl(a.src || a.currentSrc)
+        }));
+
+      return { images, videos, audios };
+    },
+
+    /**
+     * Extract Tables
+     */
+    tables: (doc) => {
+      return Array.from(doc.querySelectorAll('table')).map(table => {
+        const rows = Array.from(table.querySelectorAll('tr'));
+        return rows.map(row => {
+          return Array.from(row.querySelectorAll('td, th')).map(cell => getText(cell));
+        }).filter(row => row.some(cell => cell)); // Remove empty rows
+      }).filter(table => table.length > 0);
+    },
+
+    /**
+     * Extract Forms (Inputs)
+     */
+    forms: (doc) => {
+      return Array.from(doc.querySelectorAll('form')).map(form => ({
+        action: form.action,
+        method: form.method,
+        inputs: Array.from(form.querySelectorAll('input, select, textarea')).map(input => ({
+          name: input.name || input.id,
+          type: input.type,
+          placeholder: input.placeholder,
+          required: input.required
+        }))
+      }));
+    }
+  };
+
+  // --- Main Logic ---
+
+  /**
+   * Run the full extraction process
+   */
+  async function performDeepScrape(settings = {}) {
+    console.log("Starting Deep Scrape...");
+    
+    // Helper to send progress
+    const reportProgress = (step, percent) => {
+      chrome.runtime.sendMessage({
+        action: "scrapingProgress",
+        progress: { current: percent, total: 100, step }
+      }).catch(() => {}); // Ignore errors if popup closed
+    };
+
+    reportProgress("Initializing", 10);
+
+    // Auto-scroll if requested
+    if (settings.autoscroll) {
+      reportProgress("Auto-scrolling", 20);
+      await autoScroll();
+    }
+
+    reportProgress("Analyzing DOM", 40);
+    const doc = document;
+    
+    // Run all extractors
+    const data = {
+      ...Extractors.metadata(doc),
+      ...Extractors.content(doc),
+      links: Extractors.links(doc),
+      ...Extractors.media(doc),
+      tables: Extractors.tables(doc),
+      forms: Extractors.forms(doc),
+      scrapedAt: new Date().toISOString()
+    };
+
+    reportProgress("Finalizing", 90);
+    console.log("Deep Scrape Complete:", data);
+    
+    reportProgress("Complete", 100);
+    return data;
+  }
+
+  /**
+   * Auto-scroll helper
+   */
+  async function autoScroll() {
+    return new Promise((resolve) => {
+      let totalHeight = 0;
+      let distance = 100;
+      let scrolls = 0;
+      
+      const timer = setInterval(() => {
+        const scrollHeight = document.body.scrollHeight;
+        window.scrollBy(0, distance);
+        totalHeight += distance;
+        scrolls++;
+
+        // Stop if reached bottom or max scrolls
+        if (totalHeight >= scrollHeight || scrolls >= CONFIG.MAX_SCROLLS) {
+          clearInterval(timer);
+          window.scrollTo(0, 0); // Return to top
+          resolve();
+        }
+      }, 100);
     });
   }
 
-  // Master scraping flow
-  async function performScraping() {
-    try {
-      isScrapingActive = true;
-      scrapedItems = [];
-      
-      // Different progress steps based on scrape type
-      let totalSteps = 3;
-      if (currentScrapeType === "detail") {
-        totalSteps = 5; // More steps for detail scraping
+  // --- Message Listener ---
+
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // Ping for connection check
+    if (request.action === "ping") {
+      sendResponse({ status: "alive" });
+      return;
+    }
+
+    if (request.action === "startScraping") {
+      if (state.isScraping) {
+        sendResponse({ error: "Scraping already in progress" });
+        return;
       }
-      
-      sendProgress(0, totalSteps);
 
-      // 1) Scroll to load dynamic/infinite content
-      await autoScroll(50, 1400, 350);
-      if (!isScrapingActive) return;
-      sendProgress(1, totalSteps);
+      state.isScraping = true;
 
-      // 2) Wait DOM idle (for SPA/chat to settle)
-      await waitForDomIdle(10000, 900);
-      if (!isScrapingActive) return;
-      sendProgress(2, totalSteps);
+      // Use setTimeout to allow the response to return 'true' first (async pattern)
+      performDeepScrape(request.settings || {})
+        .then(data => {
+          state.isScraping = false;
+          sendResponse({ success: true, data: [data] }); // Wrap in array to match expected format
+        })
+        .catch(err => {
+          state.isScraping = false;
+          console.error("Scraping Failed:", err);
+          sendResponse({ success: false, error: err.message });
+        });
 
-      // 3) Extract data based on scrape type
-      let data;
-      switch (currentScrapeType) {
-        case "list":
-          data = extractListItems(document);
-          break;
-        case "detail":
-          data = extractDetailPages(document);
-          break;
-        case "full-page":
-        default:
-          data = [extractFullPage(document, location.href)];
-          break;
-      }
-      
-      scrapedItems = data;
-      sendMessage({ action: "dataScraped", data: data });
-      chrome.storage?.local?.set({ scrapedData: scrapedItems });
-      sendProgress(totalSteps, totalSteps);
-
-      sendMessage({ action: "scrapingComplete" });
-    } catch (e) {
-      sendMessage({ action: "scrapingError", error: e?.message || String(e) });
-      sendMessage({ action: "scrapingComplete" });
-    } finally {
-      isScrapingActive = false;
+      return true; // Indicates we will respond asynchronously
     }
-  }
-
-  // Public commands
-  chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
-    if (msg?.action === "startScraping") {
-      // Set scrape type and speed from message
-      currentScrapeType = msg.scrapeType || "full-page";
-      currentScrapeSpeed = msg.scrapeSpeed || "medium";
-      
-      // Start scraping
-      performScraping();
-      sendResponse({ ok: true });
-      return true;
-    }
-    if (msg?.action === "stopScraping") {
-      isScrapingActive = false;
-      sendResponse({ ok: true });
-      return true;
-    }
-    if (msg?.action === "getPreviewData") {
-      sendResponse({ data: scrapedItems || [] });
-      return true;
+    
+    if (request.action === "stopScraping") {
+      state.isScraping = false;
+      sendResponse({ success: true });
     }
   });
+
+  console.log("U-Scraper: Deep Content Script Loaded");
+
 })();
