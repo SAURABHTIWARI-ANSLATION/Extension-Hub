@@ -1,18 +1,16 @@
-const params = new URLSearchParams(window.location.search);
-const raw = params.get("quiz");
+const raw = new URLSearchParams(location.search).get("quiz");
 
 if (!raw) {
-  document.getElementById("q").textContent = "⚠️ Invalid quiz link.";
-  throw new Error("No quiz data");
+  document.getElementById("q").textContent = "Invalid quiz link";
+  throw new Error("No data");
 }
 
 let quiz;
 try {
   quiz = JSON.parse(atob(decodeURIComponent(raw)));
-} catch (e) {
-  document.getElementById("q").textContent = "⚠️ Corrupted quiz data.";
-  console.error(e);
-  throw e;
+} catch {
+  document.getElementById("q").textContent = "Corrupted quiz data";
+  throw new Error("Bad data");
 }
 
 let index = 0;
@@ -22,57 +20,54 @@ let answered = false;
 const qEl = document.getElementById("q");
 const optsEl = document.getElementById("opts");
 const feedback = document.getElementById("feedback");
-const nextBtn = document.getElementById("next");
-const progressEl = document.getElementById("progress");
+const next = document.getElementById("next");
+const progress = document.getElementById("progress");
 const scoreEl = document.getElementById("score");
 
 function render() {
   const q = quiz[index];
   answered = false;
-
   qEl.textContent = q.q;
   optsEl.innerHTML = "";
   feedback.textContent = "";
-  nextBtn.disabled = true;
+  next.disabled = true;
 
-  if (progressEl) progressEl.textContent = `${index + 1} / ${quiz.length}`;
-  if (scoreEl) scoreEl.textContent = `Score: ${score}`;
+  progress.textContent = `${index + 1}/${quiz.length}`;
+  scoreEl.textContent = `Score: ${score}`;
 
   q.o.forEach((opt, i) => {
     const btn = document.createElement("button");
     btn.textContent = opt;
+    btn.style.cssText = "display:block;width:100%;margin-bottom:8px;padding:10px;";
 
     btn.onclick = () => {
       if (answered) return;
       answered = true;
-      nextBtn.disabled = false;
+      next.disabled = false;
 
       if (i === q.a) {
         score++;
-        btn.classList.add("correct");
-        feedback.textContent = "✅ Correct!";
+        btn.style.background = "#c6f6d5";
+        feedback.textContent = "✅ Correct";
       } else {
-        btn.classList.add("wrong");
-        feedback.textContent = "❌ Wrong!";
-        optsEl.children[q.a]?.classList.add("correct");
+        btn.style.background = "#fed7d7";
+        feedback.textContent = "❌ Wrong";
       }
-
-      if (scoreEl) scoreEl.textContent = `Score: ${score}`;
+      scoreEl.textContent = `Score: ${score}`;
     };
 
     optsEl.appendChild(btn);
   });
 }
 
-nextBtn.onclick = () => {
+next.onclick = () => {
   index++;
-  if (index < quiz.length) {
-    render();
-  } else {
+  if (index < quiz.length) render();
+  else {
     qEl.textContent = "🎉 Quiz Completed!";
     optsEl.innerHTML = "";
-    feedback.textContent = `Final Score: ${score} / ${quiz.length}`;
-    nextBtn.style.display = "none";
+    feedback.textContent = `Final Score: ${score}/${quiz.length}`;
+    next.style.display = "none";
   }
 };
 

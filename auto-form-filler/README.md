@@ -37,7 +37,7 @@ auto-form-filler/
 
 ### 🔐 Permissions Explained
 - **`activeTab`**: To interact with the form.
-- **`storage`**: To save your fill data preferences.
+- **`storage`**: To save your fill data preferences
 
 ### 📸 Screenshots
 *(Placeholder for screenshots)*
