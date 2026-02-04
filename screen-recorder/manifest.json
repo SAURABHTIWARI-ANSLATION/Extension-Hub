@@ -1,10 +1,28 @@
 {
   "manifest_version": 3,
   "name": "Simple Screen Recorder",
+  "short_name": "Screen Recorder",
   "version": "1.0",
-  "description": "Record your screen, tab, or window easily.",
-  "permissions": ["activeTab"],
+  "description": "Quickly record your screen, browser tab, or application window with one click.",
+
+  "permissions": [
+    "activeTab"
+  ],
+
   "action": {
-    "default_popup": "popup.html"
-  }
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "minimum_chrome_version": "114"
 }

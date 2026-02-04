@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SEO Tracker</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1>SEO Tracker</h1>
+    <span class="badge">MVP</span>
+  </header>
+
+  <!-- Action -->
+  <button id="analyze" class="primary-btn">
+    🔍 Analyze Current Page
+  </button>
+
+  <!-- Score -->
+  <section id="scoreBox" class="card hidden">
+    <h2>SEO Score</h2>
+    <div class="score-circle">
+      <span id="seoScore">0</span>
+      <small>/100</small>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section id="result" class="card hidden"></section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>⚡ Runs locally</span>
+    <span>🔒 Privacy-safe</span>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

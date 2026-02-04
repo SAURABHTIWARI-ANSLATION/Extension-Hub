@@ -1,0 +1,102 @@
+/* Styles for content script */
+
+/* Image hover effect */
+.img-download-helper-hover {
+    position: relative;
+    outline: 2px solid #5EEAD4 !important;
+    outline-offset: 2px !important;
+    transition: outline-color 0.3s ease;
+}
+
+.img-download-helper-hover::after {
+    content: "📥 Click to select";
+    position: absolute;
+    top: -24px;
+    left: 0;
+    background: #115E59;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 10000;
+    white-space: nowrap;
+}
+
+/* Download badge */
+.download-badge {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    background: #14B8A6;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    z-index: 10000;
+    cursor: pointer;
+    border: 1px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.download-badge:hover {
+    background: #0F766E;
+    transform: scale(1.1);
+}
+
+/* Selection overlay */
+.selection-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(20, 184, 166, 0.2);
+    border: 2px solid #14B8A6;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* Progress indicator */
+.download-progress {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: #115E59;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Notification toast */
+.download-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #10B981;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    z-index: 10000;
+    animation: slideUp 0.3s ease;
+    max-width: 300px;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

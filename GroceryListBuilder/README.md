@@ -17,7 +17,7 @@
 - **JavaScript (Vanilla)**: List logic and storage.
 - **Chrome Extension (Manifest V3)**: Storage.
 
-### 📂 Folder Structure
+### 📂 Folder Structure  
 ```
 GroceryListBuilder/
 ├── manifest.json      # Config

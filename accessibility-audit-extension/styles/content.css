@@ -1,0 +1,68 @@
+/* styles/content.css - Updated with theme colors */
+.accessibility-highlight {
+  position: relative !important;
+  z-index: 10000 !important;
+}
+
+/* Contrast Issues - using theme danger color */
+.contrast-issue {
+  outline: 2px solid #EF4444 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Missing Alt Text - using theme warning color */
+.image-issue {
+  outline: 2px solid #F59E0B !important;
+  outline-offset: 2px !important;
+  background-color: rgba(245, 158, 11, 0.1) !important;
+}
+
+/* Heading Issues - using theme primary color */
+.heading-issue {
+  outline: 2px solid #6366F1 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(99, 102, 241, 0.1) !important;
+}
+
+/* Form Issues - using theme accent color */
+.form-issue {
+  outline: 2px solid #818CF8 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(129, 140, 248, 0.1) !important;
+}
+
+/* Navigation Issues - using theme success color */
+.navigation-issue {
+  outline: 2px solid #10B981 !important;
+  outline-offset: 2px !important;
+  background-color: rgba(16, 185, 129, 0.1) !important;
+}
+
+/* Accessibility Tooltip - using theme dark background */
+.accessibility-tooltip {
+  position: absolute !important;
+  background: #020617 !important;
+  color: #FFFFFF !important;
+  padding: 8px 12px !important;
+  border-radius: 6px !important;
+  font-size: 12px !important;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+  z-index: 10001 !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+  max-width: 300px !important;
+  white-space: normal !important;
+  pointer-events: none !important;
+  border: 1px solid rgba(99, 102, 241, 0.3) !important;
+}
+
+.accessibility-tooltip::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 100% !important;
+  left: 50% !important;
+  margin-left: -5px !important;
+  border-width: 5px !important;
+  border-style: solid !important;
+  border-color: #020617 transparent transparent transparent !important;
+}

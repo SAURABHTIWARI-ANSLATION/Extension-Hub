@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "Mandala Artist",
+  "version": "1.0.0",
+  "description": "Create beautiful mandala drawings with symmetry and patterns",
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Mandala Artist",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/mandala-canvas.js"],
+      "css": ["content/mandala-canvas.css"]
+    }
+  ],
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["content/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}

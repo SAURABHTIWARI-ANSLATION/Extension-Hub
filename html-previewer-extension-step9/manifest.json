@@ -1,9 +1,0 @@
-{
-  "manifest_version": 3,
-  "name": "HTML Previewer Pro",
-  "version": "1.8",
-  "description": "Professional HTML, CSS & JS Previewer with live output, tabs, export and offline support.",
-  "action": {
-    "default_popup": "popup.html"
-  }
-}

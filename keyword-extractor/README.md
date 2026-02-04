@@ -1,6 +1,5 @@
 # 🗝️ Keyword Extractor
 
-## 👨‍💻 Made by Saurabh Tiwari
 
 ### 🧩 Description
 **Keyword Extractor** is a powerful SEO and research tool. Instantly analyze the current webpage to find the most frequent and relevant keywords. Perfect for content creators, marketers, and students who need to grasp the core topics of a text quickly.

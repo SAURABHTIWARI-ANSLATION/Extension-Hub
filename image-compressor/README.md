@@ -1,6 +1,5 @@
 # 📉 Quick Image Compressor
 
-## 👨‍💻 Made by Saurabh Tiwari
 
 ### 🧩 Description
 **Quick Image Compressor** reduces image file size significantly without visible quality loss. Optimize your JPEGs and PNGs for faster web loading or email attachments. It processes everything locally in your browser.

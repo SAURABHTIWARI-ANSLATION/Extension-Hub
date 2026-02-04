@@ -3,75 +3,115 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title> U-Scraper</title>
+  <title>U-Scraper</title>
   <link rel="stylesheet" href="popup.css"/>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <img src="icons/logo.png" alt="U-Scrap Logo" class="extension-logo">
-      <h1>U-Scraper</h1>
-      <p class="tagline">Extract data from any website with ease</p>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand">
+        <img src="icons/logo.png" alt="Logo" class="logo">
+        <h1>U-Scraper</h1>
+      </div>
+      <div class="header-actions">
+        <!-- Future: Dark mode toggle could go here -->
+      </div>
     </header>
 
-    <div class="main-content">
-      <div class="status-section section">
-        <div id="status-indicator" class="status-ready">
-          <span id="status-text">Ready to scrape</span>
-        </div>
-        <div class="progress-bar" aria-hidden="true">
-          <div id="progress-fill" class="progress-fill"></div>
-        </div>
-      </div>
+    <nav class="main-nav">
+      <button class="nav-item active" data-tab="scrape">Scrape</button>
+      <button class="nav-item" data-tab="history">History</button>
+      <button class="nav-item" data-tab="settings">Settings</button>
+    </nav>
 
-      <div class="controls-section">
-        <button id="start-scrape" class="btn primary" aria-label="Start scraping">Start Scraping</button>
-        <button id="stop-scrape" class="btn secondary" disabled aria-label="Stop scraping">Stop</button>
-      </div>
-
-      <div class="options-section section" aria-label="Scraper options">
-        <div class="option-group">
-          <label for="scrape-type">Scrape Type</label>
-          <select id="scrape-type">
-            <option value="full-page">Full Page</option>
-            <option value="list">List Items</option>
-            <option value="detail">Detail Pages</option>
-          </select>
+    <main class="content-area">
+      <!-- SCRAPE TAB -->
+      <section id="tab-scrape" class="tab-content active">
+        <div class="status-card">
+          <div class="status-indicator ready" id="status-indicator"></div>
+          <div class="status-text">
+            <h3 id="status-heading">Ready</h3>
+            <p id="status-details">Waiting to start...</p>
+          </div>
         </div>
 
-        <div class="option-group">
-          <label for="scrape-speed">Scrape Speed</label>
-          <select id="scrape-speed">
-            <option value="slow">Slow (Gentle)</option>
-            <option value="medium" selected>Medium</option>
-            <option value="fast">Fast</option>
-          </select>
+        <div class="controls-grid">
+          <div class="control-group">
+            <label>Type</label>
+            <select id="scrape-type">
+              <option value="full-page">Full Page</option>
+              <option value="list">List / Feed</option>
+              <option value="detail">Detailed</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Speed</label>
+            <select id="scrape-speed">
+              <option value="slow">Slow</option>
+              <option value="medium" selected>Medium</option>
+              <option value="fast">Fast</option>
+            </select>
+          </div>
         </div>
-      </div>
 
-      <div class="results-section">
-        <h2>Results <span id="result-count">(0)</span></h2>
-        <div id="results-container" class="results-container" role="region" aria-live="polite" aria-label="Scraped results">
-          <p class="no-results">No data scraped yet</p>
+        <div class="action-buttons">
+          <button id="btn-start" class="btn btn-primary">Start Scraping</button>
+          <button id="btn-stop" class="btn btn-danger" disabled>Stop</button>
         </div>
-      </div>
 
-      <div class="export-section">
-        <button id="export-csv" class="btn export" disabled>Export as CSV</button>
-        <button id="export-json" class="btn export" disabled>Export as JSON</button>
-        <button id="clear-data" class="btn clear" disabled>Clear Data</button>
-      </div>
+        <div class="results-preview hidden" id="results-area">
+          <div class="results-header">
+            <span>Collected: <strong id="result-count">0</strong></span>
+            <button id="btn-view-results" class="btn-text">View Data</button>
+          </div>
+          <div class="export-actions">
+            <button id="btn-export-json" class="btn btn-secondary">JSON</button>
+            <button id="btn-export-csv" class="btn btn-secondary">CSV</button>
+          </div>
+        </div>
+      </section>
 
-      <div class="preview-section">
-        <button id="preview-data" class="btn preview">Preview Data</button>
-      </div>
-    </div>
+      <!-- HISTORY TAB -->
+      <section id="tab-history" class="tab-content">
+        <div class="history-list" id="history-list">
+          <!-- History items injected here -->
+          <div class="empty-state">No history yet.</div>
+        </div>
+        <button id="btn-clear-history" class="btn btn-text danger">Clear History</button>
+      </section>
 
-    <footer>
-      <p>Quick Web Scraper runs locally in your browser. Your data never leaves your device.</p>
+      <!-- SETTINGS TAB -->
+      <section id="tab-settings" class="tab-content">
+        <div class="settings-group">
+          <h3>General</h3>
+          <label class="toggle-row">
+            <span>Auto-scroll page</span>
+            <input type="checkbox" id="setting-autoscroll" checked>
+          </label>
+          <label class="toggle-row">
+            <span>Wait for idle (SPA)</span>
+            <input type="checkbox" id="setting-wait-idle" checked>
+          </label>
+        </div>
+        
+        <div class="settings-group">
+          <h3>Export</h3>
+          <label class="toggle-row">
+            <span>Pretty print JSON</span>
+            <input type="checkbox" id="setting-json-pretty" checked>
+          </label>
+          <label class="toggle-row">
+            <span>Include Metadata</span>
+            <input type="checkbox" id="setting-include-meta" checked>
+          </label>
+        </div>
+      </section>
+    </main>
+    
+    <footer class="app-footer">
+      <p>Local & Secure • v1.1.0</p>
     </footer>
   </div>
-
   <script src="popup.js"></script>
 </body>
 </html>

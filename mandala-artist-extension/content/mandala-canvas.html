@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Mandala Canvas</title>
+  <!-- FIXED PATH: Remove ../ as both are in same folder -->
+  <link rel="stylesheet" href="mandala-canvas.css">
+  <!-- fabric.min.js is in lib folder at root -->
+  <script src="../lib/fabric.min.js"></script>
+</head>
+<body>
+  <div class="mandala-container">
+    <header class="canvas-header">
+      <h1>Mandala Canvas</h1>
+      <div class="header-controls">
+        <button id="toggleSidebar" class="icon-btn">☰</button>
+        <button id="saveCanvas" class="btn-success">💾 Save</button>
+        <button id="exportCanvas" class="btn-info">📤 Export</button>
+      </div>
+    </header>
+    
+    <div class="main-content">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+          <h3>🎨 Canvas</h3>
+          <div class="control-group">
+            <label>Background Color</label>
+            <input type="color" id="backgroundColor" value="#ffffff">
+          </div>
+          <div class="control-group">
+            <label>Symmetry</label>
+            <input type="range" id="symmetryRange" min="2" max="32" value="6">
+            <span id="symmetryValue">6</span>
+          </div>
+          <div class="control-group">
+            <label>Center Point</label>
+            <div class="center-controls">
+              <label>X: <input type="range" id="centerX" min="0" max="100" value="50"></label>
+              <label>Y: <input type="range" id="centerY" min="0" max="100" value="50"></label>
+            </div>
+            <button id="centerAtTouch">📍 Center at Touch</button>
+          </div>
+          <div class="control-group">
+            <label>
+              <input type="checkbox" id="enableMirroring" checked> Mirror Drawing
+            </label>
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>🖌️ Brush</h3>
+          <div class="control-group">
+            <label>Brush Type</label>
+            <select id="brushType">
+              <option value="round">Round</option>
+              <option value="square">Square</option>
+              <option value="pattern1">Pattern 1</option>
+              <option value="pattern2">Pattern 2</option>
+              <option value="pattern3">Pattern 3</option>
+            </select>
+          </div>
+          <div class="control-group">
+            <label>Brush Size</label>
+            <input type="range" id="brushSizeRange" min="1" max="100" value="10">
+            <span id="brushSizeValue">10</span>
+          </div>
+          <div class="control-group">
+            <label>Brush Color</label>
+            <input type="color" id="brushColorPicker" value="#ff6b6b">
+            <button id="randomColor">🎲 Random</button>
+          </div>
+          <div class="control-group">
+            <label>
+              <input type="checkbox" id="randomColors"> Random Colors
+            </label>
+          </div>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>🌑 Shadow</h3>
+          <div class="control-group">
+            <label>
+              <input type="checkbox" id="enableShadows" checked> Enable Shadows
+            </label>
+          </div>
+          <div class="control-group">
+            <label>Shadow Color</label>
+            <input type="color" id="shadowColor" value="#000000">
+          </div>
+          <div class="control-group">
+            <label>Shadow Blur</label>
+            <input type="range" id="shadowBlur" min="0" max="50" value="10">
+            <span id="shadowBlurValue">10</span>
+          </div>
+          <button id="randomShadow">🎲 Random Shadow</button>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>🔷 Patterns</h3>
+          <div class="patterns-grid">
+            <div class="pattern-btn" data-pattern="radial">Radial</div>
+            <div class="pattern-btn" data-pattern="circular">Circular</div>
+            <div class="pattern-btn" data-pattern="flower">Flower</div>
+            <div class="pattern-btn" data-pattern="spiral">Spiral</div>
+            <div class="pattern-btn" data-pattern="geometric">Geometric</div>
+            <div class="pattern-btn" data-pattern="mandala">Mandala</div>
+          </div>
+          <button id="applyPattern">Apply Pattern</button>
+        </div>
+        
+        <div class="sidebar-section">
+          <h3>🔄 Actions</h3>
+          <div class="action-buttons">
+            <button id="clearBtn" class="btn-danger">Clear Canvas</button>
+            <button id="undoBtn">↶ Undo</button>
+            <button id="redoBtn">↷ Redo</button>
+          </div>
+        </div>
+      </aside>
+      
+      <main class="canvas-area">
+        <div class="canvas-container">
+          <canvas id="mandalaCanvas"></canvas>
+          <div class="canvas-overlay">
+            <div class="center-indicator" id="centerIndicator"></div>
+            <div class="symmetry-lines"></div>
+          </div>
+        </div>
+        <div class="canvas-controls">
+          <div class="zoom-controls">
+            <button id="zoomIn">+</button>
+            <span id="zoomLevel">100%</span>
+            <button id="zoomOut">-</button>
+          </div>
+          <div class="hint">
+            💡 Tip: Draw on one segment to see symmetrical drawing
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  
+  <!-- FIXED PATH: mandala-canvas.js is in same folder -->
+  <script src="mandala-canvas.js"></script>
+</body>
+</html>

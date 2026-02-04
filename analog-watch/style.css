@@ -1,0 +1,88 @@
+#analog-watch {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, #111 0%, #000 70%);
+  border: 4px solid #444;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  z-index: 999999;
+  cursor: move;
+  overflow: hidden; /* This prevents numbers from going outside */
+}
+
+.hand {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: bottom center;
+  background: white;
+  border-radius: 4px;
+  z-index: 10; /* Make sure hands are above marks */
+}
+
+.hour {
+  width: 6px;
+  height: 30px;
+  margin-left: -3px;
+  margin-top: -30px;
+  background: #ccc;
+}
+
+.minute {
+  width: 4px;
+  height: 40px;
+  margin-left: -2px;
+  margin-top: -40px;
+  background: #eee;
+}
+
+.second {
+  width: 2px;
+  height: 45px;
+  margin-left: -1px;
+  margin-top: -45px;
+  background: red;
+  z-index: 11; /* Second hand above everything */
+}
+
+.center-dot {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: white;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 12; /* Above everything */
+}
+
+/* Roman numeral marks */
+.mark {
+  position: absolute;
+  color: white;
+  font-family: 'Times New Roman', serif;
+  font-weight: bold;
+  text-align: center;
+  line-height: 1;
+  pointer-events: none; /* Don't interfere with dragging */
+}
+
+.mark-hour {
+  color: #fff;
+  font-size: 12px;
+  font-weight: normal;
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+/* Remove the dot style and create proper minute marks */
+.mark-minute {
+  width: 2px;
+  height: 4px;
+  background: #666;
+  border-radius: 1px;
+  color: transparent !important; /* Hide the dot character */
+}

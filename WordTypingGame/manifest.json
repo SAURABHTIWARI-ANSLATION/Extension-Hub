@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "Word Typing",
+  "description": "Type the word and check your points!",
+  "version": "1.0.0",
+
+  "action": {
+    "default_title": "Word Typing Game",
+    "default_popup": "index.html"
+  },
+
+  "icons": {
+    "16": "logo.png",
+    "48": "logo.png",
+    "128": "logo.png"
+  },
+
+  "permissions": [
+    "storage"
+  ]
+}

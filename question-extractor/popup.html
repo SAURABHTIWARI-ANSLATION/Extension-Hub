@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Auto Question Extractor</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <header class="header">
+    <h3>Auto Question Extractor</h3>
+    <p class="subtitle">
+      Generate important questions and answers from any content
+    </p>
+  </header>
+
+  <!-- Input Section -->
+  <section class="section">
+    <label for="inputText">Source content</label>
+    <textarea
+      id="inputText"
+      placeholder="Paste your notes, textbook content, or select text on a webpage"
+    ></textarea>
+
+    <div class="button-group">
+      <button id="extractFromPage" class="secondary">
+        Use selected text
+      </button>
+      <button id="generate" class="primary">
+        Generate questions
+      </button>
+    </div>
+  </section>
+
+  <!-- Output Section -->
+  <section class="section">
+    <h4>Generated Questions & Answers</h4>
+    <div id="output" aria-live="polite"></div>
+  </section>
+
+  <!-- Actions -->
+  <footer class="footer">
+    <button id="copy" class="secondary">
+      Copy all questions
+    </button>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

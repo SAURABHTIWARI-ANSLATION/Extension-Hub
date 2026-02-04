@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "Clipboard History Pro",
+  "version": "1.0.0",
+  "description": "Store and manage last 50 clipboard items with powerful search and organization",
+  "permissions": [
+    "clipboardRead",
+    "clipboardWrite",
+    "storage",
+    "contextMenus",
+    "activeTab",
+    "scripting",
+    "notifications" 
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Clipboard History",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+V",
+        "mac": "Command+Shift+V"
+      },
+      "description": "Open clipboard history"
+    },
+    "copy-to-history": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C",
+        "mac": "Command+Shift+C"
+      },
+      "description": "Manually save to history"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

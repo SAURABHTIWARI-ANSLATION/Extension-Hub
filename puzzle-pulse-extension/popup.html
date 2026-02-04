@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Puzzle Selection Screen -->
+    <div id="selection-screen" class="screen active">
+      <div class="header">
+        <h1><i class="fas fa-puzzle-piece"></i> Puzzle Pulse Pro</h1>
+        <div class="user-stats">
+          <span class="stat"><i class="fas fa-trophy"></i> <span id="total-solved">0</span></span>
+          <span class="stat"><i class="fas fa-star"></i> <span id="total-points">0</span></span>
+        </div>
+      </div>
+
+      <!-- Difficulty Selector -->
+      <div class="difficulty-selector">
+        <h3>Select Difficulty:</h3>
+        <div class="difficulty-buttons">
+          <button class="difficulty-btn active" data-level="easy">Easy</button>
+          <button class="difficulty-btn" data-level="medium">Medium</button>
+          <button class="difficulty-btn" data-level="hard">Hard</button>
+          <button class="difficulty-btn" data-level="expert">Expert</button>
+        </div>
+      </div>
+
+      <!-- Puzzle Categories -->
+      <div class="categories-grid">
+        <!-- Image Puzzles -->
+        <div class="category-card" data-type="image">
+          <div class="category-icon">
+            <i class="fas fa-image"></i>
+          </div>
+          <h3>Image Puzzles</h3>
+          <p>Jigsaw, Spot Differences, Visual Riddles</p>
+          <div class="category-stats">
+            <span>12 puzzles</span>
+            <span class="completed">3 solved</span>
+          </div>
+        </div>
+
+        <!-- Logic Puzzles -->
+        <div class="category-card" data-type="logic">
+          <div class="category-icon">
+            <i class="fas fa-brain"></i>
+          </div>
+          <h3>Logic Puzzles</h3>
+          <p>Riddles, Sequences, Pattern Recognition</p>
+          <div class="category-stats">
+            <span>8 puzzles</span>
+            <span class="completed">2 solved</span>
+          </div>
+        </div>
+
+        <!-- Math Puzzles -->
+        <div class="category-card" data-type="math">
+          <div class="category-icon">
+            <i class="fas fa-calculator"></i>
+          </div>
+          <h3>Math Puzzles</h3>
+          <p>Equations, Number Games, Calculations</p>
+          <div class="category-stats">
+            <span>10 puzzles</span>
+            <span class="completed">1 solved</span>
+          </div>
+        </div>
+
+        <!-- Word Puzzles -->
+        <div class="category-card" data-type="word">
+          <div class="category-icon">
+            <i class="fas fa-font"></i>
+          </div>
+          <h3>Word Puzzles</h3>
+          <p>Anagrams, Crosswords, Word Searches</p>
+          <div class="category-stats">
+            <span>15 puzzles</span>
+            <span class="completed">4 solved</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <h4>Overall Progress</h4>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 25%"></div>
+        </div>
+        <div class="progress-text">25% Complete</div>
+      </div>
+    </div>
+
+    <!-- Puzzle Solving Screen -->
+    <div id="puzzle-screen" class="screen">
+      <div class="puzzle-header">
+        <button id="back-btn" class="back-btn"><i class="fas fa-arrow-left"></i> Back</button>
+        <div class="puzzle-info">
+          <h3 id="puzzle-title">Image Puzzle</h3>
+          <div class="puzzle-meta">
+            <span class="difficulty-badge" id="puzzle-difficulty">Medium</span>
+            <span class="timer" id="puzzle-timer">10:00</span>
+          </div>
+        </div>
+        <button id="hint-btn" class="hint-btn"><i class="fas fa-lightbulb"></i> Hint</button>
+      </div>
+
+      <!-- Puzzle Display Area -->
+      <div class="puzzle-display">
+        <!-- This will be dynamically populated based on puzzle type -->
+        <div id="puzzle-content"></div>
+      </div>
+
+      <!-- Controls -->
+      <div class="puzzle-controls">
+        <div class="control-group">
+          <button id="reset-btn" class="control-btn"><i class="fas fa-redo"></i> Reset</button>
+          <button id="zoom-in" class="control-btn"><i class="fas fa-search-plus"></i></button>
+          <button id="zoom-out" class="control-btn"><i class="fas fa-search-minus"></i></button>
+        </div>
+        <div class="solution-area">
+          <input type="text" id="solution-input" placeholder="Enter your solution...">
+          <button id="submit-solution" class="submit-btn">Submit Answer</button>
+        </div>
+      </div>
+
+      <!-- Hint Box -->
+      <div id="hint-box" class="hint-box">
+        <h4><i class="fas fa-lightbulb"></i> Hint</h4>
+        <p id="hint-text">Look for patterns in the image...</p>
+      </div>
+    </div>
+
+    <!-- Puzzle Complete Screen -->
+    <div id="complete-screen" class="screen">
+      <div class="completion-card">
+        <div class="completion-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <h2>Puzzle Solved!</h2>
+        <div class="completion-stats">
+          <div class="stat">
+            <div class="stat-label">Time</div>
+            <div class="stat-value" id="completion-time">3:45</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Points</div>
+            <div class="stat-value" id="completion-points">+150</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Accuracy</div>
+            <div class="stat-value" id="completion-accuracy">100%</div>
+          </div>
+        </div>
+        <div class="completion-actions">
+          <button id="next-puzzle" class="action-btn">Next Puzzle</button>
+          <button id="share-result" class="action-btn secondary">Share</button>
+          <button id="return-menu" class="action-btn secondary">Menu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script src="init-puzzles.js"></script>
+<!-- Load puzzle data files FIRST -->
+<script src="puzzles/image-puzzles.js"></script>
+<script src="puzzles/logic-puzzles.js"></script>
+<script src="puzzles/math-puzzles.js"></script>
+<script src="puzzles/word-puzzles.js"></script>
+
+
+<!-- Puzzle Engine -->
+<script src="puzzle-engine.js"></script>
+
+<!-- Main Logic -->
+<script src="popup.js"></script>
+</body>
+</html>

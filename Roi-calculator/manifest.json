@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Feature ROI Pro",
+  "short_name": "ROI Pro",
+  "version": "1.1",
+  "description": "Calculate, compare, and track ROI for product features to support smarter decisions.",
+
+  "permissions": [
+    "storage"
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "minimum_chrome_version": "114"
+}

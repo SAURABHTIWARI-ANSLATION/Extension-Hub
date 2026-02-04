@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Website Preview Pro</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="top">
+  <span>Website Preview</span>
+  <button id="darkToggle">🌙</button>
+</div>
+
+<input id="urlInput" placeholder="Enter website URL" />
+<button id="previewBtn">Generate Preview</button>
+
+<p id="errorText"></p>
+<div id="loading">Loading preview...</div>
+
+<div id="previewContainer" class="preview-box">
+  <p>No preview yet</p>
+</div>
+
+<button id="copyBtn">Copy Image</button>
+<a id="openSite" target="_blank">Open Website</a>
+
+<div class="history-head">
+  <span>Recent</span>
+  <button id="clearHistory">Clear</button>
+</div>
+
+<ul id="historyList"></ul>
+
+<script src="popup.js"></script>
+</body>
+</html>

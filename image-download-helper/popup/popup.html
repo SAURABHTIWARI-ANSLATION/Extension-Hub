@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="mint-teal">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Download Helper</title>
+    <link rel="stylesheet" href="../themes/mint-teal.css">
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-icon">🖼️</div>
+            <div class="header-text">
+                <h1>Image Download Helper</h1>
+                <p class="subtitle">Download all images with one click</p>
+            </div>
+        </header>
+
+        <!-- Quick Stats -->
+        <div class="stats-bar">
+            <div class="stat">
+                <span class="stat-label">Images Found:</span>
+                <span class="stat-value" id="images-found">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Selected:</span>
+                <span class="stat-value" id="images-selected">0</span>
+            </div>
+            <div class="stat">
+                <span class="stat-label">Total Size:</span>
+                <span class="stat-value" id="total-size">0 MB</span>
+            </div>
+        </div>
+
+        <!-- Main Actions -->
+        <div class="actions-grid">
+            <button class="action-btn primary" id="scan-page">
+                <span class="icon">🔍</span>
+                <span class="text">Scan Page</span>
+            </button>
+            
+            <button class="action-btn success" id="download-selected">
+                <span class="icon">⬇️</span>
+                <span class="text">Download Selected</span>
+            </button>
+            
+            <button class="action-btn" id="download-all">
+                <span class="icon">💾</span>
+                <span class="text">Download All</span>
+            </button>
+            
+            <button class="action-btn" id="open-folder">
+                <span class="icon">📁</span>
+                <span class="text">Open Folder</span>
+            </button>
+        </div>
+
+        <!-- Filter Section -->
+        <section class="section filter-section">
+            <h3 class="section-title">⚙️ Filter Settings</h3>
+            
+            <div class="filter-group">
+                <label class="filter-label">
+                    <input type="checkbox" id="filter-size" checked>
+                    Minimum Size
+                </label>
+                <div class="filter-controls">
+                    <select id="min-width">
+                        <option value="50">50px width</option>
+                        <option value="100" selected>100px width</option>
+                        <option value="200">200px width</option>
+                        <option value="500">500px width</option>
+                    </select>
+                    <span class="filter-separator">×</span>
+                    <select id="min-height">
+                        <option value="50">50px height</option>
+                        <option value="100" selected>100px height</option>
+                        <option value="200">200px height</option>
+                        <option value="500">500px height</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">File Types:</label>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="jpg" checked>
+                        <span>JPG</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="png" checked>
+                        <span>PNG</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="webp">
+                        <span>WebP</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="gif">
+                        <span>GIF</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" value="svg">
+                        <span>SVG</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Skip:</label>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="skip-ads" checked>
+                        <span>Advertisements</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="skip-icons" checked>
+                        <span>Icons & Logos</span>
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="skip-blurry">
+                        <span>Blurry Images</span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Options -->
+        <section class="section options-section">
+            <h3 class="section-title">📥 Download Options</h3>
+            
+            <div class="option-group">
+                <label for="folder-name" class="option-label">Folder Name:</label>
+                <input type="text" id="folder-name" 
+                       placeholder="auto-generated" 
+                       class="option-input">
+            </div>
+
+            <div class="option-group">
+                <label for="filename-pattern" class="option-label">Filename Pattern:</label>
+                <select id="filename-pattern" class="option-select">
+                    <option value="{index}_{name}">1_image.jpg</option>
+                    <option value="{name}_{index}">image_1.jpg</option>
+                    <option value="{width}x{height}_{name}">800x600_image.jpg</option>
+                    <option value="{alt}_{index}">description_1.jpg</option>
+                    <option value="{timestamp}_{name}">20240101_image.jpg</option>
+                </select>
+            </div>
+
+            <div class="option-group">
+                <label class="option-label">Convert WebP to:</label>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="convert" value="none" checked>
+                        <span>Don't convert</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="convert" value="jpg">
+                        <span>JPG</span>
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="convert" value="png">
+                        <span>PNG</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="option-group">
+                <label for="quality" class="option-label">Quality: <span id="quality-value">85%</span></label>
+                <input type="range" id="quality" min="10" max="100" value="85" 
+                       class="option-slider">
+            </div>
+        </section>
+
+        <!-- Image Preview -->
+        <section class="section preview-section">
+            <div class="preview-header">
+                <h3 class="section-title">🖼️ Image Preview</h3>
+                <div class="preview-controls">
+                    <button class="small-btn" id="select-all">Select All</button>
+                    <button class="small-btn" id="clear-selection">Clear</button>
+                    <button class="small-btn" id="refresh-preview">Refresh</button>
+                </div>
+            </div>
+            
+            <div class="preview-container" id="preview-container">
+                <!-- Images will be loaded here -->
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-icon">🖼️</div>
+                    <p>No images found on this page</p>
+                    <p class="empty-hint">Click "Scan Page" to find images</p>
+                </div>
+            </div>
+            
+            <div class="preview-footer">
+                <div class="pagination" id="pagination">
+                    <button class="pagination-btn" id="prev-page">←</button>
+                    <span class="page-info">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                    <button class="pagination-btn" id="next-page">→</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Progress Bar -->
+        <div class="progress-container" id="progress-container" style="display: none;">
+            <div class="progress-header">
+                <span>Downloading...</span>
+                <span id="progress-percent">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="progress-info">
+                <span id="progress-text">0/0 images</span>
+                <span id="progress-speed">0 KB/s</span>
+            </div>
+            <button class="cancel-btn" id="cancel-download">Cancel</button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-left">
+                <span class="version">v1.0.0</span>
+                <span class="theme-badge">Mint Teal Theme</span>
+            </div>
+            <div class="footer-right">
+                <button class="pro-badge" id="upgrade-pro">
+                    🔓 Upgrade to Pro
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <script src="../utils/filter-engine.js"></script>
+    <script src="../utils/download-manager.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>

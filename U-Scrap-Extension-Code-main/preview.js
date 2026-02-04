@@ -633,7 +633,7 @@ function exportAsCSV() {
     const csvContent = jsonToCsv(scrapedData);
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
-    const filename = `easy-scraper-export-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+    const filename = `uscraper-export-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
     
     const a = document.createElement('a');
     a.href = url;

@@ -1,13 +1,34 @@
 {
   "manifest_version": 3,
   "name": "Pomodoro Timer",
-  "description": "A professional Pomodoro timer extension",
+  "short_name": "Pomodoro",
+  "description": "A professional Pomodoro timer to boost focus and productivity.",
   "version": "1.0",
+
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
   },
+
   "background": {
     "service_worker": "background.js"
   },
-  "permissions": ["storage", "alarms", "notifications"]
+
+  "permissions": [
+    "storage",
+    "alarms",
+    "notifications"
+  ],
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "minimum_chrome_version": "114"
 }

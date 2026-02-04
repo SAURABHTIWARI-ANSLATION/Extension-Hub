@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>U-Scraper Options</title>
+  <link rel="stylesheet" href="popup.css"/>
+</head>
+<body class="options-page">
+  <div class="app-container">
+    <header class="app-header">
+      <div class="brand">
+        <img src="icons/logo.png" alt="Logo" class="logo">
+        <h1>U-Scraper Dashboard</h1>
+      </div>
+    </header>
+
+    <nav class="main-nav">
+      <button class="nav-item active" data-tab="history">History</button>
+      <button class="nav-item" data-tab="settings">Settings</button>
+      <button class="nav-item" data-tab="about">About</button>
+    </nav>
+
+    <main class="content-area">
+      <!-- HISTORY TAB -->
+      <section id="tab-history" class="tab-content active">
+        <div class="results-header">
+          <span>Your Scrape History</span>
+          <button id="btn-clear-history" class="btn btn-danger" style="width: auto;">Clear History</button>
+        </div>
+        <div class="history-list" id="history-list">
+          <div class="empty-state">Loading history...</div>
+        </div>
+      </section>
+
+      <!-- SETTINGS TAB -->
+      <section id="tab-settings" class="tab-content">
+        <div class="settings-group">
+          <h3>General Preferences</h3>
+          <label class="toggle-row">
+            <span>Auto-scroll page during scrape</span>
+            <input type="checkbox" id="setting-autoscroll" checked>
+          </label>
+          <p class="setting-desc">Automatically scroll down to load lazy-loaded content.</p>
+          
+          <label class="toggle-row">
+            <span>Wait for idle (SPA)</span>
+            <input type="checkbox" id="setting-wait-idle" checked>
+          </label>
+          <p class="setting-desc">Wait for network activity to settle before scraping (useful for React/Vue apps).</p>
+        </div>
+        
+        <div class="settings-group">
+          <h3>Export Options</h3>
+          <label class="toggle-row">
+            <span>Pretty print JSON</span>
+            <input type="checkbox" id="setting-json-pretty" checked>
+          </label>
+          <p class="setting-desc">Format JSON with indentation for better readability.</p>
+          
+          <label class="toggle-row">
+            <span>Include Metadata</span>
+            <input type="checkbox" id="setting-include-meta" checked>
+          </label>
+          <p class="setting-desc">Include URL, timestamp, and page title in the export.</p>
+        </div>
+
+        <div class="settings-group">
+          <h3>Advanced</h3>
+           <label class="toggle-row">
+            <span>Show Notifications</span>
+            <input type="checkbox" id="setting-notifications" checked>
+          </label>
+        </div>
+        
+        <div style="margin-top: 20px; text-align: right;">
+           <button id="btn-save-settings" class="btn btn-primary" style="width: auto;">Save Settings</button>
+        </div>
+      </section>
+
+      <!-- ABOUT TAB -->
+      <section id="tab-about" class="tab-content">
+        <div class="status-card">
+          <div class="status-text">
+            <h3>U-Scraper Extension</h3>
+            <p>Version 1.1.0</p>
+          </div>
+        </div>
+        <div style="padding: 10px; color: var(--text-muted); line-height: 1.6;">
+          <p>U-Scraper is a powerful, local-first web scraper designed for simplicity and privacy.</p>
+          <ul style="margin: 15px 0; padding-left: 20px;">
+            <li>No data leaves your device.</li>
+            <li>Works on Single Page Applications (SPAs).</li>
+            <li>Exports to JSON and CSV.</li>
+          </ul>
+          <p>Developed with ❤️ for the open web.</p>
+        </div>
+      </section>
+    </main>
+    
+    <footer class="app-footer">
+      <p>Local & Secure • v1.1.0</p>
+    </footer>
+  </div>
+  <script src="options.js"></script>
+</body>
+</html>

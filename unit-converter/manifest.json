@@ -1,10 +1,25 @@
 {
   "manifest_version": 3,
   "name": "Quick Unit Converter",
-  "description": "Convert length, weight, and temperature units instantly.",
+  "short_name": "Unit Converter",
   "version": "1.0",
+  "description": "Quickly convert length, weight, and temperature units right from your browser.",
+
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Unit Converter"
-  }
+    "default_title": "Quick Unit Converter",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "minimum_chrome_version": "114"
 }

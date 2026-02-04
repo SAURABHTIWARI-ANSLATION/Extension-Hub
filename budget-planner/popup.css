@@ -1,0 +1,174 @@
+/* ===== Base ===== */
+* {
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+body {
+  width: 320px;
+  margin: 0;
+  padding: 12px;
+  background: linear-gradient(135deg, #6d28d9, #a78bfa);
+  color: #ffffff;
+}
+
+/* ===== Header ===== */
+.title {
+  text-align: center;
+  background: #4c1d95;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* ===== Balance Card ===== */
+.balance-card {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 12px;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 14px;
+  backdrop-filter: blur(4px);
+}
+
+.balance-label {
+  font-size: 12px;
+  color: #f5f3ff;
+  opacity: 0.9;
+}
+
+.balance-amount {
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 4px;
+}
+
+/* ===== Sections ===== */
+.section {
+  background: rgba(255, 255, 255, 0.12);
+  padding: 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.section h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: #f5f3ff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+  padding-bottom: 4px;
+}
+
+/* ===== Inputs ===== */
+label {
+  display: block;
+  font-size: 11px;
+  margin-bottom: 2px;
+  color: #f5f3ff;
+  opacity: 0.9;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 7px 8px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  margin-bottom: 6px;
+  font-size: 13px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #4c1d95;
+}
+
+input::placeholder {
+  color: #6b7280;
+}
+
+/* ===== Buttons ===== */
+button {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* ===== Secondary Buttons ===== */
+#export,
+#viewReport {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+  margin-top: 4px;
+}
+
+/* ===== Clear History Button (Danger Style) ===== */
+#clearHistory {
+  background: rgba(239, 68, 68, 0.9);
+  margin-bottom: 6px;
+}
+
+#clearHistory:hover {
+  background: rgba(239, 68, 68, 1);
+}
+
+/* ===== Chart ===== */
+canvas {
+  display: block;
+  margin: 8px auto 0;
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+/* ===== History ===== */
+#history {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+#history li {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 4px 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Income / Expense coloring */
+.income {
+  color: #bbf7d0;
+}
+
+.expense {
+  color: #fecaca;
+}
+
+/* ===== Scrollbar (optional aesthetic) ===== */
+#history::-webkit-scrollbar {
+  width: 6px;
+}
+
+#history::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 4px;
+}

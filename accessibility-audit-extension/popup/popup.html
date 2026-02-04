@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="popup.css">
+  <style>
+    :root {
+      --primary: #667eea;
+      --secondary: #764ba2;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #1f2937;
+      --light: #f3f4f6;
+    }
+  </style>
+</head>
+<body class="theme-indigo-night">
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>Accessibility Audit</h1>
+      <p class="subtitle">WCAG 2.1 Compliance Scanner</p>
+    </header>
+    
+    <!-- Score Display -->
+    <div class="score-section" id="scoreSection">
+      <div class="score-circle">
+        <svg width="120" height="120">
+          <circle class="score-bg" cx="60" cy="60" r="54" stroke-width="12"></circle>
+          <circle class="score-progress" cx="60" cy="60" r="54" stroke-width="12" 
+                  stroke-dasharray="339.292" stroke-dashoffset="339.292"></circle>
+        </svg>
+        <div class="score-text">
+          <span id="scoreValue">0</span>
+          <small>/100</small>
+        </div>
+      </div>
+      <div class="score-info">
+        <h2 id="scoreGrade">Grade: --</h2>
+        <p id="scoreStatus">Scan to get score</p>
+      </div>
+    </div>
+    
+    <!-- Scan Button -->
+    <button id="scanBtn" class="scan-btn">
+      🔍 Scan Current Page
+    </button>
+    
+    <!-- Loading State -->
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p>Analyzing page accessibility...</p>
+      <small>Checking contrast, images, headings, forms, and more</small>
+    </div>
+    
+    <!-- Results -->
+    <div class="results" id="results">
+      <!-- Category Breakdown -->
+      <div class="category-breakdown">
+        <h3>Accessibility Breakdown</h3>
+        <div id="categoriesList">
+          <!-- Categories will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Suggestions -->
+      <div class="suggestions">
+        <h3>💡 Improvement Suggestions</h3>
+        <div id="suggestionsList">
+          <!-- Suggestions will be populated here -->
+        </div>
+      </div>
+      
+      <!-- Quick Stats -->
+      <div class="quick-stats">
+        <div class="stat">
+          <span class="stat-value" id="issuesCount">0</span>
+          <span class="stat-label">Issues Found</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="elementsCount">0</span>
+          <span class="stat-label">Elements Scanned</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="passRate">0%</span>
+          <span class="stat-label">Pass Rate</span>
+        </div>
+      </div>
+      
+      <!-- Actions -->
+      <div class="actions">
+        <button id="viewDetailsBtn" class="action-btn">📊 View Full Report</button>
+        <button id="exportBtn" class="action-btn">📥 Export Results</button>
+        <button id="historyBtn" class="action-btn">📚 View History</button>
+      </div>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

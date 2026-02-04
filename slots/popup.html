@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free-Slots</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <h3>Free-Slots</h3>
+      <p class="subtitle">Share your availability instantly</p>
+    </header>
+
+    <section class="form">
+      <div class="field">
+        <label for="day">Day</label>
+        <select id="day">
+          <option>Monday</option>
+          <option>Tuesday</option>
+          <option>Wednesday</option>
+          <option>Thursday</option>
+          <option>Friday</option>
+          <option>Saturday</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="start">Start time</label>
+        <input type="time" id="start" />
+      </div>
+
+      <div class="field">
+        <label for="end">End time</label>
+        <input type="time" id="end" />
+      </div>
+
+      <button id="add" class="primary-btn">Add availability</button>
+    </section>
+
+    <section class="slots">
+      <h4>Saved availability</h4>
+      <ul id="slots"></ul>
+    </section>
+
+    <footer class="footer">
+      <button id="copy" class="secondary-btn">
+        Copy availability text
+      </button>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

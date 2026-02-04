@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Audit Dashboard</title>
+    <style>
+        /* Update dashboard.html styles section with Indigo Night */
+:root {
+  --primary: #6366F1;
+  --primary-dark: #4F46E5;
+  --secondary: #312E81;
+  --dark-bg: #1E1B4B;
+  --darker-bg: #020617;
+  --accent: #818CF8;
+  --light-accent: #C4B5FD;
+  --text-primary: #FFFFFF;
+  --text-secondary: #E0E7FF;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --danger: #EF4444;
+  --gray: #6B7280;
+  --border-color: rgba(99, 102, 241, 0.3);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding: 25px;
+  background: var(--darker-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo h1 {
+  font-size: 28px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: var(--text-primary);
+  border: none;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(99, 102, 241, 0.3);
+}
+
+/* Cards */
+.card {
+  background: var(--darker-bg);
+  border-radius: 12px;
+  padding: 25px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stat-value {
+  font-size: 42px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Table */
+.scan-table {
+  background: var(--darker-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.scan-table th {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--text-primary);
+}
+
+.scan-table td {
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+.scan-table tr:hover {
+  background: rgba(99, 102, 241, 0.05);
+}
+
+/* Score Badges */
+.score-excellent {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.score-good {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3B82F6;
+}
+
+.score-fair {
+  background: rgba(245, 158, 11, 0.2);
+  color: #F59E0B;
+}
+
+.score-poor {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+/* Progress Bars */
+.progress-bar {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.progress-fill {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+}
+
+/* Footer */
+.footer {
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Empty State */
+.empty-state {
+  color: var(--text-secondary);
+}
+
+.empty-title {
+  color: var(--text-primary);
+}
+
+/* Loading Spinner */
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--primary);
+}
+    </style>
+</head>
+<body class="theme-indigo-night">
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🚀</div>
+                <h1>Accessibility Audit Dashboard</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="newScanBtn">
+                    🔍 New Scan
+                </button>
+                <button class="btn btn-secondary" id="refreshBtn">
+                    ↻ Refresh Data
+                </button>
+                <button class="btn btn-secondary" id="exportAllBtn">
+                    📥 Export All Data
+                </button>
+            </div>
+        </header>
+        
+        <!-- Summary Cards -->
+        <div class="summary-cards">
+            <div class="card stat-card score-card">
+                <div class="stat-value" id="overallScore">--</div>
+                <div class="stat-label">Overall Score</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="totalScans">0</div>
+                <div class="stat-label">Total Scans</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="avgScore">--</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="trendIndicator">→</div>
+                <div class="stat-label">Trend</div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <div class="chart-container">
+                <h3 class="chart-title">Score History</h3>
+                <div class="chart-placeholder" id="scoreChart">
+                    Loading score history chart...
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <h3 class="chart-title">Category Distribution</h3>
+                <div class="chart-placeholder" id="categoryChart">
+                    Loading category distribution...
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Scans Table -->
+        <section class="recent-scans">
+            <h2 style="margin-bottom: 20px; font-size: 22px;">Recent Scans</h2>
+            <table class="scan-table" id="scansTable">
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Page Title</th>
+                        <th>Score</th>
+                        <th>Grade</th>
+                        <th>Issues</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="scansTableBody">
+                    <!-- Scans will be loaded here -->
+                </tbody>
+            </table>
+        </section>
+        
+        <!-- Category Breakdown -->
+        <section class="category-breakdown" id="categoryBreakdown">
+            <!-- Categories will be loaded here -->
+        </section>
+        
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading dashboard data...</p>
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-icon">📊</div>
+            <h2 class="empty-title">No Scans Yet</h2>
+            <p class="empty-description">
+                Start by scanning some webpages to see your accessibility audit data here.
+                Your scan history, trends, and statistics will appear in this dashboard.
+            </p>
+            <button class="btn btn-primary" id="startScanningBtn">
+                🚀 Start Your First Scan
+            </button>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Accessibility Audit Dashboard • Powered by WCAG 2.1 Guidelines • Data stored locally in your browser</p>
+    </footer>
+    
+    <script src="dashboard.js"></script>
+</body>
+</html>

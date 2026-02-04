@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Budget Planner</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h2 class="title">💰 Budget Planner</h2>
+
+    <!-- Balance -->
+    <div class="balance-card">
+      <span class="balance-label">Current Balance</span>
+      <div class="balance-amount">₹<span id="balance">0</span></div>
+    </div>
+
+    <!-- Add Entry -->
+    <div class="section">
+      <h3>Add Entry</h3>
+
+      <label for="title">Title</label>
+      <input id="title" placeholder="e.g. Salary, Grocery" />
+
+      <label for="amount">Amount</label>
+      <input id="amount" type="number" placeholder="Enter amount" />
+
+      <label for="type">Type</label>
+      <select id="type">
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
+
+      <label for="category">Category</label>
+      <select id="category">
+        <option>Food</option>
+        <option>Rent</option>
+        <option>Travel</option>
+        <option>Shopping</option>
+        <option>Other</option>
+      </select>
+
+      <button id="add" class="primary">Add Entry</button>
+    </div>
+
+    <!-- Budget Limit -->
+    <div class="section">
+      <h3>Monthly Budget Limit</h3>
+
+      <label for="limit">Set Limit</label>
+      <input id="limit" type="number" placeholder="e.g. 20000" />
+
+      <button id="saveLimit">Save Limit</button>
+    </div>
+
+    <!-- Reports -->
+    <div class="section">
+      <h3>Reports</h3>
+
+      <label for="monthFilter">Select Month</label>
+      <input type="month" id="monthFilter" />
+
+      <button id="viewReport">View Monthly Report</button>
+      <button id="export">Export to Excel</button>
+    </div>
+
+    <!-- Chart -->
+    <div class="section">
+      <h3>Spending Overview</h3>
+      <canvas id="chart" width="280" height="200"></canvas>
+    </div>
+
+    <!-- History -->
+    <div class="section">
+      <h3>Transaction History</h3>
+
+      <button id="clearHistory">Clear All History</button>
+
+      <ul id="history"></ul>
+    </div>
+
+    <script src="chart.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

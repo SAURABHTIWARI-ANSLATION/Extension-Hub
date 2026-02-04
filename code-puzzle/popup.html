@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Daily Code Puzzle</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <h2>🧩 Code Puzzle</h2>
+      </div>
+
+      <div class="streak-display">
+        <div class="streak-item">
+          <span>🔥</span>
+          <span><strong id="streakCount">0</strong> day streak</span>
+        </div>
+        <div class="streak-item">
+          <span>✅</span>
+          <span><strong id="totalSolved">0</strong> solved</span>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <select id="language">
+          <option value="javascript">JavaScript</option>
+          <option value="python">Python</option>
+        </select>
+        <select id="difficulty">
+          <option value="all">All Levels</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+    </header>
+
+    <main>
+      <div id="question-card">
+        <div class="question-header">
+          <span class="question-meta">Daily Challenge</span>
+          <span id="difficultyBadge" class="difficulty-badge">Easy</span>
+        </div>
+        <div id="question">Loading...</div>
+      </div>
+
+      <div class="controls">
+        <button id="showSolution" class="primary-btn">Show Solution</button>
+        <button id="newPuzzle" class="secondary-btn">🎲 Random</button>
+        <button id="markSolved" class="success-btn hidden">
+          ✓ Mark Solved
+        </button>
+      </div>
+
+      <div id="solutionContainer" class="hidden">
+        <div class="code-header">
+          <span>Solution</span>
+          <button id="copyBtn" title="Copy to Clipboard">📋 Copy</button>
+        </div>
+        <pre id="solution"></pre>
+      </div>
+
+      <div class="stats-section">
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value" id="easySolved">0</span>
+            <span class="stat-label">Easy Solved</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="mediumSolved">0</span>
+            <span class="stat-label">Medium Solved</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="hardSolved">0</span>
+            <span class="stat-label">Hard Solved</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value" id="bestStreak">0</span>
+            <span class="stat-label">Best Streak</span>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="puzzles.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>
