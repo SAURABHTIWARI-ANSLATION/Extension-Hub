@@ -291,8 +291,14 @@ class QuickShotEditor {
     
     handleMouseDown(e) {
         const rect = this.canvas.getBoundingClientRect();
-        this.startX = (e.clientX - rect.left) / this.zoomLevel;
-        this.startY = (e.clientY - rect.top) / this.zoomLevel;
+        const wrapper = this.canvas.parentElement;
+        
+        // Account for wrapper scroll position
+        this.startX = (e.clientX - rect.left + wrapper.scrollLeft) / this.zoomLevel;
+        this.startY = (e.clientY - rect.top + wrapper.scrollTop) / this.zoomLevel;
+        
+        console.log('MouseDown - Client:', e.clientX, e.clientY, 'Calculated:', this.startX, this.startY, 'Scroll:', wrapper.scrollLeft, wrapper.scrollTop);
+        
         this.lastX = this.startX;
         this.lastY = this.startY;
         
@@ -301,8 +307,8 @@ class QuickShotEditor {
             this.isPanning = true;
             this.panStartX = e.clientX;
             this.panStartY = e.clientY;
-            this.scrollLeftStart = this.canvas.parentElement.scrollLeft;
-            this.scrollTopStart = this.canvas.parentElement.scrollTop;
+            this.scrollLeftStart = wrapper.scrollLeft;
+            this.scrollTopStart = wrapper.scrollTop;
             this.canvas.style.cursor = 'grabbing';
             return;
         }
@@ -327,8 +333,13 @@ class QuickShotEditor {
     
     handleMouseMove(e) {
         const rect = this.canvas.getBoundingClientRect();
-        const currentX = (e.clientX - rect.left) / this.zoomLevel;
-        const currentY = (e.clientY - rect.top) / this.zoomLevel;
+        const wrapper = this.canvas.parentElement;
+        
+        // Account for wrapper scroll position
+        const currentX = (e.clientX - rect.left + wrapper.scrollLeft) / this.zoomLevel;
+        const currentY = (e.clientY - rect.top + wrapper.scrollTop) / this.zoomLevel;
+        
+        console.log('MouseMove - Client:', e.clientX, e.clientY, 'Calculated:', currentX, currentY, 'Diff from start:', currentX - this.startX, currentY - this.startY);
         
         // Update cursor position display
         this.updateCursorPosition(currentX, currentY);
@@ -336,8 +347,8 @@ class QuickShotEditor {
         if (this.isPanning) {
             const dx = e.clientX - this.panStartX;
             const dy = e.clientY - this.panStartY;
-            this.canvas.parentElement.scrollLeft = this.scrollLeftStart - dx;
-            this.canvas.parentElement.scrollTop = this.scrollTopStart - dy;
+            wrapper.scrollLeft = this.scrollLeftStart - dx;
+            wrapper.scrollTop = this.scrollTopStart - dy;
             return;
         }
 
@@ -584,15 +595,20 @@ class QuickShotEditor {
     previewSelection(x, y) {
         const selectionRect = document.getElementById('selection-rectangle');
         if (selectionRect) {
+            console.log('PreviewSelection called with:', x, y, 'Start:', this.startX, this.startY);
+            
             const width = Math.abs(x - this.startX) * this.zoomLevel;
             const height = Math.abs(y - this.startY) * this.zoomLevel;
             
-            // We need to find the position relative to the canvas-wrapper
-            const rect = this.canvas.getBoundingClientRect();
-            const wrapperRect = this.canvas.parentElement.getBoundingClientRect();
+            // Calculate position relative to canvas wrapper
+            const wrapper = this.canvas.parentElement;
+            const wrapperRect = wrapper.getBoundingClientRect();
             
-            const left = (Math.min(x, this.startX) * this.zoomLevel) + (rect.left - wrapperRect.left);
-            const top = (Math.min(y, this.startY) * this.zoomLevel) + (rect.top - wrapperRect.top);
+            // Convert canvas coordinates to wrapper coordinates
+            const left = (Math.min(x, this.startX) * this.zoomLevel) - wrapper.scrollLeft;
+            const top = (Math.min(y, this.startY) * this.zoomLevel) - wrapper.scrollTop;
+            
+            console.log('Selection rect - Width:', width, 'Height:', height, 'Left:', left, 'Top:', top);
             
             selectionRect.style.display = 'block';
             selectionRect.style.width = width + 'px';
@@ -609,10 +625,9 @@ class QuickShotEditor {
             const height = parseFloat(selectionRect.style.height) / this.zoomLevel;
             
             // Calculate canvas-relative coordinates
-            const rect = this.canvas.getBoundingClientRect();
-            const wrapperRect = this.canvas.parentElement.getBoundingClientRect();
-            const left = (parseFloat(selectionRect.style.left) - (rect.left - wrapperRect.left)) / this.zoomLevel;
-            const top = (parseFloat(selectionRect.style.top) - (rect.top - wrapperRect.top)) / this.zoomLevel;
+            const wrapper = this.canvas.parentElement;
+            const left = (parseFloat(selectionRect.style.left) + wrapper.scrollLeft) / this.zoomLevel;
+            const top = (parseFloat(selectionRect.style.top) + wrapper.scrollTop) / this.zoomLevel;
             
             if (width > 5 && height > 5) {
                 this.selectedArea = {
