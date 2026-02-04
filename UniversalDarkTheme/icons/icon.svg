@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Moon icon for dark mode -->
+  <circle cx="64" cy="64" r="40" fill="#FFD700" opacity="0.3"/>
+  <circle cx="90" cy="40" r="40" fill="#333"/>
+</svg>
