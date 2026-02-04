@@ -1,0 +1,275 @@
+:root {
+    --primary-color: #4285f4;
+    --primary-dark: #3367d6;
+    --secondary-color: #5f6368;
+    --bg-color: #ffffff;
+    --surface-color: #f8f9fa;
+    --text-color: #202124;
+    --text-secondary: #5f6368;
+    --border-color: #dadce0;
+    --success-color: #34a853;
+    --error-color: #ea4335;
+    --warning-color: #fbbc04;
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: #f5f5f5;
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: var(--text-secondary);
+    font-size: 16px;
+}
+
+.settings-section {
+    background-color: var(--bg-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.settings-section h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.setting-group {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.setting {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.setting label {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.setting input[type="checkbox"] {
+    margin-top: 2px;
+}
+
+.setting .label-text {
+    flex: 1;
+}
+
+.setting .description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-left: 28px;
+    margin-top: -4px;
+}
+
+.setting select,
+.setting textarea,
+.setting input[type="color"] {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    max-width: 300px;
+}
+
+.setting textarea {
+    width: 100%;
+    max-width: 100%;
+    resize: vertical;
+}
+
+.setting input[type="color"] {
+    width: 60px;
+    height: 40px;
+    padding: 2px;
+    cursor: pointer;
+}
+
+.shortcuts-info {
+    background-color: var(--surface-color);
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+.shortcuts-info p {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.shortcuts-info ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.shortcuts-info li {
+    margin-bottom: 8px;
+    padding-left: 20px;
+    position: relative;
+    font-size: 13px;
+}
+
+.shortcuts-info li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+}
+
+.shortcuts-info .note {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 16px;
+}
+
+.shortcuts-info a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.shortcuts-info a:hover {
+    text-decoration: underline;
+}
+
+footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-secondary {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #e8eaed;
+}
+
+.status {
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s;
+}
+
+.status.success {
+    opacity: 1;
+    transform: translateY(0);
+    background-color: rgba(52, 168, 83, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(52, 168, 83, 0.2);
+}
+
+.status.error {
+    opacity: 1;
+    transform: translateY(0);
+    background-color: rgba(234, 67, 53, 0.1);
+    color: var(--error-color);
+    border: 1px solid rgba(234, 67, 53, 0.2);
+}
+
+.status.info {
+    opacity: 1;
+    transform: translateY(0);
+    background-color: rgba(66, 133, 244, 0.1);
+    color: var(--primary-color);
+    border: 1px solid rgba(66, 133, 244, 0.2);
+}
+
+@media (max-width: 600px) {
+    .container {
+        padding: 16px;
+    }
+    
+    .settings-section {
+        padding: 16px;
+    }
+    
+    .actions {
+        flex-direction: column;
+    }
+    
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+    }
+}
