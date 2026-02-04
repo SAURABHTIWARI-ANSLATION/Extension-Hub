@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AgreeSafe Privacy Protector</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="icons/icon48.png" alt="AgreeSafe Icon" class="logo">
+      <h1>AgreeSafe</h1>
+    </div>
+    
+    <div class="status-section">
+      <div class="status-card">
+        <div class="status-info">
+          <span class="status-label">Protection Status</span>
+          <span class="status-value" id="statusText">Active</span>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="toggleProtection" checked>
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+    
+    <div class="stats-section">
+      <div class="stat-card">
+        <div class="stat-icon">🔒</div>
+        <div class="stat-content">
+          <div class="stat-number" id="totalBlocked">0</div>
+          <div class="stat-label">Trackers Blocked</div>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-content">
+          <div class="stat-number" id="sitesProtected">0</div>
+          <div class="stat-label">Sites Protected</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="current-site">
+      <h3>Current Site</h3>
+      <div class="site-info">
+        <span class="site-url" id="currentSite">Loading...</span>
+        <button class="btn-whitelist" id="whitelistBtn">
+          <span id="whitelistText">Add to Whitelist</span>
+        </button>
+      </div>
+    </div>
+    
+    <div class="tracker-list-section">
+      <div class="section-header">
+        <h3>Recent Blocked Trackers</h3>
+        <button class="btn-clear" id="clearStats">Clear</button>
+      </div>
+      <div class="tracker-list" id="trackerList">
+        <div class="empty-state">No trackers blocked yet</div>
+      </div>
+    </div>
+    
+    <div class="whitelist-section">
+      <div class="section-header">
+        <h3>Whitelisted Sites</h3>
+      </div>
+      <div class="whitelist-list" id="whitelistList">
+        <div class="empty-state">No whitelisted sites</div>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p>Browse safely with AgreeSafe 🔐</p>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
