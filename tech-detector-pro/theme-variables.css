@@ -1,6 +1,6 @@
 /* ============================================
    TECH DETECTOR PRO - THEME SYSTEM
-   Indigo Night Theme (Data-Driven Tools)
+   Vibrant Tech Theme (Dynamic Purple Gradient)
    ============================================ */
 
 html {
@@ -8,111 +8,161 @@ html {
 }
 
 :root,
-html[data-theme="indigo-night"],
-body[data-theme="indigo-night"] {
-  /* Background & Gradients */
-  --bg-gradient-start: #1E1B4B;
-  --bg-gradient-end: #312E81;
-  --bg-gradient: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+html[data-theme="vibrant-tech"],
+body[data-theme="vibrant-tech"] {
+  /* Dynamic Purple Gradient Background */
+  --bg-gradient: linear-gradient(135deg, #1a1a2e, #16213e);
+  --bg-dark: #0f172a;
+  --bg-darker: #0a0f1f;
+  --bg-light: #1e293b;
   
-  /* Header */
-  --header-bg: #020617;
-  --header-text: #FFFFFF;
+  /* Vibrant Purple Palette */
+  --purple-900: #4c1d95;
+  --purple-800: #5b21b6;
+  --purple-700: #6d28d9;
+  --purple-600: #7c3aed; /* Primary */
+  --purple-500: #8b5cf6;
+  --purple-400: #a78bfa;
+  --purple-300: #c4b5fd;
+  --purple-200: #ddd6fe;
+  --purple-100: #ede9fe;
   
-  /* Primary Button */
-  --btn-primary-start: #6366F1;
-  --btn-primary-end: #4F46E5;
-  --btn-primary-gradient: linear-gradient(135deg, var(--btn-primary-start), var(--btn-primary-end));
-  --btn-primary-hover: #4338CA;
-  --btn-primary-text: #FFFFFF;
+  /* Tech-Inspired Complementary Colors */
+  --indigo-600: #4f46e5;
+  --violet-500: #8b5cf6;
+  --blue-400: #60a5fa;
+  --cyan-400: #22d3ee;
+  --teal-500: #14b8a6;
+  --lime-300: #bef264;
+  
+  /* Header with Dynamic Gradient */
+  --header-bg: linear-gradient(135deg, #7c3aed, #6d28d9, #5b21b6);
+  --header-text: #ffffff;
+  
+  /* Vibrant Button Gradients */
+  --btn-primary-gradient: linear-gradient(135deg, #7c3aed, #6d28d9, #5b21b6);
+  --btn-primary-hover: linear-gradient(135deg, #6d28d9, #5b21b6, #4c1d95);
+  --btn-primary-text: #ffffff;
+  
+  --btn-secondary-gradient: linear-gradient(135deg, #a78bfa, #c4b5fd, #ddd6fe);
+  --btn-secondary-hover: linear-gradient(135deg, #8b5cf6, #a78bfa, #c4b5fd);
+  --btn-secondary-text: #0f172a;
+  
+  /* Category Button Gradients */
+  --btn-all-gradient: linear-gradient(135deg, #7c3aed, #6d28d9);
+  --btn-frontend-gradient: linear-gradient(135deg, #3b82f6, #2563eb);
+  --btn-backend-gradient: linear-gradient(135deg, #10b981, #059669);
+  --btn-cms-gradient: linear-gradient(135deg, #f59e0b, #d97706);
+  --btn-analytics-gradient: linear-gradient(135deg, #ef4444, #dc2626);
+  --btn-hosting-gradient: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  --btn-libraries-gradient: linear-gradient(135deg, #06b6d4, #0ea5e9);
   
   /* Accent & Interactive */
-  --accent-color: #818CF8;
-  --accent-hover: #6366F1;
+  --accent-color: #8b5cf6;
+  --accent-hover: #a78bfa;
+  --highlight: #22d3ee;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
   
   /* Text Colors */
-  --text-primary: #FFFFFF;
-  --text-secondary: #E0E7FF;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #0f172a;
   
-  /* Body & Backgrounds */
-  --body-bg: #0F172A;
-  --sidebar-bg: #1E293B;
-  --surface-bg: #1F2937;
+  /* Surface Colors */
+  --body-bg: var(--bg-gradient);
+  --sidebar-bg: var(--bg-light);
+  --surface-bg: rgba(30, 41, 59, 0.8);
+  --surface-bg-hover: rgba(51, 65, 85, 0.8);
+  --glass-bg: rgba(15, 23, 42, 0.7);
+  --glass-border: rgba(148, 163, 184, 0.3);
   
   /* Borders & Dividers */
-  --border-color: #334155;
-  --border-light: #1E293B;
+  --border-color: rgba(148, 163, 184, 0.3);
+  --border-light: rgba(148, 163, 184, 0.15);
+  --border-glass: rgba(139, 92, 246, 0.3);
   
   /* States */
-  --hover-bg: #1E293B;
-  --active-bg: #4338CA;
-  --focus-ring: rgba(99, 102, 241, 0.15);
+  --hover-bg: rgba(148, 163, 184, 0.15);
+  --active-bg: rgba(139, 92, 246, 0.2);
+  --focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.4);
   
   /* Feedback Colors */
-  --success-bg: #10B981;
-  --success-text: #ECFDF5;
-  --success-border: #6EE7B7;
+  --success-bg: #10b981;
+  --success-text: #ecfdf5;
+  --success-border: #6ee7b7;
   
-  --error-bg: #EF4444;
-  --error-text: #FEE2E2;
-  --error-border: #F87171;
+  --error-bg: #ef4444;
+  --error-text: #fef2f2;
+  --error-border: #f87171;
   
-  --warning-bg: #F59E0B;
-  --warning-text: #FEF3C7;
-  --warning-border: #FCD34D;
-  
-  /* Secondary Button */
-  --btn-secondary-bg: transparent;
-  --btn-secondary-text: var(--accent-color);
-  --btn-secondary-border: var(--border-color);
-  --btn-secondary-hover: var(--hover-bg);
+  --warning-bg: #f59e0b;
+  --warning-text: #fffbeb;
+  --warning-border: #fcd34d;
   
   /* Input & Form */
-  --input-border: var(--border-color);
-  --input-bg: #374151;
-  --input-text: #F3F4F6;
+  --input-border: rgba(148, 163, 184, 0.3);
+  --input-bg: rgba(30, 41, 59, 0.6);
+  --input-text: #f1f5f9;
   --input-focus-border: var(--accent-color);
-  --input-focus-ring: var(--focus-ring);
+  --input-focus-ring: 0 0 0 3px rgba(139, 92, 246, 0.3);
   
   /* Label & Text */
-  --label-color: #F3F4F6;
-  --label-secondary: #D1D5DB;
+  --label-color: #e2e8f0;
+  --label-secondary: #94a3b8;
   
-  /* Shadows */
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+  /* Dynamic Shadows */
+  --shadow-sm: 0 4px 20px rgba(124, 58, 237, 0.3);
+  --shadow-md: 0 8px 30px rgba(124, 58, 237, 0.4);
+  --shadow-lg: 0 15px 40px rgba(124, 58, 237, 0.5);
+  --glow-sm: 0 0 20px rgba(139, 92, 246, 0.4);
+  --glow-md: 0 0 30px rgba(139, 92, 246, 0.6);
+  --glow-lg: 0 0 40px rgba(139, 92, 246, 0.7);
   
   /* Spacing & Typography */
-  --border-radius: 10px;
-  --border-radius-sm: 8px;
-  --border-radius-lg: 14px;
+  --border-radius: 16px;
+  --border-radius-sm: 12px;
+  --border-radius-md: 14px;
+  --border-radius-lg: 20px;
+  --border-radius-xl: 24px;
+  --border-radius-full: 50px;
   
-  /* Typography */
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-size-xs: 12px;
+  /* Premium Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  --font-size-xs: 11px;
   --font-size-sm: 13px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
+  --font-size-md: 15px;
+  --font-size-lg: 17px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 28px;
   
+  --font-weight-thin: 100;
+  --font-weight-extralight: 200;
+  --font-weight-light: 300;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
   
   /* Spacing */
   --space-xs: 4px;
   --space-sm: 8px;
-  --space-md: 12px;
-  --space-lg: 16px;
-  --space-xl: 20px;
-  --space-2xl: 24px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
   
   /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-bounce: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   
   /* Z-Index */
   --z-base: 1;
