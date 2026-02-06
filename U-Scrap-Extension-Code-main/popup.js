@@ -161,6 +161,7 @@ function startScraping() {
     const activeTab = tabs[0];
     if (!activeTab) {
       updateUIState('error', 'No active tab found');
+      showNotification('No active tab found!', 'error');
       return;
     }
     
@@ -168,6 +169,7 @@ function startScraping() {
     const connected = await ensureContentScript(activeTab.id);
     if (!connected) {
       updateUIState('error', "Could not connect to page. Try refreshing the tab.");
+      showNotification('Could not connect to page. Try refreshing the tab.', 'error');
       return;
     }
 
@@ -183,6 +185,7 @@ function startScraping() {
     }, (response) => {
       if (chrome.runtime.lastError) {
         updateUIState('error', "Connection lost. Please refresh the page.");
+        showNotification('Connection lost. Please refresh the page.', 'error');
         return;
       }
       
@@ -191,6 +194,7 @@ function startScraping() {
         handleScrapeResult(response.data, activeTab.url);
       } else if (response && response.error) {
         updateUIState('error', response.error);
+        showNotification(response.error, 'error');
       }
     });
   });
@@ -220,6 +224,9 @@ function handleScrapeResult(data, url) {
   updateUIState('ready');
   els.statusHeading.textContent = "Success!";
   els.statusDetails.textContent = `Scraped ${collectedData.length} item(s).`;
+  
+  // Show success notification
+  showNotification(`Scan completed successfully! Found ${collectedData.length} item(s).`, 'success');
 }
 
 // --- UI Updates ---
@@ -249,6 +256,107 @@ function updateUIState(state, message = "") {
       isScraping = false;
       break;
   }
+}
+
+// --- Notification System ---
+function showNotification(message, type = 'info') {
+  // Remove any existing notifications
+  const existingNotifications = document.querySelectorAll('.notification');
+  existingNotifications.forEach(notification => notification.remove());
+  
+  const notification = document.createElement('div');
+  notification.className = 'notification';
+  
+  let icon = 'ℹ️';
+  if (type === 'success') {
+    icon = '✅';
+  } else if (type === 'error') {
+    icon = '❌';
+  } else if (type === 'warning') {
+    icon = '⚠️';
+  }
+  
+  notification.innerHTML = `
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <div style="font-size: 20px; animation: pulse 1.5s infinite;">${icon}</div>
+      <div style="flex: 1; font-weight: 600; color: white;">${message}</div>
+      <div style="font-size: 18px; cursor: pointer; opacity: 0.8; transition: opacity 0.2s;" class="close-notification">×</div>
+    </div>
+  `;
+  
+  // Add event listener to the close button
+  const closeButton = notification.querySelector('.close-notification');
+  if (closeButton) {
+    closeButton.addEventListener('click', function() {
+      notification.remove();
+    });
+  }
+  
+  // Add notification styles if not present
+  if (!document.querySelector('#notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'notification-styles';
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+      }
+      .notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        padding: 16px;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        max-width: 300px;
+        min-width: 250px;
+        animation: slideIn 0.3s ease-out;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .notification.error {
+        background: linear-gradient(135deg, #ef4444, #f87171);
+      }
+      .notification.success {
+        background: linear-gradient(135deg, #10b981, #34d399);
+      }
+      .notification.warning {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+      }
+      .notification.info {
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Add specific class based on type
+  notification.classList.add(type);
+  
+  document.body.appendChild(notification);
+  
+  // Auto-remove after delay
+  const delay = type === 'success' ? 4000 : 5000; // Success: 4s, others: 5s
+  setTimeout(() => {
+    notification.style.animation = 'slideOut 0.3s ease-out';
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 300);
+  }, delay);
 }
 
 function updateResultsUI() {
@@ -291,7 +399,7 @@ function exportData(format) {
   const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filename = `uscraper-export-${timestamp}.${ext}`;
+  const filename = `u-scrap-export-${timestamp}.${ext}`;
   
   chrome.downloads.download({ url, filename, saveAs: true });
 }

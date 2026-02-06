@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Audio Recorder</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎙️ Audio Recorder</h1>
+    
+    <div class="status-container">
+      <div id="status" class="status status-ready">
+        <span class="status-indicator">●</span>
+        <span class="status-text">Ready</span>
+      </div>
+      <div id="timer" class="timer">00:00:00</div>
+    </div>
+    
+    <div class="current-tab">
+      <strong>Current Tab:</strong>
+      <div id="currentTab" class="tab-name">Loading...</div>
+    </div>
+    
+    <div class="buttons">
+      <button id="startBtn" class="btn btn-start">
+        <span class="btn-icon">⏺️</span>
+        <span class="btn-text">Start Recording</span>
+      </button>
+      
+      <button id="stopBtn" class="btn btn-stop" disabled>
+        <span class="btn-icon">⏹️</span>
+        <span class="btn-text">Stop Recording</span>
+      </button>
+    </div>
+    
+    <div class="info">
+      <p>• Make sure audio is playing in the tab</p>
+      <p>• Recording saves as MP4 audio file</p>
+      <p>• Red indicator shows when recording</p>
+    </div>
+    
+    <div class="history-section">
+      <h3>📁 Recent Recordings</h3>
+      <div id="historyList" class="history-list">
+        <div class="empty-history">No recordings yet</div>
+      </div>
+      <button id="clearHistoryBtn" class="btn-clear">Clear History</button>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

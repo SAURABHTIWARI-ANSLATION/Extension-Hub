@@ -374,7 +374,7 @@ class AccessibilityDashboard {
                 overflow-y: auto;
                 position: relative;
             ">
-                <button onclick="this.parentElement.remove()" 
+                <button onclick="window.dashboard.closeModal(this)" 
                         style="position: absolute; top: 15px; right: 15px; background: none; border: none; 
                                font-size: 24px; cursor: pointer; color: #6b7280;">
                     ×
@@ -498,6 +498,13 @@ class AccessibilityDashboard {
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+    }
+    
+    closeModal(button) {
+        const modal = button.closest('div[style*="position: fixed"]');
+        if (modal) {
+            modal.remove();
+        }
     }
 }
 

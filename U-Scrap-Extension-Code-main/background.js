@@ -32,7 +32,7 @@ chrome.action.onClicked.addListener((tab) => {
 
 // Initialize extension
 function initialize() {
-  console.log('Easy Scraper extension initialized');
+  console.log('U-Scraper extension initialized');
 }
 
 // Run initialization
