@@ -50,7 +50,7 @@ class ParticleSystem {
         particle.x, particle.y, 0,
         particle.x, particle.y, particle.radius * 2
       );
-      gradient.addColorStop(0, `rgba(126, 34, 206, ${particle.opacity})`);
+      gradient.addColorStop(0, `rgba(0, 188, 212, ${particle.opacity})`);
       gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
       this.ctx.fillStyle = gradient;
       this.ctx.arc(particle.x, particle.y, particle.radius * 2, 0, Math.PI * 2);
@@ -65,7 +65,7 @@ class ParticleSystem {
           
           if (distance < 100) {
             this.ctx.beginPath();
-            this.ctx.strokeStyle = `rgba(126, 34, 206, ${0.1 * (1 - distance / 100)})`;
+            this.ctx.strokeStyle = `rgba(0, 188, 212, ${0.1 * (1 - distance / 100)})`;
             this.ctx.lineWidth = 0.5;
             this.ctx.moveTo(particle.x, particle.y);
             this.ctx.lineTo(otherParticle.x, otherParticle.y);
