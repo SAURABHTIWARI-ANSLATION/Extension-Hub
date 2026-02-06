@@ -582,7 +582,7 @@ function exportAsJSON() {
     
     const blob = new Blob([JSON.stringify(scrapedData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
-    const filename = `easy-scraper-export-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
+    const filename = `u-scrap-export-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.json`;
     
     const a = document.createElement('a');
     a.href = url;
@@ -633,7 +633,7 @@ function exportAsCSV() {
     const csvContent = jsonToCsv(scrapedData);
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
-    const filename = `uscraper-export-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+    const filename = `u-scrap-export-${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
     
     const a = document.createElement('a');
     a.href = url;

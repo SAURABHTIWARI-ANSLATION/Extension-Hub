@@ -399,7 +399,7 @@ function exportData(format) {
   const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const filename = `uscraper-export-${timestamp}.${ext}`;
+  const filename = `u-scrap-export-${timestamp}.${ext}`;
   
   chrome.downloads.download({ url, filename, saveAs: true });
 }
