@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tab Context Saver</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="background-layer">
+    <canvas id="particleCanvas"></canvas>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Header Section -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo-section">
+          <div class="logo">
+            <svg viewBox="0 0 40 40" class="logo-svg">
+              <defs>
+                <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <circle cx="20" cy="20" r="18" fill="none" stroke="url(#logoGrad)" stroke-width="2" opacity="0.3"/>
+              <circle cx="20" cy="20" r="12" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
+              <path d="M 20 8 L 20 20 L 28 20" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            </svg>
+          </div>
+          <div class="title-group">
+            <h1 class="title">Tab Context Saver</h1>
+            <p class="subtitle">Time-travel for your browsing sessions</p>
+          </div>
+        </div>
+        <button class="settings-btn" id="settingsBtn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m-9-9h6m6 0h6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M19.78 4.22l-4.24 4.24m-7.08 7.08l-4.24 4.24"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hero Actions -->
+    <section class="hero-actions">
+      <button class="action-btn primary-btn" id="saveBtn">
+        <span class="btn-glow"></span>
+        <span class="btn-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          <span>Save Current Session</span>
+        </span>
+        <div class="ripple-container"></div>
+      </button>
+
+      <button class="action-btn secondary-btn" id="restoreBtn">
+        <span class="btn-glow"></span>
+        <span class="btn-content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path>
+          </svg>
+          <span>Restore Last Session</span>
+        </span>
+      </button>
+    </section>
+
+    <!-- Mode Switcher -->
+    <section class="mode-section">
+      <h3 class="section-title">Quick Modes</h3>
+      <div class="mode-grid">
+        <button class="mode-btn" data-mode="work">
+          <div class="mode-icon">💼</div>
+          <span>Work</span>
+        </button>
+        <button class="mode-btn" data-mode="study">
+          <div class="mode-icon">📚</div>
+          <span>Study</span>
+        </button>
+        <button class="mode-btn" data-mode="entertainment">
+          <div class="mode-icon">🎮</div>
+          <span>Entertainment</span>
+        </button>
+        <button class="mode-btn" data-mode="custom">
+          <div class="mode-icon">⭐</div>
+          <span>Custom</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Sessions List -->
+    <section class="sessions-section">
+      <div class="section-header">
+        <h3 class="section-title">Saved Sessions</h3>
+        <div class="search-container">
+          <input type="text" class="search-input" id="searchInput" placeholder="Search sessions...">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <div class="sessions-list" id="sessionsList">
+        <!-- Sessions will be dynamically added here -->
+      </div>
+    </section>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState">
+      <div class="empty-icon">
+        <svg viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2" opacity="0.3"/>
+          <path d="M 30 50 L 50 30 L 70 50 M 50 35 L 50 70" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3>No Saved Sessions Yet</h3>
+      <p>Save your first browsing session to get started</p>
+    </div>
+  </div>
+
+  <!-- Modal for Save Dialog -->
+  <div class="modal" id="saveModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <h2>Save Current Session</h2>
+      <input type="text" class="modal-input" id="sessionNameInput" placeholder="Enter session name...">
+      <div class="mode-selector">
+        <label>Select Mode:</label>
+        <div class="mode-options">
+          <button class="mode-option" data-mode="work">💼 Work</button>
+          <button class="mode-option" data-mode="study">📚 Study</button>
+          <button class="mode-option" data-mode="entertainment">🎮 Entertainment</button>
+          <button class="mode-option active" data-mode="custom">⭐ Custom</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel-btn" id="cancelSaveBtn">Cancel</button>
+        <button class="modal-btn save-btn" id="confirmSaveBtn">Save Session</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Travel Effect Overlay -->
+  <div class="time-travel-overlay" id="timeTravelOverlay">
+    <div class="time-wave"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
