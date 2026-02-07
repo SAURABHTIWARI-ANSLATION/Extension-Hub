@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Meeting Mode Pro</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            text-align: center;
+        }
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #3b82f6;
+        }
+        .features {
+            text-align: left;
+            margin: 30px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🎯</div>
+        <h1>Welcome to Meeting Mode Pro!</h1>
+        <p>Your professional screen sharing assistant is ready to use.</p>
+        
+        <div class="features">
+            <h3>Quick Start:</h3>
+            <ol>
+                <li>Click the extension icon in your toolbar</li>
+                <li>Toggle "Meeting Mode" when you need to share screen</li>
+                <li>Use the sidebar for meeting tools</li>
+            </ol>
+        </div>
+        
+        <a href="#" class="btn" id="closeBtn">Get Started</a>
+        <a href="privacy-policy.html" class="btn" style="background: #6b7280;">Privacy Policy</a>
+    </div>
+    
+    <script>
+        document.getElementById('closeBtn').addEventListener('click', () => {
+            window.close();
+        });
+    </script>
+</body>
+</html>
