@@ -36,22 +36,30 @@ export function renderHeicConverter(container: HTMLElement) {
         convertBtn.setAttribute('disabled', 'true');
 
         try {
+            console.log('Starting HEIC conversion for:', currentFile.name);
             const blob = await heic2any({
                 blob: currentFile,
                 toType: 'image/jpeg',
                 quality: 0.8
             });
 
+            console.log('Conversion result:', blob);
+
             const resultBlob = Array.isArray(blob) ? blob[0] : blob;
+
+            if (!(resultBlob instanceof Blob)) {
+                throw new Error('Conversion did not return a valid Blob');
+            }
+
             const url = URL.createObjectURL(resultBlob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = currentFile.name.replace(/\.heic$/i, '.jpg');
+            a.download = currentFile.name.replace(/\.[^/.]+$/, "") + '.jpg';
             a.click();
-            URL.revokeObjectURL(url);
-        } catch (error) {
+            setTimeout(() => URL.revokeObjectURL(url), 100);
+        } catch (error: any) {
             console.error('HEIC conversion failed:', error);
-            alert('HEIC conversion failed. Please make sure it is a valid HEIC file.');
+            alert(`HEIC conversion failed: ${error.message || 'Unknown error'}. Please ensure it's a valid HEIC file.`);
         } finally {
             loader.classList.add('hidden');
             convertBtn.removeAttribute('disabled');

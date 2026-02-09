@@ -1,6 +1,9 @@
 import * as pdfjsLib from 'pdfjs-dist';
-// Set worker source
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Set worker source using Vite's URL constructor for reliable bundling
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+).toString();
 
 export async function renderPdfToImage(container: HTMLElement) {
     container.innerHTML = `

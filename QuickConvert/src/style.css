@@ -335,6 +335,28 @@ header p {
   border-radius: var(--radius-lg);
   padding: var(--space-xl);
   box-shadow: var(--shadow-md);
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+#cropper-wrapper {
+  margin-top: var(--space-lg);
+  width: 100%;
+  max-height: 400px;
+  background: #000;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#cropper-image {
+  display: block;
+  max-width: 100%;
+}
+
+.cropper-container {
+  max-width: 100% !important;
 }
 
 .file-input {

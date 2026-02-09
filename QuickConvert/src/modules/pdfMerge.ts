@@ -37,15 +37,18 @@ export function renderPdfMerge(container: HTMLElement) {
             listContainer.classList.remove('hidden');
             selectedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
-                li.style.padding = '0.5rem';
-                li.style.background = '#f5f5f5';
+                li.style.padding = '0.75rem var(--space-md)';
+                li.style.background = 'var(--bg-tertiary)';
+                li.style.border = '1px solid var(--card-border)';
                 li.style.marginBottom = '0.5rem';
-                li.style.borderRadius = '0.4rem';
+                li.style.borderRadius = 'var(--radius-md)';
                 li.style.display = 'flex';
                 li.style.justifyContent = 'space-between';
+                li.style.alignItems = 'center';
+                li.style.color = 'var(--text-primary)';
                 li.innerHTML = `
-                    <span>${index + 1}. ${file.name}</span>
-                    <button data-index="${index}" style="background: none; border: none; cursor: pointer; color: #ef4444;">✕</button>
+                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;">${index + 1}. ${file.name}</span>
+                    <button data-index="${index}" style="background: none; border: none; cursor: pointer; color: var(--accent-tertiary); font-size: 1.2rem; padding: 0 0.5rem;">✕</button>
                 `;
                 li.querySelector('button')?.addEventListener('click', (e) => {
                     const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index!);
