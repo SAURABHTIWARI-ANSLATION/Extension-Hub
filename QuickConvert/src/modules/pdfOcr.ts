@@ -53,10 +53,22 @@ export function renderPdfOcr(container: HTMLElement) {
             const arrayBuffer = await currentFile.arrayBuffer();
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
+            console.log('PDF to Text: Initializing worker with local assets...');
             const worker = await createWorker(langSelect.value, 1, {
-                // IMPORTANT for Manifest V3: Disable workerBlobURL to avoid EvalError
+                // IMPORTANT for Manifest V3: Use local paths to avoid remote CDN blocks (CSP)
+                // @ts-ignore
+                workerPath: chrome.runtime.getURL('tesseract/worker.min.js'),
+                // @ts-ignore
+                corePath: chrome.runtime.getURL('tesseract/tesseract-core.js'),
+                // @ts-ignore
+                langPath: chrome.runtime.getURL('tesseract'),
                 workerBlobURL: false,
+                // Disable cache to prevent worker from trying to fetch from remote URL stored in IndexedDB
+                cacheMethod: 'none',
+                // IMPORTANT: Disable gzip because we provided uncompressed .traineddata files
+                gzip: false,
                 logger: m => {
+                    console.log('Tesseract log:', m);
                     if (m.status === 'recognizing text') {
                         status.innerText = `Recognizing text: ${Math.round(m.progress * 100)}%`;
                     }
