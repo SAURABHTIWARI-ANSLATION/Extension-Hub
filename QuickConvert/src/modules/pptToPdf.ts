@@ -77,22 +77,54 @@ export async function renderPptToPdf(container: HTMLElement) {
 
                 const slideXml = await slideFile.async('text');
 
-                // Extract text content from slide
-                const textMatches = slideXml.match(/<a:t>([^<]+)<\/a:t>/g);
-                let yPosition = 20;
+                // Extract all text content from slide - try multiple patterns
+                let allText: string[] = [];
 
-                if (textMatches && textMatches.length > 0) {
-                    textMatches.forEach((match) => {
-                        const text = match.replace(/<\/?a:t>/g, '');
-                        if (text.trim()) {
-                            pdf.setFontSize(14);
-                            pdf.text(text, 20, yPosition, { maxWidth: 250 });
-                            yPosition += 10;
-                        }
+                // Pattern 1: Standard text runs
+                const textPattern1 = /<a:t[^>]*>([^<]+)<\/a:t>/g;
+                let match;
+                while ((match = textPattern1.exec(slideXml)) !== null) {
+                    allText.push(match[1]);
+                }
+
+                // Pattern 2: Text without attributes
+                const textPattern2 = /<t[^>]*>([^<]+)<\/t>/g;
+                while ((match = textPattern2.exec(slideXml)) !== null) {
+                    allText.push(match[1]);
+                }
+
+                // Add slide title
+                pdf.setFontSize(16);
+                pdf.setFont('helvetica', 'bold');
+                pdf.text(`Slide ${i}`, 20, 20);
+
+                let yPosition = 35;
+
+                if (allText.length > 0) {
+                    // Remove duplicates and filter empty
+                    const uniqueText = [...new Set(allText)].filter(t => t.trim());
+
+                    uniqueText.forEach((text, index) => {
+                        pdf.setFontSize(12);
+                        pdf.setFont('helvetica', 'normal');
+
+                        // Wrap text if too long
+                        const lines = pdf.splitTextToSize(text.trim(), 250);
+                        lines.forEach((line: string) => {
+                            if (yPosition > 180) { // If near bottom, add new page
+                                pdf.addPage();
+                                yPosition = 20;
+                            }
+                            pdf.text(line, 20, yPosition);
+                            yPosition += 7;
+                        });
+
+                        yPosition += 3; // Extra space between text blocks
                     });
                 } else {
-                    pdf.setFontSize(12);
-                    pdf.text(`Slide ${i}`, 20, yPosition);
+                    pdf.setFontSize(10);
+                    pdf.setFont('helvetica', 'italic');
+                    pdf.text('(No text content found on this slide)', 20, yPosition);
                 }
             }
 
