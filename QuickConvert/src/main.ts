@@ -8,7 +8,6 @@ import { renderPdfToImage } from './modules/pdfToImage';
 import { renderPdfCompressor } from './modules/pdfCompressor';
 import { renderPdfToDocx } from './modules/pdfToDocx';
 import { renderPdfToPpt } from './modules/pdfToPpt';
-import { renderPptToPdf } from './modules/pptToPdf';
 import { renderSvgConverter } from './modules/svgConverter';
 import { renderPdfMerge } from './modules/pdfMerge';
 import { renderPdfSplit } from './modules/pdfSplit';
@@ -38,8 +37,7 @@ const tools: Tool[] = [
     { id: 'pdf-merge', title: 'Merge PDF', description: 'Combine multiple PDFs', icon: '🔗', category: 'pdf' },
     { id: 'pdf-split', title: 'Split PDF', description: 'Extract pages from PDF', icon: '✂️', category: 'pdf' },
     { id: 'pdf-ocr', title: 'PDF to Text', description: 'Extract text via OCR', icon: '🔍', category: 'pdf' },
-    { id: 'pdf-security', title: 'PDF Security', description: 'Protect/Unlock PDF', icon: '🔒', category: 'pdf' },
-    { id: 'ppt-pdf', title: 'PPT to PDF', description: 'Convert PowerPoint to PDF', icon: '📄', category: 'pdf' }
+    { id: 'pdf-security', title: 'PDF Security', description: 'Protect/Unlock PDF', icon: '🔒', category: 'pdf' }
 ];
 
 let currentCategory: 'image' | 'pdf' = 'image';
@@ -87,8 +85,6 @@ function loadTool(toolId: string) {
         renderPdfToDocx(toolUI);
     } else if (toolId === 'pdf-ppt') {
         renderPdfToPpt(toolUI);
-    } else if (toolId === 'ppt-pdf') {
-        renderPptToPdf(toolUI);
     } else if (toolId === 'svg-conv') {
         renderSvgConverter(toolUI);
     } else if (toolId === 'pdf-merge') {
