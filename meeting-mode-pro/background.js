@@ -61,7 +61,12 @@ class BackgroundService {
                     this.hidePersonalTabs();
                     sendResponse({ success: true });
                     break;
-                    
+                
+                case 'restorePersonalTabs':
+                    this.restorePersonalTabs();
+                    sendResponse({ success: true });
+                    break;    
+                                    
                 case 'cleanUrl':
                     this.cleanCurrentUrl(sender.tab?.id);
                     sendResponse({ success: true });
@@ -151,35 +156,41 @@ class BackgroundService {
     }
 
     setupContextMenus() {
-        // Clear existing menus
-        chrome.contextMenus.removeAll();
+        try {
+            if (!chrome.contextMenus) {
+                console.warn("ContextMenus API not ready yet");
+                return;
+            }
 
-        // Create context menu for URL cleaning
-        chrome.contextMenus.create({
-            id: 'cleanUrl',
-            title: 'Clean URL for sharing',
-            contexts: ['link', 'page', 'selection']
-        });
+            chrome.contextMenus.removeAll?.(); // <- Safe optional call
 
-        // Create context menu for meeting mode
-        chrome.contextMenus.create({
-            id: 'toggleMeetingMode',
-            title: 'Toggle Meeting Mode',
-            contexts: ['page', 'browser_action']
-        });
+            chrome.contextMenus.create({
+                id: 'cleanUrl',
+                title: 'Clean URL for sharing',
+                contexts: ['link', 'page']
+            });
 
-        // Create context menu for action extraction
-        chrome.contextMenus.create({
-            id: 'extractActionItems',
-            title: 'Extract Action Items',
-            contexts: ['page', 'selection']
-        });
+            chrome.contextMenus.create({
+                id: 'toggleMeetingMode',
+                title: 'Toggle Meeting Mode',
+                contexts: ['page']
+            });
 
-        // Handle context menu clicks
-        chrome.contextMenus.onClicked.addListener((info, tab) => {
-            this.handleContextMenuClick(info, tab);
-        });
+            chrome.contextMenus.create({
+                id: 'extractActionItems',
+                title: 'Extract Action Items',
+                contexts: ['page', 'selection']
+            });
+
+            chrome.contextMenus.onClicked.addListener((info, tab) => {
+                this.handleContextMenuClick(info, tab);
+            });
+
+        } catch (error) {
+            console.log('Context menus not available:', error);
+        }
     }
+
 
     async toggleMeetingMode(enable) {
         this.meetingActive = enable;
@@ -252,22 +263,62 @@ class BackgroundService {
         const tabsToHide = [];
 
         for (const tab of tabs) {
+            if (!tab.id || tab.active) continue; // NEVER try to hide active tab
+
             if (tab.url && this.isDomainInList(tab.url, personalDomains)) {
                 tabsToHide.push(tab.id);
                 this.hiddenTabs.add(tab.id);
             }
         }
 
-        if (tabsToHide.length > 0) {
-            await chrome.tabs.hide(tabsToHide);
-            await this.saveHiddenTabs();
-            
-            this.createNotification({
-                title: `${tabsToHide.length} tabs hidden`,
-                message: 'Personal content is now hidden from view',
-                type: 'success'
+        if (tabsToHide.length === 0) return;
+
+        try {
+            // 👉 SAFER METHOD: Group instead of hide
+            const groupId = await chrome.tabs.group({ tabIds: tabsToHide });
+
+            await chrome.tabGroups.update(groupId, {
+                collapsed: true,
+                title: "Personal Tabs (Hidden)",
+                color: "red"
             });
+
+            console.log("Personal tabs grouped & collapsed:", groupId);
+
+            await this.saveHiddenTabs();
+
+            this.createNotification({
+                title: `${tabsToHide.length} tabs secured`,
+                message: "Personal tabs grouped and collapsed",
+                type: "success"
+            });
+
+        } catch (err) {
+            console.error("Tab grouping failed:", err);
         }
+    }
+
+    async restorePersonalTabs() {
+        const tabs = await chrome.tabs.query({ currentWindow: true });
+
+        for (const tab of tabs) {
+            if (tab.groupId !== -1) {
+                await chrome.tabs.ungroup(tab.id);
+            }
+        }
+
+        this.hiddenTabs.clear();
+        await chrome.storage.local.set({ hiddenTabs: [] });
+
+        this.createNotification({
+            title: "Tabs Restored",
+            message: "All personal tabs are visible again",
+            type: "success"
+        });
+    }
+
+    isPersonalTab(url) {
+        return this.isDomainInList(url, this.getPersonalDomains());
     }
 
     async restoreHiddenTabs() {
@@ -330,21 +381,25 @@ class BackgroundService {
     }
 
     async handleTabUrlChange(tabId, newUrl) {
+        const tab = await chrome.tabs.get(tabId);
+
+        if (!tab || tab.active || tab.url?.startsWith("chrome://")) {
+            console.warn("Skipping hide for this tab:", tabId);
+            return;
+        }
+
         if (this.isDomainInList(newUrl, this.getPersonalDomains())) {
             if (!this.hiddenTabs.has(tabId)) {
-                await chrome.tabs.hide(tabId);
-                this.hiddenTabs.add(tabId);
-                await this.saveHiddenTabs();
-                
-                this.sendToPopup('tabHidden', { tabId });
+                try {
+                    const groupId = await chrome.tabs.group({ tabIds: [tabId] });
+                    await chrome.tabGroups.update(groupId, { collapsed: true });
+                    this.hiddenTabs.add(tabId);
+                    await this.saveHiddenTabs();
+                    this.sendToPopup("tabHidden", { tabId });
+                } catch (e) {
+                    console.warn("Could not group tab:", tabId, e);
+                }
             }
-        } else if (this.hiddenTabs.has(tabId)) {
-            // If tab is no longer personal, show it
-            await chrome.tabs.show(tabId);
-            this.hiddenTabs.delete(tabId);
-            await this.saveHiddenTabs();
-            
-            this.sendToPopup('tabShown', { tabId });
         }
     }
 
@@ -440,41 +495,19 @@ class BackgroundService {
         if (active) {
             chrome.action.setBadgeText({ text: 'ON' });
             chrome.action.setBadgeBackgroundColor({ color: '#10b981' });
-            chrome.action.setIcon({
-                path: {
-                    "16": "icons/icon-active-16.png",
-                    "32": "icons/icon-active-32.png",
-                    "48": "icons/icon-active-48.png",
-                    "128": "icons/icon-active-128.png"
-                }
-            });
         } else {
             chrome.action.setBadgeText({ text: '' });
-            chrome.action.setIcon({
-                path: {
-                    "16": "icons/icon16.png",
-                    "32": "icons/icon32.png",
-                    "48": "icons/icon48.png",
-                    "128": "icons/icon128.png"
-                }
-            });
         }
     }
 
-    createNotification({ title, message, type = 'info' }) {
-        const iconMap = {
-            info: 'icons/icon48.png',
-            success: 'icons/success-48.png',
-            warning: 'icons/warning-48.png',
-            error: 'icons/error-48.png'
-        };
-
+    createNotification({ title, message, type = 'info', requireInteraction = false }) {
         chrome.notifications.create({
             type: 'basic',
-            iconUrl: iconMap[type] || iconMap.info,
+            iconUrl: 'icons/icon48.png',
             title: title,
             message: message,
-            priority: 2
+            priority: 2,
+            requireInteraction: requireInteraction
         });
     }
 
@@ -532,16 +565,17 @@ class BackgroundService {
     }
 
     broadcastStateChange() {
-        // Send message to all tabs
+    // Send message to all tabs
         chrome.tabs.query({}, (tabs) => {
             tabs.forEach(tab => {
-                try {
+                // Only send to valid tabs
+                if (tab.url && !tab.url.startsWith('chrome://') && !tab.url.startsWith('chrome-extension://')) {
                     chrome.tabs.sendMessage(tab.id, {
                         action: 'meetingModeChanged',
                         data: { active: this.meetingActive }
+                    }).catch(() => {
+                        // Tab might not have content script - ignore error
                     });
-                } catch (e) {
-                    // Tab might not have content script
                 }
             });
         });
@@ -769,9 +803,17 @@ const service = new BackgroundService();
 // Handle installation
 chrome.runtime.onInstalled.addListener((details) => {
     if (details.reason === 'install') {
-        // First time installation
-        chrome.tabs.create({
-            url: chrome.runtime.getURL('welcome.html')
+        // First time installation - show welcome notification
+        console.log('Meeting Mode Pro installed successfully!');
+        
+        // Show welcome notification
+        chrome.notifications.create({
+            type: 'basic',
+            iconUrl: 'icons/icon48.png',
+            title: 'Welcome to Meeting Mode Pro! 🎉',
+            message: 'Click the extension icon to get started. Press Ctrl+Shift+M to toggle Meeting Mode.',
+            priority: 2,
+            requireInteraction: true
         });
         
         // Set default settings
@@ -819,8 +861,6 @@ chrome.alarms.onAlarm.addListener((alarm) => {
     }
 });
 
-// Handle uninstall
-chrome.runtime.setUninstallURL('https://forms.gle/your-uninstall-feedback-form');
 
 // Export for testing
 if (typeof module !== 'undefined' && module.exports) {

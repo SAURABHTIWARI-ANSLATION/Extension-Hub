@@ -29,7 +29,9 @@ class MeetingMode {
     async init() {
         await this.loadSettings();
         await this.loadState();
-        this.updateUI();
+        document.addEventListener('DOMContentLoaded', () => {
+            this.updateUI();
+        });
         this.setupEventListeners();
         this.startTabMonitoring();
         console.log('Meeting Mode Pro initialized');
@@ -80,79 +82,45 @@ class MeetingMode {
     }
 
     setupEventListeners() {
-        // Meeting toggle
-        document.getElementById('meetingToggle').addEventListener('change', (e) => {
+        const add = (id, event, fn) => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener(event, fn);
+            else console.warn(`Missing element: #${id}`);
+        };
+
+        add('meetingToggle', 'change', (e) => {
             this.toggleMeetingMode(e.target.checked);
         });
 
-        // Control buttons
-        document.getElementById('hidePersonalBtn').addEventListener('click', () => {
-            this.hidePersonalTabs();
-        });
+        add('hidePersonalBtn', 'click', () => this.hidePersonalTabs());
+        add('cleanUrlBtn', 'click', () => this.cleanCurrentUrl());
+        add('timerBtn', 'click', () => this.showTimerModal());
+        add('agendaBtn', 'click', () => this.showAgendaModal());
 
-        document.getElementById('cleanUrlBtn').addEventListener('click', () => {
-            this.cleanCurrentUrl();
-        });
+        add('autoHideNotifications', 'change', (e) =>
+            this.updateSetting('autoHideNotifications', e.target.checked)
+        );
 
-        document.getElementById('timerBtn').addEventListener('click', () => {
-            this.showTimerModal();
-        });
+        add('autoCleanUrls', 'change', (e) =>
+            this.updateSetting('autoCleanUrls', e.target.checked)
+        );
 
-        document.getElementById('agendaBtn').addEventListener('click', () => {
-            this.showAgendaModal();
-        });
+        add('timerSound', 'change', (e) =>
+            this.updateSetting('timerSound', e.target.checked)
+        );
 
-        // Settings
-        document.getElementById('autoHideNotifications').addEventListener('change', (e) => {
-            this.updateSetting('autoHideNotifications', e.target.checked);
-        });
+        add('actionExtraction', 'change', (e) =>
+            this.updateSetting('actionExtraction', e.target.checked)
+        );
 
-        document.getElementById('autoCleanUrls').addEventListener('change', (e) => {
-            this.updateSetting('autoCleanUrls', e.target.checked);
-        });
-
-        document.getElementById('timerSound').addEventListener('change', (e) => {
-            this.updateSetting('timerSound', e.target.checked);
-        });
-
-        document.getElementById('actionExtraction').addEventListener('change', (e) => {
-            this.updateSetting('actionExtraction', e.target.checked);
-        });
-
-        // Advanced settings
-        document.getElementById('advancedSettings').addEventListener('click', () => {
-            this.openAdvancedSettings();
-        });
-
-         // Privacy Policy Button
-        document.getElementById('privacyPolicyBtn').addEventListener('click', () => {
+        // Privacy policy button
+        add('privacyPolicyBtn', 'click', () => {
             chrome.tabs.create({
                 url: chrome.runtime.getURL('privacy-policy.html')
             });
         });
-
-        // Footer buttons
-        document.getElementById('helpBtn').addEventListener('click', () => {
-            this.openHelp();
-        });
-
-        document.getElementById('feedbackBtn').addEventListener('click', () => {
-            this.openFeedback();
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.shiftKey && e.key === 'M') {
-                this.toggleMeetingMode(!this.isActive);
-            }
-            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-                this.cleanCurrentUrl();
-            }
-        });
-
-        // Modal events
-        this.setupModalEvents();
     }
+
 
     setupModalEvents() {
         // Agenda modal
@@ -271,23 +239,38 @@ class MeetingMode {
 
     async hidePersonalTabs() {
         const tabs = await chrome.tabs.query({ currentWindow: true });
+        const personalDomains = this.getPersonalDomains();
         const tabsToHide = [];
-        
+
         for (const tab of tabs) {
-            if (this.isPersonalTab(tab.url)) {
+            if (tab.url && this.isDomainInList(tab.url, personalDomains)) {
                 tabsToHide.push(tab.id);
                 this.hiddenTabs.add(tab.id);
             }
         }
-        
-        if (tabsToHide.length > 0) {
-            await chrome.tabs.hide(tabsToHide);
-            await chrome.storage.local.set({ 
-                hiddenTabs: Array.from(this.hiddenTabs) 
+
+        if (tabsToHide.length === 0) return;
+
+        try {
+            // 👉 NEW APPROACH: First create a group, then hide it
+            const groupId = await chrome.tabs.group({ tabIds: tabsToHide });
+            await chrome.tabGroups.update(groupId, { collapsed: true });
+            console.log('Personal tabs grouped & collapsed:', groupId);
+
+            await chrome.runtime.sendMessage({
+                action: "hidePersonalTabs"
             });
-            
-            this.updateTabCounts();
-            this.showNotification(`${tabsToHide.length} tabs hidden`, 'Personal content is now hidden');
+
+            chrome.notifications.create({
+                type: "basic",
+                iconUrl: "icons/icon48.png",
+                title: `${tabsToHide.length} tabs secured`,
+                message: "Personal tabs are now grouped and collapsed",
+                priority: 2
+            });
+
+        } catch (err) {
+            console.error('Tab hide/group failed:', err);
         }
     }
 
@@ -302,6 +285,29 @@ class MeetingMode {
         );
     }
 
+    isDomainInList(url, domainList) {
+        try {
+            const urlObj = new URL(url);
+            const hostname = urlObj.hostname.toLowerCase();
+            
+            return domainList.some(domain => 
+                hostname.includes(domain.toLowerCase()) ||
+                hostname.endsWith(`.${domain.toLowerCase()}`)
+            );
+        } catch {
+            return false;
+        }
+    }
+
+    getPersonalDomains() {
+        return this.settings.personalDomains || [
+            'facebook.com', 'instagram.com', 'twitter.com',
+            'youtube.com', 'netflix.com', 'reddit.com',
+            'whatsapp.com', 'tiktok.com', 'pinterest.com'
+        ];
+    }
+
+
     isWorkTab(url) {
         if (!url) return false;
         
@@ -314,16 +320,20 @@ class MeetingMode {
     }
 
     async restoreHiddenTabs() {
-        const tabsToShow = Array.from(this.hiddenTabs);
-        
-        if (tabsToShow.length > 0) {
-            await chrome.tabs.show(tabsToShow);
+        try {
+            // Ask background to restore (correct place to do it)
+            await chrome.runtime.sendMessage({
+                action: 'restorePersonalTabs'
+            });
+
             this.hiddenTabs.clear();
             await chrome.storage.local.set({ hiddenTabs: [] });
-            
-            this.updateTabCounts();
+
+        } catch (error) {
+            console.error('Failed to restore tabs:', error);
         }
     }
+
 
     async cleanCurrentUrl() {
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -400,16 +410,21 @@ class MeetingMode {
         const tabs = await chrome.tabs.query({});
         
         for (const tab of tabs) {
+            if (!tab.url || tab.url.startsWith('chrome://')) {
+                console.log('Skipping chrome page:', tab.url);
+                continue;
+            }
+
             try {
                 await chrome.scripting.executeScript({
                     target: { tabId: tab.id },
                     files: ['content.js']
                 });
             } catch (e) {
-                // Some tabs might not allow scripting
                 console.log(`Could not inject sidebar into tab ${tab.id}:`, e.message);
             }
         }
+
     }
 
     async removeMeetingSidebar() {
@@ -491,8 +506,11 @@ class MeetingMode {
 
     updateTimerUI() {
         const timerElement = document.getElementById('meetingTimer');
+        if (!timerElement) return;   
+
         const timerText = timerElement.querySelector('.timer-text');
-        
+        if (!timerText) return;      
+
         if (this.meetingTimer.active && this.meetingTimer.remaining > 0) {
             const timeStr = this.formatTime(this.meetingTimer.remaining);
             timerText.textContent = `Meeting: ${timeStr}`;
@@ -503,7 +521,8 @@ class MeetingMode {
             timerElement.style.background = '';
             timerElement.style.color = '';
         }
-    }
+}
+
 
     formatTime(seconds) {
         const hrs = Math.floor(seconds / 3600);

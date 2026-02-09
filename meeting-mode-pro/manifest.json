@@ -34,7 +34,7 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"],
       "run_at": "document_idle",
-      "all_frames": true
+      "all_frames": false
     }
   ],
   "web_accessible_resources": [
@@ -54,13 +54,6 @@
         "mac": "Command+Shift+M"
       },
       "description": "Toggle Meeting Mode"
-    },
-    "quick-clean-url": {
-      "suggested_key": {
-        "default": "Ctrl+Shift+L",
-        "mac": "Command+Shift+L"
-      },
-      "description": "Clean URL for sharing"
     }
   },
   "icons": {

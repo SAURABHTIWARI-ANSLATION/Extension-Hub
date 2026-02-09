@@ -138,17 +138,6 @@ class MeetingContentScript {
             };
         }
         
-        // Override push subscription
-        if (navigator.serviceWorker?.ready) {
-            navigator.serviceWorker.ready.then = function() {
-                return Promise.resolve({
-                    pushManager: {
-                        subscribe: () => Promise.reject(new Error('Blocked')),
-                        getSubscription: () => Promise.resolve(null)
-                    }
-                });
-            };
-        }
     }
 
     blockToastNotifications() {
