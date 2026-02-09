@@ -3,15 +3,15 @@ import heic2any from 'heic2any';
 export function renderImageResizer(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="resizer-input" accept="image/*,.heic,.HEIC" class="file-input" />
+            <input type="file" id="resizer-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
             <div id="loader" class="hidden">Processing image...</div>
             <div id="resizer-ui" class="hidden" style="margin-top: 1.5rem;">
-                <div class="preview-container" style="text-align: center; margin-bottom: 1.5rem;">
-                    <img id="resizer-preview-img" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);" />
-                    <p id="resizer-info" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);"></p>
+                <div class="preview-container">
+                    <img id="resizer-preview-img" class="preview-image" />
+                    <p id="resizer-info" style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted);"></p>
                 </div>
                 
-                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border);">
+                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border); margin-top: 1.5rem;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                         <div class="input-group">
                             <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Width (px)</label>
@@ -63,7 +63,7 @@ export function renderImageResizer(container: HTMLElement) {
             let imageSrc: string;
             const ext = file.name.split('.').pop()?.toLowerCase();
 
-            if (ext === 'heic') {
+            if (ext === 'heic' || ext === 'heif') {
                 status.innerText = 'Converting HEIC for preview...';
                 const blob = await heic2any({ blob: file, toType: 'image/png' });
                 const resultBlob = Array.isArray(blob) ? blob[0] : blob;
@@ -134,7 +134,8 @@ export function renderImageResizer(container: HTMLElement) {
         img.onload = () => {
             ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
-            const mimeType = currentFile!.type === 'image/heic' ? 'image/jpeg' : (currentFile!.type || 'image/png');
+            const isHeicOrHeif = currentFile!.name.toLowerCase().endsWith('.heic') || currentFile!.name.toLowerCase().endsWith('.heif');
+            const mimeType = isHeicOrHeif ? 'image/jpeg' : (currentFile!.type || 'image/png');
             const extension = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : (mimeType.split('/')[1] || 'png');
 
             canvas.toBlob((blob) => {

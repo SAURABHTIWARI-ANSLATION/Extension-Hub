@@ -3,11 +3,11 @@ import heic2any from 'heic2any';
 export function renderHeicConverter(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="heic-input" accept=".heic,.HEIC" class="file-input" />
+            <input type="file" id="heic-input" accept=".heic,.HEIC,.heif,.HEIF" class="file-input" />
             <div id="heic-preview" class="hidden">
-                <div class="preview-container" style="text-align: center; margin-bottom: 1.5rem;">
+                <div class="preview-container">
                     <p id="heic-info" style="font-weight: 600; font-size: 1.1rem; color: var(--text-primary);"></p>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">HEIC images will be converted in your browser.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">HEIC images will be converted in your browser.</p>
                 </div>
                 
                 <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border);">
@@ -39,10 +39,17 @@ export function renderHeicConverter(container: HTMLElement) {
     let currentFile: File | null = null;
 
     input.onchange = (e: any) => {
-        currentFile = e.target.files[0];
-        if (!currentFile) return;
+        const file = e.target.files[0];
+        if (!file) return;
 
-        info.innerText = currentFile.name;
+        const ext = file.name.split('.').pop()?.toLowerCase();
+        if (ext !== 'heic' && ext !== 'heif') {
+            alert('Please select a valid HEIC or HEIF file');
+            return;
+        }
+
+        currentFile = file;
+        info.innerText = `Selected: ${file.name} (${(file.size / (1024 * 1024)).toFixed(2)} MB)`;
         preview.classList.remove('hidden');
         status.innerText = '';
     };

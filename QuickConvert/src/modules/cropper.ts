@@ -4,11 +4,11 @@ import heic2any from 'heic2any';
 export function renderCropper(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="cropper-input" accept="image/*,.heic,.HEIC" class="file-input" />
+            <input type="file" id="cropper-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
             <div id="loader" class="hidden">Processing image...</div>
             <div id="cropper-wrapper" class="hidden">
-                <div style="max-height: 400px; overflow: hidden; border-radius: var(--radius-md); margin-bottom: 1rem;">
-                    <img id="cropper-image" style="display: block; max-width: 100%;" />
+                <div class="preview-container">
+                    <img id="cropper-image" class="preview-image" />
                 </div>
                 <div class="tool-controls">
                     <button id="crop-btn" class="primary-btn">Crop & Download</button>
@@ -40,7 +40,7 @@ export function renderCropper(container: HTMLElement) {
             let processedImage: string;
             const ext = file.name.split('.').pop()?.toLowerCase();
 
-            if (ext === 'heic') {
+            if (ext === 'heic' || ext === 'heif') {
                 const blob = await heic2any({ blob: file, toType: 'image/png' });
                 const resultBlob = Array.isArray(blob) ? blob[0] : blob;
                 processedImage = URL.createObjectURL(resultBlob);

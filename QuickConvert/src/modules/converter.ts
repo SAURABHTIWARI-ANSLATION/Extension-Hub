@@ -3,12 +3,12 @@ import heic2any from 'heic2any';
 export function renderFormatConverter(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="converter-input" accept="image/*,.heic,.HEIC,.svg" class="file-input" />
+            <input type="file" id="converter-input" accept="image/*,.heic,.HEIC,.heif,.HEIF,.svg" class="file-input" />
             <div id="converter-ui" class="hidden" style="margin-top: 1.5rem;">
-                <div class="preview-container" style="text-align: center; margin-bottom: 1.5rem;">
-                    <img id="preview-image" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);" />
-                    <div id="svg-preview" style="max-width: 100%; max-height: 300px; overflow: auto; border-radius: var(--radius-md); display: none; background: #f9f9f9; padding: 1rem;"></div>
-                    <p id="converter-info" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);"></p>
+                <div class="preview-container">
+                    <img id="preview-image" class="preview-image" />
+                    <div id="svg-preview" class="preview-image" style="overflow: auto; display: none; background: #f9f9f9; padding: 1rem;"></div>
+                    <p id="converter-info" style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted);"></p>
                 </div>
                 
                 <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border);">
@@ -49,7 +49,7 @@ export function renderFormatConverter(container: HTMLElement) {
 
         currentFile = file;
         const ext = file.name.split('.').pop()?.toLowerCase();
-        isHeic = ext === 'heic';
+        isHeic = ext === 'heic' || ext === 'heif';
         isSvg = ext === 'svg';
 
         info.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;

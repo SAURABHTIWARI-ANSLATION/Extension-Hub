@@ -4,9 +4,13 @@ import heic2any from 'heic2any';
 export async function renderImageReducer(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="reducer-input" accept="image/*,.heic,.HEIC" class="file-input" />
+            <input type="file" id="reducer-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
             <div id="reducer-ui" class="hidden">
-                <div class="settings" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border); margin-top: 1rem;">
+                <div class="preview-container">
+                    <p id="reducer-preview-status" style="font-size: 0.9rem; color: var(--text-muted); text-align: center;"></p>
+                </div>
+                
+                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border); margin-top: 1.5rem;">
                     <div style="margin-bottom: 1rem;">
                         <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Quality: <span id="quality-val" style="font-weight: 600; color: var(--primary-color);">0.7</span></label>
                         <input type="range" id="quality-range" min="0.1" max="1" step="0.1" value="0.7" style="width: 100%"/>
@@ -60,7 +64,7 @@ export async function renderImageReducer(container: HTMLElement) {
             let fileToCompress = currentFile;
             const ext = currentFile.name.split('.').pop()?.toLowerCase();
 
-            if (ext === 'heic') {
+            if (ext === 'heic' || ext === 'heif') {
                 status.innerText = 'Converting HEIC for compression...';
                 const blob = await heic2any({ blob: currentFile, toType: 'image/jpeg', quality: 0.9 });
                 const resultBlob = Array.isArray(blob) ? blob[0] : blob;

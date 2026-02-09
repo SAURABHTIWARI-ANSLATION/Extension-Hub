@@ -4,7 +4,7 @@ import heic2any from 'heic2any';
 export async function renderImageToPdf(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="pdf-input" accept="image/*,.heic,.HEIC" multiple class="file-input" />
+            <input type="file" id="pdf-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" multiple class="file-input" />
             <div id="pdf-preview" class="hidden">
                 <p id="file-count" style="font-weight: 600; margin-bottom: 1rem;"></p>
                 <div class="tool-controls">
@@ -48,8 +48,8 @@ export async function renderImageToPdf(container: HTMLElement) {
                 status.innerText = `Processing file ${i + 1} of ${files.length}...`;
 
                 const ext = file.name.split('.').pop()?.toLowerCase();
-                if (ext === 'heic') {
-                    status.innerText = `Converting HEIC: ${file.name}...`;
+                if (ext === 'heic' || ext === 'heif') {
+                    status.innerText = `Converting HEIC/HEIF: ${file.name}...`;
                     const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 });
                     const resultBlob = Array.isArray(blob) ? blob[0] : blob;
                     file = new File([resultBlob], file.name.replace(/\.[^/.]+$/, ".jpg"), { type: 'image/jpeg' });
