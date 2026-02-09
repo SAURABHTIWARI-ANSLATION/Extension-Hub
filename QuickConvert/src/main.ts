@@ -15,6 +15,7 @@ import { renderPdfMerge } from './modules/pdfMerge';
 import { renderPdfSplit } from './modules/pdfSplit';
 import { renderPdfOcr } from './modules/pdfOcr';
 import { renderPdfSecurity } from './modules/pdfSecurity';
+import { renderImageResizer } from './modules/imageResizer';
 
 interface Tool {
     id: string;
@@ -40,7 +41,8 @@ const tools: Tool[] = [
     { id: 'pdf-merge', title: 'Merge PDF', description: 'Combine multiple PDFs', icon: '🔗', category: 'pdf' },
     { id: 'pdf-split', title: 'Split PDF', description: 'Extract pages from PDF', icon: '✂️', category: 'pdf' },
     { id: 'pdf-ocr', title: 'PDF to Text', description: 'Extract text via OCR', icon: '🔍', category: 'pdf' },
-    { id: 'pdf-security', title: 'PDF Security', description: 'Protect/Unlock PDF', icon: '🔒', category: 'pdf' }
+    { id: 'pdf-security', title: 'PDF Security', description: 'Protect/Unlock PDF', icon: '🔒', category: 'pdf' },
+    { id: 'img-resizer', title: 'Image Resizer', description: 'Custom Dimensions (px)', icon: '📐', category: 'image' }
 ];
 
 let currentCategory: 'image' | 'pdf' = 'image';
@@ -106,6 +108,8 @@ function loadTool(toolId: string) {
         renderPdfOcr(toolUI);
     } else if (toolId === 'pdf-security') {
         renderPdfSecurity(toolUI);
+    } else if (toolId === 'img-resizer') {
+        renderImageResizer(toolUI);
     } else {
         toolUI.innerHTML = `<h3>${tools.find(t => t.id === toolId)?.title}</h3><p>Work in progress...</p>`;
     }

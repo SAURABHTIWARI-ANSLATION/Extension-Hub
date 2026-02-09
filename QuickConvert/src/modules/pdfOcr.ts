@@ -1,7 +1,10 @@
 import { createWorker } from 'tesseract.js';
 import * as pdfjsLib from 'pdfjs-dist';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+).toString();
 
 export function renderPdfOcr(container: HTMLElement) {
     container.innerHTML = `
@@ -51,6 +54,9 @@ export function renderPdfOcr(container: HTMLElement) {
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
             const worker = await createWorker(langSelect.value, 1, {
+                // For proper extension CSP and offline use, these could be served from /public/
+                // workerPath: '/tesseract/worker.min.js',
+                // corePath: '/tesseract/tesseract-core.wasm.js',
                 logger: m => {
                     if (m.status === 'recognizing text') {
                         status.innerText = `Recognizing text: ${Math.round(m.progress * 100)}%`;
