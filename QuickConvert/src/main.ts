@@ -26,14 +26,13 @@ interface Tool {
 }
 
 const tools: Tool[] = [
+    { id: 'universal-conv', title: 'Universal Converter', description: 'Convert between any image format (HEIC, SVG, PNG, JPG)', icon: '🔄', category: 'image' },
     { id: 'cropper', title: 'Image Cropper', description: 'Crop and rotate images', icon: '✂️', category: 'image' },
-    { id: 'jpeg-png', title: 'JPEG to PNG', description: 'Convert JPEG images to PNG', icon: '🖼️', category: 'image' },
-    { id: 'png-jpeg', title: 'PNG to JPEG', description: 'Convert PNG images to JPEG', icon: '📷', category: 'image' },
+    { id: 'img-resizer', title: 'Image Resizer', description: 'Custom Dimensions (px)', icon: '📐', category: 'image' },
     { id: 'img-pdf', title: 'Image to PDF', description: 'Convert images to a PDF file', icon: '📄', category: 'image' },
     { id: 'img-reducer', title: 'Image Reducer', description: 'Reduce image file size', icon: '📉', category: 'image' },
-    { id: 'webp-conv', title: 'WebP Converter', description: 'Convert to/from WebP', icon: '🌐', category: 'image' },
-    { id: 'heic-conv', title: 'HEIC to JPEG', description: 'Convert iPhone photos', icon: '📱', category: 'image' },
-    { id: 'svg-conv', title: 'SVG Converter', description: 'Convert SVG to Images', icon: '🎨', category: 'image' },
+    { id: 'heic-conv', title: 'HEIC Converter', description: 'Convert iPhone HEIC photos', icon: '📱', category: 'image' },
+    { id: 'svg-conv', title: 'SVG to Image', description: 'Convert SVG to Images', icon: '🎨', category: 'image' },
     { id: 'pdf-img', title: 'PDF to Image', description: 'Extract pages as images', icon: '🖼️', category: 'pdf' },
     { id: 'pdf-docx', title: 'PDF to DOCX', description: 'Convert PDF to Word document', icon: '📝', category: 'pdf' },
     { id: 'pdf-ppt', title: 'PDF to PPT', description: 'Convert PDF to PowerPoint', icon: '📊', category: 'pdf' },
@@ -41,8 +40,7 @@ const tools: Tool[] = [
     { id: 'pdf-merge', title: 'Merge PDF', description: 'Combine multiple PDFs', icon: '🔗', category: 'pdf' },
     { id: 'pdf-split', title: 'Split PDF', description: 'Extract pages from PDF', icon: '✂️', category: 'pdf' },
     { id: 'pdf-ocr', title: 'PDF to Text', description: 'Extract text via OCR', icon: '🔍', category: 'pdf' },
-    { id: 'pdf-security', title: 'PDF Security', description: 'Protect/Unlock PDF', icon: '🔒', category: 'pdf' },
-    { id: 'img-resizer', title: 'Image Resizer', description: 'Custom Dimensions (px)', icon: '📐', category: 'image' }
+    { id: 'pdf-security', title: 'PDF Security', description: 'Protect/Unlock PDF', icon: '🔒', category: 'pdf' }
 ];
 
 let currentCategory: 'image' | 'pdf' = 'image';
@@ -76,10 +74,8 @@ function loadTool(toolId: string) {
 
     if (toolId === 'cropper') {
         renderCropper(toolUI);
-    } else if (toolId === 'jpeg-png') {
-        renderFormatConverter(toolUI, 'png');
-    } else if (toolId === 'png-jpeg') {
-        renderFormatConverter(toolUI, 'jpeg');
+    } else if (toolId === 'universal-conv' || toolId === 'jpeg-png' || toolId === 'png-jpeg' || toolId === 'webp-conv') {
+        renderFormatConverter(toolUI);
     } else if (toolId === 'img-pdf') {
         renderImageToPdf(toolUI);
     } else if (toolId === 'img-reducer') {
@@ -94,8 +90,6 @@ function loadTool(toolId: string) {
         renderPdfToPpt(toolUI);
     } else if (toolId === 'ppt-pdf') {
         renderPptToPdf(toolUI);
-    } else if (toolId === 'webp-conv') {
-        renderFormatConverter(toolUI, 'webp');
     } else if (toolId === 'heic-conv') {
         renderHeicConverter(toolUI);
     } else if (toolId === 'svg-conv') {
