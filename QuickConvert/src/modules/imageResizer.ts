@@ -1,22 +1,25 @@
+import heic2any from 'heic2any';
+
 export function renderImageResizer(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="resizer-input" accept="image/*" class="file-input" />
+            <input type="file" id="resizer-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
+            <div id="loader" class="hidden">Processing image...</div>
             <div id="resizer-ui" class="hidden" style="margin-top: 1.5rem;">
-                <div class="preview-container" style="text-align: center; margin-bottom: 1.5rem;">
-                    <img id="resizer-preview-img" style="max-width: 100%; max-height: 300px; border-radius: var(--radius-md); box-shadow: var(--shadow-md);" />
-                    <p id="resizer-info" style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted);"></p>
+                <div class="preview-container">
+                    <img id="resizer-preview-img" class="preview-image" />
+                    <p id="resizer-info" style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted);"></p>
                 </div>
                 
-                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border);">
+                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border); margin-top: 1.5rem;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                         <div class="input-group">
                             <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Width (px)</label>
-                            <input type="number" id="resizer-width" class="file-input" style="padding: 0.75rem; border-style: solid;" />
+                            <input type="number" id="resizer-width" class="file-input" style="padding: 0.75rem; border-style: solid; width: 100%;" />
                         </div>
                         <div class="input-group">
                             <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Height (px)</label>
-                            <input type="number" id="resizer-height" class="file-input" style="padding: 0.75rem; border-style: solid;" />
+                            <input type="number" id="resizer-height" class="file-input" style="padding: 0.75rem; border-style: solid; width: 100%;" />
                         </div>
                     </div>
                     
@@ -28,7 +31,7 @@ export function renderImageResizer(container: HTMLElement) {
                     <button id="resize-btn" class="primary-btn" style="width: 100%;">Resize & Download</button>
                 </div>
             </div>
-            <div id="loader" class="hidden">Resizing image...</div>
+            <div id="resizer-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;"></div>
         </div>
     `;
 
@@ -41,18 +44,38 @@ export function renderImageResizer(container: HTMLElement) {
     const aspectCheck = document.getElementById('resizer-aspect') as HTMLInputElement;
     const resizeBtn = document.getElementById('resize-btn')!;
     const loader = document.getElementById('loader')!;
+    const status = document.getElementById('resizer-status')!;
 
     let originalWidth = 0;
     let originalHeight = 0;
     let currentFile: File | null = null;
 
-    input.onchange = (e: any) => {
+    input.onchange = async (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
         currentFile = file;
 
-        const reader = new FileReader();
-        reader.onload = (event) => {
+        loader.classList.remove('hidden');
+        ui.classList.add('hidden');
+        status.innerText = 'Loading image...';
+
+        try {
+            let imageSrc: string;
+            const ext = file.name.split('.').pop()?.toLowerCase();
+
+            if (ext === 'heic' || ext === 'heif') {
+                status.innerText = 'Converting HEIC for preview...';
+                const blob = await heic2any({ blob: file, toType: 'image/png' });
+                const resultBlob = Array.isArray(blob) ? blob[0] : blob;
+                imageSrc = URL.createObjectURL(resultBlob);
+            } else {
+                imageSrc = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => resolve(event.target?.result as string);
+                    reader.readAsDataURL(file);
+                });
+            }
+
             const img = new Image();
             img.onload = () => {
                 originalWidth = img.width;
@@ -62,10 +85,15 @@ export function renderImageResizer(container: HTMLElement) {
                 previewImg.src = img.src;
                 info.innerText = `Original Size: ${originalWidth} x ${originalHeight} px`;
                 ui.classList.remove('hidden');
+                loader.classList.add('hidden');
+                status.innerText = '';
             };
-            img.src = event.target?.result as string;
-        };
-        reader.readAsDataURL(file);
+            img.src = imageSrc;
+        } catch (err) {
+            console.error(err);
+            status.innerText = 'Error loading image.';
+            loader.classList.add('hidden');
+        }
     };
 
     widthInput.oninput = () => {
@@ -95,6 +123,7 @@ export function renderImageResizer(container: HTMLElement) {
 
         loader.classList.remove('hidden');
         resizeBtn.setAttribute('disabled', 'true');
+        status.innerText = 'Resizing...';
 
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d')!;
@@ -105,17 +134,19 @@ export function renderImageResizer(container: HTMLElement) {
         img.onload = () => {
             ctx.drawImage(img, 0, 0, targetWidth, targetHeight);
 
-            const mimeType = currentFile!.type || 'image/png';
-            const extension = mimeType.split('/')[1] || 'png';
+            const isHeicOrHeif = currentFile!.name.toLowerCase().endsWith('.heic') || currentFile!.name.toLowerCase().endsWith('.heif');
+            const mimeType = isHeicOrHeif ? 'image/jpeg' : (currentFile!.type || 'image/png');
+            const extension = mimeType.split('/')[1] === 'jpeg' ? 'jpg' : (mimeType.split('/')[1] || 'png');
 
             canvas.toBlob((blob) => {
                 if (blob) {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `resized-${targetWidth}x${targetHeight}-${currentFile!.name}`;
+                    a.download = `resized-${targetWidth}x${targetHeight}-${currentFile!.name.replace(/\.[^/.]+$/, "")}.${extension}`;
                     a.click();
                     URL.revokeObjectURL(url);
+                    status.innerText = 'Resize successful!';
                 }
                 loader.classList.add('hidden');
                 resizeBtn.removeAttribute('disabled');

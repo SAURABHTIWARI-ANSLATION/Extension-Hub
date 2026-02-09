@@ -1,22 +1,32 @@
 import imageCompression from 'browser-image-compression';
+import heic2any from 'heic2any';
 
 export async function renderImageReducer(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="reducer-input" accept="image/*" class="file-input" />
+            <input type="file" id="reducer-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
             <div id="reducer-ui" class="hidden">
-                <div class="settings">
-                    <label>Quality: <span id="quality-val">0.7</span></label>
-                    <input type="range" id="quality-range" min="0.1" max="1" step="0.1" value="0.7" style="width: 100%"/>
-                    
-                    <label>Max Width: <span id="width-val">1920</span>px</label>
-                    <input type="range" id="width-range" min="100" max="4000" step="100" value="1920" style="width: 100%"/>
+                <div class="preview-container">
+                    <p id="reducer-preview-status" style="font-size: 0.9rem; color: var(--text-muted); text-align: center;"></p>
                 </div>
-                <div class="tool-controls">
-                    <button id="reduce-btn" class="primary-btn">Compress & Download</button>
+                
+                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border); margin-top: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Quality: <span id="quality-val" style="font-weight: 600; color: var(--primary-color);">0.7</span></label>
+                        <input type="range" id="quality-range" min="0.1" max="1" step="0.1" value="0.7" style="width: 100%"/>
+                    </div>
+                    
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Max Width: <span id="width-val" style="font-weight: 600; color: var(--primary-color);">1920</span>px</label>
+                        <input type="range" id="width-range" min="100" max="4000" step="100" value="1920" style="width: 100%"/>
+                    </div>
+                </div>
+                <div class="tool-controls" style="margin-top: 1.5rem;">
+                    <button id="reduce-btn" class="primary-btn" style="width: 100%;">Compress & Download</button>
                 </div>
             </div>
-            <div id="loader" class="hidden">Compressing...</div>
+            <div id="loader" class="hidden">Compressing... (Processing HEIC if needed)</div>
+            <div id="reducer-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;"></div>
         </div>
     `;
 
@@ -24,8 +34,8 @@ export async function renderImageReducer(container: HTMLElement) {
     const ui = document.getElementById('reducer-ui')!;
     const reduceBtn = document.getElementById('reduce-btn')!;
     const loader = document.getElementById('loader')!;
+    const status = document.getElementById('reducer-status')!;
 
-    // Range displays
     const qRange = document.getElementById('quality-range') as HTMLInputElement;
     const qVal = document.getElementById('quality-val')!;
     const wRange = document.getElementById('width-range') as HTMLInputElement;
@@ -38,32 +48,48 @@ export async function renderImageReducer(container: HTMLElement) {
 
     input.onchange = (e: any) => {
         currentFile = e.target.files[0];
-        if (currentFile) ui.classList.remove('hidden');
+        if (currentFile) {
+            ui.classList.remove('hidden');
+            status.innerText = `Selected: ${currentFile.name}`;
+        }
     };
 
     reduceBtn.onclick = async () => {
         if (!currentFile) return;
         loader.classList.remove('hidden');
         reduceBtn.setAttribute('disabled', 'true');
-
-        const options = {
-            maxSizeMB: 1,
-            maxWidthOrHeight: parseInt(wRange.value),
-            useWebWorker: true,
-            initialQuality: parseFloat(qRange.value)
-        };
+        status.innerText = 'Initializing compression...';
 
         try {
-            const compressedFile = await imageCompression(currentFile, options);
+            let fileToCompress = currentFile;
+            const ext = currentFile.name.split('.').pop()?.toLowerCase();
+
+            if (ext === 'heic' || ext === 'heif') {
+                status.innerText = 'Converting HEIC for compression...';
+                const blob = await heic2any({ blob: currentFile, toType: 'image/jpeg', quality: 0.9 });
+                const resultBlob = Array.isArray(blob) ? blob[0] : blob;
+                fileToCompress = new File([resultBlob], currentFile.name.replace(/\.[^/.]+$/, ".jpg"), { type: 'image/jpeg' });
+            }
+
+            const options = {
+                maxSizeMB: 1,
+                maxWidthOrHeight: parseInt(wRange.value),
+                useWebWorker: true,
+                initialQuality: parseFloat(qRange.value)
+            };
+
+            const compressedFile = await imageCompression(fileToCompress, options);
             const url = URL.createObjectURL(compressedFile);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `compressed-${currentFile.name}`;
+            a.download = `compressed-${fileToCompress.name}`;
             a.click();
             URL.revokeObjectURL(url);
-        } catch (error) {
+            status.innerText = 'Compression successful!';
+        } catch (error: any) {
             console.error(error);
-            alert('Compression failed');
+            alert(`Compression failed: ${error.message || 'Error processing image'}`);
+            status.innerText = 'Compression failed.';
         } finally {
             loader.classList.add('hidden');
             reduceBtn.removeAttribute('disabled');
