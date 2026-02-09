@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "All-in-One Converter",
+  "name": "QuickConvert - Image PDF Tools",
   "version": "1.0.0",
-  "description": "Offline, privacy-first image and PDF converter with 16+ powerful tools.",
+  "description": "Fast offline converter for images (JPG, PNG, HEIC, WebP) and PDFs. Crop, resize, compress, convert, OCR, and more - all in one tool!",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -15,7 +15,7 @@
       "48": "icon48.png",
       "128": "icon128.png"
     },
-    "default_title": "All-in-One Converter"
+    "default_title": "QuickConvert - Image PDF Tools"
   },
   "permissions": [
     "storage"
