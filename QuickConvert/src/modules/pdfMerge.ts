@@ -4,12 +4,12 @@ export function renderPdfMerge(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="pdf-merge-input" accept="application/pdf" multiple class="file-input" />
-            <div id="pdf-list-container" class="hidden" style="margin-top: 1rem; text-align: left;">
-                <p>Selected Files (Files will be merged in this order):</p>
-                <ul id="pdf-file-list" style="list-style: none; padding: 0;"></ul>
+            <div id="pdf-list-container" class="hidden mt-lg">
+                <p class="fw-600">Selected Files (Files will be merged in this order):</p>
+                <ul id="pdf-file-list" class="merge-list"></ul>
                 <div class="tool-controls">
                     <button id="merge-btn" class="primary-btn">Merge & Download PDF</button>
-                    <button id="clear-merge-btn" class="secondary-btn" style="background: #ef4444; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; color: white; cursor: pointer;">Clear All</button>
+                    <button id="clear-merge-btn" class="danger-btn">Clear All</button>
                 </div>
             </div>
             <div id="loader" class="hidden">Merging PDFs...</div>
@@ -37,18 +37,10 @@ export function renderPdfMerge(container: HTMLElement) {
             listContainer.classList.remove('hidden');
             selectedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
-                li.style.padding = '0.75rem var(--space-md)';
-                li.style.background = 'var(--bg-tertiary)';
-                li.style.border = '1px solid var(--card-border)';
-                li.style.marginBottom = '0.5rem';
-                li.style.borderRadius = 'var(--radius-md)';
-                li.style.display = 'flex';
-                li.style.justifyContent = 'space-between';
-                li.style.alignItems = 'center';
-                li.style.color = 'var(--text-primary)';
+                li.className = 'merge-item';
                 li.innerHTML = `
-                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;">${index + 1}. ${file.name}</span>
-                    <button data-index="${index}" style="background: none; border: none; cursor: pointer; color: var(--accent-tertiary); font-size: 1.2rem; padding: 0 0.5rem;">✕</button>
+                    <span>${index + 1}. ${file.name}</span>
+                    <button data-index="${index}" class="icon-btn">✕</button>
                 `;
                 li.querySelector('button')?.addEventListener('click', (e) => {
                     const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index!);

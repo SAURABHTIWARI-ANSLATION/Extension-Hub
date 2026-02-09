@@ -11,20 +11,20 @@ export function renderPdfSecurity(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="pdf-security-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-security-ui" class="hidden">
-                <p id="security-info"></p>
-                <div class="tool-controls">
-                    <div style="margin-bottom: 1rem;">
-                        <input type="password" id="pdf-password" placeholder="Set New Password" class="file-input" style="width: 200px;" />
+            <div id="pdf-security-ui" class="hidden mt-lg">
+                <p id="security-info" class="fw-600 mb-md"></p>
+                <div class="tool-settings-card">
+                    <div class="mb-md">
+                        <input type="password" id="pdf-password" placeholder="Set New Password" class="file-input input-styled" />
                     </div>
-                    <div style="margin-bottom: 1rem;">
-                        <button id="encrypt-btn" class="primary-btn">Add Password & Download</button>
+                    <div class="mb-md">
+                        <button id="encrypt-btn" class="primary-btn w-full">Add Password & Download</button>
                     </div>
-                    <p style="font-size: 0.8rem; color: #666; margin-top: 1rem;">Note: This will secure the PDF visual content with a password. Selectable text may be converted to images for maximum compatibility.</p>
+                    <p class="fs-xs text-muted-color mt-md">Note: This will secure the PDF visual content with a password. Selectable text may be converted to images for maximum compatibility.</p>
                 </div>
             </div>
             <div id="loader" class="hidden">Processing Security...</div>
-            <div id="progress" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></div>
+            <div id="progress" class="preview-status"></div>
         </div>
     `;
 

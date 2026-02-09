@@ -10,18 +10,18 @@ export function renderPdfOcr(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="pdf-ocr-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-ocr-ui" class="hidden">
-                <p id="ocr-info"></p>
-                <div class="tool-controls">
-                    <select id="ocr-lang" class="file-input" style="margin-bottom: 1rem; width: auto;">
+            <div id="pdf-ocr-ui" class="hidden mt-lg">
+                <p id="ocr-info" class="fw-600 mb-md"></p>
+                <div class="tool-settings-card">
+                    <select id="ocr-lang" class="file-input input-styled mb-md">
                         <option value="eng">English</option>
                         <option value="hin">Hindi</option>
                         <option value="eng+hin">English + Hindi</option>
                     </select>
-                    <button id="ocr-btn" class="primary-btn">Extract Text (OCR) & Download</button>
+                    <button id="ocr-btn" class="primary-btn w-full">Extract Text (OCR) & Download</button>
                 </div>
             </div>
-            <div id="ocr-status" style="margin-top: 1rem; font-size: 0.9rem; color: #666;"></div>
+            <div id="ocr-status" class="preview-status"></div>
             <div id="loader" class="hidden">Initializing OCR Engine...</div>
         </div>
     `;
@@ -54,9 +54,8 @@ export function renderPdfOcr(container: HTMLElement) {
             const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
             const worker = await createWorker(langSelect.value, 1, {
-                // For proper extension CSP and offline use, these could be served from /public/
-                // workerPath: '/tesseract/worker.min.js',
-                // corePath: '/tesseract/tesseract-core.wasm.js',
+                // IMPORTANT for Manifest V3: Disable workerBlobURL to avoid EvalError
+                workerBlobURL: false,
                 logger: m => {
                     if (m.status === 'recognizing text') {
                         status.innerText = `Recognizing text: ${Math.round(m.progress * 100)}%`;

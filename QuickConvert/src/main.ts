@@ -9,7 +9,6 @@ import { renderPdfCompressor } from './modules/pdfCompressor';
 import { renderPdfToDocx } from './modules/pdfToDocx';
 import { renderPdfToPpt } from './modules/pdfToPpt';
 import { renderPptToPdf } from './modules/pptToPdf';
-import { renderHeicConverter } from './modules/heicConverter';
 import { renderSvgConverter } from './modules/svgConverter';
 import { renderPdfMerge } from './modules/pdfMerge';
 import { renderPdfSplit } from './modules/pdfSplit';
@@ -26,12 +25,11 @@ interface Tool {
 }
 
 const tools: Tool[] = [
-    { id: 'universal-conv', title: 'Universal Converter', description: 'Convert between any image format (HEIC, SVG, PNG, JPG)', icon: '🔄', category: 'image' },
+    { id: 'universal-conv', title: 'Universal Converter', description: 'Convert between any image format (SVG, PNG, JPG)', icon: '🔄', category: 'image' },
     { id: 'cropper', title: 'Image Cropper', description: 'Crop and rotate images', icon: '✂️', category: 'image' },
     { id: 'img-resizer', title: 'Image Resizer', description: 'Custom Dimensions (px)', icon: '📐', category: 'image' },
     { id: 'img-pdf', title: 'Image to PDF', description: 'Convert images to a PDF file', icon: '📄', category: 'image' },
     { id: 'img-reducer', title: 'Image Reducer', description: 'Reduce image file size', icon: '📉', category: 'image' },
-    { id: 'heic-conv', title: 'HEIC Converter', description: 'Convert iPhone HEIC photos', icon: '📱', category: 'image' },
     { id: 'svg-conv', title: 'SVG to Image', description: 'Convert SVG to Images', icon: '🎨', category: 'image' },
     { id: 'pdf-img', title: 'PDF to Image', description: 'Extract pages as images', icon: '🖼️', category: 'pdf' },
     { id: 'pdf-docx', title: 'PDF to DOCX', description: 'Convert PDF to Word document', icon: '📝', category: 'pdf' },
@@ -90,8 +88,6 @@ function loadTool(toolId: string) {
         renderPdfToPpt(toolUI);
     } else if (toolId === 'ppt-pdf') {
         renderPptToPdf(toolUI);
-    } else if (toolId === 'heic-conv') {
-        renderHeicConverter(toolUI);
     } else if (toolId === 'svg-conv') {
         renderSvgConverter(toolUI);
     } else if (toolId === 'pdf-merge') {
