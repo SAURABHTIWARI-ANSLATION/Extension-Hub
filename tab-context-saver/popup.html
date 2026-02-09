@@ -3,18 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tab Context Saver</title>
+  <title>Tab Context Saver ⚡ Time Travel for Tabs</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* Add some inline styles for immediate rendering */
+    body:before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 20% 30%, rgba(139, 92, 246, 0.05) 0%, transparent 40%),
+                  radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.03) 0%, transparent 40%);
+      z-index: -1;
+      pointer-events: none;
+    }
+  </style>
 </head>
 <body>
-  <!-- Animated Background -->
+  <!-- Animated Background - Space Nebula -->
   <div class="background-layer">
     <canvas id="particleCanvas"></canvas>
   </div>
 
   <!-- Main Container -->
   <div class="container">
-    <!-- Header Section -->
+    <!-- Header Section - Cyberpunk Style -->
     <header class="header">
       <div class="header-content">
         <div class="logo-section">
@@ -22,22 +40,34 @@
             <svg viewBox="0 0 40 40" class="logo-svg">
               <defs>
                 <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
-                  <stop offset="100%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                  <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                  <stop offset="50%" style="stop-color:#6366f1;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
                 </linearGradient>
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
               </defs>
-              <circle cx="20" cy="20" r="18" fill="none" stroke="url(#logoGrad)" stroke-width="2" opacity="0.3"/>
-              <circle cx="20" cy="20" r="12" fill="none" stroke="url(#logoGrad)" stroke-width="2"/>
-              <path d="M 20 8 L 20 20 L 28 20" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <circle cx="20" cy="20" r="18" fill="none" stroke="url(#logoGrad)" stroke-width="1.5" opacity="0.4" filter="url(#glow)"/>
+              <circle cx="20" cy="20" r="12" fill="none" stroke="url(#logoGrad)" stroke-width="2" filter="url(#glow)"/>
+              <path d="M 20 8 L 20 20 L 28 20" stroke="url(#logoGrad)" stroke-width="2.5" stroke-linecap="round" fill="none" filter="url(#glow)"/>
+              <!-- Time travel effect -->
+              <circle cx="20" cy="20" r="15" fill="none" stroke="url(#logoGrad)" stroke-width="1" opacity="0.2">
+                <animateTransform attributeName="transform" type="scale" from="1" to="1.3" dur="3s" repeatCount="indefinite" />
+              </circle>
             </svg>
           </div>
           <div class="title-group">
-            <h1 class="title">Tab Context Saver</h1>
-            <p class="subtitle">Time-travel for your browsing sessions</p>
+            <h1 class="title">TAB CONTEXT SAVER</h1>
+            <p class="subtitle">⚡ TIME-TRAVEL FOR YOUR BROWSING SESSIONS</p>
           </div>
         </div>
-        <button class="settings-btn" id="settingsBtn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <button class="settings-btn" id="settingsBtn" aria-label="Settings">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <circle cx="12" cy="12" r="3"></circle>
             <path d="M12 1v6m0 6v6m-9-9h6m6 0h6M4.22 4.22l4.24 4.24m7.08 7.08l4.24 4.24M19.78 4.22l-4.24 4.24m-7.08 7.08l-4.24 4.24"></path>
           </svg>
@@ -45,114 +75,174 @@
       </div>
     </header>
 
-    <!-- Hero Actions -->
+    <!-- Hero Actions - Time Travel Buttons -->
     <section class="hero-actions">
-      <button class="action-btn primary-btn" id="saveBtn">
+      <button class="action-btn primary-btn" id="saveBtn" aria-label="Save Current Session">
         <span class="btn-glow"></span>
         <span class="btn-content">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
             <polyline points="17 21 17 13 7 13 7 21"></polyline>
             <polyline points="7 3 7 8 15 8"></polyline>
           </svg>
-          <span>Save Current Session</span>
+          <span>FREEZE TIME & SAVE</span>
         </span>
         <div class="ripple-container"></div>
       </button>
 
-      <button class="action-btn secondary-btn" id="restoreBtn">
+      <button class="action-btn secondary-btn" id="restoreBtn" aria-label="Restore Last Session">
         <span class="btn-glow"></span>
         <span class="btn-content">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="1 4 1 10 7 10"></polyline>
             <path d="M3.51 15a9 9 0 102.13-9.36L1 10"></path>
           </svg>
-          <span>Restore Last Session</span>
+          <span>REWIND & RESTORE</span>
         </span>
+        <div class="ripple-container"></div>
       </button>
     </section>
 
-    <!-- Mode Switcher -->
+    <!-- Mode Switcher - Time Periods -->
     <section class="mode-section">
-      <h3 class="section-title">Quick Modes</h3>
+      <h3 class="section-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        QUICK TIME JUMP
+      </h3>
       <div class="mode-grid">
-        <button class="mode-btn" data-mode="work">
+        <button class="mode-btn" data-mode="work" aria-label="Work Mode">
           <div class="mode-icon">💼</div>
-          <span>Work</span>
+          <span>WORK</span>
         </button>
-        <button class="mode-btn" data-mode="study">
+        <button class="mode-btn" data-mode="study" aria-label="Study Mode">
           <div class="mode-icon">📚</div>
-          <span>Study</span>
+          <span>STUDY</span>
         </button>
-        <button class="mode-btn" data-mode="entertainment">
+        <button class="mode-btn" data-mode="entertainment" aria-label="Entertainment Mode">
           <div class="mode-icon">🎮</div>
-          <span>Entertainment</span>
+          <span>FUN</span>
         </button>
-        <button class="mode-btn" data-mode="custom">
-          <div class="mode-icon">⭐</div>
-          <span>Custom</span>
+        <button class="mode-btn active" data-mode="custom" aria-label="Custom Mode">
+          <div class="mode-icon">⚡</div>
+          <span>CUSTOM</span>
         </button>
       </div>
     </section>
 
-    <!-- Sessions List -->
+    <!-- Sessions Section - Time Archive -->
     <section class="sessions-section">
       <div class="section-header">
-        <h3 class="section-title">Saved Sessions</h3>
+        <h3 class="section-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+            <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"></path>
+          </svg>
+          TIME CAPSULES
+        </h3>
         <div class="search-container">
-          <input type="text" class="search-input" id="searchInput" placeholder="Search sessions...">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <input type="text" class="search-input" id="searchInput" placeholder="Search time capsules..." aria-label="Search saved sessions">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <circle cx="11" cy="11" r="8"></circle>
             <path d="m21 21-4.35-4.35"></path>
           </svg>
         </div>
       </div>
       
-      <div class="sessions-list" id="sessionsList">
+      <div class="sessions-list" id="sessionsList" role="list" aria-label="Saved sessions list">
         <!-- Sessions will be dynamically added here -->
       </div>
     </section>
 
-    <!-- Empty State -->
+    <!-- Empty State - Time Void -->
     <div class="empty-state" id="emptyState">
       <div class="empty-icon">
         <svg viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="40" stroke="url(#logoGrad)" stroke-width="2" opacity="0.3"/>
-          <path d="M 30 50 L 50 30 L 70 50 M 50 35 L 50 70" stroke="url(#logoGrad)" stroke-width="3" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="emptyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:0.3" />
+              <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.1" />
+            </linearGradient>
+            <filter id="emptyGlow">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          <circle cx="50" cy="50" r="40" stroke="url(#emptyGrad)" stroke-width="2" opacity="0.5" filter="url(#emptyGlow)"/>
+          <path d="M 30 50 L 50 30 L 70 50 M 50 35 L 50 70" stroke="url(#emptyGrad)" stroke-width="3" stroke-linecap="round" filter="url(#emptyGlow)"/>
+          <!-- Animated pulse -->
+          <circle cx="50" cy="50" r="45" stroke="url(#emptyGrad)" stroke-width="1" opacity="0">
+            <animate attributeName="opacity" values="0;0.3;0" dur="3s" repeatCount="indefinite" />
+            <animate attributeName="r" values="45;50;45" dur="3s" repeatCount="indefinite" />
+          </circle>
         </svg>
       </div>
-      <h3>No Saved Sessions Yet</h3>
-      <p>Save your first browsing session to get started</p>
+      <h3>TIME VOID DETECTED</h3>
+      <p>No time capsules saved yet. Freeze your first session to begin time-travel!</p>
     </div>
   </div>
 
-  <!-- Modal for Save Dialog -->
-  <div class="modal" id="saveModal">
-    <div class="modal-backdrop"></div>
+  <!-- Modal for Save Dialog - Time Portal -->
+  <div class="modal" id="saveModal" role="dialog" aria-labelledby="saveModalTitle" aria-hidden="true">
+    <div class="modal-backdrop" tabindex="-1"></div>
     <div class="modal-content">
-      <h2>Save Current Session</h2>
-      <input type="text" class="modal-input" id="sessionNameInput" placeholder="Enter session name...">
+      <h2 id="saveModalTitle">⏳ FREEZE THIS MOMENT</h2>
+      <input type="text" class="modal-input" id="sessionNameInput" placeholder="Enter capsule name (e.g., 'Project X Research')" aria-label="Session name">
       <div class="mode-selector">
-        <label>Select Mode:</label>
+        <label>SELECT TIME PERIOD:</label>
         <div class="mode-options">
-          <button class="mode-option" data-mode="work">💼 Work</button>
-          <button class="mode-option" data-mode="study">📚 Study</button>
-          <button class="mode-option" data-mode="entertainment">🎮 Entertainment</button>
-          <button class="mode-option active" data-mode="custom">⭐ Custom</button>
+          <button class="mode-option" data-mode="work" aria-label="Work mode">
+            <span style="font-size: 14px; margin-right: 6px;">💼</span>
+            WORK
+          </button>
+          <button class="mode-option" data-mode="study" aria-label="Study mode">
+            <span style="font-size: 14px; margin-right: 6px;">📚</span>
+            STUDY
+          </button>
+          <button class="mode-option" data-mode="entertainment" aria-label="Entertainment mode">
+            <span style="font-size: 14px; margin-right: 6px;">🎮</span>
+            FUN
+          </button>
+          <button class="mode-option active" data-mode="custom" aria-label="Custom mode">
+            <span style="font-size: 14px; margin-right: 6px;">⚡</span>
+            CUSTOM
+          </button>
         </div>
       </div>
       <div class="modal-actions">
-        <button class="modal-btn cancel-btn" id="cancelSaveBtn">Cancel</button>
-        <button class="modal-btn save-btn" id="confirmSaveBtn">Save Session</button>
+        <button class="modal-btn cancel-btn" id="cancelSaveBtn" aria-label="Cancel">CANCEL</button>
+        <button class="modal-btn save-btn" id="confirmSaveBtn" aria-label="Save session">FREEZE & SAVE</button>
       </div>
     </div>
   </div>
 
-  <!-- Time Travel Effect Overlay -->
-  <div class="time-travel-overlay" id="timeTravelOverlay">
+  <!-- Confirmation Modal -->
+  <div class="confirmation-modal" id="confirmationModal" style="display: none;">
+    <div class="confirmation-backdrop"></div>
+    <div class="confirmation-content">
+      <h3 id="confirmationTitle">CONFIRM TIME JUMP</h3>
+      <p id="confirmationMessage">Are you sure you want to restore this session? Current tabs will be closed.</p>
+      <div class="confirmation-actions">
+        <button class="confirmation-cancel" id="confirmationCancel">CANCEL</button>
+        <button class="confirmation-confirm" id="confirmationConfirm">JUMP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Travel Effect Overlay - Wormhole -->
+  <div class="time-travel-overlay" id="timeTravelOverlay" aria-hidden="true">
     <div class="time-wave"></div>
   </div>
 
+  <!-- Notification Container -->
+  <div id="notificationContainer"></div>
+
   <script src="popup.js"></script>
+  <script src="popup-extra.js"></script>
 </body>
 </html>
