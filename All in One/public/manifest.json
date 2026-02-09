@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "All-in-One Converter",
+  "version": "1.0.0",
+  "description": "Offline, privacy-first image and PDF converter with 16+ powerful tools.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "default_title": "All-in-One Converter"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": []
+}

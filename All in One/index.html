@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="All-in-One Offline Converter - Image & PDF Tools" />
+  <title>All-in-One Converter</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+
+<body>
+  <div id="app">
+    <aside class="sidebar">
+      <h1>✨ Converter</h1>
+      <nav>
+        <button class="nav-btn active" data-tool="image">🖼️ Image Tools</button>
+        <button class="nav-btn" data-tool="pdf">📄 PDF Tools</button>
+      </nav>
+    </aside>
+    <main class="content">
+      <header>
+        <h2 id="tool-title">Image Tools</h2>
+        <p id="tool-desc">Convert, crop, and resize images locally with ease.</p>
+      </header>
+      <div id="tool-container" class="tool-grid">
+        <!-- Tool buttons will be injected here -->
+      </div>
+      <div id="active-tool" class="hidden">
+        <button id="back-btn">← Back to Tools</button>
+        <div id="tool-ui"></div>
+      </div>
+    </main>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>
