@@ -10,10 +10,12 @@
           "data-reactroot",
           "data-reactid",
           "ReactDOM",
-          "react-dom"
+          "react-dom",
+          "_reactRootContainer"
         ],
         "icon": "⚛️",
-        "website": "https://react.dev"
+        "website": "https://react.dev",
+        "versionCheck": "React.version"
       },
       {
         "id": "nextjs",
@@ -23,10 +25,12 @@
           "__NEXT_PAGE__",
           "nextjs",
           "/_next/",
-          "next/"
+          "next/",
+          "__next"
         ],
         "icon": "⏭️",
-        "website": "https://nextjs.org"
+        "website": "https://nextjs.org",
+        "versionCheck": "__NEXT_DATA__.buildId"
       },
       {
         "id": "vue",
@@ -35,10 +39,13 @@
           "__VUE__",
           "data-v-",
           "Vue",
-          "vue@"
+          "vue@",
+          "v-cloak",
+          "v-if"
         ],
         "icon": "💚",
-        "website": "https://vuejs.org"
+        "website": "https://vuejs.org",
+        "versionCheck": "Vue.version"
       },
       {
         "id": "nuxtjs",
@@ -46,7 +53,8 @@
         "patterns": [
           "__NUXT__",
           "nuxt",
-          "nuxt/"
+          "nuxt/",
+          "_nuxt"
         ],
         "icon": "🌀",
         "website": "https://nuxt.com"
@@ -60,7 +68,9 @@
           "ng-repeat",
           "__ng",
           "angular",
-          "ng-version"
+          "ng-version",
+          "_nghost",
+          "_ngcontent"
         ],
         "icon": "🅰️",
         "website": "https://angular.io"
@@ -81,10 +91,78 @@
         "name": "Gatsby",
         "patterns": [
           "gatsby",
-          "___gatsby"
+          "___gatsby",
+          "gatsby-focus-wrapper"
         ],
         "icon": "🟣",
         "website": "https://gatsbyjs.com"
+      },
+      {
+        "id": "remix",
+        "name": "Remix",
+        "patterns": [
+          "remix",
+          "__remixContext",
+          "remix-run"
+        ],
+        "icon": "💿",
+        "website": "https://remix.run"
+      },
+      {
+        "id": "astro",
+        "name": "Astro",
+        "patterns": [
+          "astro",
+          "astro-island",
+          "astro-slot"
+        ],
+        "icon": "🚀",
+        "website": "https://astro.build"
+      },
+      {
+        "id": "preact",
+        "name": "Preact",
+        "patterns": [
+          "preact",
+          "preact/",
+          "__PREACT_DEVTOOLS__"
+        ],
+        "icon": "💜",
+        "website": "https://preactjs.com"
+      },
+      {
+        "id": "solidjs",
+        "name": "Solid.js",
+        "patterns": [
+          "solid-js",
+          "solidjs",
+          "_$DX"
+        ],
+        "icon": "🔷",
+        "website": "https://solidjs.com"
+      },
+      {
+        "id": "alpinejs",
+        "name": "Alpine.js",
+        "patterns": [
+          "alpine",
+          "x-data",
+          "x-show",
+          "Alpine.start"
+        ],
+        "icon": "🏔️",
+        "website": "https://alpinejs.dev"
+      },
+      {
+        "id": "emberjs",
+        "name": "Ember.js",
+        "patterns": [
+          "ember",
+          "ember-application",
+          "Ember.VERSION"
+        ],
+        "icon": "🔥",
+        "website": "https://emberjs.com"
       }
     ],
     "backend": [
@@ -109,65 +187,101 @@
         "website": "https://expressjs.com"
       },
       {
+        "id": "laravel",
+        "name": "Laravel",
+        "patterns": [
+          "laravel",
+          "laravel_session",
+          "XSRF-TOKEN"
+        ],
+        "icon": "🔴",
+        "website": "https://laravel.com"
+      },
+      {
+        "id": "django",
+        "name": "Django",
+        "patterns": [
+          "django",
+          "csrftoken",
+          "__admin_media_prefix__"
+        ],
+        "icon": "🟢",
+        "website": "https://djangoproject.com"
+      },
+      {
+        "id": "flask",
+        "name": "Flask",
+        "patterns": [
+          "flask",
+          "werkzeug"
+        ],
+        "icon": "⚗️",
+        "website": "https://flask.palletsprojects.com"
+      },
+      {
+        "id": "fastapi",
+        "name": "FastAPI",
+        "patterns": [
+          "fastapi",
+          "/docs",
+          "/redoc"
+        ],
+        "icon": "⚡",
+        "website": "https://fastapi.tiangolo.com"
+      },
+      {
+        "id": "spring",
+        "name": "Spring Boot",
+        "patterns": [
+          "spring",
+          "spring-boot",
+          "jsessionid"
+        ],
+        "icon": "🍃",
+        "website": "https://spring.io"
+      },
+      {
         "id": "php",
         "name": "PHP",
         "patterns": [
           ".php",
           "php",
-          "x-powered-by: php"
+          "x-powered-by: php",
+          "PHPSESSID"
         ],
         "icon": "🐘",
         "website": "https://php.net"
       },
       {
-        "id": "python",
-        "name": "Python",
+        "id": "aspnet",
+        "name": "ASP.NET Core",
         "patterns": [
-          "python",
-          "django",
-          "flask"
-        ],
-        "icon": "🐍",
-        "website": "https://python.org"
-      },
-      {
-        "id": "ruby",
-        "name": "Ruby",
-        "patterns": [
-          "ruby",
-          "rails"
-        ],
-        "icon": "💎",
-        "website": "https://ruby-lang.org"
-      },
-      {
-        "id": "java",
-        "name": "Java",
-        "patterns": [
-          "java",
-          "jsp",
-          "servlet"
-        ],
-        "icon": "☕",
-        "website": "https://java.com"
-      },
-      {
-        "id": "net",
-        "name": ".NET",
-        "patterns": [
-          ".net",
           "asp.net",
-          "aspnet"
+          "aspnet",
+          ".aspx",
+          "__viewstate"
         ],
         "icon": "🪟",
         "website": "https://dotnet.microsoft.com"
+      },
+      {
+        "id": "ruby",
+        "name": "Ruby on Rails",
+        "patterns": [
+          "ruby",
+          "rails",
+          "csrf-param"
+        ],
+        "icon": "💎",
+        "website": "https://rubyonrails.org"
       },
       {
         "id": "firebase",
         "name": "Firebase",
         "patterns": [
           "firebase",
-          "firebaseio.com"
+          "firebaseio.com",
+          "__firebase"
         ],
         "icon": "🔥",
         "website": "https://firebase.google.com"
@@ -183,10 +297,23 @@
           "/wp-admin",
           "wp-json",
           "wordpress",
-          "wp-"
+          "wp-",
+          "wp-embed"
         ],
         "icon": "📝",
-        "website": "https://wordpress.org"
+        "website": "https://wordpress.org",
+        "versionCheck": "generator"
+      },
+      {
+        "id": "woocommerce",
+        "name": "WooCommerce",
+        "patterns": [
+          "woocommerce",
+          "wc-",
+          "woocommerce.js"
+        ],
+        "icon": "🛒",
+        "website": "https://woocommerce.com"
       },
       {
         "id": "shopify",
@@ -195,10 +322,42 @@
           "shopify",
           "cdn.shopify.com",
           "myshopify.com",
-          "Shopify.theme"
+          "Shopify.theme",
+          "shopify-buy"
+        ],
+        "icon": "🛍️",
+        "website": "https://shopify.com"
+      },
+      {
+        "id": "magento",
+        "name": "Magento",
+        "patterns": [
+          "magento",
+          "mage",
+          "Mage.Cookies"
         ],
         "icon": "🛒",
-        "website": "https://shopify.com"
+        "website": "https://magento.com"
+      },
+      {
+        "id": "bigcommerce",
+        "name": "BigCommerce",
+        "patterns": [
+          "bigcommerce",
+          "bc-sf-filter"
+        ],
+        "icon": "🏬",
+        "website": "https://bigcommerce.com"
+      },
+      {
+        "id": "prestashop",
+        "name": "PrestaShop",
+        "patterns": [
+          "prestashop",
+          "presta"
+        ],
+        "icon": "🛒",
+        "website": "https://prestashop.com"
       },
       {
         "id": "wix",
@@ -216,7 +375,8 @@
         "name": "Squarespace",
         "patterns": [
           "squarespace",
-          "squarespace.com"
+          "squarespace.com",
+          "squarespace-cdn"
         ],
         "icon": "⬛",
         "website": "https://squarespace.com"
@@ -226,7 +386,8 @@
         "name": "Webflow",
         "patterns": [
           "webflow",
-          "webflow.io"
+          "webflow.io",
+          "webflow.com"
         ],
         "icon": "🌊",
         "website": "https://webflow.com"
@@ -236,7 +397,7 @@
         "name": "Joomla",
         "patterns": [
           "joomla",
-          "joomla.org"
+          "/components/com_"
         ],
         "icon": "🎯",
         "website": "https://joomla.org"
@@ -246,7 +407,8 @@
         "name": "Drupal",
         "patterns": [
           "drupal",
-          "drupal.org"
+          "drupal.org",
+          "sites/default"
         ],
         "icon": "💧",
         "website": "https://drupal.org"
@@ -254,14 +416,13 @@
     ],
     "analytics": [
       {
-        "id": "google_analytics",
-        "name": "Google Analytics",
+        "id": "google_analytics_4",
+        "name": "Google Analytics 4",
         "patterns": [
           "gtag.js",
-          "GoogleAnalyticsObject",
-          "__google_analytics",
-          "/analytics.js",
-          "ga("
+          "google-analytics.com/analytics.js",
+          "googletagmanager.com/gtag/js",
+          "ga4"
         ],
         "icon": "📊",
         "website": "https://analytics.google.com"
@@ -272,19 +433,21 @@
         "patterns": [
           "googletagmanager.com",
           "gtm.js",
-          "gtm.start"
+          "gtm.start",
+          "dataLayer"
         ],
         "icon": "🏷️",
         "website": "https://tagmanager.google.com"
       },
       {
         "id": "facebook_pixel",
-        "name": "Facebook Pixel",
+        "name": "Meta Pixel",
         "patterns": [
           "facebook.net/pixel",
           "fbq(",
           "facebook.com/tr/",
-          "fbevents.js"
+          "fbevents.js",
+          "_fbp"
         ],
         "icon": "📱",
         "website": "https://facebook.com/business/tools/meta-pixel"
@@ -295,7 +458,8 @@
         "patterns": [
           "hotjar",
           "hjid:",
-          "hjsettings"
+          "hjsettings",
+          "static.hotjar.com"
         ],
         "icon": "🔥",
         "website": "https://hotjar.com"
@@ -305,10 +469,53 @@
         "name": "Mixpanel",
         "patterns": [
           "mixpanel",
-          "mixpanel.track"
+          "mixpanel.track",
+          "cdn.mxpnl.com"
         ],
         "icon": "📈",
         "website": "https://mixpanel.com"
+      },
+      {
+        "id": "segment",
+        "name": "Segment",
+        "patterns": [
+          "segment.com",
+          "analytics.js",
+          "cdn.segment.com"
+        ],
+        "icon": "📊",
+        "website": "https://segment.com"
+      },
+      {
+        "id": "amplitude",
+        "name": "Amplitude",
+        "patterns": [
+          "amplitude",
+          "amplitude.com",
+          "cdn.amplitude.com"
+        ],
+        "icon": "📈",
+        "website": "https://amplitude.com"
+      },
+      {
+        "id": "plausible",
+        "name": "Plausible",
+        "patterns": [
+          "plausible",
+          "plausible.io"
+        ],
+        "icon": "📊",
+        "website": "https://plausible.io"
+      },
+      {
+        "id": "matomo",
+        "name": "Matomo",
+        "patterns": [
+          "matomo",
+          "piwik"
+        ],
+        "icon": "📊",
+        "website": "https://matomo.org"
       }
     ],
     "hosting": [
@@ -318,18 +525,20 @@
         "patterns": [
           "cloudflare",
           "cf-ray",
-          "__cf"
+          "__cf",
+          "cdnjs.cloudflare.com"
         ],
         "icon": "☁️",
         "website": "https://cloudflare.com"
       },
       {
         "id": "aws",
-        "name": "AWS",
+        "name": "Amazon AWS",
         "patterns": [
           "amazonaws.com",
           "s3.amazonaws",
-          "cloudfront.net"
+          "cloudfront.net",
+          "aws-"
         ],
         "icon": "🟠",
         "website": "https://aws.amazon.com"
@@ -340,7 +549,8 @@
         "patterns": [
           "azure",
           "azureedge.net",
-          "azure.com"
+          "azure.com",
+          "windows.net"
         ],
         "icon": "🔷",
         "website": "https://azure.microsoft.com"
@@ -350,7 +560,8 @@
         "name": "Google Cloud",
         "patterns": [
           "googleapis.com",
-          "gstatic.com"
+          "gstatic.com",
+          "googleusercontent.com"
         ],
         "icon": "🔴",
         "website": "https://cloud.google.com"
@@ -361,7 +572,8 @@
         "patterns": [
           "vercel.com",
           "vercel.app",
-          "now.sh"
+          "now.sh",
+          "x-vercel"
         ],
         "icon": "▲",
         "website": "https://vercel.com"
@@ -372,7 +584,8 @@
         "patterns": [
           "netlify",
           "netlify.com",
-          "netlify.app"
+          "netlify.app",
+          "x-nf-request-id"
         ],
         "icon": "🌐",
         "website": "https://netlify.com"
@@ -386,6 +599,54 @@
         ],
         "icon": "💜",
         "website": "https://heroku.com"
+      },
+      {
+        "id": "fastly",
+        "name": "Fastly",
+        "patterns": [
+          "fastly",
+          "fastly.net"
+        ],
+        "icon": "⚡",
+        "website": "https://fastly.com"
+      },
+      {
+        "id": "akamai",
+        "name": "Akamai",
+        "patterns": [
+          "akamai",
+          "akamaihd.net"
+        ],
+        "icon": "🌐",
+        "website": "https://akamai.com"
+      },
+      {
+        "id": "jsdelivr",
+        "name": "jsDelivr CDN",
+        "patterns": [
+          "cdn.jsdelivr.net",
+          "jsdelivr"
+        ],
+        "icon": "📦",
+        "website": "https://jsdelivr.com"
+      },
+      {
+        "id": "unpkg",
+        "name": "unpkg CDN",
+        "patterns": [
+          "unpkg.com"
+        ],
+        "icon": "📦",
+        "website": "https://unpkg.com"
+      },
+      {
+        "id": "cdnjs",
+        "name": "cdnjs",
+        "patterns": [
+          "cdnjs.cloudflare.com"
+        ],
+        "icon": "📦",
+        "website": "https://cdnjs.com"
       }
     ],
     "libraries": [
@@ -398,7 +659,8 @@
           "jquery/"
         ],
         "icon": "⚡",
-        "website": "https://jquery.com"
+        "website": "https://jquery.com",
+        "versionCheck": "jQuery.fn.jquery"
       },
       {
         "id": "bootstrap",
@@ -408,7 +670,8 @@
           "bootstrap/"
         ],
         "icon": "🎨",
-        "website": "https://getbootstrap.com"
+        "website": "https://getbootstrap.com",
+        "versionCheck": "bootstrap.Tooltip.VERSION"
       },
       {
         "id": "tailwind",
@@ -427,7 +690,8 @@
         "patterns": [
           "fontawesome",
           "font-awesome",
-          "fortawesome"
+          "fortawesome",
+          "fa-"
         ],
         "icon": "✨",
         "website": "https://fontawesome.com"
@@ -474,6 +738,69 @@
         "website": "https://momentjs.com"
       },
       {
+        "id": "threejs",
+        "name": "Three.js",
+        "patterns": [
+          "three.js",
+          "three.min.js",
+          "THREE."
+        ],
+        "icon": "🎮",
+        "website": "https://threejs.org"
+      },
+      {
+        "id": "d3js",
+        "name": "D3.js",
+        "patterns": [
+          "d3.js",
+          "d3.min.js",
+          "d3.v"
+        ],
+        "icon": "📊",
+        "website": "https://d3js.org"
+      },
+      {
+        "id": "chartjs",
+        "name": "Chart.js",
+        "patterns": [
+          "chart.js",
+          "chartjs"
+        ],
+        "icon": "📈",
+        "website": "https://chartjs.org"
+      },
+      {
+        "id": "gsap",
+        "name": "GSAP",
+        "patterns": [
+          "gsap",
+          "greensock",
+          "TweenMax"
+        ],
+        "icon": "✨",
+        "website": "https://greensock.com/gsap"
+      },
+      {
+        "id": "swiper",
+        "name": "Swiper",
+        "patterns": [
+          "swiper",
+          "swiper-bundle"
+        ],
+        "icon": "👆",
+        "website": "https://swiperjs.com"
+      },
+      {
+        "id": "aos",
+        "name": "AOS",
+        "patterns": [
+          "aos.js",
+          "data-aos"
+        ],
+        "icon": "✨",
+        "website": "https://michalsnik.github.io/aos"
+      },
+      {
         "id": "bulma",
         "name": "Bulma",
         "patterns": [
@@ -485,7 +812,7 @@
       },
       {
         "id": "materialize",
-        "name": "Materialize",
+        "name": "Materialize CSS",
         "patterns": [
           "materialize",
           "materializecss"
@@ -493,19 +820,127 @@
         "icon": "🎨",
         "website": "https://materializecss.com"
       }
+    ],
+    "payment": [
+      {
+        "id": "stripe",
+        "name": "Stripe",
+        "patterns": [
+          "stripe.com",
+          "stripe.js",
+          "js.stripe.com"
+        ],
+        "icon": "💳",
+        "website": "https://stripe.com"
+      },
+      {
+        "id": "paypal",
+        "name": "PayPal",
+        "patterns": [
+          "paypal.com",
+          "paypal.js",
+          "paypalobjects.com"
+        ],
+        "icon": "💰",
+        "website": "https://paypal.com"
+      },
+      {
+        "id": "razorpay",
+        "name": "Razorpay",
+        "patterns": [
+          "razorpay",
+          "checkout.razorpay.com"
+        ],
+        "icon": "💳",
+        "website": "https://razorpay.com"
+      },
+      {
+        "id": "square",
+        "name": "Square",
+        "patterns": [
+          "squareup.com",
+          "square.js"
+        ],
+        "icon": "⬛",
+        "website": "https://squareup.com"
+      },
+      {
+        "id": "braintree",
+        "name": "Braintree",
+        "patterns": [
+          "braintree",
+          "braintreegateway"
+        ],
+        "icon": "💳",
+        "website": "https://braintreepayments.com"
+      }
+    ],
+    "build_tools": [
+      {
+        "id": "webpack",
+        "name": "Webpack",
+        "patterns": [
+          "webpack",
+          "webpackJsonp",
+          "__webpack"
+        ],
+        "icon": "📦",
+        "website": "https://webpack.js.org"
+      },
+      {
+        "id": "vite",
+        "name": "Vite",
+        "patterns": [
+          "vite",
+          "/@vite/",
+          "__vite"
+        ],
+        "icon": "⚡",
+        "website": "https://vitejs.dev"
+      },
+      {
+        "id": "parcel",
+        "name": "Parcel",
+        "patterns": [
+          "parcel",
+          "parcelRequire"
+        ],
+        "icon": "📦",
+        "website": "https://parceljs.org"
+      },
+      {
+        "id": "turbopack",
+        "name": "Turbopack",
+        "patterns": [
+          "turbopack"
+        ],
+        "icon": "⚡",
+        "website": "https://turbo.build/pack"
+      },
+      {
+        "id": "esbuild",
+        "name": "esbuild",
+        "patterns": [
+          "esbuild"
+        ],
+        "icon": "⚡",
+        "website": "https://esbuild.github.io"
+      }
     ]
   },
   "metadata": {
-    "version": "1.0.0",
-    "lastUpdated": "2026-01-07",
-    "totalTechnologies": 54,
+    "version": "2.0.0",
+    "lastUpdated": "2026-02-09",
+    "totalTechnologies": 89,
     "categories": [
       "frontend",
       "backend",
       "cms",
       "analytics",
       "hosting",
-      "libraries"
+      "libraries",
+      "payment",
+      "build_tools"
     ]
   }
 }
