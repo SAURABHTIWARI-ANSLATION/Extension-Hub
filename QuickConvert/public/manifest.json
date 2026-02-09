@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "QuickConvert - Image PDF Tools",
   "version": "1.0.0",
-  "description": "Fast offline converter for images (JPG, PNG, HEIC, WebP) and PDFs. Crop, resize, compress, convert, OCR, and more - all in one tool!",
+  "description": "Fast offline converter for images (JPG, PNG, SVG, WebP) and PDFs. Crop, resize, compress, convert, OCR, and more - all in one tool!",
   "icons": {
     "16": "icon16.png",
     "48": "icon48.png",
@@ -22,6 +22,6 @@
   ],
   "host_permissions": [],
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
   }
 }

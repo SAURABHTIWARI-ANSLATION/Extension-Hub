@@ -2,15 +2,15 @@ export function renderSvgConverter(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="svg-input" accept=".svg" class="file-input" />
-            <div id="svg-preview-container" class="hidden">
-                <div id="svg-display" style="max-width: 100%; max-height: 300px; overflow: auto; border: 1px solid #eee; margin-bottom: 1rem; border-radius: 0.5rem; background: #f9f9f9; padding: 1rem;"></div>
-                <div class="tool-controls">
-                    <select id="svg-format" class="file-input" style="margin-bottom: 1rem; width: auto;">
+            <div id="svg-preview-container" class="hidden mt-lg">
+                <div id="svg-display" class="svg-preview-box preview-image mb-md"></div>
+                <div class="tool-settings-card">
+                    <select id="svg-format" class="file-input input-styled mb-md">
                         <option value="png">Format: PNG</option>
                         <option value="jpeg">Format: JPEG</option>
                         <option value="webp">Format: WebP</option>
                     </select>
-                    <button id="convert-svg-btn" class="primary-btn">Convert & Download</button>
+                    <button id="convert-svg-btn" class="primary-btn w-full">Convert & Download</button>
                 </div>
             </div>
             <div id="loader" class="hidden">Converting SVG...</div>

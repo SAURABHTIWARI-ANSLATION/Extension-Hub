@@ -1,12 +1,11 @@
 import Cropper from 'cropperjs';
-import heic2any from 'heic2any';
 
 export function renderCropper(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="cropper-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
+            <input type="file" id="cropper-input" accept="image/*" class="file-input" />
             <div id="loader" class="hidden">Processing image...</div>
-            <div id="cropper-wrapper" class="hidden">
+            <div id="cropper-wrapper" class="hidden mt-lg">
                 <div class="preview-container">
                     <img id="cropper-image" class="preview-image" />
                 </div>
@@ -37,20 +36,11 @@ export function renderCropper(container: HTMLElement) {
         currentFileName = `cropped-${file.name.replace(/\.[^/.]+$/, ".png")}`;
 
         try {
-            let processedImage: string;
-            const ext = file.name.split('.').pop()?.toLowerCase();
-
-            if (ext === 'heic' || ext === 'heif') {
-                const blob = await heic2any({ blob: file, toType: 'image/png' });
-                const resultBlob = Array.isArray(blob) ? blob[0] : blob;
-                processedImage = URL.createObjectURL(resultBlob);
-            } else {
-                processedImage = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (event) => resolve(event.target?.result as string);
-                    reader.readAsDataURL(file);
-                });
-            }
+            const processedImage = await new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onload = (event) => resolve(event.target?.result as string);
+                reader.readAsDataURL(file);
+            });
 
             image.src = processedImage;
             image.onload = () => {
@@ -75,7 +65,8 @@ export function renderCropper(container: HTMLElement) {
     cropBtn.onclick = () => {
         if (!cropper) return;
         const canvas = cropper.getCroppedCanvas();
-        canvas.toBlob((blob: Blob) => {
+        canvas.toBlob((blob: Blob | null) => {
+            if (!blob) return;
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;

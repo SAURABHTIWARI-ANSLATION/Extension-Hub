@@ -1,18 +1,17 @@
 import { jsPDF } from 'jspdf';
-import heic2any from 'heic2any';
 
 export async function renderImageToPdf(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="pdf-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" multiple class="file-input" />
             <div id="pdf-preview" class="hidden">
-                <p id="file-count" style="font-weight: 600; margin-bottom: 1rem;"></p>
+                <p id="file-count" class="fw-600 mb-md"></p>
                 <div class="tool-controls">
                     <button id="generate-pdf-btn" class="primary-btn">Generate PDF & Download</button>
                 </div>
             </div>
             <div id="loader" class="hidden">Generating PDF... (Processing HEIC if needed)</div>
-            <div id="pdf-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;"></div>
+            <div id="pdf-status" class="preview-status"></div>
         </div>
     `;
 
@@ -46,14 +45,6 @@ export async function renderImageToPdf(container: HTMLElement) {
             for (let i = 0; i < files.length; i++) {
                 let file = files[i];
                 status.innerText = `Processing file ${i + 1} of ${files.length}...`;
-
-                const ext = file.name.split('.').pop()?.toLowerCase();
-                if (ext === 'heic' || ext === 'heif') {
-                    status.innerText = `Converting HEIC/HEIF: ${file.name}...`;
-                    const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 });
-                    const resultBlob = Array.isArray(blob) ? blob[0] : blob;
-                    file = new File([resultBlob], file.name.replace(/\.[^/.]+$/, ".jpg"), { type: 'image/jpeg' });
-                }
 
                 const dataUrl = await fileToDataUrl(file);
 

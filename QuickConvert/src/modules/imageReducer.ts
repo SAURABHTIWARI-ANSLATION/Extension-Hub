@@ -1,5 +1,4 @@
 import imageCompression from 'browser-image-compression';
-import heic2any from 'heic2any';
 
 export async function renderImageReducer(container: HTMLElement) {
     container.innerHTML = `
@@ -7,26 +6,26 @@ export async function renderImageReducer(container: HTMLElement) {
             <input type="file" id="reducer-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
             <div id="reducer-ui" class="hidden">
                 <div class="preview-container">
-                    <p id="reducer-preview-status" style="font-size: 0.9rem; color: var(--text-muted); text-align: center;"></p>
+                    <p id="reducer-preview-status" class="fs-sm text-muted-color text-center"></p>
                 </div>
                 
-                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border); margin-top: 1.5rem;">
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Quality: <span id="quality-val" style="font-weight: 600; color: var(--primary-color);">0.7</span></label>
-                        <input type="range" id="quality-range" min="0.1" max="1" step="0.1" value="0.7" style="width: 100%"/>
+                <div class="tool-settings-card mt-lg">
+                    <div class="mb-md">
+                        <label class="label-styled">Quality: <span id="quality-val" class="fw-600 accent-text">0.7</span></label>
+                        <input type="range" id="quality-range" min="0.1" max="1" step="0.1" value="0.7" class="w-full"/>
                     </div>
                     
                     <div>
-                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Max Width: <span id="width-val" style="font-weight: 600; color: var(--primary-color);">1920</span>px</label>
-                        <input type="range" id="width-range" min="100" max="4000" step="100" value="1920" style="width: 100%"/>
+                        <label class="label-styled">Max Width: <span id="width-val" class="fw-600 accent-text">1920</span>px</label>
+                        <input type="range" id="width-range" min="100" max="4000" step="100" value="1920" class="w-full"/>
                     </div>
                 </div>
-                <div class="tool-controls" style="margin-top: 1.5rem;">
-                    <button id="reduce-btn" class="primary-btn" style="width: 100%;">Compress & Download</button>
+                <div class="mt-lg">
+                    <button id="reduce-btn" class="primary-btn w-full">Compress & Download</button>
                 </div>
             </div>
             <div id="loader" class="hidden">Compressing... (Processing HEIC if needed)</div>
-            <div id="reducer-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;"></div>
+            <div id="reducer-status" class="preview-status"></div>
         </div>
     `;
 
@@ -62,14 +61,6 @@ export async function renderImageReducer(container: HTMLElement) {
 
         try {
             let fileToCompress = currentFile;
-            const ext = currentFile.name.split('.').pop()?.toLowerCase();
-
-            if (ext === 'heic' || ext === 'heif') {
-                status.innerText = 'Converting HEIC for compression...';
-                const blob = await heic2any({ blob: currentFile, toType: 'image/jpeg', quality: 0.9 });
-                const resultBlob = Array.isArray(blob) ? blob[0] : blob;
-                fileToCompress = new File([resultBlob], currentFile.name.replace(/\.[^/.]+$/, ".jpg"), { type: 'image/jpeg' });
-            }
 
             const options = {
                 maxSizeMB: 1,

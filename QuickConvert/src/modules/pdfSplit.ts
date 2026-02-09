@@ -5,17 +5,17 @@ export function renderPdfSplit(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="pdf-split-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-split-ui" class="hidden">
-                <p id="split-info"></p>
-                <div class="tool-controls">
-                    <div style="margin-bottom: 1rem;">
+            <div id="pdf-split-ui" class="hidden mt-lg">
+                <p id="split-info" class="fw-600 mb-md"></p>
+                <div class="tool-settings-card">
+                    <div class="mb-md">
                         <label><input type="radio" name="split-mode" value="all" checked> Extract All Pages (as ZIP)</label><br>
                         <label><input type="radio" name="split-mode" value="range"> Extract Specific Range</label>
                     </div>
-                    <div id="range-input-container" class="hidden" style="margin-bottom: 1rem;">
-                        <input type="text" id="split-range" placeholder="e.g. 1-3, 5, 8-10" class="file-input" style="width: 200px;" />
+                    <div id="range-input-container" class="hidden mb-md">
+                        <input type="text" id="split-range" placeholder="e.g. 1-3, 5, 8-10" class="file-input input-styled" />
                     </div>
-                    <button id="split-btn" class="primary-btn">Split & Download</button>
+                    <button id="split-btn" class="primary-btn w-full">Split & Download</button>
                 </div>
             </div>
             <div id="loader" class="hidden">Splitting PDF...</div>

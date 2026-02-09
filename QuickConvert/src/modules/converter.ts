@@ -1,31 +1,29 @@
-import heic2any from 'heic2any';
-
 export function renderFormatConverter(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
-            <input type="file" id="converter-input" accept="image/*,.heic,.HEIC,.heif,.HEIF,.svg" class="file-input" />
-            <div id="converter-ui" class="hidden" style="margin-top: 1.5rem;">
+            <input type="file" id="converter-input" accept="image/*,.svg" class="file-input" />
+            <div id="converter-ui" class="hidden mt-lg">
                 <div class="preview-container">
                     <img id="preview-image" class="preview-image" />
-                    <div id="svg-preview" class="preview-image" style="overflow: auto; display: none; background: #f9f9f9; padding: 1rem;"></div>
-                    <p id="converter-info" style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-muted);"></p>
+                    <div id="svg-preview" class="preview-image display-block svg-preview-box"></div>
+                    <p id="converter-info" class="mt-md fs-sm text-muted-color"></p>
                 </div>
                 
-                <div class="tool-controls" style="background: var(--bg-tertiary); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--card-border);">
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; font-size: 0.85rem; margin-bottom: 0.5rem; color: var(--text-secondary);">Select Target Format</label>
-                        <select id="target-format" class="file-input" style="padding: 0.75rem; border-style: solid; width: 100%;">
+                <div class="tool-settings-card mt-lg">
+                    <div class="mb-md">
+                        <label class="label-styled">Select Target Format</label>
+                        <select id="target-format" class="file-input input-styled">
                             <option value="image/png">PNG (.png)</option>
                             <option value="image/jpeg">JPEG (.jpg)</option>
                             <option value="image/webp">WebP (.webp)</option>
                         </select>
                     </div>
                     
-                    <button id="convert-btn" class="primary-btn" style="width: 100%;">Convert & Download</button>
+                    <button id="convert-btn" class="primary-btn w-full">Convert & Download</button>
                 </div>
             </div>
-            <div id="loader" class="hidden">Processing... (Converting HEIC/SVG if needed)</div>
-            <div id="converter-status" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted); text-align: center;"></div>
+            <div id="loader" class="hidden">Processing...</div>
+            <div id="converter-status" class="preview-status"></div>
         </div>
     `;
 
@@ -40,7 +38,6 @@ export function renderFormatConverter(container: HTMLElement) {
     const status = document.getElementById('converter-status')!;
 
     let currentFile: File | null = null;
-    let isHeic = false;
     let isSvg = false;
 
     input.onchange = async (e: any) => {
@@ -49,7 +46,6 @@ export function renderFormatConverter(container: HTMLElement) {
 
         currentFile = file;
         const ext = file.name.split('.').pop()?.toLowerCase();
-        isHeic = ext === 'heic' || ext === 'heif';
         isSvg = ext === 'svg';
 
         info.innerText = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
@@ -58,12 +54,7 @@ export function renderFormatConverter(container: HTMLElement) {
         loader.classList.remove('hidden');
 
         try {
-            if (isHeic) {
-                previewImg.style.display = 'none';
-                svgPreview.style.display = 'none';
-                status.innerText = 'Preview not available for HEIC (Direct conversion only)';
-                loader.classList.add('hidden');
-            } else if (isSvg) {
+            if (isSvg) {
                 const text = await file.text();
                 svgPreview.innerHTML = text;
                 svgPreview.style.display = 'block';
@@ -95,52 +86,38 @@ export function renderFormatConverter(container: HTMLElement) {
         const targetExt = targetMime.split('/')[1] === 'jpeg' ? 'jpg' : targetMime.split('/')[1];
 
         try {
-            let imageSource: HTMLImageElement | HTMLCanvasElement | Blob = currentFile;
+            const img = new Image();
+            const loadPromise = new Promise((resolve, reject) => {
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+            });
 
-            if (isHeic) {
-                status.innerText = 'Converting HEIC to target format...';
-                const heicBlob = await heic2any({
-                    blob: currentFile,
-                    toType: targetMime,
-                    quality: 0.85
-                });
-                imageSource = Array.isArray(heicBlob) ? heicBlob[0] : heicBlob;
+            if (isSvg) {
+                const text = await currentFile.text();
+                const blob = new Blob([text], { type: 'image/svg+xml;charset=utf-8' });
+                img.src = URL.createObjectURL(blob);
             } else {
-                // For SVG and others, use Canvas for better control
-                const img = new Image();
-                const loadPromise = new Promise((resolve, reject) => {
-                    img.onload = () => resolve(img);
-                    img.onerror = reject;
-                });
-
-                if (isSvg) {
-                    const text = await currentFile.text();
-                    const blob = new Blob([text], { type: 'image/svg+xml;charset=utf-8' });
-                    img.src = URL.createObjectURL(blob);
-                } else {
-                    img.src = previewImg.src;
-                }
-
-                await loadPromise;
-
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d')!;
-
-                if (targetMime === 'image/jpeg') {
-                    ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-                }
-
-                ctx.drawImage(img, 0, 0);
-
-                const finalBlob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, targetMime, 0.9));
-                if (!finalBlob) throw new Error('Canvas conversion failed');
-                imageSource = finalBlob;
+                img.src = previewImg.src;
             }
 
-            const downloadUrl = URL.createObjectURL(imageSource as Blob);
+            await loadPromise;
+
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d')!;
+
+            if (targetMime === 'image/jpeg') {
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            ctx.drawImage(img, 0, 0);
+
+            const finalBlob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, targetMime, 0.9));
+            if (!finalBlob) throw new Error('Canvas conversion failed');
+
+            const downloadUrl = URL.createObjectURL(finalBlob);
             const a = document.createElement('a');
             a.href = downloadUrl;
             a.download = currentFile.name.replace(/\.[^/.]+$/, "") + '.' + targetExt;
