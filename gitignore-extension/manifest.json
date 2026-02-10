@@ -19,6 +19,9 @@
   },
   "permissions": ["activeTab", "storage", "scripting"],
   "host_permissions": ["<all_urls>"],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  },
   "web_accessible_resources": [
     {
       "resources": ["popup/popup.css"],
