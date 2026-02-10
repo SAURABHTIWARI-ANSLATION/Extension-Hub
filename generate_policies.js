@@ -186,5 +186,10 @@ directories.forEach(dir => {
     }
 });
 
-fs.writeFileSync(indexFile, generateIndexHTML(processedExtensions));
-console.log(`\nSuccessfully generated ${processedExtensions.length} privacy policies and updated index.`);
+const legacyIndexFile = path.join(rootDir, 'privacy_index.html');
+
+// Before logging success:
+const indexContent = generateIndexHTML(processedExtensions);
+fs.writeFileSync(indexFile, indexContent);
+fs.writeFileSync(legacyIndexFile, indexContent);
+console.log(`\nSuccessfully generated ${processedExtensions.length} privacy policies and updated both index.html and privacy_index.html.`);
