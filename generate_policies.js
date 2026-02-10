@@ -18,7 +18,13 @@ const getDirectories = source =>
 
 // Helper to read manifest
 const readManifest = (dirPath) => {
-    const manifestPath = path.join(dirPath, 'manifest.json');
+    let manifestPath = path.join(dirPath, 'manifest.json');
+
+    // Check root first, then public/ (common in Vite apps)
+    if (!fs.existsSync(manifestPath)) {
+        manifestPath = path.join(dirPath, 'public', 'manifest.json');
+    }
+
     if (fs.existsSync(manifestPath)) {
         try {
             return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
