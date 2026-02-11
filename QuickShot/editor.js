@@ -189,9 +189,10 @@ class QuickShotEditor {
         
         // Color selection
         document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.addEventListener('click', (e) => {
-                this.setColor(e.currentTarget.dataset.color);
-            });
+            const color = swatch.getAttribute('data-color');
+            if (color) {
+                swatch.style.backgroundColor = color;
+            }
         });
         
         // Custom color picker

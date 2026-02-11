@@ -9,12 +9,12 @@
     "scripting",
     "storage",
     "downloads",
-    "tabs",
     "notifications"
   ],
 
   "host_permissions": [
-    "<all_urls>"
+    "https://*/*",
+    "http://*/*"
   ],
 
   "action": {
@@ -25,9 +25,8 @@
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
     },
-    "default_popup": "popup.html",
-    "default_width": 420,    
-    "default_height": 520   
+    "default_width": 420,
+    "default_height": 520
   },
 
   "icons": {
@@ -41,7 +40,7 @@
     "type": "module"
   },
 
-  "commands": {
+   "commands": {
     "capture_visible": {
       "suggested_key": {
         "default": "Alt+Shift+1",
@@ -57,6 +56,15 @@
       "description": "Capture selected area"
     }
   },
+
+  "content_scripts": [
+    {
+      "matches": ["https://*/*", "http://*/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
 
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
