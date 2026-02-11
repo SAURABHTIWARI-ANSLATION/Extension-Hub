@@ -1,33 +1,39 @@
 {
   "manifest_version": 3,
-  "name": "GitIgnore Generator Pro",
-  "version": "1.0",
-  "description": "Generate .gitignore files with smart detection and themes",
+  "name": "GitIgnore Premium Generator",
+  "version": "2.0.0",
+  "description": "Enterprise-grade .gitignore generator with intelligent tech detection and premium templates",
+  "author": "GitIgnore Pro Team",
+  "homepage_url": "https://github.com/your-repo/gitignore-premium",
   "action": {
     "default_popup": "popup/popup.html",
-    "default_title": "GitIgnore Generator",
+    "default_title": "GitIgnore Premium Generator",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
-    }
+    },
+    "default_width": 820,
+    "default_height": 800
   },
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-  "permissions": ["activeTab", "storage", "scripting"],
-
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting",
+    "clipboardWrite"
+  ],
   "host_permissions": [
     "https://*/*",
     "http://*/*"
   ],
-
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
   },
-
- 
-  "web_accessible_resources": []
+  "minimum_chrome_version": "88",
+  "offline_enabled": true
 }

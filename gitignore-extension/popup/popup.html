@@ -1,71 +1,158 @@
 <!DOCTYPE html>
-<html data-theme="ocean-blue">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+  <title>GitIgnore Premium</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <!-- Theme Selector -->
-  <div class="theme-selector">
-    <div class="theme-btn ocean" data-theme="ocean-blue" title="Ocean Blue"></div>
-    <div class="theme-btn mint" data-theme="mint-teal" title="Mint Teal"></div>
-    <div class="theme-btn indigo" data-theme="indigo-night" title="Indigo Night"></div>
+  <!-- Premium Header -->
+  <div class="premium-header">
+    <h1>🚀 GitIgnore Premium</h1>
+    <div class="premium-subtitle">
+      <span>Enterprise-grade .gitignore generator</span>
+      <span class="premium-badge">PRO</span>
+    </div>
   </div>
 
-  
-  <!-- Header -->
-  <div class="header">
-    <h3>GitIgnore Generator</h3>
-    <p class="subtitle">
-      Generate .gitignore files instantly
-    </p>
+  <!-- TWO-COLUMN GRID - CSS KE MUTABIK EXACT -->
+  <div class="premium-grid">
+    
+    <!-- LEFT COLUMN: Technology Selection -->
+    <div class="premium-control">
+      <label class="premium-label">
+        <span>📦</span>
+        Technology Stack
+      </label>
+      <select id="techSelect" multiple class="premium-multi-select">
+        <optgroup label="⚡ Node.js Ecosystem">
+          <option value="node">Node.js</option>
+          <option value="npm">NPM</option>
+          <option value="yarn">Yarn</option>
+          <option value="pnpm">PNPM</option>
+        </optgroup>
+        <optgroup label="🐍 Python Ecosystem">
+          <option value="python">Python</option>
+          <option value="django">Django</option>
+          <option value="flask">Flask</option>
+          <option value="fastapi">FastAPI</option>
+        </optgroup>
+        <optgroup label="⚛️ JavaScript Frameworks">
+          <option value="react">React</option>
+          <option value="next">Next.js</option>
+          <option value="vue">Vue.js</option>
+          <option value="angular">Angular</option>
+          <option value="svelte">Svelte</option>
+        </optgroup>
+        <optgroup label="🖥️ Backend">
+          <option value="java">Java</option>
+          <option value="spring">Spring Boot</option>
+          <option value="php">PHP</option>
+          <option value="laravel">Laravel</option>
+          <option value="go">Go</option>
+          <option value="rust">Rust</option>
+          <option value="ruby">Ruby</option>
+          <option value="rails">Ruby on Rails</option>
+        </optgroup>
+        <optgroup label="☁️ DevOps & Cloud">
+          <option value="docker">Docker</option>
+          <option value="kubernetes">Kubernetes</option>
+          <option value="terraform">Terraform</option>
+          <option value="ansible">Ansible</option>
+        </optgroup>
+        <optgroup label="📱 Mobile">
+          <option value="android">Android</option>
+          <option value="ios">iOS</option>
+          <option value="flutter">Flutter</option>
+          <option value="react-native">React Native</option>
+        </optgroup>
+      </select>
+      <span class="premium-hint">⌘/Ctrl + click to select multiple</span>
+    </div>
+
+    <!-- RIGHT COLUMN: Platform -->
+    <div class="premium-control">
+      <label class="premium-label">
+        <span>🚀</span>
+        Deployment Platform
+      </label>
+      <select id="platformSelect" class="premium-select">
+        <option value="general">🌐 General Purpose</option>
+        <optgroup label="☁️ Cloud Platforms">
+          <option value="aws">AWS</option>
+          <option value="azure">Azure</option>
+          <option value="gcp">GCP</option>
+        </optgroup>
+        <optgroup label="⚡ Hosting Platforms">
+          <option value="vercel">Vercel</option>
+          <option value="netlify">Netlify</option>
+          <option value="github">GitHub Pages</option>
+          <option value="firebase">Firebase</option>
+          <option value="heroku">Heroku</option>
+        </optgroup>
+      </select>
+      
+      <div class="premium-quick-actions">
+        <button id="quickNodeBtn" class="premium-quick-btn">Node</button>
+        <button id="quickPythonBtn" class="premium-quick-btn">Python</button>
+        <button id="quickReactBtn" class="premium-quick-btn">React</button>
+        <button id="quickDockerBtn" class="premium-quick-btn">Docker</button>
+      </div>
+    </div>
+  </div> <!-- CLOSE premium-grid -->
+
+  <!-- 🔥 FIX: ACTION BUTTONS - GRID KE BAHAR, ALIGNMENT SAHI KARNE KE LIYE -->
+  <div class="premium-control premium-full-width">
+    <div class="premium-button-group">
+      <button id="autoDetectBtn" class="premium-btn premium-btn-secondary">
+        🔍 Auto-detect
+      </button>
+      <button id="clearBtn" class="premium-btn premium-btn-secondary">
+        ✕ Clear
+      </button>
+    </div>
+    <button id="generateBtn" class="premium-btn premium-btn-primary">
+      ⚡ Generate .gitignore
+    </button>
   </div>
-  
-  <!-- Main Controls -->
-  <div class="control-group">
-    <label for="techSelect">Select Technologies:</label>
-    <select id="techSelect" multiple class="multi-select">
-      <option value="node">Node.js</option>
-      <option value="python">Python</option>
-      <option value="react">React</option>
-      <option value="next">Next.js</option>
-      <option value="java">Java</option>
-      <option value="php">PHP</option>
-      <option value="go">Go</option>
-      <option value="rust">Rust</option>
-      <option value="docker">Docker</option>
-    </select>
-    <small class="select-hint">Hold Ctrl/Cmd to select multiple</small>
+
+  <!-- STATS BAR -->
+  <div class="premium-stats">
+    <span>📊 <span id="selectedCount">0</span> selected</span>
+    <span>🎯 50+ templates</span>
+    <span>⚡ v2.0</span>
   </div>
-  
-  <div class="control-group">
-    <label for="platformSelect">Deployment Platform:</label>
-    <select id="platformSelect">
-      <option value="general">General</option>
-      <option value="vercel">Vercel</option>
-      <option value="netlify">Netlify</option>
-      <option value="github">GitHub Pages</option>
-      <option value="aws">AWS</option>
-      <option value="firebase">Firebase</option>
-    </select>
-  </div>
-  
-  <button id="autoDetectBtn" class="btn-secondary">Auto-detect from page</button>
-  <button id="clearBtn" class="btn-secondary">Clear Selection</button>
-  <button id="generateBtn" class="btn-primary">Generate .gitignore</button>
-  
+
   <!-- Output Section -->
-  <div id="output" class="output-section">
-    <div class="control-group">
-      <label>Generated .gitignore:</label>
-      <textarea id="gitignoreContent" rows="10"></textarea>
+  <div id="output" class="premium-output">
+    <div class="premium-output-header">
+      <span class="premium-output-title">
+        <span>📄</span>
+        Generated .gitignore
+      </span>
+      <span id="wordCount" class="premium-word-count">0 lines</span>
     </div>
-    <div class="action-buttons">
-      <button id="copyBtn" class="btn-secondary">Copy to Clipboard</button>
-      <button id="downloadBtn" class="btn-secondary">Download File</button>
+    <textarea id="gitignoreContent" class="premium-textarea" readonly placeholder="Click Generate to create .gitignore..."></textarea>
+    <div class="premium-button-group">
+      <button id="copyBtn" class="premium-btn premium-btn-secondary">
+        📋 Copy
+      </button>
+      <button id="downloadBtn" class="premium-btn premium-btn-secondary">
+        ⬇️ Download
+      </button>
     </div>
   </div>
+
+  <div class="premium-divider"></div>
   
+  <!-- Footer -->
+  <div class="premium-footer">
+    <span>⚡ GitIgnore Premium</span>
+    <span>Ocean Elite Theme</span>
+  </div>
+
   <script src="popup.js"></script>
 </body>
 </html>
