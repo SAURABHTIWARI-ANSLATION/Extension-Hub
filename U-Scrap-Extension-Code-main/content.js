@@ -5,12 +5,22 @@
     SCROLL_DELAY: 500,
     MAX_SCROLLS: 20, // Limit auto-scroll to avoid infinite loops
     MIN_TEXT_LENGTH: 3,
-    TIMEOUT: 15000 // 15s timeout for operations
+    TIMEOUT: 15000, // 15s timeout for operations
+    MAX_PARAGRAPHS: 1000,
+    MAX_HEADINGS: 500,
+    MAX_VIDEOS: 100,
+    MAX_AUDIOS: 50,
+    MAX_TABLES: 20,
+    MAX_FORMS: 50,
+    MAX_EMAILS: 100,
+    EMAIL_SCAN_TEXT_LIMIT: 500000 // 500KB text limit for email regex
   };
 
   let state = {
     isScraping: false,
-    scrolledCount: 0
+    scrolledCount: 0,
+    activeIntervals: [],
+    activeTimeouts: []
   };
 
   // --- Core Utilities ---
@@ -24,7 +34,7 @@
     if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') return el.value || "";
     // Handle images with alt
     if (el.tagName === 'IMG') return el.alt || "";
-    
+
     return (el.innerText || el.textContent || "")
       .replace(/[\n\r\t]+/g, " ") // Replace newlines/tabs with space
       .replace(/\s{2,}/g, " ")   // Collapse multiple spaces
@@ -39,7 +49,7 @@
     // Fast checks
     if (el.style && (el.style.display === 'none' || el.style.visibility === 'hidden')) return false;
     if (el.hasAttribute('hidden')) return false;
-    
+
     // Expensive check
     const rect = el.getBoundingClientRect();
     return rect.width > 0 && rect.height > 0 && rect.top < window.innerHeight * 2; // Allow some off-screen buffer
@@ -60,7 +70,7 @@
   // --- Deep Extraction Modules ---
 
   const Extractors = {
-    
+
     /**
      * Extract Page Metadata (SEO, OpenGraph, Twitter, JSON-LD)
      */
@@ -128,20 +138,22 @@
 
       // Fallback to body if no main container found
       const target = mainEl || doc.body;
-      
-      // Extract paragraphs
+
+      // Extract paragraphs (performance limit: max 1000)
       const paragraphs = Array.from(target.querySelectorAll('p'))
         .filter(p => isVisible(p))
         .map(p => getText(p))
-        .filter(t => t.length > CONFIG.MIN_TEXT_LENGTH);
+        .filter(t => t.length > CONFIG.MIN_TEXT_LENGTH)
+        .slice(0, CONFIG.MAX_PARAGRAPHS);
 
-      // Extract headers
+      // Extract headers (performance limit: max 500)
       const headings = Array.from(target.querySelectorAll('h1, h2, h3, h4, h5, h6'))
         .filter(h => isVisible(h))
         .map(h => ({
           tag: h.tagName.toLowerCase(),
           text: getText(h)
-        }));
+        }))
+        .slice(0, CONFIG.MAX_HEADINGS);
 
       return {
         hasMainContainer: !!mainEl,
@@ -157,7 +169,7 @@
     links: (doc) => {
       const allLinks = Array.from(doc.querySelectorAll('a[href]'));
       const origin = window.location.origin;
-      
+
       const internal = new Set();
       const external = new Set();
       const social = new Set();
@@ -191,11 +203,14 @@
         }
       });
 
-      // Regex for emails in text (fallback)
-      const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+      // Regex for emails in text (with performance safeguard)
       const text = doc.body.innerText;
-      const foundEmails = text.match(emailRegex) || [];
-      foundEmails.forEach(e => emails.add(e));
+      // Only scan for emails if text is reasonable length (prevent regex freeze)
+      if (text.length < CONFIG.EMAIL_SCAN_TEXT_LIMIT) {
+        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+        const foundEmails = text.match(emailRegex) || [];
+        foundEmails.slice(0, CONFIG.MAX_EMAILS).forEach(e => emails.add(e));
+      }
 
       return {
         internal: Array.from(internal).slice(0, 500),
@@ -224,12 +239,14 @@
           src: getAbsoluteUrl(v.src || v.currentSrc),
           poster: getAbsoluteUrl(v.poster),
           type: v.tagName.toLowerCase()
-        }));
-      
+        }))
+        .slice(0, CONFIG.MAX_VIDEOS);
+
       const audios = Array.from(doc.querySelectorAll('audio'))
         .map(a => ({
           src: getAbsoluteUrl(a.src || a.currentSrc)
-        }));
+        }))
+        .slice(0, CONFIG.MAX_AUDIOS);
 
       return { images, videos, audios };
     },
@@ -238,28 +255,33 @@
      * Extract Tables
      */
     tables: (doc) => {
-      return Array.from(doc.querySelectorAll('table')).map(table => {
-        const rows = Array.from(table.querySelectorAll('tr'));
-        return rows.map(row => {
-          return Array.from(row.querySelectorAll('td, th')).map(cell => getText(cell));
-        }).filter(row => row.some(cell => cell)); // Remove empty rows
-      }).filter(table => table.length > 0);
+      return Array.from(doc.querySelectorAll('table'))
+        .slice(0, CONFIG.MAX_TABLES)
+        .map(table => {
+          const rows = Array.from(table.querySelectorAll('tr'));
+          return rows.map(row => {
+            return Array.from(row.querySelectorAll('td, th')).map(cell => getText(cell));
+          }).filter(row => row.some(cell => cell)); // Remove empty rows
+        })
+        .filter(table => table.length > 0);
     },
 
     /**
      * Extract Forms (Inputs)
      */
     forms: (doc) => {
-      return Array.from(doc.querySelectorAll('form')).map(form => ({
-        action: form.action,
-        method: form.method,
-        inputs: Array.from(form.querySelectorAll('input, select, textarea')).map(input => ({
-          name: input.name || input.id,
-          type: input.type,
-          placeholder: input.placeholder,
-          required: input.required
-        }))
-      }));
+      return Array.from(doc.querySelectorAll('form'))
+        .slice(0, CONFIG.MAX_FORMS)
+        .map(form => ({
+          action: form.action,
+          method: form.method,
+          inputs: Array.from(form.querySelectorAll('input, select, textarea')).map(input => ({
+            name: input.name || input.id,
+            type: input.type,
+            placeholder: input.placeholder,
+            required: input.required
+          }))
+        }));
     }
   };
 
@@ -270,42 +292,55 @@
    */
   async function performDeepScrape(settings = {}) {
     console.log("Starting Deep Scrape...");
-    
+
     // Helper to send progress
     const reportProgress = (step, percent) => {
       chrome.runtime.sendMessage({
         action: "scrapingProgress",
         progress: { current: percent, total: 100, step }
-      }).catch(() => {}); // Ignore errors if popup closed
+      }).catch(() => { }); // Ignore errors if popup closed
     };
 
-    reportProgress("Initializing", 10);
+    // Timeout safeguard: abort scraping if it takes too long
+    const timeoutPromise = new Promise((_, reject) => {
+      const timeoutId = setTimeout(() => {
+        reject(new Error('Scraping timeout: operation took longer than 15 seconds'));
+      }, CONFIG.TIMEOUT);
+      state.activeTimeouts.push(timeoutId);
+    });
 
-    // Auto-scroll if requested
-    if (settings.autoscroll) {
-      reportProgress("Auto-scrolling", 20);
-      await autoScroll();
-    }
+    const scrapePromise = (async () => {
+      reportProgress("Initializing", 10);
 
-    reportProgress("Analyzing DOM", 40);
-    const doc = document;
-    
-    // Run all extractors
-    const data = {
-      ...Extractors.metadata(doc),
-      ...Extractors.content(doc),
-      links: Extractors.links(doc),
-      ...Extractors.media(doc),
-      tables: Extractors.tables(doc),
-      forms: Extractors.forms(doc),
-      scrapedAt: new Date().toISOString()
-    };
+      // Auto-scroll if requested
+      if (settings.autoscroll) {
+        reportProgress("Auto-scrolling", 20);
+        await autoScroll();
+      }
 
-    reportProgress("Finalizing", 90);
-    console.log("Deep Scrape Complete:", data);
-    
-    reportProgress("Complete", 100);
-    return data;
+      reportProgress("Analyzing DOM", 40);
+      const doc = document;
+
+      // Run all extractors
+      const data = {
+        ...Extractors.metadata(doc),
+        ...Extractors.content(doc),
+        links: Extractors.links(doc),
+        ...Extractors.media(doc),
+        tables: Extractors.tables(doc),
+        forms: Extractors.forms(doc),
+        scrapedAt: new Date().toISOString()
+      };
+
+      reportProgress("Finalizing", 90);
+      console.log("Deep Scrape Complete:", data);
+
+      reportProgress("Complete", 100);
+      return data;
+    })();
+
+    // Race between scrape and timeout
+    return await Promise.race([scrapePromise, timeoutPromise]);
   }
 
   /**
@@ -316,20 +351,26 @@
       let totalHeight = 0;
       let distance = 100;
       let scrolls = 0;
-      
+
       const timer = setInterval(() => {
         const scrollHeight = document.body.scrollHeight;
         window.scrollBy(0, distance);
         totalHeight += distance;
         scrolls++;
 
-        // Stop if reached bottom or max scrolls
+        // Strictly enforce MAX_SCROLLS limit (prevent infinite scroll)
         if (totalHeight >= scrollHeight || scrolls >= CONFIG.MAX_SCROLLS) {
           clearInterval(timer);
+          // Remove from active intervals
+          const index = state.activeIntervals.indexOf(timer);
+          if (index > -1) state.activeIntervals.splice(index, 1);
           window.scrollTo(0, 0); // Return to top
           resolve();
         }
       }, 100);
+
+      // Track interval for cleanup
+      state.activeIntervals.push(timer);
     });
   }
 
@@ -364,9 +405,16 @@
 
       return true; // Indicates we will respond asynchronously
     }
-    
+
     if (request.action === "stopScraping") {
       state.isScraping = false;
+
+      // Cancel all active intervals and timeouts
+      state.activeIntervals.forEach(clearInterval);
+      state.activeTimeouts.forEach(clearTimeout);
+      state.activeIntervals = [];
+      state.activeTimeouts = [];
+
       sendResponse({ success: true });
     }
   });

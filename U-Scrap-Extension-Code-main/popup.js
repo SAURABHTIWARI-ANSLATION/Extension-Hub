@@ -9,7 +9,7 @@ let currentTab = 'scrape';
 const els = {
   navItems: document.querySelectorAll('.nav-item'),
   tabContents: document.querySelectorAll('.tab-content'),
-  
+
   // Scrape Tab
   btnStart: document.getElementById('btn-start'),
   btnStop: document.getElementById('btn-stop'),
@@ -23,11 +23,11 @@ const els = {
   btnViewResults: document.getElementById('btn-view-results'),
   btnExportJson: document.getElementById('btn-export-json'),
   btnExportCsv: document.getElementById('btn-export-csv'),
-  
+
   // History Tab
   historyList: document.getElementById('history-list'),
   btnClearHistory: document.getElementById('btn-clear-history'),
-  
+
   // Settings Tab
   settingAutoscroll: document.getElementById('setting-autoscroll'),
   settingWaitIdle: document.getElementById('setting-wait-idle'),
@@ -41,7 +41,7 @@ function init() {
   setupTabs();
   setupEventListeners();
   loadHistory();
-  
+
   // Check if we have data in memory/storage from a recent scrape
   chrome.storage.local.get(['lastScrape'], (result) => {
     if (result.lastScrape) {
@@ -63,19 +63,19 @@ function setupTabs() {
 
 function switchTab(tabName) {
   currentTab = tabName;
-  
+
   // Update Nav
   els.navItems.forEach(btn => {
     if (btn.dataset.tab === tabName) btn.classList.add('active');
     else btn.classList.remove('active');
   });
-  
+
   // Update Content
   els.tabContents.forEach(section => {
     if (section.id === `tab-${tabName}`) section.classList.add('active');
     else section.classList.remove('active');
   });
-  
+
   if (tabName === 'history') loadHistory();
 }
 
@@ -105,15 +105,15 @@ function setupEventListeners() {
   // Scrape Controls
   els.btnStart.addEventListener('click', startScraping);
   els.btnStop.addEventListener('click', stopScraping);
-  
+
   // Export
   els.btnExportJson.addEventListener('click', () => exportData('json'));
   els.btnExportCsv.addEventListener('click', () => exportData('csv'));
   els.btnViewResults.addEventListener('click', openPreview);
-  
+
   // History
   els.btnClearHistory.addEventListener('click', clearHistory);
-  
+
   // Settings Change
   [els.settingAutoscroll, els.settingWaitIdle, els.settingJsonPretty, els.settingIncludeMeta]
     .forEach(el => el.addEventListener('change', saveSettings));
@@ -121,14 +121,47 @@ function setupEventListeners() {
 
 // --- Scraping Logic ---
 
-async function ensureContentScript(tabId) {
+// Validate URL for scraping (Chrome Web Store compliance)
+function isValidUrl(url) {
+  if (!url) return false;
+
+  // Only allow http and https protocols
+  const validProtocols = ['http:', 'https:'];
+  try {
+    const urlObj = new URL(url);
+    return validProtocols.includes(urlObj.protocol);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Ensure content script is injected and ready.
+ *
+ * SECURITY NOTE: Content script is injected only after explicit user action.
+ * The user must click "Start Scraping" button to trigger injection.
+ *
+ * @param {number} tabId - The tab ID to inject into
+ * @param {number} retryCount - Current retry attempt (internal use)
+ * @returns {Promise<boolean>} - True if content script is ready, false otherwise
+ */
+async function ensureContentScript(tabId, retryCount = 0) {
+  const MAX_RETRIES = 2; // Prevent infinite retry loops
+
   try {
     // Try sending a ping message
     await chrome.tabs.sendMessage(tabId, { action: "ping" });
     console.log("Content script is alive.");
     return true;
   } catch (error) {
-    console.log("Ping failed, injecting script...");
+    // Content script not loaded, attempt injection
+    console.log(`Ping failed (attempt ${retryCount + 1}), injecting script...`);
+
+    if (retryCount >= MAX_RETRIES) {
+      console.error("Max injection retries reached. Aborting.");
+      return false;
+    }
+
     try {
       await chrome.scripting.executeScript({
         target: { tabId: tabId },
@@ -136,9 +169,8 @@ async function ensureContentScript(tabId) {
       });
       // Wait for script to initialize and verify with another ping
       await new Promise(r => setTimeout(r, 300));
-      await chrome.tabs.sendMessage(tabId, { action: "ping" });
-      console.log("Content script injected and verified.");
-      return true;
+      // Recursive retry with incremented counter
+      return await ensureContentScript(tabId, retryCount + 1);
     } catch (injectionError) {
       console.error("Injection/Verification failed:", injectionError);
       return false;
@@ -148,14 +180,14 @@ async function ensureContentScript(tabId) {
 
 function startScraping() {
   if (isScraping) return;
-  
+
   isScraping = true;
   collectedData = [];
   updateUIState('scraping');
-  
+
   const type = els.scrapeType.value;
   const speed = els.scrapeSpeed.value;
-  
+
   // Get active tab
   chrome.tabs.query({ active: true, currentWindow: true }, async (tabs) => {
     const activeTab = tabs[0];
@@ -164,7 +196,16 @@ function startScraping() {
       showNotification('No active tab found!', 'error');
       return;
     }
-    
+
+    // Validate URL before attempting injection (Chrome Web Store compliance)
+    if (!isValidUrl(activeTab.url)) {
+      const message = 'Cannot scrape this page. Only http:// and https:// websites are supported.';
+      updateUIState('error', message);
+      showNotification(message, 'error');
+      isScraping = false;
+      return;
+    }
+
     // Ensure connection
     const connected = await ensureContentScript(activeTab.id);
     if (!connected) {
@@ -188,7 +229,7 @@ function startScraping() {
         showNotification('Connection lost. Please refresh the page.', 'error');
         return;
       }
-      
+
       if (response && response.success) {
         // Data received immediately (synchronous/simple scraping)
         handleScrapeResult(response.data, activeTab.url);
@@ -213,18 +254,18 @@ function stopScraping() {
 function handleScrapeResult(data, url) {
   isScraping = false;
   collectedData = data || [];
-  
+
   // Save to current session
   chrome.storage.local.set({ lastScrape: collectedData });
-  
+
   // Add to History
   addToHistory(collectedData, url);
-  
+
   updateResultsUI();
   updateUIState('ready');
   els.statusHeading.textContent = "Success!";
   els.statusDetails.textContent = `Scraped ${collectedData.length} item(s).`;
-  
+
   // Show success notification
   showNotification(`Scan completed successfully! Found ${collectedData.length} item(s).`, 'success');
 }
@@ -235,7 +276,7 @@ function updateUIState(state, message = "") {
   els.statusIndicator.className = 'status-indicator';
   els.btnStart.disabled = false;
   els.btnStop.disabled = true;
-  
+
   switch (state) {
     case 'ready':
       els.statusIndicator.classList.add('ready');
@@ -263,10 +304,10 @@ function showNotification(message, type = 'info') {
   // Remove any existing notifications
   const existingNotifications = document.querySelectorAll('.notification');
   existingNotifications.forEach(notification => notification.remove());
-  
+
   const notification = document.createElement('div');
   notification.className = 'notification';
-  
+
   let icon = 'ℹ️';
   if (type === 'success') {
     icon = '✅';
@@ -275,23 +316,34 @@ function showNotification(message, type = 'info') {
   } else if (type === 'warning') {
     icon = '⚠️';
   }
-  
-  notification.innerHTML = `
-    <div style="display: flex; align-items: center; gap: 12px;">
-      <div style="font-size: 20px; animation: pulse 1.5s infinite;">${icon}</div>
-      <div style="flex: 1; font-weight: 600; color: white;">${message}</div>
-      <div style="font-size: 18px; cursor: pointer; opacity: 0.8; transition: opacity 0.2s;" class="close-notification">×</div>
-    </div>
-  `;
-  
+
+  // Create notification content using safe DOM methods
+  const container = document.createElement('div');
+  container.style.cssText = 'display: flex; align-items: center; gap: 12px;';
+
+  const iconDiv = document.createElement('div');
+  iconDiv.style.cssText = 'font-size: 20px; animation: pulse 1.5s infinite;';
+  iconDiv.textContent = icon;
+
+  const messageDiv = document.createElement('div');
+  messageDiv.style.cssText = 'flex: 1; font-weight: 600; color: white;';
+  messageDiv.textContent = message; // Safe: using textContent
+
+  const closeDiv = document.createElement('div');
+  closeDiv.style.cssText = 'font-size: 18px; cursor: pointer; opacity: 0.8; transition: opacity 0.2s;';
+  closeDiv.className = 'close-notification';
+  closeDiv.textContent = '×';
+
+  container.appendChild(iconDiv);
+  container.appendChild(messageDiv);
+  container.appendChild(closeDiv);
+  notification.appendChild(container);
+
   // Add event listener to the close button
-  const closeButton = notification.querySelector('.close-notification');
-  if (closeButton) {
-    closeButton.addEventListener('click', function() {
-      notification.remove();
-    });
-  }
-  
+  closeDiv.addEventListener('click', function () {
+    notification.remove();
+  });
+
   // Add notification styles if not present
   if (!document.querySelector('#notification-styles')) {
     const style = document.createElement('style');
@@ -341,12 +393,12 @@ function showNotification(message, type = 'info') {
     `;
     document.head.appendChild(style);
   }
-  
+
   // Add specific class based on type
   notification.classList.add(type);
-  
+
   document.body.appendChild(notification);
-  
+
   // Auto-remove after delay
   const delay = type === 'success' ? 4000 : 5000; // Success: 4s, others: 5s
   setTimeout(() => {
@@ -362,7 +414,7 @@ function showNotification(message, type = 'info') {
 function updateResultsUI() {
   const count = collectedData.length;
   els.resultCount.textContent = count;
-  
+
   if (count > 0) {
     els.resultsArea.classList.remove('hidden');
   } else {
@@ -380,11 +432,11 @@ function openPreview() {
 
 function exportData(format) {
   if (!collectedData.length) return;
-  
+
   let content = "";
   let type = "";
   let ext = "";
-  
+
   if (format === 'json') {
     const pretty = els.settingJsonPretty.checked;
     content = JSON.stringify(collectedData, null, pretty ? 2 : 0);
@@ -395,22 +447,22 @@ function exportData(format) {
     type = "text/csv";
     ext = "csv";
   }
-  
+
   const blob = new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = `u-scrap-export-${timestamp}.${ext}`;
-  
+
   chrome.downloads.download({ url, filename, saveAs: true });
 }
 
 function jsonToCsv(json) {
   if (!json || !json.length) return "";
-  
+
   // Flatten objects if needed or just take top level keys
   // For this extension, our data structure might be complex (nested objects).
   // We'll flatten the first level.
-  
+
   const items = Array.isArray(json) ? json : [json];
   if (items.length === 0) return "";
 
@@ -418,9 +470,9 @@ function jsonToCsv(json) {
   const keys = new Set();
   items.forEach(item => Object.keys(item).forEach(k => keys.add(k)));
   const headers = Array.from(keys);
-  
+
   const csvRows = [headers.map(h => `"${h}"`).join(',')];
-  
+
   items.forEach(item => {
     const row = headers.map(header => {
       let val = item[header];
@@ -431,7 +483,7 @@ function jsonToCsv(json) {
     });
     csvRows.push(row.join(','));
   });
-  
+
   return csvRows.join('\n');
 }
 
@@ -439,7 +491,7 @@ function jsonToCsv(json) {
 function addToHistory(data, url) {
   chrome.storage.local.get(['scrapeHistory'], (result) => {
     const history = result.scrapeHistory || [];
-    
+
     const newItem = {
       id: Date.now(),
       timestamp: new Date().toISOString(),
@@ -447,11 +499,11 @@ function addToHistory(data, url) {
       itemCount: data.length,
       dataSummary: data.length > 0 ? (data[0].title || "No Title") : "Empty"
     };
-    
+
     // Prepend and limit to 20
     history.unshift(newItem);
     if (history.length > 20) history.pop();
-    
+
     chrome.storage.local.set({ scrapeHistory: history }, () => {
       if (currentTab === 'history') loadHistory();
     });
@@ -462,28 +514,53 @@ function loadHistory() {
   chrome.storage.local.get(['scrapeHistory'], (result) => {
     const history = result.scrapeHistory || [];
     els.historyList.innerHTML = '';
-    
+
     if (history.length === 0) {
-      els.historyList.innerHTML = '<div class="empty-state">No history yet.</div>';
+      const emptyState = document.createElement('div');
+      emptyState.className = 'empty-state';
+      emptyState.textContent = 'No history yet.';
+      els.historyList.appendChild(emptyState);
       return;
     }
-    
+
     history.forEach(item => {
       const date = new Date(item.timestamp).toLocaleString();
       const div = document.createElement('div');
       div.className = 'history-item';
-      div.innerHTML = `
-        <div class="history-info">
-          <span class="history-url" title="${item.url}">${item.url}</span>
-          <div class="history-meta">${date} • ${item.itemCount} items</div>
-        </div>
-        <div class="history-actions">
-          <button class="btn-icon" title="Load" data-id="${item.id}">📂</button>
-        </div>
-      `;
-      
+
+      // Create history-info container
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'history-info';
+
+      const urlSpan = document.createElement('span');
+      urlSpan.className = 'history-url';
+      urlSpan.title = item.url;
+      urlSpan.textContent = item.url; // Safe: using textContent
+
+      const metaDiv = document.createElement('div');
+      metaDiv.className = 'history-meta';
+      metaDiv.textContent = `${date} • ${item.itemCount} items`; // Safe: template only uses trusted data
+
+      infoDiv.appendChild(urlSpan);
+      infoDiv.appendChild(metaDiv);
+
+      // Create history-actions container
+      const actionsDiv = document.createElement('div');
+      actionsDiv.className = 'history-actions';
+
+      const loadBtn = document.createElement('button');
+      loadBtn.className = 'btn-icon';
+      loadBtn.title = 'Load';
+      loadBtn.setAttribute('data-id', item.id);
+      loadBtn.textContent = '📂';
+
+      actionsDiv.appendChild(loadBtn);
+
+      div.appendChild(infoDiv);
+      div.appendChild(actionsDiv);
+
       // Load button click
-      div.querySelector('button').addEventListener('click', () => {
+      loadBtn.addEventListener('click', () => {
         // In a real app we'd store the full data in history, but here we might just have summary.
         // If we want to load full data, we should have stored it. 
         // For now, let's assume we can't fully "restore" the data unless we saved it all.
@@ -493,7 +570,7 @@ function loadHistory() {
         // Let's assume for this task we just show history metadata.
         alert("History restoration requires persistent storage (IndexedDB). Currently showing metadata only.");
       });
-      
+
       els.historyList.appendChild(div);
     });
   });

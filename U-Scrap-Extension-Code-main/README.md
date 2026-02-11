@@ -52,5 +52,49 @@ U-Scrap-Extension-Code-main/
 - **Your Data**: Scraped data is saved directly to your Downloads folder.
 - **No Cloud**: We do not see what you scrape.
 
+---
+
+## Security & Privacy Architecture
+
+U-Scrap is designed with privacy-first principles and enterprise-grade security:
+
+### 🔒 Privacy Guarantees
+- **No automatic background scraping** - Extension only runs when you click "Start Scraping"
+- **No remote data transmission** - All data stays on your device
+- **No cloud processing** - Everything processed locally in your browser
+- **No tracking or analytics** - We don't collect any usage data
+- **No third-party services** - Zero external dependencies
+
+### 🛡️ Security Architecture
+- **Content script injected dynamically** - No automatic injection on all websites
+- **Fully Manifest V3 compliant** - Uses latest Chrome extension security standards
+- **CSP-compliant** - No inline scripts or unsafe-eval
+- **XSS-safe** - All scraped data sanitized before display using safe DOM methods
+- **URL validation** - Only works on http/https websites (blocks chrome://, file://, etc.)
+- **Performance limits** - Built-in safeguards prevent browser freeze
+- **Timeout protection** - 15-second timeout prevents runaway scraping
+- **Retry limits** - Prevents infinite injection loops
+
+### ✅ Chrome Web Store Compliance
+- **Minimal permissions** - Only requests activeTab, scripting, storage, downloads
+- **User-triggered only** - No background activity without explicit user action
+- **Transparent operation** - Clear UI shows exactly what's happening
+- **No overbroad permissions** - No `<all_urls>` host permissions
+- **Production-grade code** - Enterprise-level error handling and validation
+
+### 🔐 Data Storage
+- All scraped data stored locally using Chrome's storage API
+- No data leaves your computer unless you explicitly export it
+- Export formats: JSON, CSV (saved to your Downloads folder)
+- History entries stored locally (can be cleared anytime)
+
+### 🚀 Performance Safety
+- DOM query limits (max 1000 paragraphs, 500 headings)
+- Email regex scanning only on reasonable text lengths (< 500KB)
+- Strict scroll limit (max 20 scrolls) prevents infinite loops
+- All intervals and timeouts properly cleaned up
+
+---
+
 ### 📄 License
 This project is licensed under the **MIT License**.
