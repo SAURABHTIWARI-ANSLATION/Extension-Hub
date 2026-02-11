@@ -132,14 +132,53 @@
   50% { opacity: 0.7; }
 }
 
-#qs-overlay .selection-box {
-  animation: pulse 2s infinite ease-in-out !important;
+/* ===============================
+   QuickShot Selection Overlay
+   =============================== */
+
+#qs-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  cursor: crosshair;
+  background-color: rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  user-select: none;
 }
 
-/* Prevent text selection during drag */
-#qs-overlay * {
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-  -ms-user-select: none !important;
+#qs-selection-box {
+  position: absolute;
+  border: 2px dashed #ffffff;
+  background-color: rgba(100, 181, 246, 0.2);
+  pointer-events: none;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+#qs-instructions {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+#qs-cancel-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+  z-index: 2147483648;
 }

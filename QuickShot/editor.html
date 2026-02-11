@@ -4,49 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <title>QuickShot Editor</title>
+
+    <!-- ✅ ONLY local CSS (CSP safe) -->
     <link rel="stylesheet" href="editor.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Loading animation */
-        #loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: white;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-            margin-bottom: 20px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-    </style>
 </head>
 
 <body>
+    <!-- Loading Overlay (styled from editor.css now) -->
     <div id="loading-overlay">
         <div class="spinner"></div>
         <div>Loading Editor...</div>
     </div>
 
-    <div class="editor-container" style="display: none;">
+    <div class="editor-container" hidden>
         <!-- Left Sidebar - Tools -->
         <aside class="toolbar">
             <div class="toolbar-header">
@@ -105,20 +75,20 @@
             <div class="toolbar-section">
                 <div class="section-header">Colors</div>
                 <div class="colors-grid">
-                    <div class="color-swatch active" style="background: #ef4444;" data-color="#ef4444" title="Red"></div>
-                    <div class="color-swatch" style="background: #f97316;" data-color="#f97316" title="Orange"></div>
-                    <div class="color-swatch" style="background: #eab308;" data-color="#eab308" title="Yellow"></div>
-                    <div class="color-swatch" style="background: #22c55e;" data-color="#22c55e" title="Green"></div>
-                    <div class="color-swatch" style="background: #0ea5e9;" data-color="#0ea5e9" title="Light Blue"></div>
-                    <div class="color-swatch" style="background: #3b82f6;" data-color="#3b82f6" title="Blue"></div>
-                    <div class="color-swatch" style="background: #8b5cf6;" data-color="#8b5cf6" title="Purple"></div>
-                    <div class="color-swatch" style="background: #ec4899;" data-color="#ec4899" title="Pink"></div>
-                    <div class="color-swatch" style="background: #ffffff; border: 1px solid #cbd5e1;" data-color="#ffffff" title="White"></div>
-                    <div class="color-swatch" style="background: #000000;" data-color="#000000" title="Black"></div>
-                    <div class="color-swatch" style="background: #64748b;" data-color="#64748b" title="Gray"></div>
-                    <div class="color-swatch" style="background: #475569;" data-color="#475569" title="Dark Gray"></div>
+                    <div class="color-swatch active" data-color="#ef4444" title="Red"></div>
+                    <div class="color-swatch" data-color="#f97316" title="Orange"></div>
+                    <div class="color-swatch" data-color="#eab308" title="Yellow"></div>
+                    <div class="color-swatch" data-color="#22c55e" title="Green"></div>
+                    <div class="color-swatch" data-color="#0ea5e9" title="Light Blue"></div>
+                    <div class="color-swatch" data-color="#3b82f6" title="Blue"></div>
+                    <div class="color-swatch" data-color="#8b5cf6" title="Purple"></div>
+                    <div class="color-swatch" data-color="#ec4899" title="Pink"></div>
+                    <div class="color-swatch" data-color="#ffffff" title="White"></div>
+                    <div class="color-swatch" data-color="#000000" title="Black"></div>
+                    <div class="color-swatch" data-color="#64748b" title="Gray"></div>
+                    <div class="color-swatch" data-color="#475569" title="Dark Gray"></div>
                 </div>
-                
+
                 <div class="color-picker-container">
                     <input type="color" id="custom-color" value="#3b82f6">
                     <label for="custom-color">Custom Color</label>
@@ -145,56 +115,29 @@
             </div>
 
             <div class="action-buttons">
-                <button id="btn-undo" class="action-btn secondary" title="Undo (Ctrl+Z)">
-                    <span class="btn-icon">↩️</span>
-                    Undo
-                </button>
-                <button id="btn-redo" class="action-btn secondary" title="Redo (Ctrl+Y)">
-                    <span class="btn-icon">↪️</span>
-                    Redo
-                </button>
-                <button id="btn-clear" class="action-btn secondary" title="Clear Canvas">
-                    <span class="btn-icon">🗑️</span>
-                    Clear
-                </button>
-                <button id="btn-copy" class="action-btn primary">
-                    <span class="btn-icon">📋</span>
-                    Copy to Clipboard
-                </button>
-                <button id="btn-download" class="action-btn primary">
-                    <span class="btn-icon">💾</span>
-                    Download Image
-                </button>
-                <button id="btn-share" class="action-btn secondary">
-                    <span class="btn-icon">📤</span>
-                    Share
-                </button>
+                <button id="btn-undo" class="action-btn secondary">↩️ Undo</button>
+                <button id="btn-redo" class="action-btn secondary">↪️ Redo</button>
+                <button id="btn-clear" class="action-btn secondary">🗑️ Clear</button>
+                <button id="btn-copy" class="action-btn primary">📋 Copy to Clipboard</button>
+                <button id="btn-download" class="action-btn primary">💾 Download Image</button>
             </div>
         </aside>
 
-        <!-- Main Canvas Area -->
         <main class="canvas-area">
-            <!-- Canvas Controls -->
             <div class="canvas-controls">
-                <button id="btn-zoom-in" class="control-btn" title="Zoom In (Ctrl +)">➕</button>
-                <button id="btn-zoom-out" class="control-btn" title="Zoom Out (Ctrl -)">➖</button>
-                <button id="btn-zoom-reset" class="control-btn" title="Reset Zoom">↺</button>
-                <button id="btn-fit-to-screen" class="control-btn" title="Fit to Screen">⛶</button>
+                <button id="btn-zoom-in" class="control-btn">➕</button>
+                <button id="btn-zoom-out" class="control-btn">➖</button>
+                <button id="btn-zoom-reset" class="control-btn">↺</button>
+                <button id="btn-fit-to-screen" class="control-btn">⛶</button>
                 <div class="zoom-display" id="zoom-level">100%</div>
             </div>
 
-            <!-- Canvas Wrapper -->
             <div class="canvas-wrapper">
                 <canvas id="editor-canvas"></canvas>
-                
-                <!-- Grid Overlay (optional) -->
                 <div class="grid-overlay" id="grid-overlay"></div>
-                
-                <!-- Selection Rectangle (for select tool) -->
-                <div class="selection-rectangle" id="selection-rectangle" style="display: none;"></div>
+                <div class="selection-rectangle" id="selection-rectangle" hidden></div>
             </div>
 
-            <!-- Status Bar -->
             <div class="status-bar">
                 <div class="status-info">
                     <span id="cursor-position">X: 0, Y: 0</span>
@@ -202,8 +145,8 @@
                     <span id="tool-status">Select Tool</span>
                 </div>
                 <div class="status-actions">
-                    <button id="btn-grid-toggle" class="status-btn" title="Toggle Grid">#</button>
-                    <button id="btn-ruler-toggle" class="status-btn" title="Toggle Ruler">📏</button>
+                    <button id="btn-grid-toggle" class="status-btn">#</button>
+                    <button id="btn-ruler-toggle" class="status-btn">📏</button>
                     <div class="save-status" id="save-status">Auto-saved</div>
                 </div>
             </div>
@@ -218,15 +161,14 @@
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
-                <textarea id="text-input" placeholder="Enter your text here..." rows="4"></textarea>
+                <textarea id="text-input" rows="4"></textarea>
                 <div class="text-controls">
                     <select id="font-family">
-                        <option value="Inter, sans-serif">Inter</option>
                         <option value="Arial, sans-serif">Arial</option>
                         <option value="Georgia, serif">Georgia</option>
                         <option value="Courier New, monospace">Monospace</option>
                     </select>
-                    <input type="number" id="font-size" min="8" max="72" value="24" placeholder="Size">
+                    <input type="number" id="font-size" min="8" max="72" value="24">
                 </div>
                 <div class="modal-actions">
                     <button id="text-cancel" class="btn-secondary">Cancel</button>
@@ -235,7 +177,8 @@
             </div>
         </div>
     </div>
+
+    <!-- ✅ Local script only -->
     <script src="editor.js"></script>
 </body>
-
 </html>

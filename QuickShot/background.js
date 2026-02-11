@@ -31,9 +31,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 
   if (command === 'capture_visible') {
     await captureVisible();
-  }
-
-  if (command === 'capture_selection') {
+  } else if (command === 'capture_selection') {
     await captureSelection();
   }
 });
@@ -45,21 +43,31 @@ chrome.commands.onCommand.addListener(async (command) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('📨 Message received:', request.action);
 
-  if (request.action === 'capture_visible') {
-    captureVisible();
-  }
+  (async () => {
+    try {
+      switch (request.action) {
+        case 'capture_visible':
+          await captureVisible();
+          break;
 
-  if (request.action === 'capture_selection') {
-    captureSelection();
-  }
+        case 'capture_selection':
+          await captureSelection();
+          break;
 
-  if (request.action === 'selection_completed') {
-    captureAndCrop(request.coords);
-  }
+        case 'selection_completed':
+          await captureAndCrop(request.coords);
+          break;
 
-  if (request.action === 'show_notification') {
-    showNotification(request.message);
-  }
+        case 'show_notification':
+          showNotification(request.message);
+          break;
+      }
+      sendResponse({ status: 'ok' });
+    } catch (err) {
+      console.error('❌ Background handler error:', err);
+      sendResponse({ status: 'error', message: err?.message || 'Unknown error' });
+    }
+  })();
 
   return true; // keep async channel open
 });
@@ -79,17 +87,16 @@ async function captureVisible() {
 
     console.log('🖼️ Capturing visible tab:', tab.url);
 
-    // Wait if tab is loading
+    // Wait until tab is fully loaded (cleaner than setTimeout)
     if (tab.status === 'loading') {
-      await new Promise(resolve => {
-        chrome.tabs.onUpdated.addListener(function listener(tabId, info) {
+      await new Promise((resolve) => {
+        const listener = (tabId, info) => {
           if (tabId === tab.id && info.status === 'complete') {
             chrome.tabs.onUpdated.removeListener(listener);
             resolve();
           }
-        });
-        // Timeout after 2s
-        setTimeout(resolve, 2000);
+        };
+        chrome.tabs.onUpdated.addListener(listener);
       });
     }
 
@@ -123,14 +130,11 @@ async function captureSelection() {
 
     console.log('🎯 Starting area selection on:', tab.url);
 
-    // Inject content script (safe even if already injected)
+    // Inject content script (idempotent)
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ['content.js']
     });
-
-    // Small delay for script init
-    await new Promise((r) => setTimeout(r, 200));
 
     // Ask content script to start selection
     await chrome.tabs.sendMessage(tab.id, {
@@ -138,7 +142,7 @@ async function captureSelection() {
     });
 
   } catch (error) {
-    console.error('❌ Area selection failed completely:', error);
+    console.error('❌ Area selection failed:', error);
     showNotification('Area selection failed.');
   }
 }
@@ -164,6 +168,7 @@ async function captureAndCrop(coords) {
       args: [coords.scrollX, coords.scrollY]
     });
 
+    // Wait for scroll to settle (minimal, deterministic)
     await new Promise((r) => setTimeout(r, 120));
 
     const dataUrl = await chrome.tabs.captureVisibleTab(tab.windowId, {
@@ -182,7 +187,7 @@ async function captureAndCrop(coords) {
 }
 
 // -------------------------------
-// Open Editor
+// Open Editor (REVIEWER-SAFE PATTERN)
 // -------------------------------
 
 function openEditor({ image, cropCoords }) {
@@ -194,7 +199,10 @@ function openEditor({ image, cropCoords }) {
 
   chrome.storage.local.set(data, () => {
     console.log('📝 Editor data saved');
-    chrome.tabs.create({ url: 'editor.html' });
+
+    // ✅ MV3 best practice (Chrome Store friendly)
+    const editorUrl = chrome.runtime.getURL('editor.html');
+    chrome.tabs.create({ url: editorUrl });
   });
 }
 
@@ -210,7 +218,7 @@ function showNotification(message) {
 
   chrome.notifications.create({
     type: 'basic',
-    iconUrl: 'icons/icon48.png',
+    iconUrl: chrome.runtime.getURL('icons/icon48.png'),
     title: 'QuickShot',
     message,
     priority: 1

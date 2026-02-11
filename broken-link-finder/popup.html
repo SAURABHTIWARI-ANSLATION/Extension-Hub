@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Broken Link Finder Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Premium Header with Gradient -->
+        <header class="premium-header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-link"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Broken Link Finder</h1>
+                    <p class="tagline">Professional Broken Link Monitor</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="refreshBtn" title="Refresh">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <button class="icon-btn" id="settingsBtn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Current Page Info -->
+        <div class="page-info-bar">
+            <div class="page-icon">
+                <i class="fas fa-globe"></i>
+            </div>
+            <div class="page-details">
+                <span class="page-label">Current Page</span>
+                <span class="page-url" id="currentUrl">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Main Controls -->
+        <main>
+            <!-- Quick Actions with Premium Buttons -->
+            <div class="section premium-section">
+                <div class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    <span>Quick Actions</span>
+                </div>
+                <div class="action-grid">
+                    <button id="scanBtn" class="premium-btn primary">
+                        <div class="btn-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="btn-content">
+                            <span class="btn-label">Scan Page</span>
+                            <span class="btn-sublabel">Find broken links</span>
+                        </div>
+                    </button>
+                    <button id="highlightBtn" class="premium-btn secondary">
+                        <div class="btn-icon">
+                            <i class="fas fa-highlighter"></i>
+                        </div>
+                        <div class="btn-content">
+                            <span class="btn-label">Highlight</span>
+                            <span class="btn-sublabel">Show broken links</span>
+                        </div>
+                    </button>
+                    <button id="clearBtn" class="premium-btn outline">
+                        <div class="btn-icon">
+                            <i class="fas fa-broom"></i>
+                        </div>
+                        <div class="btn-content">
+                            <span class="btn-label">Clear</span>
+                            <span class="btn-sublabel">Remove highlights</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Premium Statistics Dashboard -->
+            <div class="section premium-section">
+                <div class="section-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Link Health Dashboard</span>
+                </div>
+                <div class="stats-grid-premium">
+                    <div class="stat-card-premium" id="totalLinksCard">
+                        <div class="stat-header">
+                            <div class="stat-icon-premium total">
+                                <i class="fas fa-link"></i>
+                            </div>
+                            <span class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i>
+                            </span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value-premium" id="totalLinks">0</span>
+                            <span class="stat-label-premium">Total Links</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-trend">All page links</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-premium danger" id="brokenLinksCard">
+                        <div class="stat-header">
+                            <div class="stat-icon-premium broken">
+                                <i class="fas fa-unlink"></i>
+                            </div>
+                            <span class="stat-change negative">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value-premium" id="brokenLinks">0</span>
+                            <span class="stat-label-premium">Broken Links</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-trend">Needs attention</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-premium success" id="successRateCard">
+                        <div class="stat-header">
+                            <div class="stat-icon-premium success">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <span class="stat-badge">Live</span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value-premium" id="successRate">100%</span>
+                            <span class="stat-label-premium">Success Rate</span>
+                        </div>
+                        <div class="stat-footer">
+                            <div class="mini-progress">
+                                <div class="mini-progress-bar" id="successProgressBar" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card-premium warning" id="seoScoreCard">
+                        <div class="stat-header">
+                            <div class="stat-icon-premium seo">
+                                <i class="fas fa-search-dollar"></i>
+                            </div>
+                            <span class="stat-badge">SEO</span>
+                        </div>
+                        <div class="stat-body">
+                            <span class="stat-value-premium" id="seoScore">100</span>
+                            <span class="stat-label-premium">Health Score</span>
+                        </div>
+                        <div class="stat-footer">
+                            <span class="stat-trend" id="seoTrend">Excellent</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Results Table -->
+            <div class="section premium-section">
+                <div class="section-header-premium">
+                    <div class="section-title">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>Broken Links Report</span>
+                        <span class="badge-count" id="brokenCount">0</span>
+                    </div>
+                    <div class="result-actions-premium">
+                        <button id="exportCSV" class="action-btn">
+                            <i class="fas fa-file-csv"></i>
+                            <span>CSV</span>
+                        </button>
+                        <button id="exportJSON" class="action-btn">
+                            <i class="fas fa-file-code"></i>
+                            <span>JSON</span>
+                        </button>
+                        <button id="copyAll" class="action-btn">
+                            <i class="fas fa-copy"></i>
+                            <span>Copy</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-container-premium">
+                    <div id="resultsTable">
+                        <div class="table-header-premium">
+                            <span class="col-url">URL</span>
+                            <span class="col-status">Status</span>
+                            <span class="col-text">Link Text</span>
+                            <span class="col-actions">Actions</span>
+                        </div>
+                        <div id="resultsBody" class="table-body-premium">
+                            <!-- Results will appear here -->
+                            <div class="empty-state-premium">
+                                <div class="empty-icon">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <h3>Ready to Scan</h3>
+                                <p>Click "Scan Page" to analyze all links on this webpage</p>
+                                <div class="empty-features">
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Instant Analysis</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Visual Highlighting</span>
+                                    </div>
+                                    <div class="feature-item">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Detailed Reports</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Premium Settings Panel -->
+            <div class="section premium-section settings-panel" id="settingsPanel" style="display: none;">
+                <div class="section-title">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Advanced Settings</span>
+                </div>
+                <div class="settings-grid-premium">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-icon">
+                                <i class="fas fa-highlighter"></i>
+                            </div>
+                            <div class="setting-text">
+                                <span class="setting-label">Auto-highlight</span>
+                                <span class="setting-description">Automatically highlight broken links after scan</span>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="autoHighlight" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-icon">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div class="setting-text">
+                                <span class="setting-label">Notifications</span>
+                                <span class="setting-description">Show desktop alerts when scan completes</span>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="showNotifications" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-icon">
+                                <i class="fas fa-globe"></i>
+                            </div>
+                            <div class="setting-text">
+                                <span class="setting-label">External Links</span>
+                                <span class="setting-description">Include external links in scan (slower)</span>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="checkExternalLinks">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-icon">
+                                <i class="fas fa-sitemap"></i>
+                            </div>
+                            <div class="setting-text">
+                                <span class="setting-label">Bulk Scan Mode</span>
+                                <span class="setting-description">Enable multi-page website scanning</span>
+                            </div>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="bulkScanMode">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Premium Footer with Status -->
+        <footer class="premium-footer">
+            <div class="status-section">
+                <div class="status-indicator" id="statusIndicator">
+                    <span class="status-dot"></span>
+                    <span class="status-text" id="statusText">Ready to scan</span>
+                </div>
+            </div>
+            <div class="progress-section" id="progressSection" style="display: none;">
+                <div class="progress-info">
+                    <span class="progress-label">Scanning...</span>
+                    <span class="progress-percentage" id="progressText">0%</span>
+                </div>
+                <div class="progress-bar-premium">
+                    <div class="progress-fill-premium" id="progressFill"></div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

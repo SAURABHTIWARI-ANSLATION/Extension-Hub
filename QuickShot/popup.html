@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuickShot - Premium Screen Capture</title>
+
+  <!-- ✅ ONLY local CSS (CSP safe) -->
   <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
@@ -24,9 +24,7 @@
     <!-- PREMIUM ACTIONS -->
     <section class="actions">
       <button id="btn-visible" class="action-card" type="button">
-        <div class="icon">
-          <i class="fas fa-desktop"></i>
-        </div>
+        <div class="icon">🖥️</div>
         <div class="label-container">
           <span class="label">Capture Visible Screen</span>
           <span class="description">Take screenshot of current tab</span>
@@ -34,9 +32,7 @@
       </button>
 
       <button id="btn-selection" class="action-card" type="button">
-        <div class="icon">
-          <i class="fas fa-crosshairs"></i>
-        </div>
+        <div class="icon">🎯</div>
         <div class="label-container">
           <span class="label">Select Area</span>
           <span class="description">Drag to capture specific region</span>
@@ -47,19 +43,19 @@
     <!-- PREMIUM FOOTER LINKS -->
     <div class="footer-links">
       <button class="footer-link" id="open-editor">
-        <i class="fas fa-paint-brush"></i>
-        Open Editor
+        🖌️ Open Editor
       </button>
     </div>
 
     <!-- PREMIUM FOOTER -->
     <footer class="footer">
       <div class="version">
-        <i class="fas fa-gem"></i> Premium v2.0.0
+        💎 Premium v2.0.0
       </div>
     </footer>
   </div>
 
+  <!-- ✅ Local script only (CSP safe) -->
   <script src="popup.js"></script>
 </body>
 </html>
