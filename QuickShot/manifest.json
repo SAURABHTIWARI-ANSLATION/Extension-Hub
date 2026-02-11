@@ -3,7 +3,6 @@
   "name": "QuickShot - Advanced Screen Capture",
   "version": "2.0.0",
   "description": "Capture visible parts or selected areas. Edit and share instantly.",
-
   "permissions": [
     "activeTab",
     "scripting",
@@ -11,12 +10,7 @@
     "downloads",
     "notifications"
   ],
-
-  "host_permissions": [
-    "https://*/*",
-    "http://*/*"
-  ],
-
+  "host_permissions": [],
   "action": {
     "default_popup": "popup.html",
     "default_title": "QuickShot",
@@ -24,23 +18,18 @@
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
       "128": "icons/icon128.png"
-    },
-    "default_width": 420,
-    "default_height": 520
+    }
   },
-
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
   },
-
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
-
-   "commands": {
+  "commands": {
     "capture_visible": {
       "suggested_key": {
         "default": "Alt+Shift+1",
@@ -56,16 +45,6 @@
       "description": "Capture selected area"
     }
   },
-
-  "content_scripts": [
-    {
-      "matches": ["https://*/*", "http://*/*"],
-      "js": ["content.js"],
-      "css": ["content.css"],
-      "run_at": "document_idle"
-    }
-  ],
-
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'"
   }

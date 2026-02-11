@@ -9,18 +9,20 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('📨 Content script received message:', request.action);
 
   if (request.action === 'QS_START_SELECTION') {
+    console.log('✅ Starting selection overlay...');
     startSelectionOverlay();
     sendResponse({ status: 'ok', message: 'Selection started' });
     return true;
   }
 
-  console.warn('⚠️ Unknown action received:', request.action);
+  // Add this to handle any other messages
+  console.log('⚠️ Unknown action received:', request.action);
   sendResponse({ status: 'error', message: 'Unknown action' });
   return true;
 });
 
 function startSelectionOverlay() {
-  console.log('🎯 Executing startSelectionOverlay()');
+  console.log('🎯 Starting selection overlay...');
 
   // Remove existing overlay if present
   document.getElementById('qs-overlay')?.remove();
@@ -28,30 +30,27 @@ function startSelectionOverlay() {
   const overlay = document.createElement('div');
   overlay.id = 'qs-overlay';
 
-  const selectionBox = document.createElement('div');
-  selectionBox.id = 'qs-selection-box';
-
-  const instructions = document.createElement('div');
-  instructions.id = 'qs-instructions';
-  instructions.textContent = 'Drag to select area • Press ESC to cancel';
-
-  const cancelBtn = document.createElement('button');
-  cancelBtn.id = 'qs-cancel-btn';
-  cancelBtn.textContent = '✕ Cancel';
-
-  overlay.appendChild(selectionBox);
-  overlay.appendChild(instructions);
-  overlay.appendChild(cancelBtn);
   document.body.appendChild(overlay);
 
   let startX, startY, isDragging = false;
+  const selectionBox = document.createElement('div');
+  selectionBox.className = 'qs-selection-box';
+  overlay.appendChild(selectionBox);
 
-  const removeOverlay = () => {
-    document.removeEventListener('keydown', handleKeyDown);
-    overlay.remove();
-  };
+  // Add instructions
+  const instructions = document.createElement('div');
+  instructions.className = 'qs-instructions';
+  instructions.textContent = 'Drag to select area • Press ESC to cancel';
+  overlay.appendChild(instructions);
 
-  cancelBtn.addEventListener('click', removeOverlay);
+  // Add cancel button
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'qs-cancel-btn';
+  cancelBtn.textContent = '✕ Cancel';
+  cancelBtn.addEventListener('click', () => {
+    document.body.removeChild(overlay);
+  });
+  overlay.appendChild(cancelBtn);
 
   overlay.addEventListener('mousedown', (e) => {
     e.preventDefault();
@@ -61,8 +60,8 @@ function startSelectionOverlay() {
     startY = e.clientY;
     isDragging = true;
 
-    selectionBox.style.left = `${startX}px`;
-    selectionBox.style.top = `${startY}px`;
+    selectionBox.style.left = startX + 'px';
+    selectionBox.style.top = startY + 'px';
     selectionBox.style.width = '0px';
     selectionBox.style.height = '0px';
 
@@ -74,17 +73,17 @@ function startSelectionOverlay() {
 
     const currentX = e.clientX;
     const currentY = e.clientY;
-
     const width = Math.abs(currentX - startX);
     const height = Math.abs(currentY - startY);
     const left = Math.min(currentX, startX);
     const top = Math.min(currentY, startY);
 
-    selectionBox.style.width = `${width}px`;
-    selectionBox.style.height = `${height}px`;
-    selectionBox.style.left = `${left}px`;
-    selectionBox.style.top = `${top}px`;
+    selectionBox.style.width = width + 'px';
+    selectionBox.style.height = height + 'px';
+    selectionBox.style.left = left + 'px';
+    selectionBox.style.top = top + 'px';
 
+    // Update instructions with size
     instructions.textContent = `${width} × ${height} pixels • Release to capture`;
   });
 
@@ -94,13 +93,17 @@ function startSelectionOverlay() {
     isDragging = false;
     const rect = selectionBox.getBoundingClientRect();
 
-    removeOverlay();
+    // Remove overlay
+    document.body.removeChild(overlay);
 
     if (rect.width < 10 || rect.height < 10) {
-      console.warn('⚠️ Selection too small, ignoring');
+      console.log('⚠️ Selection too small, ignoring');
       return;
     }
 
+    console.log('📏 Selected area:', rect);
+
+    // Send viewport-relative coordinates for cropping the viewport screenshot
     const coords = {
       x: Math.round(rect.left),
       y: Math.round(rect.top),
@@ -113,15 +116,18 @@ function startSelectionOverlay() {
 
     console.log('📤 Sending coordinates to background:', coords);
 
+    // Send coords to background
     chrome.runtime.sendMessage({
       action: 'selection_completed',
-      coords
+      coords: coords
     });
   });
 
+  // ESC key to cancel
   const handleKeyDown = (e) => {
     if (e.key === 'Escape') {
-      removeOverlay();
+      document.body.removeChild(overlay);
+      document.removeEventListener('keydown', handleKeyDown);
     }
   };
 

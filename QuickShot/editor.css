@@ -1,3 +1,198 @@
+/* ==========================================
+   CSP-COMPLIANT STYLES (Moved from inline HTML)
+   ========================================== */
+
+/* Loading overlay (moved from inline <style>) */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    color: white;
+    font-family: 'Inter', sans-serif;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Hidden class (replaces inline style="display: none;") */
+.hidden {
+    display: none !important;
+}
+
+/* Color swatches - backgrounds set via data attributes */
+.color-swatch[data-color="#ef4444"] {
+    background: #ef4444;
+}
+
+.color-swatch[data-color="#f97316"] {
+    background: #f97316;
+}
+
+.color-swatch[data-color="#eab308"] {
+    background: #eab308;
+}
+
+.color-swatch[data-color="#22c55e"] {
+    background: #22c55e;
+}
+
+.color-swatch[data-color="#0ea5e9"] {
+    background: #0ea5e9;
+}
+
+.color-swatch[data-color="#3b82f6"] {
+    background: #3b82f6;
+}
+
+.color-swatch[data-color="#8b5cf6"] {
+    background: #8b5cf6;
+}
+
+.color-swatch[data-color="#ec4899"] {
+    background: #ec4899;
+}
+
+.color-swatch[data-color="#ffffff"] {
+    background: #ffffff;
+}
+
+.color-swatch[data-color="#000000"] {
+    background: #000000;
+}
+
+.color-swatch[data-color="#64748b"] {
+    background: #64748b;
+}
+
+.color-swatch[data-color="#475569"] {
+    background: #475569;
+}
+
+/* White swatch special styling */
+.color-swatch.white-swatch {
+    border: 1px solid #cbd5e1;
+}
+
+/* Editor notification (for style.cssText replacement) */
+.editor-notification {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(135deg, #0A4DBF 0%, #1E88E5 100%);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 10000;
+    animation: slideInNotification 0.3s ease-out;
+    max-width: 300px;
+}
+
+/* Notification variations */
+.editor-notification.success {
+    background: #22C55E;
+}
+
+.editor-notification.error {
+    background: #EF4444;
+}
+
+.editor-notification.info {
+    background: #3B82F6;
+}
+
+.editor-notification.hide {
+    animation: slideOutNotification 0.3s ease-out;
+}
+
+@keyframes slideInNotification {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutNotification {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+}
+
+/* ==========================================
+   UTILITY CLASSES FOR STYLE HARDENING
+   ========================================== */
+
+/* Display utilities */
+.flex-visible {
+    display: flex !important;
+}
+
+.block-visible {
+    display: block !important;
+}
+
+/* Cursor utilities */
+.cursor-grab {
+    cursor: grab !important;
+}
+
+.cursor-grabbing {
+    cursor: grabbing !important;
+}
+
+.cursor-crosshair {
+    cursor: crosshair !important;
+}
+
+.cursor-text {
+    cursor: text !important;
+}
+
+/* Save status color */
+.save-status-success {
+    color: #22C55E !important;
+}
+
+
+/* ==========================================
+   ORIGINAL EDITOR STYLES
+   ========================================== */
+
 /* Light Theme - QuickShot Editor */
 :root {
     /* Light Theme Colors */
@@ -6,7 +201,7 @@
     --primary-hover: #1976D2;
     --accent: #64B5F6;
     --header-bg: #E3F2FD;
-    
+
     /* Editor Colors */
     --editor-bg: #F5F7FA;
     --surface: #FFFFFF;
@@ -16,28 +211,28 @@
     --text-primary: #1E293B;
     --text-secondary: #64748B;
     --text-dim: #94A3B8;
-    
+
     /* Tool Colors */
     --tool-active: var(--primary-solid);
     --tool-hover: rgba(33, 150, 243, 0.1);
     --tool-bg: rgba(0, 0, 0, 0.02);
-    
+
     /* Canvas Background */
     --checker-light: #F1F5F9;
     --checker-dark: #E2E8F0;
-    
+
     /* Status Colors */
     --success: #10B981;
     --warning: #F59E0B;
     --error: #EF4444;
     --info: #3B82F6;
-    
+
     /* Shadows */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
     --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
     --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
-    
+
     /* Spacing */
     --radius-xs: 4px;
     --radius-sm: 8px;
@@ -210,7 +405,7 @@ body {
     transform: scale(1.15);
     border-color: var(--primary-solid);
     box-shadow: 0 0 0 3px var(--primary-solid),
-                0 4px 20px rgba(33, 150, 243, 0.2);
+        0 4px 20px rgba(33, 150, 243, 0.2);
 }
 /* 👉 Make white swatch visible on light background */
 .color-swatch[data-color="#ffffff"] {
@@ -370,7 +565,7 @@ input[type="range"]::-moz-range-thumb {
     display: flex;
     flex-direction: column;
     background-color: var(--checker-dark);
-    background-image: 
+    background-image:
         linear-gradient(45deg, var(--checker-light) 25%, transparent 25%),
         linear-gradient(-45deg, var(--checker-light) 25%, transparent 25%),
         linear-gradient(45deg, transparent 75%, var(--checker-light) 75%),
@@ -447,9 +642,10 @@ canvas {
     box-shadow: var(--shadow-xl);
     border-radius: var(--radius-md);
     background: white;
+    width: auto;
+    height: auto;
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain;
 }
 
 .grid-overlay {
@@ -459,7 +655,7 @@ canvas {
     width: 100%;
     height: 100%;
     pointer-events: none;
-    background-image: 
+    background-image:
         linear-gradient(rgba(100, 181, 246, 0.1) 1px, transparent 1px),
         linear-gradient(90deg, rgba(100, 181, 246, 0.1) 1px, transparent 1px);
     background-size: 20px 20px;
@@ -559,6 +755,7 @@ canvas {
         opacity: 0;
         transform: translateY(-50px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -626,7 +823,8 @@ textarea:focus {
     margin-bottom: var(--spacing-lg);
 }
 
-select, input[type="number"] {
+select,
+input[type="number"] {
     padding: var(--spacing-sm) var(--spacing-md);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -636,7 +834,8 @@ select, input[type="number"] {
     font-size: 14px;
 }
 
-select:focus, input[type="number"]:focus {
+select:focus,
+input[type="number"]:focus {
     outline: none;
     border-color: var(--primary-solid);
     box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
@@ -648,7 +847,8 @@ select:focus, input[type="number"]:focus {
     justify-content: flex-end;
 }
 
-.btn-primary, .btn-secondary {
+.btn-primary,
+.btn-secondary {
     padding: var(--spacing-sm) var(--spacing-lg);
     border-radius: var(--radius-md);
     border: none;
@@ -742,11 +942,11 @@ select:focus, input[type="number"]:focus {
         width: 280px;
         padding: var(--spacing-md);
     }
-    
+
     .tools-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .colors-grid {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -756,7 +956,7 @@ select:focus, input[type="number"]:focus {
     .editor-container {
         flex-direction: column;
     }
-    
+
     .toolbar {
         width: 100%;
         height: auto;
@@ -766,20 +966,20 @@ select:focus, input[type="number"]:focus {
         padding: var(--spacing-md);
         overflow-x: auto;
     }
-    
+
     .toolbar-section {
         min-width: 200px;
     }
-    
+
     .canvas-area {
         height: calc(100vh - 300px);
     }
-    
+
     .canvas-controls {
         top: var(--spacing-sm);
         right: var(--spacing-sm);
     }
-    
+
     .status-bar {
         position: relative;
     }
@@ -787,17 +987,18 @@ select:focus, input[type="number"]:focus {
 
 /* Print Styles */
 @media print {
+
     .toolbar,
     .canvas-controls,
     .status-bar,
     .modal {
         display: none !important;
     }
-    
+
     .canvas-area {
         background: white !important;
     }
-    
+
     canvas {
         box-shadow: none !important;
     }

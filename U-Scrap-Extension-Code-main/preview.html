@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,14 +8,15 @@
   <link rel="stylesheet" href="popup.css">
   <link rel="stylesheet" href="preview.css">
 </head>
+
 <body class="preview-page">
   <div class="container">
     <header>
-      <img src="icons/icon48.svg" alt="U-Scrap Logo" class="extension-logo">
+      <img src="icons/icon48.png" alt="U-Scrap Logo" class="extension-logo">
       <h1>U-Scraper</h1>
       <p class="subtitle">Structured Data Preview</p>
     </header>
-    
+
     <div class="controls">
       <button id="refresh-btn" class="btn btn-primary">
         <i>↻</i> Refresh Data
@@ -29,7 +31,7 @@
         <i>✕</i> Close
       </button>
     </div>
-    
+
     <div class="dashboard">
       <div class="main-content">
         <div class="tab-navigation">
@@ -39,7 +41,7 @@
           <button class="tab-button" data-tab="structure">Structure</button>
           <button class="tab-button" data-tab="raw">Raw Data</button>
         </div>
-        
+
         <div id="tab-overview" class="tab-content active">
           <div id="overview-content">
             <div class="no-data">
@@ -47,7 +49,7 @@
             </div>
           </div>
         </div>
-        
+
         <div id="tab-content" class="tab-content">
           <div id="content-data">
             <div class="no-data">
@@ -55,7 +57,7 @@
             </div>
           </div>
         </div>
-        
+
         <div id="tab-media" class="tab-content">
           <div id="media-data">
             <div class="no-data">
@@ -63,7 +65,7 @@
             </div>
           </div>
         </div>
-        
+
         <div id="tab-structure" class="tab-content">
           <div id="structure-data">
             <div class="no-data">
@@ -71,7 +73,7 @@
             </div>
           </div>
         </div>
-        
+
         <div id="tab-raw" class="tab-content">
           <div id="raw-data">
             <div class="no-data">
@@ -80,7 +82,7 @@
           </div>
         </div>
       </div>
-      
+
       <div class="sidebar">
         <div class="section">
           <h2 class="section-title">📊 Summary</h2>
@@ -90,7 +92,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="section">
           <h2 class="section-title">🔗 Quick Links</h2>
           <div id="quick-links">
@@ -101,7 +103,7 @@
         </div>
       </div>
     </div>
-    
+
     <footer>
       <p>U-Scraper - Your data is processed locally and never leaves your device</p>
     </footer>
@@ -109,4 +111,5 @@
 
   <script src="preview.js"></script>
 </body>
+
 </html>

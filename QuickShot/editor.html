@@ -16,7 +16,7 @@
         <div>Loading Editor...</div>
     </div>
 
-    <div class="editor-container" hidden>
+    <div class="editor-container hidden">
         <!-- Left Sidebar - Tools -->
         <aside class="toolbar">
             <div class="toolbar-header">
@@ -83,7 +83,7 @@
                     <div class="color-swatch" data-color="#3b82f6" title="Blue"></div>
                     <div class="color-swatch" data-color="#8b5cf6" title="Purple"></div>
                     <div class="color-swatch" data-color="#ec4899" title="Pink"></div>
-                    <div class="color-swatch" data-color="#ffffff" title="White"></div>
+                    <div class="color-swatch white-swatch" data-color="#ffffff" title="White"></div>
                     <div class="color-swatch" data-color="#000000" title="Black"></div>
                     <div class="color-swatch" data-color="#64748b" title="Gray"></div>
                     <div class="color-swatch" data-color="#475569" title="Dark Gray"></div>
@@ -134,22 +134,25 @@
 
             <div class="canvas-wrapper">
                 <canvas id="editor-canvas"></canvas>
-                <div class="grid-overlay" id="grid-overlay"></div>
-                <div class="selection-rectangle" id="selection-rectangle" hidden></div>
-            </div>
 
-            <div class="status-bar">
-                <div class="status-info">
-                    <span id="cursor-position">X: 0, Y: 0</span>
-                    <span id="canvas-size">0 × 0</span>
-                    <span id="tool-status">Select Tool</span>
+                <!-- Grid Overlay (optional) -->
+                <div class="grid-overlay" id="grid-overlay"></div>
+
+                <!-- Selection Rectangle (for select tool) -->
+                <div class="selection-rectangle hidden" id="selection-rectangle"></div>
+
+                <div class="status-bar">
+                    <div class="status-info">
+                        <span id="cursor-position">X: 0, Y: 0</span>
+                        <span id="canvas-size">0 × 0</span>
+                        <span id="tool-status">Select Tool</span>
+                    </div>
+                    <div class="status-actions">
+                        <button id="btn-grid-toggle" class="status-btn">#</button>
+                        <button id="btn-ruler-toggle" class="status-btn">📏</button>
+                        <div class="save-status" id="save-status">Auto-saved</div>
+                    </div>
                 </div>
-                <div class="status-actions">
-                    <button id="btn-grid-toggle" class="status-btn">#</button>
-                    <button id="btn-ruler-toggle" class="status-btn">📏</button>
-                    <div class="save-status" id="save-status">Auto-saved</div>
-                </div>
-            </div>
         </main>
     </div>
 
@@ -181,4 +184,5 @@
     <!-- ✅ Local script only -->
     <script src="editor.js"></script>
 </body>
+
 </html>
