@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Broken Link Finder – Test Page</title>
+</head>
+<body>
+  <h1>Broken Link Finder Test Page</h1>
+
+  <h3>✅ Working Links</h3>
+  <ul>
+    <li><a href="https://www.google.com">Google (200)</a></li>
+    <li><a href="https://www.github.com">GitHub (200)</a></li>
+    <li><a href="https://www.wikipedia.org">Wikipedia (200)</a></li>
+  </ul>
+
+  <h3>❌ Broken Links (for testing)</h3>
+  <ul>
+    <li><a href="https://example.com/thispagedoesnotexist123">404 Page</a></li>
+    <li><a href="https://nonexistent-domain-abc123.com">No Domain (Network Error)</a></li>
+    <li><a href="https://httpstat.us/500">500 Server Error</a></li>
+    <li><a href="https://httpstat.us/403">403 Forbidden</a></li>
+    <li><a href="https://httpstat.us/408">408 Timeout</a></li>
+  </ul>
+
+  <h3>⚠️ Edge Cases</h3>
+  <ul>
+    <li><a href="mailto:test@example.com">Mailto Link (should be skipped)</a></li>
+    <li><a href="tel:+123456789">Telephone Link (should be skipped)</a></li>
+    <li><a href="#section1">Anchor Link (should be skipped)</a></li>
+  </ul>
+</body>
+</html>
