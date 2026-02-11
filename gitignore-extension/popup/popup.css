@@ -276,3 +276,16 @@ select option {
 .notification.warning {
   background: #f59e0b;
 }
+
+/* ===== CSP-SAFE THEME BUTTON COLORS (NO INLINE STYLES) ===== */
+.theme-btn.ocean {
+  background: #2196F3;
+}
+
+.theme-btn.mint {
+  background: #14B8A6;
+}
+
+.theme-btn.indigo {
+  background: #6366F1;
+}
