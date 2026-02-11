@@ -3,17 +3,23 @@ document.addEventListener('DOMContentLoaded', async function() {
   const totp = new TOTP();
   let accounts = [];
   let updateInterval;
+  let accountToDelete = null;
 
   // DOM Elements
   const accountsList = document.getElementById('accounts-list');
   const addModal = document.getElementById('add-modal');
+  const confirmModal = document.getElementById('confirm-modal');
   const addForm = document.getElementById('add-form');
   const searchInput = document.getElementById('search');
   const showSecretBtn = document.getElementById('show-secret');
   const secretKeyInput = document.getElementById('secret-key');
   const addAccountBtn = document.getElementById('add-account');
   const closeModalBtn = document.querySelector('.close');
+  const closeConfirmBtn = document.querySelector('.close-confirm');
   const cancelBtn = document.querySelector('.cancel-btn');
+  const cancelDeleteBtn = document.getElementById('cancel-delete');
+  const confirmDeleteBtn = document.getElementById('confirm-delete');
+  const confirmMessage = document.getElementById('confirm-message');
 
   // Initialize
   loadAccounts();
@@ -22,14 +28,24 @@ document.addEventListener('DOMContentLoaded', async function() {
 
   // Load accounts from storage
   async function loadAccounts() {
-    const data = await chrome.storage.sync.get('otpAccounts');
-    accounts = data.otpAccounts || [];
-    renderAccounts();
+    try {
+      const data = await chrome.storage.sync.get('otpAccounts');
+      accounts = data.otpAccounts || [];
+      renderAccounts();
+    } catch (error) {
+      console.error('Failed to load accounts:', error);
+      showToast('Failed to load accounts', 'error');
+    }
   }
 
   // Save accounts to storage
   async function saveAccounts() {
-    await chrome.storage.sync.set({ otpAccounts: accounts });
+    try {
+      await chrome.storage.sync.set({ otpAccounts: accounts });
+    } catch (error) {
+      console.error('Failed to save accounts:', error);
+      showToast('Failed to save accounts', 'error');
+    }
   }
 
   // Render accounts list
@@ -82,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     
     document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', deleteAccount);
+      btn.addEventListener('click', showDeleteConfirm);
     });
   }
 
@@ -116,28 +132,37 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     try {
       await navigator.clipboard.writeText(code);
-      showToast('Code copied to clipboard!');
+      showToast('Code copied to clipboard!', 'success');
     } catch (error) {
       console.error('Failed to copy:', error);
-      showToast('Failed to copy code');
+      showToast('Failed to copy code', 'error');
     }
   }
 
-  // Delete account
-  async function deleteAccount(e) {
+  // Show delete confirmation modal
+  function showDeleteConfirm(e) {
     const index = parseInt(e.target.dataset.index);
+    accountToDelete = index;
     const accountName = accounts[index].name;
     
-    if (confirm(`Delete account "${accountName}"?`)) {
-      accounts.splice(index, 1);
-      await saveAccounts();
-      updateCodes();
-      showToast('Account deleted');
-    }
+    confirmMessage.textContent = `Delete account "${accountName}"?`;
+    confirmModal.style.display = 'block';
+  }
+
+  // Delete account (after confirmation)
+  async function deleteAccount() {
+    if (accountToDelete === null) return;
+    
+    accounts.splice(accountToDelete, 1);
+    await saveAccounts();
+    updateCodes();
+    accountToDelete = null;
+    confirmModal.style.display = 'none';
+    showToast('Account deleted', 'success');
   }
 
   // Show toast notification
-  function showToast(message) {
+  function showToast(message, type = 'success') {
     let toast = document.querySelector('.toast');
     if (!toast) {
       toast = document.createElement('div');
@@ -146,11 +171,15 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     
     toast.textContent = message;
-    toast.classList.add('show');
+    toast.className = `toast ${type}`;
+    
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 10);
     
     setTimeout(() => {
       toast.classList.remove('show');
-    }, 2000);
+    }, 3000);
   }
 
   // Setup event listeners
@@ -161,7 +190,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       document.getElementById('account-name').focus();
     });
 
-    // Close modal buttons
+    // Close add modal buttons
     closeModalBtn.addEventListener('click', () => {
       addModal.style.display = 'none';
       addForm.reset();
@@ -172,11 +201,28 @@ document.addEventListener('DOMContentLoaded', async function() {
       addForm.reset();
     });
 
-    // Close modal when clicking outside
+    // Close confirm modal buttons
+    closeConfirmBtn.addEventListener('click', () => {
+      confirmModal.style.display = 'none';
+      accountToDelete = null;
+    });
+
+    cancelDeleteBtn.addEventListener('click', () => {
+      confirmModal.style.display = 'none';
+      accountToDelete = null;
+    });
+
+    confirmDeleteBtn.addEventListener('click', deleteAccount);
+
+    // Close modals when clicking outside
     window.addEventListener('click', (e) => {
       if (e.target === addModal) {
         addModal.style.display = 'none';
         addForm.reset();
+      }
+      if (e.target === confirmModal) {
+        confirmModal.style.display = 'none';
+        accountToDelete = null;
       }
     });
 
@@ -194,7 +240,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       // Validate secret (basic base32 validation)
       const base32Regex = /^[A-Z2-7]+=*$/i;
       if (!base32Regex.test(secret)) {
-        alert('Please enter a valid base32 secret key');
+        showToast('Please enter a valid base32 secret key', 'error');
         return;
       }
       
@@ -203,6 +249,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         const testCode = await totp.generateTOTP(secret);
         if (testCode === 'ERROR') {
           throw new Error('Invalid secret key');
+        }
+        
+        // Check for duplicates
+        const duplicate = accounts.find(acc => 
+          acc.name.toLowerCase() === name.toLowerCase() && 
+          acc.secret === secret
+        );
+        
+        if (duplicate) {
+          showToast('This account already exists', 'error');
+          return;
         }
         
         // Add account
@@ -219,12 +276,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         updateCodes();
         addModal.style.display = 'none';
         addForm.reset();
-        showToast('Account added successfully!');
+        showToast('Account added successfully!', 'success');
         
         // Scroll to show new account
         accountsList.scrollTop = accountsList.scrollHeight;
       } catch (error) {
-        alert('Invalid secret key. Please check and try again.');
+        showToast('Invalid secret key. Please check and try again.', 'error');
       }
     });
 

@@ -1,14 +1,23 @@
 {
   "name": "QR Code Generator",
-  "description": "Generate QR codes instantly from text or URLs",
-  "version": "0.0.1",
+  "description": "Generate QR codes instantly from text or URLs. Uses api.qrserver.com for QR generation.",
+  "version": "1.0.0",
   "manifest_version": 3,
-
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
+      "16": "qr.png",
+      "48": "qr.png",
       "128": "qr.png"
     }
+  },
+  "permissions": [
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "https://api.qrserver.com/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; img-src 'self' https://api.qrserver.com; connect-src https://api.qrserver.com;"
   }
-  }
-
+}

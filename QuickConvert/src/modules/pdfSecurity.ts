@@ -1,23 +1,30 @@
-import { PDFDocument } from 'pdf-lib';
+import { jsPDF } from 'jspdf';
+import * as pdfjsLib from 'pdfjs-dist';
+
+// Set worker source
+pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
+    'pdfjs-dist/build/pdf.worker.min.mjs',
+    import.meta.url
+).toString();
 
 export function renderPdfSecurity(container: HTMLElement) {
     container.innerHTML = `
         <div class="tool-io">
             <input type="file" id="pdf-security-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-security-ui" class="hidden">
-                <p id="security-info"></p>
-                <div class="tool-controls">
-                    <div style="margin-bottom: 1rem;">
-                        <input type="password" id="pdf-password" placeholder="Enter Password" class="file-input" style="width: 200px;" />
+            <div id="pdf-security-ui" class="hidden mt-lg">
+                <p id="security-info" class="fw-600 mb-md"></p>
+                <div class="tool-settings-card">
+                    <div class="mb-md">
+                        <input type="password" id="pdf-password" placeholder="Set New Password" class="file-input input-styled" />
                     </div>
-                    <div style="margin-bottom: 1rem;">
-                        <button id="encrypt-btn" class="primary-btn">Add Password & Download</button>
+                    <div class="mb-md">
+                        <button id="encrypt-btn" class="primary-btn w-full">Add Password & Download</button>
                     </div>
-                    <p style="font-size: 0.8rem; color: #666;">Note: Removing password requires the current password. (Basic support via re-saving).</p>
-                    <button id="decrypt-btn" class="secondary-btn" style="background: #10b981; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; color: white; cursor: pointer;">Remove Password & Download</button>
+                    <p class="fs-xs text-muted-color mt-md">Note: This will secure the PDF visual content with a password. Selectable text may be converted to images for maximum compatibility.</p>
                 </div>
             </div>
             <div id="loader" class="hidden">Processing Security...</div>
+            <div id="progress" class="preview-status"></div>
         </div>
     `;
 
@@ -26,8 +33,8 @@ export function renderPdfSecurity(container: HTMLElement) {
     const info = document.getElementById('security-info')!;
     const passInput = document.getElementById('pdf-password') as HTMLInputElement;
     const encryptBtn = document.getElementById('encrypt-btn')!;
-    const decryptBtn = document.getElementById('decrypt-btn')!;
     const loader = document.getElementById('loader')!;
+    const progress = document.getElementById('progress')!;
 
     let currentFile: File | null = null;
 
@@ -45,75 +52,56 @@ export function renderPdfSecurity(container: HTMLElement) {
             return;
         }
 
+        if (!currentFile) return;
+
         loader.classList.remove('hidden');
         encryptBtn.setAttribute('disabled', 'true');
+        progress.innerText = 'Starting security processing...';
 
         try {
-            const arrayBuffer = await currentFile!.arrayBuffer();
-            const pdf = await PDFDocument.load(arrayBuffer);
+            const arrayBuffer = await currentFile.arrayBuffer();
+            const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-            // pdf-lib's built-in encryption is limited in some environments, 
-            // but we can try to set metadata or just re-save.
-            // Note: Standard PDF encryption is complex. pdf-lib supports it via PDFDocument.encrypt()
+            // @ts-ignore - jsPDF types might not include encryption in some versions, but it's supported
+            const doc = new jsPDF({
+                encryption: {
+                    userPassword: password,
+                    ownerPassword: password,
+                    userPermissions: ['print', 'modify', 'copy', 'annot-forms']
+                }
+            });
 
-            // pdf-lib's built-in encryption involves setting metadata or using standard PDF features
-            // Note: Standard PDF encryption is complex.
-            // In pdf-lib v1, encryption is not directly supported in the simple way I tried.
-            // Removing the call as it might be version-specific or require extra steps.
-            // For now, let's acknowledge that pdf-lib encryption might need a different approach or version.
+            for (let i = 1; i <= pdf.numPages; i++) {
+                progress.innerText = `Securing page ${i} of ${pdf.numPages}...`;
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({ scale: 2.0 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d')!;
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
 
-            // pdf.encrypt({ ... }) // Removing this for now as it's not valid in this version or environment
+                await page.render({ canvasContext: context, viewport: viewport, canvas }).promise;
 
-            const pdfBytes = await pdf.save();
-            const blob = new Blob([pdfBytes.buffer as any], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${currentFile!.name.replace('.pdf', '')}_protected.pdf`;
-            a.click();
-            URL.revokeObjectURL(url);
-        } catch (error) {
+                const imgData = canvas.toDataURL('image/jpeg', 0.8);
+
+                if (i > 1) doc.addPage();
+
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+
+                doc.addImage(imgData, 'JPEG', 0, 0, pageWidth, pageHeight);
+            }
+
+            progress.innerText = 'Finalizing and downloading...';
+            doc.save(`${currentFile!.name.replace('.pdf', '')}_protected.pdf`);
+            progress.innerText = 'Protected PDF downloaded successfully!';
+        } catch (error: any) {
             console.error('Encryption failed:', error);
-            alert('Failed to protect PDF. This file might already be encrypted.');
+            alert(`Failed to protect PDF: ${error.message || 'The file might be corrupted or already protected.'}`);
+            progress.innerText = 'Failed to protect PDF.';
         } finally {
             loader.classList.add('hidden');
             encryptBtn.removeAttribute('disabled');
-        }
-    };
-
-    decryptBtn.onclick = async () => {
-        const password = passInput.value;
-        // Password might be needed to LOAD the pdf first if it's already protected
-        loader.classList.remove('hidden');
-        decryptBtn.setAttribute('disabled', 'true');
-
-        try {
-            const arrayBuffer = await currentFile!.arrayBuffer();
-            let pdf: PDFDocument;
-
-            if (password) {
-                // pdf-lib doesn't have 'password' directly in LoadOptions in all versions or is named differently
-                // Actually, it should be there, but maybe the type definition is missing it.
-                // Let's use any if type is strict
-                pdf = await PDFDocument.load(arrayBuffer, { ignoreEncryption: true } as any);
-            } else {
-                pdf = await PDFDocument.load(arrayBuffer);
-            }
-
-            const pdfBytes = await pdf.save();
-            const blob = new Blob([pdfBytes.buffer as any], { type: 'application/pdf' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${currentFile!.name.replace('.pdf', '')}_unlocked.pdf`;
-            a.click();
-            URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Decryption failed:', error);
-            alert('Failed to unlock PDF. Please check if the password is correct.');
-        } finally {
-            loader.classList.add('hidden');
-            decryptBtn.removeAttribute('disabled');
         }
     };
 }

@@ -12,16 +12,32 @@
 <body>
   <div id="app">
     <aside class="sidebar">
-      <h1>✨ Converter</h1>
+      <div class="sidebar-header">
+        <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="url(#gradient1)" />
+          <path d="M12 8L20 16L12 24" stroke="white" stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round" />
+          <defs>
+            <linearGradient id="gradient1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#667eea" />
+              <stop offset="1" stop-color="#764ba2" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <h1>QuickConvert</h1>
+      </div>
       <nav>
-        <button class="nav-btn active" data-tool="image">🖼️ Image Tools</button>
-        <button class="nav-btn" data-tool="pdf">📄 PDF Tools</button>
+        <button class="nav-btn active" data-category="pdf">PDF Tools</button>
+        <button class="nav-btn" data-category="image">Image Tools</button>
+        <button class="nav-btn" data-category="text">Text Tools</button>
+        <button class="nav-btn" data-category="settings">Settings</button>
       </nav>
     </aside>
     <main class="content">
       <header>
-        <h2 id="tool-title">Image Tools</h2>
-        <p id="tool-desc">Convert, crop, and resize images locally with ease.</p>
+        <h2 id="tool-title">PDF Tools</h2>
+        <p id="tool-desc">Manage and convert PDF documents offline.</p>
       </header>
       <div id="tool-container" class="tool-grid">
         <!-- Tool buttons will be injected here -->
@@ -30,6 +46,9 @@
         <button id="back-btn">← Back to Tools</button>
         <div id="tool-ui"></div>
       </div>
+      <footer class="app-footer">
+        Built for Privacy. No Internet Required. | Made by <strong>SAURABH TIWARI</strong>
+      </footer>
     </main>
   </div>
   <script type="module" src="/src/main.ts"></script>

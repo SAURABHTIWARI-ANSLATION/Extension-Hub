@@ -3,288 +3,121 @@ console.log('Tech Detector Pro content script loaded');
 // Check if already loaded to avoid redeclaration
 if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
   window.TECH_DETECTOR_LOADED = true;
-  
-  // Technology detection patterns
-  const TECH_PATTERNS = {
-    // Frontend Frameworks
-    react: {
-      name: 'React',
-      category: 'frontend',
-      patterns: [
-        'react',
-        '__REACT_DEVTOOLS_GLOBAL_HOOK__',
-        'data-reactroot',
-        'data-reactid',
-        'ReactDOM',
-        'react-dom'
-      ]
-    },
-    nextjs: {
-      name: 'Next.js',
-      category: 'frontend',
-      patterns: [
-        '__NEXT_DATA__',
-        '__NEXT_PAGE__',
-        'nextjs',
-        '/_next/',
-        'next/'
-      ]
-    },
-    vue: {
-      name: 'Vue.js',
-      category: 'frontend',
-      patterns: [
-        '__VUE__',
-        'data-v-',
-        'Vue',
-        'vue@'
-      ]
-    },
-    nuxtjs: {
-      name: 'Nuxt.js',
-      category: 'frontend',
-      patterns: [
-        '__NUXT__',
-        'nuxt',
-        'nuxt/'
-      ]
-    },
-    angular: {
-      name: 'Angular',
-      category: 'frontend',
-      patterns: [
-        'ng-app',
-        'data-ng-',
-        'ng-repeat',
-        '__ng',
-        'angular',
-        'ng-version'
-      ]
-    },
-    svelte: {
-      name: 'Svelte',
-      category: 'frontend',
-      patterns: [
-        'svelte',
-        'svelte/',
-        'svelte-'
-      ]
-    },
-    
-    // JavaScript Libraries
-    jquery: {
-      name: 'jQuery',
-      category: 'libraries',
-      patterns: ['jquery', 'jQuery', 'jquery/']
-    },
-    bootstrap: {
-      name: 'Bootstrap',
-      category: 'libraries',
-      patterns: ['bootstrap', 'bootstrap/']
-    },
-    tailwind: {
-      name: 'Tailwind CSS',
-      category: 'libraries',
-      patterns: ['tailwindcss', 'tailwind', 'tailwindcss/']
-    },
-    lodash: {
-      name: 'Lodash',
-      category: 'libraries',
-      patterns: ['lodash', '_lodash', 'lodash/']
-    },
-    axios: {
-      name: 'Axios',
-      category: 'libraries',
-      patterns: ['axios', 'axios/']
-    },
-    
-    // CSS Frameworks
-    bulma: {
-      name: 'Bulma',
-      category: 'libraries',
-      patterns: ['bulma', 'bulma/']
-    },
-    materialize: {
-      name: 'Materialize',
-      category: 'libraries',
-      patterns: ['materialize', 'materializecss']
-    },
-    
-    // Analytics
-    google_analytics: {
-      name: 'Google Analytics',
-      category: 'analytics',
-      patterns: ['gtag.js', 'GoogleAnalyticsObject', '__google_analytics', '/analytics.js', 'ga(']
-    },
-    google_tag_manager: {
-      name: 'Google Tag Manager',
-      category: 'analytics',
-      patterns: ['googletagmanager.com', 'gtm.js', 'gtm.start']
-    },
-    facebook_pixel: {
-      name: 'Facebook Pixel',
-      category: 'analytics',
-      patterns: ['facebook.net/pixel', 'fbq(', 'facebook.com/tr/', 'fbevents.js']
-    },
-    hotjar: {
-      name: 'Hotjar',
-      category: 'analytics',
-      patterns: ['hotjar', 'hjid:', 'hjsettings']
-    },
-    mixpanel: {
-      name: 'Mixpanel',
-      category: 'analytics',
-      patterns: ['mixpanel', 'mixpanel.track']
-    },
-    
-    // CMS
-    wordpress: {
-      name: 'WordPress',
-      category: 'cms',
-      patterns: [
-        'wp-content',
-        'wp-includes',
-        '/wp-admin',
-        'wp-json',
-        'wordpress',
-        'wp-'
-      ]
-    },
-    shopify: {
-      name: 'Shopify',
-      category: 'cms',
-      patterns: ['shopify', 'cdn.shopify.com', 'myshopify.com', 'Shopify.theme']
-    },
-    wix: {
-      name: 'Wix',
-      category: 'cms',
-      patterns: ['wix.com', 'wixsite.com', 'static.wixstatic.com']
-    },
-    squarespace: {
-      name: 'Squarespace',
-      category: 'cms',
-      patterns: ['squarespace', 'squarespace.com']
-    },
-    webflow: {
-      name: 'Webflow',
-      category: 'cms',
-      patterns: ['webflow', 'webflow.io']
-    },
-    joomla: {
-      name: 'Joomla',
-      category: 'cms',
-      patterns: ['joomla', 'joomla.org']
-    },
-    drupal: {
-      name: 'Drupal',
-      category: 'cms',
-      patterns: ['drupal', 'drupal.org']
-    },
-    
-    // Hosting/CDN
-    cloudflare: {
-      name: 'Cloudflare',
-      category: 'hosting',
-      patterns: ['cloudflare', 'cf-ray', '__cf']
-    },
-    aws: {
-      name: 'AWS',
-      category: 'hosting',
-      patterns: ['amazonaws.com', 's3.amazonaws', 'cloudfront.net']
-    },
-    azure: {
-      name: 'Microsoft Azure',
-      category: 'hosting',
-      patterns: ['azure', 'azureedge.net', 'azure.com']
-    },
-    google_cloud: {
-      name: 'Google Cloud',
-      category: 'hosting',
-      patterns: ['googleapis.com', 'gstatic.com']
-    },
-    vercel: {
-      name: 'Vercel',
-      category: 'hosting',
-      patterns: ['vercel.com', 'vercel.app', 'now.sh']
-    },
-    netlify: {
-      name: 'Netlify',
-      category: 'hosting',
-      patterns: ['netlify', 'netlify.com', 'netlify.app']
-    },
-    heroku: {
-      name: 'Heroku',
-      category: 'hosting',
-      patterns: ['herokuapp.com', 'heroku.com']
-    },
-    
-    // Fonts/Icons
-    font_awesome: {
-      name: 'Font Awesome',
-      category: 'libraries',
-      patterns: ['fontawesome', 'font-awesome', 'fortawesome']
-    },
-    google_fonts: {
-      name: 'Google Fonts',
-      category: 'libraries',
-      patterns: ['fonts.googleapis.com', 'fonts.gstatic.com']
+
+  // Load technology patterns from technologies.json
+  let TECH_PATTERNS = {};
+  let TECH_DATABASE_LOADED = false;
+
+  // Load technologies.json file
+  async function loadTechnologies() {
+    try {
+      const response = await fetch(chrome.runtime.getURL('technologies.json'));
+      const data = await response.json();
+
+      // Convert technologies.json format to TECH_PATTERNS format
+      TECH_PATTERNS = {};
+
+      // Process each category
+      Object.entries(data.technologies).forEach(([category, techs]) => {
+        techs.forEach(tech => {
+          TECH_PATTERNS[tech.id] = {
+            name: tech.name,
+            category: category,
+            patterns: tech.patterns,
+            icon: tech.icon,
+            website: tech.website,
+            versionCheck: tech.versionCheck
+          };
+        });
+      });
+
+      TECH_DATABASE_LOADED = true;
+      console.log('✅ Technologies database loaded:', Object.keys(TECH_PATTERNS).length, 'technologies');
+      return true;
+    } catch (error) {
+      console.error('❌ Error loading technologies.json:', error);
+      return false;
     }
-  };
+  }
 
   // Enhanced detection functions
-  function detectTechnologies() {
+  async function detectTechnologies() {
+    // Load technologies first if not already loaded
+    if (!TECH_DATABASE_LOADED) {
+      await loadTechnologies();
+    }
+
     const detected = {
       frontend: [],
       backend: [],
       cms: [],
       analytics: [],
       hosting: [],
-      libraries: []
+      libraries: [],
+      payment: [],
+      build_tools: []
     };
-    
+
+    // Track scraping statistics
+    let patternsChecked = 0;
+    let patternsMatched = 0;
+
     try {
-      // Get relevant page data
+      // Get relevant page data (REAL SCRAPING)
       const scripts = Array.from(document.scripts);
       const links = Array.from(document.querySelectorAll('link'));
       const metaTags = Array.from(document.querySelectorAll('meta'));
       const htmlSource = document.documentElement.outerHTML;
       const htmlSourceLower = htmlSource.substring(0, 50000).toLowerCase();
-      
+
+      // Log scraping activity
+      console.log('🔍 SCRAPING PAGE DATA:');
+      console.log(`  - Scripts found: ${scripts.length}`);
+      console.log(`  - Links found: ${links.length}`);
+      console.log(`  - Meta tags found: ${metaTags.length}`);
+      console.log(`  - HTML source size: ${htmlSource.length} characters`);
+      console.log(`  - Analyzing patterns in technologies.json...`);
+
       // Check for React FIRST (before pattern matching)
       detectReactSpecial(detected, scripts, htmlSourceLower);
-      
+
       // Check for Vue
       detectVueSpecial(detected, scripts, htmlSourceLower);
-      
+
       // Check for Next.js
       detectNextJsSpecial(detected, scripts, htmlSourceLower);
-      
-      // Check each technology
+
+      // Check each technology (REAL PATTERN MATCHING)
       Object.entries(TECH_PATTERNS).forEach(([techId, tech]) => {
         try {
           let found = false;
           let detectionMethod = 'html';
-          
-          // Check in page source
+
+          // Check in page source (SCRAPING HTML)
           for (const pattern of tech.patterns) {
+            patternsChecked++;
             const patternLower = pattern.toLowerCase();
             if (htmlSourceLower.includes(patternLower)) {
               found = true;
+              patternsMatched++;
               detectionMethod = 'html';
               break;
             }
           }
-          
-          // Check script sources
+
+          // Check script sources (SCRAPING SCRIPT URLs)
           if (!found) {
             for (const script of scripts) {
               if (script.src) {
                 const srcLower = script.src.toLowerCase();
                 for (const pattern of tech.patterns) {
+                  patternsChecked++;
                   const patternLower = pattern.toLowerCase();
                   if (srcLower.includes(patternLower)) {
                     found = true;
+                    patternsMatched++;
                     detectionMethod = 'script';
+                    console.log(`  ✓ Matched "${tech.name}" via script: ${script.src.substring(0, 50)}...`);
                     break;
                   }
                 }
@@ -292,7 +125,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
               }
             }
           }
-          
+
           // Check links
           if (!found) {
             for (const link of links) {
@@ -308,19 +141,19 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
               if (found) break;
             }
           }
-          
+
           // Check meta tags
           if (!found) {
             for (const meta of metaTags) {
               const content = (meta.content || '').toLowerCase();
               const name = (meta.name || '').toLowerCase();
               const property = (meta.getAttribute('property') || '').toLowerCase();
-              
+
               for (const pattern of tech.patterns) {
                 const patternLower = pattern.toLowerCase();
-                if (content.includes(patternLower) || 
-                    name.includes(patternLower) ||
-                    property.includes(patternLower)) {
+                if (content.includes(patternLower) ||
+                  name.includes(patternLower) ||
+                  property.includes(patternLower)) {
                   found = true;
                   detectionMethod = 'meta';
                   break;
@@ -329,11 +162,11 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
               if (found) break;
             }
           }
-          
+
           if (found) {
             // Try to detect version
             const version = detectVersion(techId, htmlSourceLower, scripts);
-            
+
             detected[tech.category].push({
               id: techId,
               name: tech.name,
@@ -348,15 +181,30 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
           console.warn(`Error detecting ${techId}:`, techError);
         }
       });
-      
+
       // Check for additional technologies
       detectAdditionalTechnologies(detected, htmlSourceLower, scripts, metaTags);
-      
+
     } catch (error) {
       console.error('Error in detectTechnologies:', error);
       detected.error = error.message;
     }
-    
+
+    // Log final results with scraping statistics
+    const totalDetected = Object.values(detected).reduce((sum, arr) => {
+      return sum + (Array.isArray(arr) ? arr.length : 0);
+    }, 0);
+
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🎯 SCRAPING & DETECTION COMPLETE');
+    console.log(`  - Patterns checked: ${patternsChecked || 'N/A'}`);
+    console.log(`  - Patterns matched: ${patternsMatched || 'N/A'}`);
+    console.log(`  - Technologies found: ${totalDetected}`);
+    console.log('  - Detection method: Real-time page analysis');
+    console.log('  - Data source: Live webpage scraping');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('📊 Detected technologies:', detected);
+
     return detected;
   }
 
@@ -383,10 +231,10 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         /ng-version="(\d+\.\d+\.\d+)"/gi
       ]
     };
-    
+
     const patterns = versionPatterns[techId];
     if (!patterns) return null;
-    
+
     // Check in page source
     for (const pattern of patterns) {
       const match = pageSource.match(pattern);
@@ -395,7 +243,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         if (versionMatch) return versionMatch[1];
       }
     }
-    
+
     // Check in script URLs
     for (const script of scripts) {
       if (script.src) {
@@ -409,7 +257,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         }
       }
     }
-    
+
     return null;
   }
 
@@ -420,7 +268,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         try {
           const generator = (meta.getAttribute('generator') || '').toLowerCase();
           const content = (meta.getAttribute('content') || '').toLowerCase();
-          
+
           if (generator.includes('wordpress') || content.includes('wordpress')) {
             addIfNotExists(detected.cms, {
               id: 'wordpress_meta',
@@ -435,20 +283,20 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
           // Ignore individual meta tag errors
         }
       });
-      
+
       // Detect window object properties
       detectFromWindowObject(detected);
-      
+
       // Detect from performance API
       detectFromPerformanceAPI(detected);
-      
+
       // Enhanced script URL detection
       scripts.forEach(script => {
         try {
           if (!script.src) return;
-          
+
           const src = script.src.toLowerCase();
-          
+
           // Google Analytics
           if (src.includes('gtag.js') || (src.includes('googletagmanager') && src.includes('gtag'))) {
             addIfNotExists(detected.analytics, {
@@ -460,7 +308,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
               detectedAt: new Date().toISOString()
             });
           }
-          
+
           // Facebook Pixel
           if (src.includes('facebook.net') && src.includes('fbevents')) {
             addIfNotExists(detected.analytics, {
@@ -472,11 +320,11 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
               detectedAt: new Date().toISOString()
             });
           }
-          
+
           // Public CDN detection
-          if (src.includes('cdn.jsdelivr.net') || 
-              src.includes('cdnjs.cloudflare.com') || 
-              src.includes('unpkg.com')) {
+          if (src.includes('cdn.jsdelivr.net') ||
+            src.includes('cdnjs.cloudflare.com') ||
+            src.includes('unpkg.com')) {
             addIfNotExists(detected.hosting, {
               id: 'cdn_public',
               name: 'Public CDN',
@@ -490,7 +338,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
           // Ignore script detection errors
         }
       });
-      
+
     } catch (error) {
       console.error('Error in detectAdditionalTechnologies:', error);
     }
@@ -509,7 +357,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         { key: 'jQuery', tech: { id: 'jquery_window', name: 'jQuery', category: 'libraries' } },
         { key: 'Shopify', tech: { id: 'shopify_window', name: 'Shopify', category: 'cms' } }
       ];
-      
+
       indicators.forEach(({ key, tech }) => {
         try {
           if (typeof window !== 'undefined' && window[key] !== undefined) {
@@ -527,7 +375,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
           // Ignore errors accessing window properties
         }
       });
-      
+
     } catch (error) {
       console.error('Error in detectFromWindowObject:', error);
     }
@@ -538,13 +386,13 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
       if (typeof performance === 'undefined' || !performance.getEntriesByType) {
         return;
       }
-      
+
       const entries = performance.getEntriesByType('resource');
-      
+
       entries.forEach(entry => {
         try {
           const url = entry.name.toLowerCase();
-          
+
           const hostingPatterns = [
             { pattern: 'cloudflare', id: 'cf_perf', name: 'Cloudflare' },
             { pattern: 'amazonaws.com', id: 'aws_perf', name: 'AWS' },
@@ -556,7 +404,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
             { pattern: 'vercel', id: 'vercel_perf', name: 'Vercel' },
             { pattern: 'herokuapp.com', id: 'heroku_perf', name: 'Heroku' }
           ];
-          
+
           for (const { pattern, id, name } of hostingPatterns) {
             if (url.includes(pattern)) {
               addIfNotExists(detected.hosting, {
@@ -584,7 +432,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
   function detectReactSpecial(detected, scripts, pageSource) {
     let reactFound = false;
     let reactVersion = null;
-    
+
     // Method 1: Check for React in window object
     try {
       if (typeof window !== 'undefined') {
@@ -592,8 +440,8 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
           reactFound = true;
         }
       }
-    } catch (e) {}
-    
+    } catch (e) { }
+
     // Method 2: Check script URLs for React
     scripts.forEach(script => {
       if (script.src) {
@@ -606,29 +454,29 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         }
       }
     });
-    
+
     // Method 3: Check for React DOM patterns in HTML
     const reactPatterns = [
       'data-reactroot',
-      'data-reactid', 
+      'data-reactid',
       '__react',
       'react-root',
       'id="root"',
       'id="app"',
       'class="app"'
     ];
-    
+
     reactPatterns.forEach(pattern => {
       if (pageSource.includes(pattern.toLowerCase())) {
         reactFound = true;
       }
     });
-    
+
     // Method 4: Check for JSX-like attributes
     if (pageSource.includes('classname=') || pageSource.includes('onclick=')) {
       reactFound = true;
     }
-    
+
     // Method 5: Check meta tags
     try {
       const metaTags = document.querySelectorAll('meta');
@@ -638,8 +486,8 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
           reactFound = true;
         }
       });
-    } catch (e) {}
-    
+    } catch (e) { }
+
     if (reactFound) {
       addIfNotExists(detected.frontend, {
         id: 'react_detected',
@@ -652,27 +500,27 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
       });
     }
   }
-  
+
   // Special Vue detection
   function detectVueSpecial(detected, scripts, pageSource) {
     let vueFound = false;
-    
+
     try {
       if (typeof window !== 'undefined' && (window.Vue || window.__VUE__)) {
         vueFound = true;
       }
-    } catch (e) {}
-    
+    } catch (e) { }
+
     scripts.forEach(script => {
       if (script.src && script.src.toLowerCase().includes('vue')) {
         vueFound = true;
       }
     });
-    
+
     if (pageSource.includes('data-v-') || pageSource.includes('v-if') || pageSource.includes('v-for')) {
       vueFound = true;
     }
-    
+
     if (vueFound) {
       addIfNotExists(detected.frontend, {
         id: 'vue_detected',
@@ -684,17 +532,17 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
       });
     }
   }
-  
+
   // Special Next.js detection
   function detectNextJsSpecial(detected, scripts, pageSource) {
     let nextFound = false;
-    
+
     try {
       if (typeof window !== 'undefined' && window.__NEXT_DATA__) {
         nextFound = true;
       }
-    } catch (e) {}
-    
+    } catch (e) { }
+
     scripts.forEach(script => {
       if (script.src) {
         const src = script.src.toLowerCase();
@@ -703,11 +551,11 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
         }
       }
     });
-    
+
     if (pageSource.includes('__next') || pageSource.includes('_next')) {
       nextFound = true;
     }
-    
+
     if (nextFound) {
       addIfNotExists(detected.frontend, {
         id: 'nextjs_detected',
@@ -725,7 +573,7 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
       console.warn('addIfNotExists: array is not an array', array);
       return;
     }
-    
+
     if (!array.some(i => i.id === item.id && i.name === item.name)) {
       array.push(item);
     }
@@ -734,62 +582,64 @@ if (typeof window.TECH_DETECTOR_LOADED === 'undefined') {
   // Message listener
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('Tech Detector: Received message:', message.type);
-    
-    try {
-      if (message.type === 'DETECT_TECHNOLOGIES') {
-        const technologies = detectTechnologies();
-        
-        const result = {
-          url: window.location.href,
-          hostname: window.location.hostname,
-          title: document.title,
-          technologies: technologies,
-          timestamp: new Date().toISOString(),
-          userAgent: navigator.userAgent
-        };
-        
-        // Send to background script
-        try {
-          chrome.runtime.sendMessage({
-            type: 'TECH_DATA',
-            data: result
-          }).catch(err => {
-            console.warn('Could not send to background:', err);
-          });
-        } catch (sendError) {
-          console.warn('Could not send message to background:', sendError);
+
+    // Handle async operations
+    (async () => {
+      try {
+        if (message.type === 'DETECT_TECHNOLOGIES') {
+          const technologies = await detectTechnologies();
+
+          const result = {
+            url: window.location.href,
+            hostname: window.location.hostname,
+            title: document.title,
+            technologies: technologies,
+            timestamp: new Date().toISOString(),
+            userAgent: navigator.userAgent
+          };
+
+          // Send to background script
+          try {
+            chrome.runtime.sendMessage({
+              type: 'TECH_DATA',
+              data: result
+            }).catch(err => {
+              console.warn('Could not send to background:', err);
+            });
+          } catch (sendError) {
+            console.warn('Could not send message to background:', sendError);
+          }
+
+          sendResponse({ success: true, data: result });
+          return;
         }
-        
-        sendResponse({ success: true, data: result });
-        return true;
+
+        if (message.type === 'PING') {
+          sendResponse({ pong: true, timestamp: new Date().toISOString() });
+          return;
+        }
+
+      } catch (error) {
+        console.error('Message handler error:', error);
+        sendResponse({
+          error: true,
+          message: error.message,
+          timestamp: new Date().toISOString()
+        });
       }
-      
-      if (message.type === 'PING') {
-        sendResponse({ pong: true, timestamp: new Date().toISOString() });
-        return true;
-      }
-      
-    } catch (error) {
-      console.error('Message handler error:', error);
-      sendResponse({ 
-        error: true,
-        message: error.message,
-        timestamp: new Date().toISOString()
-      });
-      return true;
-    }
-    
-    return false;
+    })();
+
+    return true; // Keep channel open for async response
   });
 
   // Auto-detect on page load if enabled
   try {
     chrome.storage.sync.get(['autoScan'], (result) => {
       if (result && result.autoScan) {
-        setTimeout(() => {
+        setTimeout(async () => {
           try {
-            const techData = detectTechnologies();
-            
+            const techData = await detectTechnologies();
+
             chrome.runtime.sendMessage({
               type: 'TECH_DATA',
               data: {

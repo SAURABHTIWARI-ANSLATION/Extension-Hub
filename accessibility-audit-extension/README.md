@@ -417,7 +417,7 @@ accessibility-audit-extension/
 │   └── ...                          # Other languages
 ├── tests/                           # Test files
 │   ├── unit/                        # Unit tests
-│   └── integration/                  # Integration tests
+│   ├── integration/                  # Integration tests
 └── docs/                            # Documentation
     ├── api.md                       # API documentation
     ├── contributing.md              # Contribution guide
@@ -499,7 +499,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ```
 MIT License
 
-Copyright (c) 2024 Accessibility Score Calculator
+<<<<<<< HEAD
+Copyright (c) 2026 Accessibility Score Calculator
+=======
+Copyright (c) 2026 Saurabh Tiwari and ANSLATION COMPANY
+>>>>>>> 97b4785 (Update Accessibility Audit README copyright)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

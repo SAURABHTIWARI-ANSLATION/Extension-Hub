@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Mode Pro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            transition: all 0.2s ease;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+                        <defs>
+                            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#1d4ed8"/>
+                            </linearGradient>
+                        </defs>
+                        <rect width="40" height="40" rx="10" fill="url(#logoGrad)"/>
+                        <path d="M12 20 L18 14 L28 20 L22 26 L12 20Z" fill="white" opacity="0.9"/>
+                        <circle cx="20" cy="20" r="8" fill="none" stroke="white" stroke-width="2" opacity="0.7"/>
+                    </svg>
+                </div>
+                <div class="title-group">
+                    <h1>Meeting Mode Pro</h1>
+                    <p class="subtitle">Professional Screen Sharing Made Easy</p>
+                </div>
+            </div>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Inactive</span>
+            </div>
+        </header>
+
+        <!-- Quick Toggle -->
+        <section class="quick-toggle-section">
+            <div class="toggle-header">
+                <h3>⚡ Quick Actions</h3>
+                <div class="shortcut-hint">Ctrl+Shift+M</div>
+            </div>
+            <div class="toggle-container">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="meetingToggle">
+                    <span class="toggle-slider"></span>
+                </label>
+                <div class="toggle-label">
+                    <span class="toggle-title">Meeting Mode</span>
+                    <span class="toggle-desc">Hide personal tabs & notifications</span>
+                </div>
+            </div>
+            <div class="toggle-stats">
+                <div class="stat">
+                    <span class="stat-value" id="tabCount">0</span>
+                    <span class="stat-label">Tabs Hidden</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="timeSaved">0m</span>
+                    <span class="stat-label">Time Saved</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meeting Controls -->
+        <section class="meeting-controls">
+            <h3>🎯 Meeting Tools</h3>
+            <div class="controls-grid">
+                <button class="control-btn" id="hidePersonalBtn">
+                    <span class="control-icon">🙈</span>
+                    <span class="control-text">Hide Personal Tabs</span>
+                </button>
+                <button class="control-btn" id="cleanUrlBtn">
+                    <span class="control-icon">🔗</span>
+                    <span class="control-text">Clean URL</span>
+                </button>
+                <button class="control-btn" id="timerBtn">
+                    <span class="control-icon">⏱️</span>
+                    <span class="control-text">Meeting Timer</span>
+                </button>
+                <button class="control-btn" id="agendaBtn">
+                    <span class="control-icon">📋</span>
+                    <span class="control-text">Agenda</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Smart Detection -->
+        <section class="smart-section">
+            <h3>🤖 Smart Detection</h3>
+            <div class="detection-list">
+                <div class="detection-item">
+                    <span class="detection-icon">💼</span>
+                    <span class="detection-text">Work Tabs</span>
+                    <div class="detection-count" id="workTabCount">0</div>
+                </div>
+                <div class="detection-item">
+                    <span class="detection-icon">🎮</span>
+                    <span class="detection-text">Personal Tabs</span>
+                    <div class="detection-count" id="personalTabCount">0</div>
+                </div>
+                <div class="detection-item">
+                    <span class="detection-icon">🔔</span>
+                    <span class="detection-text">Notifications</span>
+                    <div class="detection-count" id="notificationCount">0</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings -->
+        <section class="settings-section">
+            <h3>⚙️ Settings</h3>
+            <div class="settings-list">
+                <div class="setting-item">
+                    <span class="setting-text">Auto-hide notifications</span>
+                    <label class="switch">
+                        <input type="checkbox" id="autoHideNotifications" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-text">Clean URLs automatically</span>
+                    <label class="switch">
+                        <input type="checkbox" id="autoCleanUrls" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-text">Meeting timer sound</span>
+                    <label class="switch">
+                        <input type="checkbox" id="timerSound" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <span class="setting-text">Action item extraction</span>
+                    <label class="switch">
+                        <input type="checkbox" id="actionExtraction" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- 👇 NEW: Add this Privacy & Legal Section -->
+        <section class="legal-section" style="
+            margin-top: var(--space-md);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--gray-200);
+        ">
+            <div class="legal-links" style="
+                display: flex;
+                justify-content: center;
+                gap: var(--space-lg);
+            ">
+                <button class="legal-link" id="privacyPolicyBtn" style="
+                    background: none;
+                    border: none;
+                    color: var(--gray-500);
+                    font-size: 11px;
+                    cursor: pointer;
+                    text-decoration: underline;
+                    padding: 4px;
+                ">
+                    🔒 Privacy Policy
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="agendaModal">
+        <div class="modal-content">
+            <h3>📋 Meeting Agenda</h3>
+            <textarea id="agendaText" placeholder="Add meeting agenda items..."></textarea>
+            <div class="modal-actions">
+                <button class="modal-btn secondary" id="cancelAgenda">Cancel</button>
+                <button class="modal-btn primary" id="saveAgenda">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="timerModal">
+        <div class="modal-content">
+            <h3>⏱️ Meeting Timer</h3>
+            <div class="timer-display">
+                <div class="time-input">
+                    <input type="number" id="hours" min="0" max="23" value="1">
+                    <span>h</span>
+                    <input type="number" id="minutes" min="0" max="59" value="0">
+                    <span>m</span>
+                </div>
+                <div class="time-remaining" id="timeRemaining">01:00:00</div>
+            </div>
+            <div class="timer-controls">
+                <button class="timer-btn" id="startTimer">Start</button>
+                <button class="timer-btn" id="pauseTimer">Pause</button>
+                <button class="timer-btn" id="resetTimer">Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

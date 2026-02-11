@@ -310,6 +310,84 @@ header h1 {
   background-color: #e0e0e0;
 }
 
+/* Add to existing CSS, before the toast section */
+
+/* Modal Styles - Updated */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Toast notification - Updated */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background-color: #333;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1001;
+  min-width: 250px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast.success {
+  background-color: #34a853;
+}
+
+.toast.error {
+  background-color: #d93025;
+}
+
+.toast.warning {
+  background-color: #f9ab00;
+}
+
+/* Update form group for confirm modal */
+.form-group[style*="text-align: right"] {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 /* Toast notification */
 .toast {
   position: fixed;

@@ -366,6 +366,8 @@ function getCategoryIcon(category) {
     analytics: '📊',
     hosting: '☁️',
     libraries: '📚',
+    payment: '💳',
+    build_tools: '📦',
     other: '🔧'
   };
   return icons[category] || '🔍';
