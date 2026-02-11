@@ -7,29 +7,56 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export async function renderPdfToPpt(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-ppt-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-ppt-ui" class="hidden">
-                <p id="ppt-info"></p>
-                <div class="tool-controls">
-                    <button id="convert-ppt-btn" class="primary-btn">Convert to PPT & Download</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Converting... (Pages will be converted to high-quality slide images)</div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-ppt-input') as HTMLInputElement;
-    const ui = document.getElementById('pdf-ppt-ui')!;
-    const info = document.getElementById('ppt-info')!;
-    const convertBtn = document.getElementById('convert-ppt-btn')!;
-    const loader = document.getElementById('loader')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-ppt-input';
+    fileInput.accept = 'application/pdf';
+    fileInput.className = 'file-input';
+
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'pdf-ppt-ui';
+    ui.className = 'hidden';
+
+    const info = document.createElement('p');
+    info.id = 'ppt-info';
+
+    const controls = document.createElement('div');
+    controls.className = 'tool-controls';
+
+    const convertBtn = document.createElement('button');
+    convertBtn.id = 'convert-ppt-btn';
+    convertBtn.className = 'primary-btn';
+    convertBtn.textContent = 'Convert to PPT & Download';
+
+    controls.appendChild(convertBtn);
+
+    ui.appendChild(info);
+    ui.appendChild(controls);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Converting... (Pages will be converted to high-quality slide images)';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(loader);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     let pdfData: ArrayBuffer | null = null;
     let fileName = '';
 
-    input.onchange = async (e: any) => {
+    fileInput.onchange = async (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
         fileName = file.name.replace('.pdf', '');

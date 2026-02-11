@@ -50,30 +50,63 @@ let currentCategory: 'image' | 'pdf' | 'text' | 'settings' = 'pdf';
 
 function renderToolGrid() {
     const container = document.getElementById('tool-container')!;
-    container.innerHTML = '';
+    container.replaceChildren(); // Safe clear
 
     // Handle Settings view
     if (currentCategory === 'settings') {
-        container.innerHTML = `
-            <div style="grid-column: 1 / -1; padding: var(--space-2xl); text-align: center;">
-                <h3 style="font-size: 1.5rem; margin-bottom: var(--space-md); color: var(--text-primary);">Settings</h3>
-                <p style="color: var(--text-secondary); margin-bottom: var(--space-lg);">QuickConvert Extension v1.0</p>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">All conversions happen locally in your browser.<br>No data is sent to external servers.</p>
-            </div>
-        `;
+        // Create settings view safely
+        const settingsDiv = document.createElement('div');
+        settingsDiv.className = 'settings-view';
+        settingsDiv.style.gridColumn = '1 / -1';
+        settingsDiv.style.padding = 'var(--space-2xl)';
+        settingsDiv.style.textAlign = 'center';
+
+        const title = document.createElement('h3');
+        title.textContent = 'Settings';
+        title.style.fontSize = '1.5rem';
+        title.style.marginBottom = 'var(--space-md)';
+        title.style.color = 'var(--text-primary)';
+
+        const version = document.createElement('p');
+        version.textContent = 'QuickConvert Extension v1.0';
+        version.style.color = 'var(--text-secondary)';
+        version.style.marginBottom = 'var(--space-lg)';
+
+        const privacy = document.createElement('p');
+        privacy.textContent = 'All conversions happen locally in your browser. No data is sent to external servers.';
+        privacy.style.color = 'var(--text-muted)';
+        privacy.style.fontSize = '0.9rem';
+
+        settingsDiv.appendChild(title);
+        settingsDiv.appendChild(version);
+        settingsDiv.appendChild(privacy);
+        container.appendChild(settingsDiv);
         return;
     }
 
     tools.filter(t => t.category === currentCategory).forEach(tool => {
         const card = document.createElement('div');
         card.className = `tool-card ${tool.gradient}`;
-        card.innerHTML = `
-            <div class="tool-card-content">
-                <div class="icon-wrapper">${tool.icon}</div>
-                <h3>${tool.title}</h3>
-                <p>${tool.description}</p>
-            </div>
-        `;
+
+        // Create card content safely
+        const content = document.createElement('div');
+        content.className = 'tool-card-content';
+
+        const iconWrapper = document.createElement('div');
+        iconWrapper.className = 'icon-wrapper';
+        iconWrapper.textContent = tool.icon;
+
+        const title = document.createElement('h3');
+        title.textContent = tool.title;
+
+        const description = document.createElement('p');
+        description.textContent = tool.description;
+
+        content.appendChild(iconWrapper);
+        content.appendChild(title);
+        content.appendChild(description);
+        card.appendChild(content);
+
         card.onclick = () => loadTool(tool.id);
         container.appendChild(card);
     });
@@ -87,7 +120,7 @@ function loadTool(toolId: string) {
 
     // Module loading logic
     const toolUI = document.getElementById('tool-ui')!;
-    toolUI.innerHTML = ''; // Clear previous
+    toolUI.replaceChildren(); // Safe clear
 
     if (toolId === 'cropper') {
         renderCropper(toolUI);
@@ -118,7 +151,13 @@ function loadTool(toolId: string) {
     } else if (toolId === 'img-resizer') {
         renderImageResizer(toolUI);
     } else {
-        toolUI.innerHTML = `<h3>${tools.find(t => t.id === toolId)?.title}</h3><p>Work in progress...</p>`;
+        // Create work-in-progress message safely
+        const title = document.createElement('h3');
+        title.textContent = tools.find(t => t.id === toolId)?.title || 'Tool';
+        const message = document.createElement('p');
+        message.textContent = 'Work in progress...';
+        toolUI.appendChild(title);
+        toolUI.appendChild(message);
     }
 }
 

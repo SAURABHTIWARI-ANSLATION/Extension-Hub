@@ -1,28 +1,55 @@
 import { PDFDocument } from 'pdf-lib';
 
 export async function renderPdfCompressor(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-compress-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-compress-ui" class="hidden">
-                <p id="compress-info"></p>
-                <div class="tool-controls">
-                    <button id="compress-pdf-btn" class="primary-btn">Compress & Download</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Compressing... (This might take a while for large files)</div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-compress-input') as HTMLInputElement;
-    const ui = document.getElementById('pdf-compress-ui')!;
-    const info = document.getElementById('compress-info')!;
-    const compressBtn = document.getElementById('compress-pdf-btn')!;
-    const loader = document.getElementById('loader')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-compress-input';
+    fileInput.accept = 'application/pdf';
+    fileInput.className = 'file-input';
+
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'pdf-compress-ui';
+    ui.className = 'hidden';
+
+    const info = document.createElement('p');
+    info.id = 'compress-info';
+
+    const controls = document.createElement('div');
+    controls.className = 'tool-controls';
+
+    const compressBtn = document.createElement('button');
+    compressBtn.id = 'compress-pdf-btn';
+    compressBtn.className = 'primary-btn';
+    compressBtn.textContent = 'Compress & Download';
+
+    controls.appendChild(compressBtn);
+
+    ui.appendChild(info);
+    ui.appendChild(controls);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Compressing... (This might take a while for large files)';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(loader);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     let currentFile: File | null = null;
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         currentFile = e.target.files[0];
         if (!currentFile) return;
         info.innerText = `Selected: ${currentFile.name} (${(currentFile.size / 1024 / 1024).toFixed(2)} MB)`;

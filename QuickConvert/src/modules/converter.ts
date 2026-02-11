@@ -1,46 +1,103 @@
 export function renderFormatConverter(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="converter-input" accept="image/*,.svg" class="file-input" />
-            <div id="converter-ui" class="hidden mt-lg">
-                <div class="preview-container">
-                    <img id="preview-image" class="preview-image" />
-                    <div id="svg-preview" class="preview-image display-block svg-preview-box"></div>
-                    <p id="converter-info" class="mt-md fs-sm text-muted-color"></p>
-                </div>
-                
-                <div class="tool-settings-card mt-lg">
-                    <div class="mb-md">
-                        <label class="label-styled">Select Target Format</label>
-                        <select id="target-format" class="file-input input-styled">
-                            <option value="image/png">PNG (.png)</option>
-                            <option value="image/jpeg">JPEG (.jpg)</option>
-                            <option value="image/webp">WebP (.webp)</option>
-                        </select>
-                    </div>
-                    
-                    <button id="convert-btn" class="primary-btn w-full">Convert & Download</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Processing...</div>
-            <div id="converter-status" class="preview-status"></div>
-        </div>
-    `;
+    // Create main wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('converter-input') as HTMLInputElement;
-    const ui = document.getElementById('converter-ui')!;
-    const previewImg = document.getElementById('preview-image') as HTMLImageElement;
-    const svgPreview = document.getElementById('svg-preview')!;
-    const info = document.getElementById('converter-info')!;
-    const convertBtn = document.getElementById('convert-btn')!;
-    const loader = document.getElementById('loader')!;
-    const formatSelect = document.getElementById('target-format') as HTMLSelectElement;
-    const status = document.getElementById('converter-status')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'converter-input';
+    fileInput.accept = 'image/*,.svg';
+    fileInput.className = 'file-input';
 
+    // UI container
+    const ui = document.createElement('div');
+    ui.id = 'converter-ui';
+    ui.className = 'hidden mt-lg';
+
+    // Preview container
+    const previewContainer = document.createElement('div');
+    previewContainer.className = 'preview-container';
+
+    const previewImg = document.createElement('img');
+    previewImg.id = 'preview-image';
+    previewImg.className = 'preview-image';
+
+    const svgPreview = document.createElement('div');
+    svgPreview.id = 'svg-preview';
+    svgPreview.className = 'preview-image display-block svg-preview-box';
+
+    const info = document.createElement('p');
+    info.id = 'converter-info';
+    info.className = 'mt-md fs-sm text-muted-color';
+
+    previewContainer.appendChild(previewImg);
+    previewContainer.appendChild(svgPreview);
+    previewContainer.appendChild(info);
+
+    // Settings card
+    const settingsCard = document.createElement('div');
+    settingsCard.className = 'tool-settings-card mt-lg';
+
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'mb-md';
+
+    const label = document.createElement('label');
+    label.className = 'label-styled';
+    label.textContent = 'Select Target Format';
+
+    const select = document.createElement('select');
+    select.id = 'target-format';
+    select.className = 'file-input input-styled';
+
+    ['image/png|PNG (.png)', 'image/jpeg|JPEG (.jpg)', 'image/webp|WebP (.webp)'].forEach(opt => {
+        const [value, text] = opt.split('|');
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        select.appendChild(option);
+    });
+
+    labelDiv.appendChild(label);
+    labelDiv.appendChild(select);
+
+    const convertBtn = document.createElement('button');
+    convertBtn.id = 'convert-btn';
+    convertBtn.className = 'primary-btn w-full';
+    convertBtn.textContent = 'Convert & Download';
+
+    settingsCard.appendChild(labelDiv);
+    settingsCard.appendChild(convertBtn);
+
+    ui.appendChild(previewContainer);
+    ui.appendChild(settingsCard);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Processing...';
+
+    // Status
+    const status = document.createElement('div');
+    status.id = 'converter-status';
+    status.className = 'preview-status';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(loader);
+    toolDiv.appendChild(status);
+
+    container.appendChild(toolDiv);
+
+    // Alias for consistency
+    const formatSelect = select;
+
+    // Elements already created above, reuse them
     let currentFile: File | null = null;
     let isSvg = false;
 
-    input.onchange = async (e: any) => {
+    fileInput.onchange = async (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -56,7 +113,11 @@ export function renderFormatConverter(container: HTMLElement) {
         try {
             if (isSvg) {
                 const text = await file.text();
-                svgPreview.innerHTML = text;
+                // Safe SVG rendering
+                const parser = new DOMParser();
+                const svgDoc = parser.parseFromString(text, 'image/svg+xml');
+                const svgElement = svgDoc.documentElement;
+                svgPreview.replaceChildren(svgElement.cloneNode(true));
                 svgPreview.style.display = 'block';
                 previewImg.style.display = 'none';
                 loader.classList.add('hidden');

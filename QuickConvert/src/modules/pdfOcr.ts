@@ -7,36 +7,75 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export function renderPdfOcr(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-ocr-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-ocr-ui" class="hidden mt-lg">
-                <p id="ocr-info" class="fw-600 mb-md"></p>
-                <div class="tool-settings-card">
-                    <select id="ocr-lang" class="file-input input-styled mb-md">
-                        <option value="eng">English</option>
-                        <option value="hin">Hindi</option>
-                        <option value="eng+hin">English + Hindi</option>
-                    </select>
-                    <button id="ocr-btn" class="primary-btn w-full">Extract Text (OCR) & Download</button>
-                </div>
-            </div>
-            <div id="ocr-status" class="preview-status"></div>
-            <div id="loader" class="hidden">Initializing OCR Engine...</div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-ocr-input') as HTMLInputElement;
-    const ui = document.getElementById('pdf-ocr-ui')!;
-    const info = document.getElementById('ocr-info')!;
-    const ocrBtn = document.getElementById('ocr-btn')!;
-    const loader = document.getElementById('loader')!;
-    const status = document.getElementById('ocr-status')!;
-    const langSelect = document.getElementById('ocr-lang') as HTMLSelectElement;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-ocr-input';
+    fileInput.accept = 'application/pdf';
+    fileInput.className = 'file-input';
+
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'pdf-ocr-ui';
+    ui.className = 'hidden mt-lg';
+
+    const info = document.createElement('p');
+    info.id = 'ocr-info';
+    info.className = 'fw-600 mb-md';
+
+    const settingsCard = document.createElement('div');
+    settingsCard.className = 'tool-settings-card';
+
+    const langSelect = document.createElement('select');
+    langSelect.id = 'ocr-lang';
+    langSelect.className = 'file-input input-styled mb-md';
+
+    ['eng|English', 'hin|Hindi', 'eng+hin|English + Hindi'].forEach(opt => {
+        const [value, text] = opt.split('|');
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        langSelect.appendChild(option);
+    });
+
+    const ocrBtn = document.createElement('button');
+    ocrBtn.id = 'ocr-btn';
+    ocrBtn.className = 'primary-btn w-full';
+    ocrBtn.textContent = 'Extract Text (OCR) & Download';
+
+    settingsCard.appendChild(langSelect);
+    settingsCard.appendChild(ocrBtn);
+
+    ui.appendChild(info);
+    ui.appendChild(settingsCard);
+
+    // Status
+    const status = document.createElement('div');
+    status.id = 'ocr-status';
+    status.className = 'preview-status';
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Initializing OCR Engine...';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(status);
+    toolDiv.appendChild(loader);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     let currentFile: File | null = null;
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         currentFile = e.target.files[0];
         if (!currentFile) return;
         info.innerText = `Selected: ${currentFile.name}`;

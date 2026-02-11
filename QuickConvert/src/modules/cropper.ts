@@ -1,33 +1,70 @@
 import Cropper from 'cropperjs';
 
 export function renderCropper(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="cropper-input" accept="image/*" class="file-input" />
-            <div id="loader" class="hidden">Processing image...</div>
-            <div id="cropper-wrapper" class="hidden mt-lg">
-                <div class="preview-container">
-                    <img id="cropper-image" class="preview-image" />
-                </div>
-                <div class="tool-controls">
-                    <button id="crop-btn" class="primary-btn">Crop & Download</button>
-                    <button id="rotate-btn" class="secondary-btn">Rotate 90°</button>
-                </div>
-            </div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('cropper-input') as HTMLInputElement;
-    const wrapper = document.getElementById('cropper-wrapper')!;
-    const image = document.getElementById('cropper-image') as HTMLImageElement;
-    const cropBtn = document.getElementById('crop-btn')!;
-    const rotateBtn = document.getElementById('rotate-btn')!;
-    const loader = document.getElementById('loader')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'cropper-input';
+    fileInput.accept = 'image/*';
+    fileInput.className = 'file-input';
 
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Processing image...';
+
+    // Wrapper for cropper
+    const wrapper = document.createElement('div');
+    wrapper.id = 'cropper-wrapper';
+    wrapper.className = 'hidden mt-lg';
+
+    // Preview container
+    const previewContainer = document.createElement('div');
+    previewContainer.className = 'preview-container';
+
+    // Image element
+    const image = document.createElement('img');
+    image.id = 'cropper-image';
+    image.className = 'preview-image';
+
+    previewContainer.appendChild(image);
+
+    // Controls
+    const controls = document.createElement('div');
+    controls.className = 'tool-controls';
+
+    const cropBtn = document.createElement('button');
+    cropBtn.id = 'crop-btn';
+    cropBtn.className = 'primary-btn';
+    cropBtn.textContent = 'Crop & Download';
+
+    const rotateBtn = document.createElement('button');
+    rotateBtn.id = 'rotate-btn';
+    rotateBtn.className = 'secondary-btn';
+    rotateBtn.textContent = 'Rotate 90°';
+
+    controls.appendChild(cropBtn);
+    controls.appendChild(rotateBtn);
+
+    wrapper.appendChild(previewContainer);
+    wrapper.appendChild(controls);
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(loader);
+    toolDiv.appendChild(wrapper);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above, reuse them
     let cropper: any = null;
     let currentFileName = 'cropped-image.png';
 
-    input.onchange = async (e: any) => {
+    fileInput.onchange = async (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
 

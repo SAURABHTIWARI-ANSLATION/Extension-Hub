@@ -1,48 +1,92 @@
 import { PDFDocument } from 'pdf-lib';
 
 export function renderPdfMerge(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-merge-input" accept="application/pdf" multiple class="file-input" />
-            <div id="pdf-list-container" class="hidden mt-lg">
-                <p class="fw-600">Selected Files (Files will be merged in this order):</p>
-                <ul id="pdf-file-list" class="merge-list"></ul>
-                <div class="tool-controls">
-                    <button id="merge-btn" class="primary-btn">Merge & Download PDF</button>
-                    <button id="clear-merge-btn" class="danger-btn">Clear All</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Merging PDFs...</div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-merge-input') as HTMLInputElement;
-    const listContainer = document.getElementById('pdf-list-container')!;
-    const fileList = document.getElementById('pdf-file-list')!;
-    const mergeBtn = document.getElementById('merge-btn')!;
-    const clearBtn = document.getElementById('clear-merge-btn')!;
-    const loader = document.getElementById('loader')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-merge-input';
+    fileInput.accept = 'application/pdf';
+    fileInput.multiple = true;
+    fileInput.className = 'file-input';
 
+    // List container
+    const listContainer = document.createElement('div');
+    listContainer.id = 'pdf-list-container';
+    listContainer.className = 'hidden mt-lg';
+
+    const listTitle = document.createElement('p');
+    listTitle.className = 'fw-600';
+    listTitle.textContent = 'Selected Files (Files will be merged in this order):';
+
+    const fileList = document.createElement('ul');
+    fileList.id = 'pdf-file-list';
+    fileList.className = 'merge-list';
+
+    const controls = document.createElement('div');
+    controls.className = 'tool-controls';
+
+    const mergeBtn = document.createElement('button');
+    mergeBtn.id = 'merge-btn';
+    mergeBtn.className = 'primary-btn';
+    mergeBtn.textContent = 'Merge & Download PDF';
+
+    const clearBtn = document.createElement('button');
+    clearBtn.id = 'clear-merge-btn';
+    clearBtn.className = 'danger-btn';
+    clearBtn.textContent = 'Clear All';
+
+    controls.appendChild(mergeBtn);
+    controls.appendChild(clearBtn);
+
+    listContainer.appendChild(listTitle);
+    listContainer.appendChild(fileList);
+    listContainer.appendChild(controls);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Merging PDFs...';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(listContainer);
+    toolDiv.appendChild(loader);
+
+    container.appendChild(toolDiv);
+
+    // Elements already created above
     let selectedFiles: File[] = [];
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         const files = Array.from(e.target.files as FileList);
         selectedFiles = [...selectedFiles, ...files];
         updateFileList();
     };
 
     function updateFileList() {
-        fileList.innerHTML = '';
+        fileList.replaceChildren(); // Safe clear
         if (selectedFiles.length > 0) {
             listContainer.classList.remove('hidden');
             selectedFiles.forEach((file, index) => {
                 const li = document.createElement('li');
                 li.className = 'merge-item';
-                li.innerHTML = `
-                    <span>${index + 1}. ${file.name}</span>
-                    <button data-index="${index}" class="icon-btn">✕</button>
-                `;
-                li.querySelector('button')?.addEventListener('click', (e) => {
+
+                const span = document.createElement('span');
+                span.textContent = `${index + 1}. ${file.name}`;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'icon-btn';
+                removeBtn.textContent = '✕';
+                removeBtn.dataset.index = index.toString();
+
+                li.appendChild(span);
+                li.appendChild(removeBtn);
+
+                removeBtn.addEventListener('click', (e) => {
                     const idx = parseInt((e.currentTarget as HTMLButtonElement).dataset.index!);
                     selectedFiles.splice(idx, 1);
                     updateFileList();
@@ -56,7 +100,7 @@ export function renderPdfMerge(container: HTMLElement) {
 
     clearBtn.onclick = () => {
         selectedFiles = [];
-        input.value = '';
+        fileInput.value = '';
         updateFileList();
     };
 

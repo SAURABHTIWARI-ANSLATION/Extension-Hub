@@ -8,37 +8,84 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export function renderPdfSecurity(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-security-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-security-ui" class="hidden mt-lg">
-                <p id="security-info" class="fw-600 mb-md"></p>
-                <div class="tool-settings-card">
-                    <div class="mb-md">
-                        <input type="password" id="pdf-password" placeholder="Set New Password" class="file-input input-styled" />
-                    </div>
-                    <div class="mb-md">
-                        <button id="encrypt-btn" class="primary-btn w-full">Add Password & Download</button>
-                    </div>
-                    <p class="fs-xs text-muted-color mt-md">Note: This will secure the PDF visual content with a password. Selectable text may be converted to images for maximum compatibility.</p>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Processing Security...</div>
-            <div id="progress" class="preview-status"></div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-security-input') as HTMLInputElement;
-    const ui = document.getElementById('pdf-security-ui')!;
-    const info = document.getElementById('security-info')!;
-    const passInput = document.getElementById('pdf-password') as HTMLInputElement;
-    const encryptBtn = document.getElementById('encrypt-btn')!;
-    const loader = document.getElementById('loader')!;
-    const progress = document.getElementById('progress')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-security-input';
+    fileInput.accept = 'application/pdf';
+    fileInput.className = 'file-input';
+
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'pdf-security-ui';
+    ui.className = 'hidden mt-lg';
+
+    const info = document.createElement('p');
+    info.id = 'security-info';
+    info.className = 'fw-600 mb-md';
+
+    const settingsCard = document.createElement('div');
+    settingsCard.className = 'tool-settings-card';
+
+    const passDiv = document.createElement('div');
+    passDiv.className = 'mb-md';
+
+    const passInput = document.createElement('input');
+    passInput.type = 'password';
+    passInput.id = 'pdf-password';
+    passInput.placeholder = 'Set New Password';
+    passInput.className = 'file-input input-styled';
+
+    passDiv.appendChild(passInput);
+
+    const btnDiv = document.createElement('div');
+    btnDiv.className = 'mb-md';
+
+    const encryptBtn = document.createElement('button');
+    encryptBtn.id = 'encrypt-btn';
+    encryptBtn.className = 'primary-btn w-full';
+    encryptBtn.textContent = 'Add Password & Download';
+
+    btnDiv.appendChild(encryptBtn);
+
+    const note = document.createElement('p');
+    note.className = 'fs-xs text-muted-color mt-md';
+    note.textContent = 'Note: This will secure the PDF visual content with a password. Selectable text may be converted to images for maximum compatibility.';
+
+    settingsCard.appendChild(passDiv);
+    settingsCard.appendChild(btnDiv);
+    settingsCard.appendChild(note);
+
+    ui.appendChild(info);
+    ui.appendChild(settingsCard);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Processing Security...';
+
+    // Progress
+    const progress = document.createElement('div');
+    progress.id = 'progress';
+    progress.className = 'preview-status';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(loader);
+    toolDiv.appendChild(progress);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     let currentFile: File | null = null;
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         currentFile = e.target.files[0];
         if (!currentFile) return;
         info.innerText = `Selected: ${currentFile.name}`;

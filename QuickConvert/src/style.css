@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap');
+/* Local fonts removed per user request - using system fonts */
 
 :root {
   /* Premium Color Palette */
@@ -63,7 +63,7 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   background: #2d3748;
   background-image:
     url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><filter id="blur"><feGaussianBlur stdDeviation="50"/></filter><circle cx="200" cy="200" r="300" fill="%23667eea" opacity="0.3" filter="url(%23blur)"/><circle cx="800" cy="800" r="300" fill="%23764ba2" opacity="0.3" filter="url(%23blur)"/></svg>'),
@@ -152,7 +152,7 @@ body {
 }
 
 .sidebar h1 {
-  font-family: 'Poppins', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--text-primary);

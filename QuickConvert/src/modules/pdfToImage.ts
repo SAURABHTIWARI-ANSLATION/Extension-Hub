@@ -6,29 +6,56 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 export async function renderPdfToImage(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-to-img-input" accept="application/pdf" class="file-input" />
-            <div id="pdf-to-img-ui" class="hidden">
-                <div id="pdf-info"></div>
-                <div class="tool-controls">
-                    <button id="extract-imgs-btn" class="primary-btn">Extract All Pages as Images</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Extracting...</div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-to-img-input') as HTMLInputElement;
-    const ui = document.getElementById('pdf-to-img-ui')!;
-    const pdfInfo = document.getElementById('pdf-info')!;
-    const extractBtn = document.getElementById('extract-imgs-btn')!;
-    const loader = document.getElementById('loader')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-to-img-input';
+    fileInput.accept = 'application/pdf';
+    fileInput.className = 'file-input';
+
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'pdf-to-img-ui';
+    ui.className = 'hidden';
+
+    const pdfInfo = document.createElement('div');
+    pdfInfo.id = 'pdf-info';
+
+    const controls = document.createElement('div');
+    controls.className = 'tool-controls';
+
+    const extractBtn = document.createElement('button');
+    extractBtn.id = 'extract-imgs-btn';
+    extractBtn.className = 'primary-btn';
+    extractBtn.textContent = 'Extract All Pages as Images';
+
+    controls.appendChild(extractBtn);
+
+    ui.appendChild(pdfInfo);
+    ui.appendChild(controls);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Extracting...';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(loader);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     let pdfData: ArrayBuffer | null = null;
     let fileName = '';
 
-    input.onchange = async (e: any) => {
+    fileInput.onchange = async (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
         fileName = file.name.replace('.pdf', '');

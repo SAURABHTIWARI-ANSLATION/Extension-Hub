@@ -1,51 +1,134 @@
 import imageCompression from 'browser-image-compression';
 
 export async function renderImageReducer(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="reducer-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" class="file-input" />
-            <div id="reducer-ui" class="hidden">
-                <div class="preview-container">
-                    <p id="reducer-preview-status" class="fs-sm text-muted-color text-center"></p>
-                </div>
-                
-                <div class="tool-settings-card mt-lg">
-                    <div class="mb-md">
-                        <label class="label-styled">Quality: <span id="quality-val" class="fw-600 accent-text">0.7</span></label>
-                        <input type="range" id="quality-range" min="0.1" max="1" step="0.1" value="0.7" class="w-full"/>
-                    </div>
-                    
-                    <div>
-                        <label class="label-styled">Max Width: <span id="width-val" class="fw-600 accent-text">1920</span>px</label>
-                        <input type="range" id="width-range" min="100" max="4000" step="100" value="1920" class="w-full"/>
-                    </div>
-                </div>
-                <div class="mt-lg">
-                    <button id="reduce-btn" class="primary-btn w-full">Compress & Download</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Compressing... (Processing HEIC if needed)</div>
-            <div id="reducer-status" class="preview-status"></div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('reducer-input') as HTMLInputElement;
-    const ui = document.getElementById('reducer-ui')!;
-    const reduceBtn = document.getElementById('reduce-btn')!;
-    const loader = document.getElementById('loader')!;
-    const status = document.getElementById('reducer-status')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'reducer-input';
+    fileInput.accept = 'image/*,.heic,.HEIC,.heif,.HEIF';
+    fileInput.className = 'file-input';
 
-    const qRange = document.getElementById('quality-range') as HTMLInputElement;
-    const qVal = document.getElementById('quality-val')!;
-    const wRange = document.getElementById('width-range') as HTMLInputElement;
-    const wVal = document.getElementById('width-val')!;
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'reducer-ui';
+    ui.className = 'hidden';
+
+    const previewContainer = document.createElement('div');
+    previewContainer.className = 'preview-container';
+
+    const previewStatus = document.createElement('p');
+    previewStatus.id = 'reducer-preview-status';
+    previewStatus.className = 'fs-sm text-muted-color text-center';
+
+    previewContainer.appendChild(previewStatus);
+
+    const settingsCard = document.createElement('div');
+    settingsCard.className = 'tool-settings-card mt-lg';
+
+    // Quality Control
+    const qualityDiv = document.createElement('div');
+    qualityDiv.className = 'mb-md';
+
+    const qualityLabel = document.createElement('label');
+    qualityLabel.className = 'label-styled';
+    qualityLabel.textContent = 'Quality: ';
+
+    const qualityVal = document.createElement('span');
+    qualityVal.id = 'quality-val';
+    qualityVal.className = 'fw-600 accent-text';
+    qualityVal.textContent = '0.7';
+
+    qualityLabel.appendChild(qualityVal);
+
+    const qualityRange = document.createElement('input');
+    qualityRange.type = 'range';
+    qualityRange.id = 'quality-range';
+    qualityRange.min = '0.1';
+    qualityRange.max = '1';
+    qualityRange.step = '0.1';
+    qualityRange.value = '0.7';
+    qualityRange.className = 'w-full';
+
+    qualityDiv.appendChild(qualityLabel);
+    qualityDiv.appendChild(qualityRange);
+
+    // Width Control
+    const widthDiv = document.createElement('div');
+
+    const widthLabel = document.createElement('label');
+    widthLabel.className = 'label-styled';
+    widthLabel.textContent = 'Max Width: ';
+
+    const widthVal = document.createElement('span');
+    widthVal.id = 'width-val';
+    widthVal.className = 'fw-600 accent-text';
+    widthVal.textContent = '1920';
+
+    const widthUnit = document.createTextNode('px');
+
+    widthLabel.appendChild(widthVal);
+    widthLabel.appendChild(widthUnit);
+
+    const widthRange = document.createElement('input');
+    widthRange.type = 'range';
+    widthRange.id = 'width-range';
+    widthRange.min = '100';
+    widthRange.max = '4000';
+    widthRange.step = '100';
+    widthRange.value = '1920';
+    widthRange.className = 'w-full';
+
+    widthDiv.appendChild(widthLabel);
+    widthDiv.appendChild(widthRange);
+
+    settingsCard.appendChild(qualityDiv);
+    settingsCard.appendChild(widthDiv);
+
+    // Button
+    const btnDiv = document.createElement('div');
+    btnDiv.className = 'mt-lg';
+
+    const reduceBtn = document.createElement('button');
+    reduceBtn.id = 'reduce-btn';
+    reduceBtn.className = 'primary-btn w-full';
+    reduceBtn.textContent = 'Compress & Download';
+
+    btnDiv.appendChild(reduceBtn);
+
+    ui.appendChild(previewContainer);
+    ui.appendChild(settingsCard);
+    ui.appendChild(btnDiv);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Compressing... (Processing HEIC if needed)';
+
+    // Status
+    const status = document.createElement('div');
+    status.id = 'reducer-status';
+    status.className = 'preview-status';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(loader);
+    toolDiv.appendChild(status);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     qRange.oninput = () => qVal.innerText = qRange.value;
     wRange.oninput = () => wVal.innerText = wRange.value;
 
     let currentFile: File | null = null;
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         currentFile = e.target.files[0];
         if (currentFile) {
             ui.classList.remove('hidden');

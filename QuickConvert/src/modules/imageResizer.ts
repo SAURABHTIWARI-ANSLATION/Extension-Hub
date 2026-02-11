@@ -1,54 +1,127 @@
 export function renderImageResizer(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="resizer-input" accept="image/*" class="file-input" />
-            <div id="loader" class="hidden">Processing image...</div>
-            <div id="resizer-ui" class="hidden mt-lg">
-                <div class="preview-container">
-                    <img id="resizer-preview-img" class="preview-image" />
-                    <p id="resizer-info" class="mt-md fs-sm text-muted-color"></p>
-                </div>
-                
-                <div class="tool-settings-card mt-lg">
-                    <div class="grid-2col mb-md">
-                        <div class="input-group">
-                            <label class="label-styled">Width (px)</label>
-                            <input type="number" id="resizer-width" class="file-input input-styled" />
-                        </div>
-                        <div class="input-group">
-                            <label class="label-styled">Height (px)</label>
-                            <input type="number" id="resizer-height" class="file-input input-styled" />
-                        </div>
-                    </div>
-                    
-                    <div class="flex-center mb-md">
-                        <input type="checkbox" id="resizer-aspect" checked class="checkbox-styled" />
-                        <label for="resizer-aspect" class="fs-sm text-secondary-color cursor-pointer">Lock Aspect Ratio</label>
-                    </div>
-                    
-                    <button id="resize-btn" class="primary-btn w-full">Resize & Download</button>
-                </div>
-            </div>
-            <div id="resizer-status" class="preview-status"></div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('resizer-input') as HTMLInputElement;
-    const ui = document.getElementById('resizer-ui')!;
-    const previewImg = document.getElementById('resizer-preview-img') as HTMLImageElement;
-    const info = document.getElementById('resizer-info')!;
-    const widthInput = document.getElementById('resizer-width') as HTMLInputElement;
-    const heightInput = document.getElementById('resizer-height') as HTMLInputElement;
-    const aspectCheck = document.getElementById('resizer-aspect') as HTMLInputElement;
-    const resizeBtn = document.getElementById('resize-btn')!;
-    const loader = document.getElementById('loader')!;
-    const status = document.getElementById('resizer-status')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'resizer-input';
+    fileInput.accept = 'image/*';
+    fileInput.className = 'file-input';
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Processing image...';
+
+    // UI Container
+    const ui = document.createElement('div');
+    ui.id = 'resizer-ui';
+    ui.className = 'hidden mt-lg';
+
+    // Preview Section
+    const previewContainer = document.createElement('div');
+    previewContainer.className = 'preview-container';
+
+    const previewImg = document.createElement('img');
+    previewImg.id = 'resizer-preview-img';
+    previewImg.className = 'preview-image';
+
+    const info = document.createElement('p');
+    info.id = 'resizer-info';
+    info.className = 'mt-md fs-sm text-muted-color';
+
+    previewContainer.appendChild(previewImg);
+    previewContainer.appendChild(info);
+
+    // Settings Card
+    const settingsCard = document.createElement('div');
+    settingsCard.className = 'tool-settings-card mt-lg';
+
+    const gridDiv = document.createElement('div');
+    gridDiv.className = 'grid-2col mb-md';
+
+    // Width Input
+    const widthGroup = document.createElement('div');
+    widthGroup.className = 'input-group';
+    const widthLabel = document.createElement('label');
+    widthLabel.className = 'label-styled';
+    widthLabel.textContent = 'Width (px)';
+    const widthInput = document.createElement('input');
+    widthInput.type = 'number';
+    widthInput.id = 'resizer-width';
+    widthInput.className = 'file-input input-styled';
+    widthGroup.appendChild(widthLabel);
+    widthGroup.appendChild(widthInput);
+
+    // Height Input
+    const heightGroup = document.createElement('div');
+    heightGroup.className = 'input-group';
+    const heightLabel = document.createElement('label');
+    heightLabel.className = 'label-styled';
+    heightLabel.textContent = 'Height (px)';
+    const heightInput = document.createElement('input');
+    heightInput.type = 'number';
+    heightInput.id = 'resizer-height';
+    heightInput.className = 'file-input input-styled';
+    heightGroup.appendChild(heightLabel);
+    heightGroup.appendChild(heightInput);
+
+    gridDiv.appendChild(widthGroup);
+    gridDiv.appendChild(heightGroup);
+
+    // Aspect Ratio Checkbox
+    const aspectDiv = document.createElement('div');
+    aspectDiv.className = 'flex-center mb-md';
+
+    const aspectCheck = document.createElement('input');
+    aspectCheck.type = 'checkbox';
+    aspectCheck.id = 'resizer-aspect';
+    aspectCheck.checked = true;
+    aspectCheck.className = 'checkbox-styled';
+
+    const aspectLabel = document.createElement('label');
+    aspectLabel.htmlFor = 'resizer-aspect';
+    aspectLabel.className = 'fs-sm text-secondary-color cursor-pointer';
+    aspectLabel.textContent = 'Lock Aspect Ratio';
+
+    aspectDiv.appendChild(aspectCheck);
+    aspectDiv.appendChild(aspectLabel);
+
+    // Resize Button
+    const resizeBtn = document.createElement('button');
+    resizeBtn.id = 'resize-btn';
+    resizeBtn.className = 'primary-btn w-full';
+    resizeBtn.textContent = 'Resize & Download';
+
+    settingsCard.appendChild(gridDiv);
+    settingsCard.appendChild(aspectDiv);
+    settingsCard.appendChild(resizeBtn);
+
+    ui.appendChild(previewContainer);
+    ui.appendChild(settingsCard);
+
+    // Status
+    const status = document.createElement('div');
+    status.id = 'resizer-status';
+    status.className = 'preview-status';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(loader);
+    toolDiv.appendChild(ui);
+    toolDiv.appendChild(status);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above, reuse them
 
     let originalWidth = 0;
     let originalHeight = 0;
     let currentFile: File | null = null;
 
-    input.onchange = async (e: any) => {
+    fileInput.onchange = async (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
         currentFile = file;

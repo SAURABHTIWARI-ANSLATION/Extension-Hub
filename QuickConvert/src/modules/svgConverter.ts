@@ -1,33 +1,70 @@
 export function renderSvgConverter(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="svg-input" accept=".svg" class="file-input" />
-            <div id="svg-preview-container" class="hidden mt-lg">
-                <div id="svg-display" class="svg-preview-box preview-image mb-md"></div>
-                <div class="tool-settings-card">
-                    <select id="svg-format" class="file-input input-styled mb-md">
-                        <option value="png">Format: PNG</option>
-                        <option value="jpeg">Format: JPEG</option>
-                        <option value="webp">Format: WebP</option>
-                    </select>
-                    <button id="convert-svg-btn" class="primary-btn w-full">Convert & Download</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Converting SVG...</div>
-        </div>
-    `;
+    // Create main wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('svg-input') as HTMLInputElement;
-    const previewContainer = document.getElementById('svg-preview-container')!;
-    const svgDisplay = document.getElementById('svg-display')!;
-    const formatSelect = document.getElementById('svg-format') as HTMLSelectElement;
-    const convertBtn = document.getElementById('convert-svg-btn')!;
-    const loader = document.getElementById('loader')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'svg-input';
+    fileInput.accept = '.svg';
+    fileInput.className = 'file-input';
+
+    // Preview container
+    const previewContainer = document.createElement('div');
+    previewContainer.id = 'svg-preview-container';
+    previewContainer.className = 'hidden mt-lg';
+
+    // SVG display
+    const svgDisplay = document.createElement('div');
+    svgDisplay.id = 'svg-display';
+    svgDisplay.className = 'svg-preview-box preview-image mb-md';
+
+    // Settings card
+    const settingsCard = document.createElement('div');
+    settingsCard.className = 'tool-settings-card';
+
+    // Format select
+    const formatSelect = document.createElement('select');
+    formatSelect.id = 'svg-format';
+    formatSelect.className = 'file-input input-styled mb-md';
+
+    ['png|Format: PNG', 'jpeg|Format: JPEG', 'webp|Format: WebP'].forEach(opt => {
+        const [value, text] = opt.split('|');
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = text;
+        formatSelect.appendChild(option);
+    });
+
+    // Convert button
+    const convertBtn = document.createElement('button');
+    convertBtn.id = 'convert-svg-btn';
+    convertBtn.className = 'primary-btn w-full';
+    convertBtn.textContent = 'Convert & Download';
+
+    settingsCard.appendChild(formatSelect);
+    settingsCard.appendChild(convertBtn);
+
+    previewContainer.appendChild(svgDisplay);
+    previewContainer.appendChild(settingsCard);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Converting SVG...';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(previewContainer);
+    toolDiv.appendChild(loader);
+
+    container.appendChild(toolDiv);
 
     let currentFileContent: string | null = null;
     let fileName = '';
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         const file = e.target.files[0];
         if (!file) return;
 
@@ -35,7 +72,10 @@ export function renderSvgConverter(container: HTMLElement) {
         const reader = new FileReader();
         reader.onload = (event) => {
             currentFileContent = event.target?.result as string;
-            svgDisplay.innerHTML = currentFileContent;
+            // Safe SVG rendering using DOMParser
+            const parser = new DOMParser();
+            const svgDoc = parser.parseFromString(currentFileContent, 'image/svg+xml');
+            svgDisplay.replaceChildren(svgDoc.documentElement.cloneNode(true));
             previewContainer.classList.remove('hidden');
         };
         reader.readAsText(file);

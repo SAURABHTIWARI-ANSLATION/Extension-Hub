@@ -1,30 +1,63 @@
 import { jsPDF } from 'jspdf';
 
 export async function renderImageToPdf(container: HTMLElement) {
-    container.innerHTML = `
-        <div class="tool-io">
-            <input type="file" id="pdf-input" accept="image/*,.heic,.HEIC,.heif,.HEIF" multiple class="file-input" />
-            <div id="pdf-preview" class="hidden">
-                <p id="file-count" class="fw-600 mb-md"></p>
-                <div class="tool-controls">
-                    <button id="generate-pdf-btn" class="primary-btn">Generate PDF & Download</button>
-                </div>
-            </div>
-            <div id="loader" class="hidden">Generating PDF... (Processing HEIC if needed)</div>
-            <div id="pdf-status" class="preview-status"></div>
-        </div>
-    `;
+    // Create tool wrapper
+    const toolDiv = document.createElement('div');
+    toolDiv.className = 'tool-io';
 
-    const input = document.getElementById('pdf-input') as HTMLInputElement;
-    const preview = document.getElementById('pdf-preview')!;
-    const fileCount = document.getElementById('file-count')!;
-    const generateBtn = document.getElementById('generate-pdf-btn')!;
-    const loader = document.getElementById('loader')!;
-    const status = document.getElementById('pdf-status')!;
+    // File input
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.id = 'pdf-input';
+    fileInput.accept = 'image/*,.heic,.HEIC,.heif,.HEIF';
+    fileInput.multiple = true;
+    fileInput.className = 'file-input';
+
+    // Preview Container
+    const preview = document.createElement('div');
+    preview.id = 'pdf-preview';
+    preview.className = 'hidden';
+
+    const fileCount = document.createElement('p');
+    fileCount.id = 'file-count';
+    fileCount.className = 'fw-600 mb-md';
+
+    const controls = document.createElement('div');
+    controls.className = 'tool-controls';
+
+    const generateBtn = document.createElement('button');
+    generateBtn.id = 'generate-pdf-btn';
+    generateBtn.className = 'primary-btn';
+    generateBtn.textContent = 'Generate PDF & Download';
+
+    controls.appendChild(generateBtn);
+
+    preview.appendChild(fileCount);
+    preview.appendChild(controls);
+
+    // Loader
+    const loader = document.createElement('div');
+    loader.id = 'loader';
+    loader.className = 'hidden';
+    loader.textContent = 'Generating PDF... (Processing HEIC if needed)';
+
+    // Status
+    const status = document.createElement('div');
+    status.id = 'pdf-status';
+    status.className = 'preview-status';
+
+    toolDiv.appendChild(fileInput);
+    toolDiv.appendChild(preview);
+    toolDiv.appendChild(loader);
+    toolDiv.appendChild(status);
+
+    container.appendChild(toolDiv);
+
+    // Elements are already created above
 
     let files: File[] = [];
 
-    input.onchange = (e: any) => {
+    fileInput.onchange = (e: any) => {
         files = Array.from(e.target.files);
         if (files.length === 0) return;
 
