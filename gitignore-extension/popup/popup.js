@@ -2,95 +2,38 @@
 // THEME MANAGEMENT
 // ============================================
 
-// Theme color tokens for UI elements
-const themeColors = {
-  'ocean-blue': {
-    btnBg: 'linear-gradient(135deg, #2196F3 0%, #42A5F5 100%)',
-    btnHover: 'linear-gradient(135deg, #1976D2 0%, #1E88E5 100%)',
-    accent: '#64B5F6'
-  },
-  'mint-teal': {
-    btnBg: 'linear-gradient(135deg, #14B8A6 0%, #2DD4BF 100%)',
-    btnHover: 'linear-gradient(135deg, #0D9488 0%, #14B8A6 100%)',
-    accent: '#5EEAD4'
-  },
-  'indigo-night': {
-    btnBg: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-    btnHover: 'linear-gradient(135deg, #4F46E5 0%, #4338CA 100%)',
-    accent: '#818CF8'
-  },
-  'sky-gradient': {
-    btnBg: 'linear-gradient(135deg, #38BDF8 0%, #0EA5E9 100%)',
-    btnHover: 'linear-gradient(135deg, #0EA5E9 0%, #0284C7 100%)',
-    accent: '#BAE6FD'
-  },
-  'violet-glow': {
-    btnBg: 'linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%)',
-    btnHover: 'linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%)',
-    accent: '#C4B5FD'
-  }
-};
-
-// Initialize theme
+// Initialize theme from storage
 function initTheme() {
-  chrome.storage.local.get(['selectedTheme'], function(result) {
+  chrome.storage.local.get(['selectedTheme'], function (result) {
     const theme = result.selectedTheme || 'ocean-blue';
     document.documentElement.setAttribute('data-theme', theme);
-    
+
+    // Update active state on theme buttons
     document.querySelectorAll('.theme-btn').forEach(btn => {
       btn.classList.remove('active');
       if (btn.getAttribute('data-theme') === theme) {
         btn.classList.add('active');
       }
     });
-    
-    updateButtonColors(theme);
   });
-}
-
-// Update button colors based on theme
-function updateButtonColors(theme) {
-  const colors = themeColors[theme] || themeColors['ocean-blue'];
-  const generateBtn = document.getElementById('generateBtn');
-  const copyBtn = document.getElementById('copyBtn');
-  const downloadBtn = document.getElementById('downloadBtn');
-  
-  if (generateBtn) {
-    generateBtn.style.background = colors.btnBg;
-    generateBtn.addEventListener('mouseenter', () => {
-      generateBtn.style.background = colors.btnHover;
-    });
-    generateBtn.addEventListener('mouseleave', () => {
-      generateBtn.style.background = colors.btnBg;
-    });
-  }
-  
-  if (copyBtn) {
-    copyBtn.style.borderColor = colors.accent;
-    copyBtn.style.color = colors.accent;
-  }
-  
-  if (downloadBtn) {
-    downloadBtn.style.borderColor = colors.accent;
-    downloadBtn.style.color = colors.accent;
-  }
 }
 
 // Theme selector event listeners
 document.querySelectorAll('.theme-btn').forEach(btn => {
-  btn.addEventListener('click', function() {
+  btn.addEventListener('click', function () {
     const theme = this.getAttribute('data-theme');
-    
+
+    // Update theme via data attribute (CSS handles all visual changes)
     document.documentElement.setAttribute('data-theme', theme);
-    
+
+    // Update active state
     document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
     this.classList.add('active');
-    
-    updateButtonColors(theme);
-    
+
+    // Save to storage
     chrome.storage.local.set({ 'selectedTheme': theme });
-    
-    showNotification(`Theme changed to ${this.getAttribute('title')}`);
+
+    showNotification(`Theme changed to ${this.getAttribute('title')}`, 'success');
   });
 });
 
@@ -291,104 +234,144 @@ build/
 // MAIN FUNCTIONALITY
 // ============================================
 
+// Update technology badge count
+function updateTechBadge() {
+  const selectedTechs = document.querySelectorAll('.tech-item input[type="checkbox"]:checked');
+  const badge = document.getElementById('techBadge');
+  const count = selectedTechs.length;
+
+  if (badge) {
+    badge.textContent = `${count} selected`;
+    if (count > 0) {
+      badge.classList.add('success');
+    } else {
+      badge.classList.remove('success');
+    }
+  }
+}
+
+// Update line count in output
+function updateLineCount() {
+  const textarea = document.getElementById('gitignoreContent');
+  const lineCountBadge = document.getElementById('lineCount');
+
+  if (textarea && lineCountBadge) {
+    const lines = textarea.value.split('\n').filter(line => line.trim() !== '').length;
+    lineCountBadge.textContent = `${lines} lines`;
+  }
+}
+
 // Generate .gitignore content
 function generateGitignore() {
-  const techSelect = document.getElementById('techSelect');
-  const platformSelect = document.getElementById('platformSelect');
+  const selectedTechs = Array.from(document.querySelectorAll('.tech-item input[type="checkbox"]:checked'))
+    .map(input => input.value);
+  const platformInput = document.querySelector('.platform-item input[type="radio"]:checked');
+  const platform = platformInput ? platformInput.value : 'general';
   const outputDiv = document.getElementById('output');
   const textarea = document.getElementById('gitignoreContent');
-  
-  const selectedTechs = Array.from(techSelect.selectedOptions).map(opt => opt.value);
-  const platform = platformSelect.value;
-  
+
   if (selectedTechs.length === 0) {
     showNotification('Please select at least one technology', 'warning');
     return;
   }
-  
+
   let content = `# .gitignore generated by GitIgnore Generator Pro
 # Generated: ${new Date().toLocaleString()}
 # Technologies: ${selectedTechs.join(', ')}
 # Platform: ${platform === 'general' ? 'General' : platform.charAt(0).toUpperCase() + platform.slice(1)}
 \n`;
-  
+
   selectedTechs.forEach(tech => {
     if (templates[tech]) {
       content += templates[tech] + '\n\n';
     }
   });
-  
+
   if (platform !== 'general' && templates[platform]) {
     content += templates[platform] + '\n\n';
   }
-  
+
   content += `# Common files\n.DS_Store\nThumbs.db\n*.log\n.env\n.env.local\n.idea/\n.vscode/\n`;
-  
+
   textarea.value = content.trim();
-  outputDiv.style.display = 'block';
-  
+  outputDiv.classList.add('visible');
+
+  updateLineCount();
+
   outputDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  
-  showNotification('.gitignore generated successfully!');
+
+  showNotification('.gitignore generated successfully!', 'success');
 }
 
 // Copy to clipboard
 function copyToClipboard() {
   const textarea = document.getElementById('gitignoreContent');
   const copyBtn = document.getElementById('copyBtn');
-  
+
   if (!textarea || textarea.value.trim() === '') {
     showNotification('Nothing to copy! Generate content first.', 'warning');
     return;
   }
-  
+
   textarea.select();
   textarea.setSelectionRange(0, 99999);
-  
+
   navigator.clipboard.writeText(textarea.value).then(() => {
-    const originalText = copyBtn.textContent;
-    copyBtn.textContent = '✓ Copied!';
-    copyBtn.style.background = 'var(--accent-color)';
-    copyBtn.style.color = 'white';
-    
-    showNotification('Copied to clipboard!');
-    
+    // Store original state
+    const originalDisabled = copyBtn.disabled;
+    const span = copyBtn.querySelector('span');
+    const originalText = span ? span.textContent : 'Copy';
+
+    // Update button text (CSP-safe, no innerHTML)
+    if (span) {
+      span.textContent = 'Copied!';
+    }
+
+    // Use CSS class for visual changes
+    copyBtn.classList.add('success-state');
+    copyBtn.disabled = true;
+
+    showNotification('Copied to clipboard!', 'success');
+
     setTimeout(() => {
-      copyBtn.textContent = originalText;
-      copyBtn.style.background = '';
-      copyBtn.style.color = '';
+      if (span) {
+        span.textContent = originalText;
+      }
+      copyBtn.classList.remove('success-state');
+      copyBtn.disabled = originalDisabled;
     }, 2000);
   }).catch(() => {
+    // Fallback for older browsers
     document.execCommand('copy');
-    showNotification('Copied to clipboard!');
+    showNotification('Copied to clipboard!', 'success');
   });
 }
 
 // Download .gitignore file
 function downloadGitignore() {
   const textarea = document.getElementById('gitignoreContent');
-  
+
   if (!textarea || textarea.value.trim() === '') {
     showNotification('Nothing to download! Generate content first.', 'warning');
     return;
   }
-  
+
   const content = textarea.value;
   const blob = new Blob([content], { type: 'text/plain' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  
+
   a.href = url;
   a.download = '.gitignore';
   document.body.appendChild(a);
   a.click();
-  
+
   setTimeout(() => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   }, 100);
-  
-  showNotification('.gitignore file downloaded!');
+
+  showNotification('.gitignore file downloaded!', 'success');
 }
 
 // Show notification
@@ -397,85 +380,126 @@ function showNotification(message, type = 'success') {
   if (existingNotification) {
     existingNotification.remove();
   }
-  
+
   const notification = document.createElement('div');
   notification.className = `notification ${type}`;
   notification.textContent = message;
-  
+
   document.body.appendChild(notification);
-  
+
   setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease';
+    notification.style.animation = 'slideOutToRight 0.3s ease-out';
     setTimeout(() => notification.remove(), 300);
   }, 3000);
 }
 
-// Auto-detect technology from current page (MODERN FETCH VERSION)
+// Auto-detect technology from current page
 async function autoDetectTech() {
   try {
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    
+
     if (tab.url.startsWith('chrome://') || tab.url.startsWith('chrome-extension://')) {
       showNotification('Auto-detect not available on this page', 'warning');
       return;
     }
-    
+
+    // Show loading state
+    const autoDetectBtn = document.getElementById('autoDetectBtn');
+    autoDetectBtn.classList.add('loading');
+    autoDetectBtn.disabled = true;
+
     // Use the background script for detection
-    const detectedTechs = await chrome.runtime.sendMessage({ 
-      action: 'detectTechStack', 
-      tabId: tab.id 
+    const detectedTechs = await chrome.runtime.sendMessage({
+      action: 'detectTechStack',
+      tabId: tab.id
     });
-    
+
+    // Remove loading state
+    autoDetectBtn.classList.remove('loading');
+    autoDetectBtn.disabled = false;
+
     if (detectedTechs && detectedTechs.length > 0) {
-      const techSelect = document.getElementById('techSelect');
-      
       // Clear previous selections
-      Array.from(techSelect.options).forEach(option => {
-        option.selected = detectedTechs.includes(option.value);
+      document.querySelectorAll('.tech-item input[type="checkbox"]').forEach(checkbox => {
+        checkbox.checked = detectedTechs.includes(checkbox.value);
       });
-      
-      showNotification(`Auto-detected: ${detectedTechs.join(', ')}`);
+
+      updateTechBadge();
+
+      showNotification(`Auto-detected: ${detectedTechs.join(', ')}`, 'success');
     } else {
       showNotification('No technologies detected on this page', 'warning');
     }
   } catch (error) {
     console.log('Auto-detect error:', error);
+    const autoDetectBtn = document.getElementById('autoDetectBtn');
+    autoDetectBtn.classList.remove('loading');
+    autoDetectBtn.disabled = false;
     showNotification('Auto-detect failed', 'warning');
   }
+}
+
+// Clear all selections
+function clearSelections() {
+  document.querySelectorAll('.tech-item input[type="checkbox"]').forEach(checkbox => {
+    checkbox.checked = false;
+  });
+
+  document.querySelectorAll('.platform-item input[type="radio"]').forEach(radio => {
+    radio.checked = false;
+  });
+
+  // Set general platform as default
+  const generalRadio = document.querySelector('.platform-item input[value="general"]');
+  if (generalRadio) {
+    generalRadio.checked = true;
+  }
+
+  updateTechBadge();
+
+  const outputDiv = document.getElementById('output');
+  outputDiv.classList.remove('visible');
+
+  showNotification('Selection cleared', 'success');
 }
 
 // ============================================
 // EVENT LISTENERS
 // ============================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
   initTheme();
-  
+
+  // Tech checkbox change listeners
+  document.querySelectorAll('.tech-item input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', updateTechBadge);
+  });
+
+  // Button click listeners
   document.getElementById('autoDetectBtn').addEventListener('click', autoDetectTech);
   document.getElementById('generateBtn').addEventListener('click', generateGitignore);
   document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
   document.getElementById('downloadBtn').addEventListener('click', downloadGitignore);
-  document.getElementById('clearBtn').addEventListener('click', function() {
-    const techSelect = document.getElementById('techSelect');
-    Array.from(techSelect.options).forEach(option => option.selected = false);
-    document.getElementById('platformSelect').value = 'general';
-    document.getElementById('output').style.display = 'none';
-    showNotification('Selection cleared');
-  });
-  
-  document.addEventListener('keydown', function(e) {
+  document.getElementById('clearBtn').addEventListener('click', clearSelections);
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', function (e) {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
       e.preventDefault();
       generateGitignore();
     }
-    
-    if ((e.ctrlKey || e.metaKey) && e.key === 'c' && 
-        document.activeElement.id === 'gitignoreContent') {
+
+    if ((e.ctrlKey || e.metaKey) && e.key === 'c' &&
+      document.activeElement.id === 'gitignoreContent') {
       copyToClipboard();
     }
-    
+
     if (e.key === 'Escape') {
-      document.getElementById('output').style.display = 'none';
+      const outputDiv = document.getElementById('output');
+      outputDiv.classList.remove('visible');
     }
   });
+
+  // Initialize badge
+  updateTechBadge();
 });

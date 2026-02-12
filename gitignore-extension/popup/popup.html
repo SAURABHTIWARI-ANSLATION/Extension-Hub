@@ -1,71 +1,277 @@
 <!DOCTYPE html>
 <html data-theme="ocean-blue">
+
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitIgnore Generator Pro</title>
   <link rel="stylesheet" href="popup.css">
 </head>
+
 <body>
   <!-- Theme Selector -->
-  <div class="theme-selector">
-    <div class="theme-btn ocean" data-theme="ocean-blue" title="Ocean Blue"></div>
-    <div class="theme-btn mint" data-theme="mint-teal" title="Mint Teal"></div>
-    <div class="theme-btn indigo" data-theme="indigo-night" title="Indigo Night"></div>
+  <div class="theme-selector" role="group" aria-label="Theme selector">
+    <button class="theme-btn ocean" data-theme="ocean-blue" title="Ocean Blue" aria-label="Ocean Blue theme"
+      role="button"></button>
+    <button class="theme-btn mint" data-theme="mint-teal" title="Mint Teal" aria-label="Mint Teal theme"
+      role="button"></button>
+    <button class="theme-btn indigo" data-theme="indigo-night" title="Indigo Night" aria-label="Indigo Night theme"
+      role="button"></button>
   </div>
 
-  
-  <!-- Header -->
-  <div class="header">
-    <h3>GitIgnore Generator</h3>
-    <p class="subtitle">
-      Generate .gitignore files instantly
-    </p>
-  </div>
-  
-  <!-- Main Controls -->
-  <div class="control-group">
-    <label for="techSelect">Select Technologies:</label>
-    <select id="techSelect" multiple class="multi-select">
-      <option value="node">Node.js</option>
-      <option value="python">Python</option>
-      <option value="react">React</option>
-      <option value="next">Next.js</option>
-      <option value="java">Java</option>
-      <option value="php">PHP</option>
-      <option value="go">Go</option>
-      <option value="rust">Rust</option>
-      <option value="docker">Docker</option>
-    </select>
-    <small class="select-hint">Hold Ctrl/Cmd to select multiple</small>
-  </div>
-  
-  <div class="control-group">
-    <label for="platformSelect">Deployment Platform:</label>
-    <select id="platformSelect">
-      <option value="general">General</option>
-      <option value="vercel">Vercel</option>
-      <option value="netlify">Netlify</option>
-      <option value="github">GitHub Pages</option>
-      <option value="aws">AWS</option>
-      <option value="firebase">Firebase</option>
-    </select>
-  </div>
-  
-  <button id="autoDetectBtn" class="btn-secondary">Auto-detect from page</button>
-  <button id="clearBtn" class="btn-secondary">Clear Selection</button>
-  <button id="generateBtn" class="btn-primary">Generate .gitignore</button>
-  
-  <!-- Output Section -->
-  <div id="output" class="output-section">
-    <div class="control-group">
-      <label>Generated .gitignore:</label>
-      <textarea id="gitignoreContent" rows="10"></textarea>
+  <!-- Header Section -->
+  <header class="header">
+    <div class="header-content">
+      <svg class="header-icon" width="32" height="32" viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M13 2v7h7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M8 13h8M8 17h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <div class="header-text">
+        <h1>GitIgnore Generator</h1>
+        <p class="subtitle">Create .gitignore files instantly</p>
+      </div>
     </div>
-    <div class="action-buttons">
-      <button id="copyBtn" class="btn-secondary">Copy to Clipboard</button>
-      <button id="downloadBtn" class="btn-secondary">Download File</button>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Quick Actions Bar -->
+    <div class="quick-actions">
+      <button id="autoDetectBtn" class="quick-action-btn" aria-label="Auto-detect technologies from current page">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Auto-detect</span>
+      </button>
+      <button id="clearBtn" class="quick-action-btn" aria-label="Clear all selections">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span>Clear</span>
+      </button>
     </div>
-  </div>
-  
+
+    <!-- Technology Selection Card -->
+    <section class="card" role="region" aria-label="Technology selection">
+      <div class="card-header">
+        <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        <h2>Technologies</h2>
+        <span class="badge" id="techBadge">0 selected</span>
+      </div>
+      <div class="card-body">
+        <div class="tech-grid" role="group" aria-label="Technology selector">
+          <label class="tech-item">
+            <input type="checkbox" value="node" aria-label="Node.js">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Node.js</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="python" aria-label="Python">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Python</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="react" aria-label="React">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">React</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="next" aria-label="Next.js">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Next.js</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="java" aria-label="Java">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Java</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="php" aria-label="PHP">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">PHP</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="go" aria-label="Go">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Go</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="rust" aria-label="Rust">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Rust</span>
+            </span>
+          </label>
+          <label class="tech-item">
+            <input type="checkbox" value="docker" aria-label="Docker">
+            <span class="tech-label">
+              <svg class="check-icon" width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M20 6L9 17l-5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+              <span class="tech-name">Docker</span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Platform Selection Card -->
+    <section class="card" role="region" aria-label="Platform selection">
+      <div class="card-header">
+        <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 15v4c0 1.1.9 2 2 2h14a2 2 0 002-2v-4M17 8l-5-5-5 5M12 3v12" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <h2>Deployment Platform</h2>
+      </div>
+      <div class="card-body">
+        <div class="platform-grid">
+          <label class="platform-item">
+            <input type="radio" name="platform" value="general" checked aria-label="General">
+            <span class="platform-label">
+              <span class="platform-name">General</span>
+            </span>
+          </label>
+          <label class="platform-item">
+            <input type="radio" name="platform" value="vercel" aria-label="Vercel">
+            <span class="platform-label">
+              <span class="platform-name">Vercel</span>
+            </span>
+          </label>
+          <label class="platform-item">
+            <input type="radio" name="platform" value="netlify" aria-label="Netlify">
+            <span class="platform-label">
+              <span class="platform-name">Netlify</span>
+            </span>
+          </label>
+          <label class="platform-item">
+            <input type="radio" name="platform" value="github" aria-label="GitHub Pages">
+            <span class="platform-label">
+              <span class="platform-name">GitHub</span>
+            </span>
+          </label>
+          <label class="platform-item">
+            <input type="radio" name="platform" value="aws" aria-label="AWS">
+            <span class="platform-label">
+              <span class="platform-name">AWS</span>
+            </span>
+          </label>
+          <label class="platform-item">
+            <input type="radio" name="platform" value="firebase" aria-label="Firebase">
+            <span class="platform-label">
+              <span class="platform-name">Firebase</span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Generate Button -->
+    <button id="generateBtn" class="btn-primary" aria-label="Generate .gitignore file">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <span>Generate .gitignore</span>
+    </button>
+
+    <!-- Output Section -->
+    <section id="output" class="output-section" aria-live="polite" aria-label="Generated output">
+      <div class="card">
+        <div class="card-header">
+          <svg class="card-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="2" />
+            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+          <h2>.gitignore</h2>
+          <span class="badge success" id="lineCount">0 lines</span>
+        </div>
+        <div class="card-body">
+          <textarea id="gitignoreContent" rows="10" aria-label="Generated .gitignore file content" readonly
+            placeholder="Your generated .gitignore will appear here..."></textarea>
+        </div>
+        <div class="card-footer" role="group" aria-label="Output actions">
+          <button id="copyBtn" class="btn-secondary" aria-label="Copy .gitignore to clipboard">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M8 4v12a2 2 0 002 2h8a2 2 0 002-2V7.242a2 2 0 00-.602-1.43L16.083 2.57A2 2 0 0014.685 2H10a2 2 0 00-2 2z"
+                stroke="currentColor" stroke-width="2" />
+              <path d="M16 18v2a2 2 0 01-2 2H6a2 2 0 01-2-2V9a2 2 0 012-2h2" stroke="currentColor" stroke-width="2" />
+            </svg>
+            <span>Copy</span>
+          </button>
+          <button id="downloadBtn" class="btn-secondary" aria-label="Download .gitignore file">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <span>Download</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Privacy-first • No data collection • Local processing</p>
+  </footer>
+
   <script src="popup.js"></script>
 </body>
+
 </html>

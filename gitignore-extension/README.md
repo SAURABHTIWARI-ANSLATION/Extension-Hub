@@ -235,18 +235,56 @@ Enable Chrome extension debug logs:
 
 ## 🔒 Privacy & Security
 
-### Data Collection
-- **No data collected**: All processing happens locally
-- **No analytics**: No tracking of any kind
-- **Local storage only**: Settings stored in your browser
+> **🎯 ZERO DATA COLLECTION GUARANTEE**
+> 
+> This extension is built with privacy-first principles and Chrome Web Store compliance as top priorities.
 
-### Permissions
-| Permission | Purpose |
-|------------|---------|
-| `activeTab` | Auto-detect technologies on current page |
-| `storage` | Save theme preferences and settings |
-| `scripting` | Execute auto-detection scripts |
-| `<all_urls>` | Work on any webpage for detection |
+### Data Collection
+- **✅ NO DATA COLLECTED**: Absolutely zero user data is collected, stored, or transmitted
+- **✅ NO ANALYTICS**: No tracking, telemetry, or usage analytics of any kind
+- **✅ LOCAL PROCESSING ONLY**: All operations happen entirely in your browser
+- **✅ NO REMOTE SERVERS**: No external API calls or network requests whatsoever
+- **✅ OPEN SOURCE**: Fully transparent and auditable code
+
+### Privacy Guarantees
+| Aspect | Status | Details |
+|--------|--------|---------|
+| Personal Data | ❌ Never Collected | No names, emails, or identifiable information |
+| Browsing History | ❌ Never Accessed | Extension doesn't track or access your browsing |
+| Network Requests | ❌ Zero Outbound | No HTTP/HTTPS requests to any server |
+| Third-Party Services | ❌ None Used | No analytics, CDNs, or external dependencies |
+| Local Storage | ✅ Theme Only | Only your theme preference is stored locally |
+
+### Permissions Explained
+| Permission | Purpose | Privacy Impact |
+|------------|---------| ---------------|
+| `activeTab` | Analyze current page's DOM for technology detection | **Temporary only** - granted when you click the icon |
+| `storage` | Save your selected theme preference | **Local only** - never synced or shared |
+| `scripting` | Inject DOM analysis for auto-detection | **On-demand only** - runs when you click "Auto-detect" |
+
+**✅ Chrome Web Store Compliant**: This extension follows all Chrome Web Store Developer Policies, including minimal permission usage and strict Content Security Policy (CSP).
+
+### How Auto-Detection Works (Privacy-Safe)
+The extension uses **DOM-only analysis** without making any network requests:
+- ✅ Analyzes `<script>` tags for technology indicators (e.g., `src="react.js"`)
+- ✅ Checks for framework-specific meta tags and window variables
+- ✅ Detects patterns in the current page's DOM structure
+- ❌ Does NOT probe files via HTTP requests
+- ❌ Does NOT access your file system
+- ❌ Does NOT send data to external servers
+
+**Note**: Auto-detection works on live web pages with loaded JavaScript, not on repository pages (GitHub/GitLab) unless the actual project files are loaded in the DOM.
+
+### Verify Our Privacy Claims
+You can independently verify our privacy guarantees:
+1. Open Chrome DevTools (F12) → Network tab
+2. Use all extension features (theme switching, auto-detect, generate, copy, download)
+3. **Observe: ZERO network requests**
+
+### Privacy Policy
+- 📄 Full Privacy Policy: See `privacy_policy.html` in the extension directory
+- 🔍 Source Code: Fully auditable and transparent
+- 📧 Questions?: Contact via Chrome Web Store support page
 
 ## 📈 Future Features
 
