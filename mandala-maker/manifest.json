@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Mandala Maker",
+  "version": "2.1.0",
+  "description": "Professional mandala creation tool with symmetry, layers, and export features",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Mandala Maker",
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "permissions": ["activeTab", "storage", "scripting", "contextMenus"],
+  "background": { "service_worker": "background.js" },
+  "options_page": "options.html",
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+  },
+  "icons": {
+    "16": "assets/icon16.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  }
+}
