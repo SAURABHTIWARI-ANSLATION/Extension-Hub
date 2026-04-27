@@ -1,11 +1,9 @@
 {
   "manifest_version": 3,
   "name": "CSS Specificity Calculator",
-  "version": "1.0.0",
-  "description": "Visualize and compare CSS selector specificity with detailed analysis",
-  "permissions": [
-    "storage"
-  ],
+  "version": "2.1.0",
+  "description": "Professional CSS selector specificity calculator — live analysis, comparison, history, dark mode.",
+  "permissions": ["storage"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -21,6 +19,6 @@
     "128": "icons/icon128.png"
   },
   "content_security_policy": {
-     "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'self';"
+     "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; img-src 'self'; style-src 'self'; font-src 'self';"
   }
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Web Activity Tracker</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <div class="app-header">
+    <div class="header-top">
+      <h1 class="app-title">Web Activity Tracker</h1>
+      <span class="badge-date" id="dateLabel">Today</span>
+    </div>
+    <p class="app-subtitle">Track time, set limits, stay focused</p>
+  </div>
+
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="today"> Today</button>
+    <button class="tab-btn" data-tab="totals"> Total time</button>
+    <button class="tab-btn" data-tab="daily"> Daily</button>
+  </div>
+
+  <div class="panel active" id="panel-today">
+
+    <!-- Donut + legend -->
+    <div class="chart-area">
+      <div class="donut-wrap">
+        <canvas id="donutChart" width="150" height="150"></canvas>
+        <div class="donut-center">
+          <span class="donut-center-value" id="donutCenterVal">0s</span>
+          <span class="donut-center-label">Today</span>
+        </div>
+      </div>
+      <div class="legend" id="donutLegend"></div>
+    </div>
+
+    <div class="summary-bar">
+      <div>
+        <div class="sb-label">Today</div>
+        <div class="sb-value" id="totalTime">0s</div>
+      </div>
+      <div class="sb-right">
+        <div class="sb-value" id="siteCount">0</div>
+        <div class="sb-label">Sites tracked</div>
+      </div>
+    </div>
+
+    <div class="list-header">
+      <span class="list-label">Websites visited</span>
+    </div>
+    <div class="site-list" id="statsList"></div>
+
+  </div>
+
+  <!-- ═══════════ TOTAL TIME PANEL ═══════════ -->
+  <div class="panel" id="panel-totals">
+
+    <div class="totals-grid">
+      <div class="stat-box">
+        <div class="stat-box-label">First active day</div>
+        <div class="stat-box-value" id="tt-firstDay">—</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Active days</div>
+        <div class="stat-box-value" id="tt-activeDays">0</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Total days</div>
+        <div class="stat-box-value" id="tt-totalDays">0</div>
+      </div>
+    </div>
+
+    <div class="totals-grid-2 totals-grid-2-spaced">
+      <div class="stat-box">
+        <div class="stat-box-label">All time today</div>
+        <div class="stat-box-value" id="tt-todayTotal">0s</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-box-label">Total time</div>
+        <div class="stat-box-value" id="tt-allTime">0s</div>
+      </div>
+      <div class="stat-box stat-box-full">
+        <div class="stat-box-label">Avg time (active days)</div>
+        <div class="stat-box-value" id="tt-avgTime">0s</div>
+      </div>
+    </div>
+
+    <div class="chart-area chart-area-top-spaced">
+      <div class="donut-wrap">
+        <canvas id="donutChart2" width="150" height="150"></canvas>
+        <div class="donut-center">
+          <span class="donut-center-value" id="donutCenterVal2">0s</span>
+          <span class="donut-center-label">Total</span>
+        </div>
+      </div>
+      <div class="legend" id="donutLegend2"></div>
+    </div>
+
+    <div class="summary-bar">
+      <div>
+        <div class="sb-label" id="tt-aggLabel">Aggregate data</div>
+        <div class="sb-value" id="tt-aggTotal">0s</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════ DAILY PANEL ═══════════ -->
+  <div class="panel" id="panel-daily">
+    <div class="daily-wrap">
+      <div class="bar-avg-row">
+        <span class="bar-avg-label">Average time on selected days</span>
+        <span class="bar-avg-value" id="daily-avg">0s</span>
+      </div>
+      <div class="bar-chart-area">
+        <canvas id="barChart" height="140"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Control section (always visible below tabs content for current site) -->
+  <div class="control-wrap">
+    <div class="h-divider"></div>
+    <div class="control-head">
+      <div>
+        <div class="control-kicker">Current site</div>
+        <div class="control-domain" id="currentDomain">No active website</div>
+      </div>
+      <span class="pill" id="limitStatus"><span class="pill-dot"></span>No limit</span>
+    </div>
+
+    <div class="metrics-row">
+      <div class="metric">
+        <div class="metric-label">Spent today</div>
+        <strong id="currentSpent">0s</strong>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Limit</div>
+        <strong id="currentLimit">Not set</strong>
+      </div>
+    </div>
+
+    <label class="input-label" for="limitInput">Set limit (minutes)</label>
+    <div class="limit-row">
+      <input id="limitInput" class="limit-input" type="number" min="1" step="1" placeholder="e.g. 30" />
+      <button id="saveLimitBtn" class="btn btn-primary" type="button">Save</button>
+    </div>
+    <div class="actions-row">
+      <button id="removeLimitBtn" class="btn btn-ghost" type="button">Remove limit</button>
+      <button id="clearBtn" class="btn btn-danger" type="button">Reset all</button>
+    </div>
+  </div>
+
+  <!-- Status row -->
+  <div class="status-row">
+    <div class="status-led" id="statusLed"></div>
+    <span id="statusText">Live data</span>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
