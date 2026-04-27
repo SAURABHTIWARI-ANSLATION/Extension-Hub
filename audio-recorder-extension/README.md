@@ -26,9 +26,10 @@ A simple and reliable Chrome extension to record audio from any browser tab.
 
 1. **Navigate** to a website with audio (YouTube, Spotify, podcast, etc.)
 2. **Click** the Audio Recorder icon in your toolbar
-3. **Start Recording** - Click the green "Start Recording" button
-4. **Stop Recording** - Click the red "Stop Recording" button
-5. **Save File** - Choose where to save the recording (browser download dialog)
+3. The recorder opens in a **Chrome Side Panel**
+4. **Start Recording** - Click "Record"
+5. **Stop Recording** - Click "Stop"
+6. **Save File** - Click "Save Recording" (downloads to your computer)
 
 ## Important Notes
 
@@ -59,7 +60,7 @@ A simple and reliable Chrome extension to record audio from any browser tab.
 - `manifest.json` - Extension configuration
 - `background.js` - Background service worker
 - `offscreen.html/js` - Audio recording handling
-- `popup.html/js/css` - User interface
+- `sidebar.html/js/css` - Side panel user interface
 - `icons/` - Extension icons
 
 ## Permissions Explained
@@ -77,4 +78,3 @@ A simple and reliable Chrome extension to record audio from any browser tab.
 - Saves files as WebM with Opus codec
 - Works with Manifest V3
 - No external dependencies
-
