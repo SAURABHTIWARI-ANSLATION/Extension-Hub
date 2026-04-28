@@ -12,17 +12,16 @@
       <!-- ─── Hero ─────────────────────────────────────────── -->
       <header class="hero">
         <div class="hero-copy">
-          <p class="eyebrow">Campaign Studio</p>
+          <p class="eyebrow">Campion Studeio</p>
           <h1 id="title">
-            <span class="title-main">UTM Link Builder</span>
-            <span class="title-accent">with URL Shortener</span>
+            <span class="title-main">Campion Studio</span>
           </h1>
-          <p class="subtitle">Build clean campaign links, shorten them fast, and generate QR codes in one polished workspace.</p>
+          <p class="subtitle">Build your URL, shorten links fast, and generate QR codes in one polished workspace.</p>
         </div>
         <div class="hero-side">
           <span class="hero-badge">Links + QR</span>
           <button id="themeToggle" class="theme-btn" title="Toggle dark mode" aria-label="Toggle theme">
-            <span class="theme-icon">🌙</span>
+            <span class="theme-icon"></span>
           </button>
         </div>
       </header>
@@ -160,21 +159,15 @@
 
           <div class="field-grid">
             <label class="field">
-              <span class="label-text">T.LY API Token</span>
-              <input id="sht-token" class="input" type="password" placeholder="Paste your T.LY API token" autocomplete="off" spellcheck="false" />
-            </label>
-            <p class="field-hint">Required by T.LY. Your token is stored locally in this extension only.</p>
-
-            <label class="field">
               <span class="label-text">Long URL</span>
               <input id="sht-url" class="input" type="url" placeholder="https://your-very-long-url.com/page?lots=of&params=here" autocomplete="off" spellcheck="false" />
             </label>
-            <p class="field-hint">Paste any full URL and generate a shorter T.LY shareable link instantly.</p>
+            <p class="field-hint">Paste any full URL and generate a shorter shareable link instantly. No API token needed from the user.</p>
           </div>
 
           <div class="action-row">
             <button id="sht-shorten" class="btn btn-primary" type="button">
-              <span class="btn-label">✂️ Shorten URL</span>
+              <span class="btn-label">Shorten URL</span>
               <span class="btn-spinner hidden"></span>
             </button>
           </div>
@@ -210,7 +203,7 @@
             <img id="sht-qrImg" class="qr-img" src="" alt="QR Code for short URL" />
             <div class="qr-meta">
               <span class="qr-label">Scan to open your short link</span>
-              <a id="sht-qrDownload" class="qr-download" href="#" download="short-url-qr.png">⬇ Save PNG</a>
+              <a id="sht-qrDownload" class="qr-download" href="#" download="short-url-qr.png"> Save PNG</a>
             </div>
           </div>
         </section>
@@ -222,7 +215,7 @@
               <p class="section-label">Recent</p>
               <h2 class="section-title">Shortened Links</h2>
             </div>
-            <button id="sht-clearHistory" class="icon-btn icon-btn--danger" title="Clear shortener history">🗑 Clear</button>
+            <button id="sht-clearHistory" class="icon-btn icon-btn--danger" title="Clear shortener history">Clear</button>
           </div>
           <div id="sht-historyList" class="history-list">
             <p class="empty-state">No links yet — shorten something above!</p>
@@ -240,8 +233,8 @@
               <h2 class="section-title">UTM History</h2>
             </div>
             <div class="btn-group">
-              <button id="exportCsv" class="icon-btn" title="Export history as CSV">📥 CSV</button>
-              <button id="clearHistory" class="icon-btn icon-btn--danger" title="Clear all history">🗑 Clear</button>
+              <button id="exportCsv" class="icon-btn" title="Export history as CSV"> CSV</button>
+              <button id="clearHistory" class="icon-btn icon-btn--danger" title="Clear all history"> Clear</button>
             </div>
           </div>
           <p class="history-count" id="historyCount"></p>

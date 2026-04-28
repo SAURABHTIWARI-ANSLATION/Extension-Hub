@@ -323,14 +323,14 @@ $('#exportCsv').addEventListener('click', async () => {
 
 // ── Presets ───────────────────────────────────────
 const BUILTIN = [
-  { label:'Google Ads',    icon:'🔍', source:'google',    medium:'cpc' },
-  { label:'Facebook Ads',  icon:'📘', source:'facebook',  medium:'paid_social' },
-  { label:'Email',         icon:'✉️', source:'newsletter', medium:'email' },
-  { label:'Instagram',     icon:'📸', source:'instagram',  medium:'social' },
-  { label:'LinkedIn',      icon:'💼', source:'linkedin',   medium:'social' },
-  { label:'Twitter/X',     icon:'🐦', source:'twitter',    medium:'social' },
-  { label:'YouTube',       icon:'▶️', source:'youtube',    medium:'video' },
-  { label:'TikTok',        icon:'🎵', source:'tiktok',     medium:'paid_social' },
+  { label:'Google Ads',    source:'google',    medium:'cpc' },
+  { label:'Facebook Ads',  source:'facebook',  medium:'paid_social' },
+  { label:'Email',         source:'newsletter', medium:'email' },
+  { label:'Instagram',     source:'instagram',  medium:'social' },
+  { label:'LinkedIn',      source:'linkedin',   medium:'social' },
+  { label:'Twitter/X',     source:'twitter',    medium:'social' },
+  { label:'YouTube',       source:'youtube',    medium:'video' },
+  { label:'TikTok',        source:'tiktok',     medium:'paid_social' },
 ];
 
 async function renderPresets() {
@@ -460,11 +460,9 @@ confirmSavePreset.addEventListener('click', async () => {
 // SECTION 4 — URL SHORTENER
 // ══════════════════════════════════════════════════
 
-const SHT_API_ENDPOINT = 'https://api.t.ly/api/v1/link/shorten';
-const SHT_DEFAULT_DOMAIN = 'https://t.ly/';
+const SHT_API_ENDPOINT = 'https://is.gd/create.php';
 const MAX_SHT_HISTORY  = 10;
 
-const shtTokenInput  = $('#sht-token');
 const shtUrlInput    = $('#sht-url');
 const shtShortenBtn  = $('#sht-shorten');
 const shtBtnLabel    = $('.btn-label', $('#sht-shorten'));
@@ -480,7 +478,7 @@ const shtQrImg       = $('#sht-qrImg');
 const shtQrDownload  = $('#sht-qrDownload');
 const shtClearHist   = $('#sht-clearHistory');
 const shtHistList    = $('#sht-historyList');
-const SHT_DEFAULT_BTN_LABEL = '✂️ Shorten URL';
+const SHT_DEFAULT_BTN_LABEL = 'Shorten URL';
 
 let shtRequestInFlight = false;
 let shtCooldownUntil = 0;
@@ -489,9 +487,6 @@ let shtCooldownTimer = null;
 // Shorten
 shtShortenBtn.addEventListener('click', handleShorten);
 shtUrlInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleShorten(); });
-shtTokenInput.addEventListener('input', async () => {
-  await store.set({ shtApiToken: shtTokenInput.value.trim() });
-});
 
 async function handleShorten() {
   if (shtRequestInFlight) return;
@@ -500,9 +495,7 @@ async function handleShorten() {
     return;
   }
 
-  const apiToken = shtTokenInput.value.trim();
   const longUrl = shtUrlInput.value.trim();
-  if (!apiToken) { shtShowMsg('Enter your T.LY API token first.', 'error'); return; }
   if (!longUrl) { shtShowMsg('Please enter a URL.', 'error'); return; }
   try { new URL(longUrl); } catch { shtShowMsg('Enter a valid URL (include https://).', 'error'); return; }
   shtRequestInFlight = true;
@@ -511,20 +504,15 @@ async function handleShorten() {
   shtResultCard.classList.add('hidden');
 
   try {
-    const resp = await fetch(SHT_API_ENDPOINT, {
-      method: 'POST',
+    const requestUrl = new URL(SHT_API_ENDPOINT);
+    requestUrl.searchParams.set('format', 'json');
+    requestUrl.searchParams.set('url', longUrl);
+
+    const resp = await fetch(requestUrl.toString(), {
+      method: 'GET',
       headers: {
-        'Authorization': `Bearer ${apiToken}`,
-        'Content-Type': 'application/json',
         'Accept': 'application/json',
       },
-      body: JSON.stringify({
-        long_url: longUrl,
-        domain: SHT_DEFAULT_DOMAIN,
-        format: 'json',
-        public_stats: false,
-        include_qr_code: false,
-      }),
     });
     const data = await parseShortenerResponse(resp);
     if (!resp.ok) {
@@ -533,9 +521,15 @@ async function handleShorten() {
       }
       throw new Error(getShortenerErrorMessage(resp, data));
     }
-    const shortUrl = data.url || data.shortUrl || data.short_url || data.data?.url || data.data?.shortUrl || data.data?.short_url;
+    if (data.errorcode) {
+      if (Number(data.errorcode) === 3) {
+        startShtCooldown(60000);
+      }
+      throw new Error(getShortenerErrorMessage(resp, data));
+    }
+    const shortUrl = data.shorturl || data.short_url || data.url;
     if (!shortUrl) {
-      throw new Error(data.error || data.message || 'Unable to shorten this URL right now.');
+      throw new Error(data.errormessage || data.error || data.message || 'Unable to shorten this URL right now.');
     }
 
     shtShowResult(shortUrl, longUrl);
@@ -587,16 +581,13 @@ async function parseShortenerResponse(resp) {
 }
 
 function getShortenerErrorMessage(resp, data) {
-  const apiMessage = data?.error || data?.message || data?.detail;
-  if (resp.status === 401 || resp.status === 403) {
-    return apiMessage || 'Your T.LY token was rejected. Double-check the API token and try again.';
-  }
+  const apiMessage = data?.errormessage || data?.error || data?.message || data?.detail;
   if (resp.status === 429) {
     const retryAfterMs = getRetryAfterMs(resp);
     if (retryAfterMs > 0) {
-      return `T.LY rate limit reached. ${formatCooldownMessage(Date.now() + retryAfterMs)}.`;
+      return `Shortener rate limit reached. ${formatCooldownMessage(Date.now() + retryAfterMs)}.`;
     }
-    return apiMessage || 'T.LY rate limit reached. Wait a moment, then try again.';
+    return apiMessage || 'Shortener rate limit reached. Wait a moment, then try again.';
   }
   return apiMessage || `Request failed (${resp.status})`;
 }
@@ -698,7 +689,7 @@ async function loadShtHistory() {
     btn.addEventListener('click', () => {
       navigator.clipboard.writeText(btn.dataset.url).then(() => {
         btn.textContent = '✓';
-        setTimeout(() => btn.textContent = '📋', 1600);
+        setTimeout(() => btn.textContent = '', 1600);
       });
     });
   });
@@ -742,9 +733,9 @@ function createHistoryItem(item, idx) {
   const actions = document.createElement('div');
   actions.className = 'history-actions';
   actions.append(
-    createActionButton('copy', item.url, 'Copy', '📋'),
+    createActionButton('copy', item.url, 'Copy', ''),
     createActionButton('load', String(idx), 'Load into builder', '↩', true),
-    createActionButton('del', String(idx), 'Delete', '🗑', true)
+    createActionButton('del', String(idx), 'Delete', '', true)
   );
 
   wrap.append(body, actions);
@@ -783,7 +774,7 @@ function createShortHistoryItem(item) {
   btn.dataset.url = item.shortUrl;
   btn.title = 'Copy';
   btn.type = 'button';
-  btn.textContent = '📋';
+  btn.textContent = '';
 
   wrap.append(link, btn);
   return wrap;
@@ -802,8 +793,6 @@ function relTime(ts) {
 // ── Init ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   initTheme();
-  const { shtApiToken = '' } = await store.get(['shtApiToken']);
-  shtTokenInput.value = shtApiToken;
   loadShtHistory();
   urlInput.focus();
 });

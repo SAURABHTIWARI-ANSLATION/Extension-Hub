@@ -484,7 +484,7 @@ function stopAutoNightPolling() {
 function updateBrightnessSliderFill() {
   const pct = ((state.brightness - 20) / 80) * 100;
   brightnessSlider.style.background =
-    `linear-gradient(to right, #0D4DB5 0%, #0D4DB5 ${pct}%, #D0D8F0 ${pct}%, #D0D8F0 100%)`;
+    `linear-gradient(to right, #000 0%, #000 ${pct}%, #D0D8F0 ${pct}%, #D0D8F0 100%)`;
 }
 
 // ── QUICK COLOR ACTIVE STATE ──

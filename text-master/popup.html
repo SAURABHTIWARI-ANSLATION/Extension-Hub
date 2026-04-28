@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Master</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <div class="logo-icon">TM</div>
+          <div class="logo-copy">
+            <p class="eyebrow">Browser Productivity</p>
+            <h1>Text Master</h1>
+            <p class="tagline">Convert copy, summarize long text, and scan the current page from one focused popup.</p>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- TABS NAV -->
+    <div class="main-tabs" role="tablist" aria-label="Text Master tools">
+      <button class="main-tab active" data-tab="case" role="tab" aria-selected="true">
+        <span class="tab-kicker">Transform</span>
+        <span class="tab-label">Case tools</span>
+      </button>
+      <button class="main-tab" data-tab="summarize" role="tab" aria-selected="false">
+        <span class="tab-kicker">Condense</span>
+        <span class="tab-label">Summaries</span>
+      </button>
+      <button class="main-tab" data-tab="scan" role="tab" aria-selected="false">
+        <span class="tab-kicker">Capture</span>
+        <span class="tab-label">Page scan</span>
+      </button>
+    </div>
+
+    <!-- TAB: CASE CONVERTER -->
+    <div id="case-tab" class="tab-content active">
+      <div class="source-section">
+        <div class="section-header">
+          <span>Source Text</span>
+          <div class="source-actions">
+            <button id="fetchSelectionBtn" class="icon-btn" title="Get selected text from page">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="6" width="18" height="12" rx="1"/>
+                <path d="M8 10h8M8 14h6"/>
+              </svg>
+            </button>
+            <button id="clearCaseBtn" class="icon-btn" title="Clear source text">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <textarea id="caseInput" placeholder="Type or paste text here, or pull in the current selection from the page."></textarea>
+        <div class="input-stats">
+          <span id="caseCharCount">0 chars</span>
+          <span id="caseWordCount">0 words</span>
+        </div>
+      </div>
+
+      <div class="converters-section">
+        <div class="section-header">
+          <span>Convert To</span>
+        </div>
+        <div class="case-buttons">
+          <button class="case-btn" data-case="upper">UPPER CASE</button>
+          <button class="case-btn" data-case="lower">lower case</button>
+          <button class="case-btn" data-case="title">Title Case</button>
+          <button class="case-btn" data-case="sentence">Sentence case</button>
+          <button class="case-btn" data-case="camel">camelCase</button>
+          <button class="case-btn" data-case="pascal">PascalCase</button>
+          <button class="case-btn" data-case="snake">snake_case</button>
+          <button class="case-btn" data-case="kebab">kebab-case</button>
+          <button class="case-btn" data-case="alternating">aLtErNaTiNg</button>
+          <button class="case-btn" data-case="inverse">iNVERSE cASE</button>
+        </div>
+      </div>
+
+      <div class="result-section">
+        <div class="section-header">
+          <span>Converted Result</span>
+          <span id="resultCharCount">0 chars</span>
+        </div>
+        <div class="result-box is-placeholder" id="caseOutput">Converted text will appear here.</div>
+        <div class="action-buttons">
+          <button id="copyCaseResult" class="btn-secondary">Copy result</button>
+          <button id="applyToPage" class="btn-primary">Apply to page</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: SUMMARIZE -->
+    <div id="summarize-tab" class="tab-content">
+      <div class="source-section">
+        <div class="section-header">
+          <span>Text to Summarize</span>
+          <div class="source-actions">
+            <button id="pasteTextBtn" class="icon-btn" title="Paste from clipboard">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+            <button id="clearSummarizeBtn" class="icon-btn" title="Clear text">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <textarea id="summarizeInput" placeholder="Paste article, notes, or any text here…"></textarea>
+        <div class="input-stats">
+          <span id="summarizeWordCount">0 words</span>
+          <span id="summarizeSentenceCount">0 sentences</span>
+        </div>
+      </div>
+
+      <div class="control-section">
+        <div class="section-header">
+          <span>Summary Length</span>
+        </div>
+        <div class="length-presets">
+          <button class="length-btn" data-length="20">Short (20%)</button>
+          <button class="length-btn active" data-length="35">Medium (35%)</button>
+          <button class="length-btn" data-length="50">Detailed (50%)</button>
+        </div>
+        <div class="slider-control">
+          <span>Custom</span>
+          <input type="range" id="summaryRatio" min="10" max="70" step="5" value="35">
+          <span id="ratioValue">35%</span>
+        </div>
+      </div>
+
+      <div class="result-section">
+        <div class="section-header">
+          <span>Summary</span>
+          <span id="summaryStats">0% reduction</span>
+        </div>
+        <div class="result-box is-placeholder" id="summaryOutput">Generate a summary to see the condensed version here.</div>
+        <div id="keyPointsContainer" class="key-points" hidden>
+          <div class="key-points-header">Key Points</div>
+          <ul id="keyPointsList"></ul>
+        </div>
+        <div class="action-buttons">
+          <button id="generateSummaryBtn" class="btn-primary">Generate summary</button>
+          <button id="copySummaryBtn" class="btn-secondary">Copy</button>
+          <button id="downloadSummaryBtn" class="btn-secondary">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: PAGE SCAN -->
+    <div id="scan-tab" class="tab-content">
+      <div class="source-section">
+        <div class="section-header">
+          <span>Page Content Scanner</span>
+        </div>
+        <button id="scanPageBtn" class="btn-primary full-width">Scan current page</button>
+        <div id="pageInfo" class="page-info" hidden>
+          <div class="page-info-header">
+            <strong id="pageTitle"></strong>
+          </div>
+          <div id="pagePreview" class="page-preview"></div>
+        </div>
+      </div>
+      <div class="scanned-content">
+        <div class="section-header">
+          <span>Extracted Content</span>
+          <span id="scanWordCount">0 words</span>
+        </div>
+        <div class="result-box scrollable is-placeholder" id="scannedContent">Scan the current page to pull in readable content.</div>
+        <div class="action-buttons">
+          <button id="useForCaseBtn" class="btn-secondary">Send to Case</button>
+          <button id="useForSummaryBtn" class="btn-primary">Send to Summarizer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <p class="hint">Tip: select text on any webpage and it can be pulled straight into the case converter.</p>
+    </footer>
+
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>

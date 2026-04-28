@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>URLBurst</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark"></div>
+      <div>
+        <h1 class="header-title">URLBurst</h1>
+        <p class="header-sub">Bulk URL Manager</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span id="urlCountBadge" class="badge">0 URLs</span>
+      <button id="historyToggleBtn" class="icon-btn" title="Session history" aria-label="Open history">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- TABS -->
+  <nav class="tab-nav" role="tablist">
+    <button class="tab-btn active" data-tab="main"     role="tab" aria-selected="true">Input</button>
+    <button class="tab-btn"        data-tab="lists"    role="tab" aria-selected="false">Saved Lists</button>
+    <button class="tab-btn"        data-tab="settings" role="tab" aria-selected="false">Settings</button>
+    <button class="tab-btn"        data-tab="history"  role="tab" aria-selected="false">History</button>
+  </nav>
+
+  <!-- ═══════════════ MAIN TAB ═══════════════ -->
+  <div id="tab-main" class="tab-panel active">
+
+    <!-- TOP ACTION BAR -->
+    <div class="top-action-bar">
+      <button id="btnOpenLinks" class="btn-primary-top">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        Open All
+      </button>
+      <button id="btnPreview" class="btn-outline-top">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        Preview
+      </button>
+      <button id="btnGetTabs" class="btn-outline-top">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>
+        Get Tabs
+      </button>
+      <button id="btnClearLinks" class="btn-outline-top">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+        Clear
+      </button>
+    </div>
+
+    <!-- TEXTAREA -->
+    <div class="input-section">
+      <textarea
+        id="urlInput"
+        class="url-textarea"
+        placeholder="Paste URLs here — one per line&#10;Ctrl+Enter to open · Ctrl+Shift+V to paste"
+        spellcheck="false"
+        autocomplete="off"
+      ></textarea>
+
+      <!-- STATS BAR -->
+      <div id="statsBar" class="stats-bar hidden">
+        <span class="stat-item">
+          <span class="stat-dot valid"></span>
+          <span id="statValidCount">0</span> valid
+        </span>
+        <span class="stat-divider">·</span>
+        <span class="stat-item">
+          <span class="stat-dot invalid"></span>
+          <span id="statInvalidCount">0</span> invalid
+        </span>
+        <span class="stat-divider">·</span>
+        <span class="stat-item">
+          <span class="stat-dot dupe"></span>
+          <span id="statDupeCount">0</span> dupes
+        </span>
+        <span class="stat-divider">·</span>
+        <button id="btnShowDupes" class="stat-link hidden">View dupes</button>
+      </div>
+
+      <!-- QUICK ACTIONS -->
+      <div class="quick-actions">
+        <button id="btnPaste"    class="qa-btn">Paste</button>
+        <button id="btnCopy"     class="qa-btn">Copy</button>
+        <button id="btnClear"    class="qa-btn">Clear</button>
+        <button id="btnImport"   class="qa-btn">Import</button>
+        <button id="btnExportTxt"  class="qa-btn">Export TXT</button>
+        <button id="btnExportJson" class="qa-btn">Export JSON</button>
+        <button id="btnExtract"  class="qa-btn">Extract</button>
+        <button id="btnFromTabs" class="qa-btn">From Tabs</button>
+        <button id="btnCleanup"  class="qa-btn">Cleanup</button>
+      </div>
+      <input type="file" id="fileImport" accept=".txt,.csv,.tsv,.json,.xlsx,.ods,.html,.htm,.pdf" class="sr-only" aria-hidden="true" />
+    </div>
+
+    <!-- DUPLICATE PANEL -->
+    <div id="dupePanel" class="card-panel hidden">
+      <div class="card-header">
+        <span class="card-title">Duplicate URLs</span>
+        <button id="btnDupeClose" class="icon-btn-sm">✕</button>
+      </div>
+      <div id="dupeList" class="dupe-list"></div>
+      <div class="card-footer">
+        <button id="btnDupeRemove" class="btn-primary-sm">Remove Dupes</button>
+        <button id="btnDupeClose2" class="btn-ghost-sm">Cancel</button>
+      </div>
+    </div>
+
+    <!-- URL PREVIEW PANEL -->
+    <div id="previewPanel" class="card-panel hidden">
+      <div class="card-header">
+        <span class="card-title">Preview URLs</span>
+        <span id="previewCount" class="badge">0 URLs</span>
+      </div>
+      <div id="previewList" class="preview-list"></div>
+      <div class="card-footer">
+        <button id="btnPreviewConfirm" class="btn-primary-sm">Open All</button>
+        <button id="btnPreviewCancel"  class="btn-ghost-sm">Cancel</button>
+      </div>
+    </div>
+
+    <!-- EXTRACT PREVIEW -->
+    <div id="extractPreview" class="card-panel hidden">
+      <div class="card-header">
+        <span class="card-title">Extracted URLs</span>
+        <span id="extractCount" class="badge">0 found</span>
+      </div>
+      <div id="extractList" class="extract-list"></div>
+      <div class="card-footer">
+        <button id="btnExtractConfirm" class="btn-primary-sm">Replace Input</button>
+        <button id="btnExtractCancel"  class="btn-ghost-sm">Cancel</button>
+      </div>
+    </div>
+
+    <!-- SEQUENTIAL / PROGRESS -->
+    <div class="section-divider"><span>or open sequentially</span></div>
+    <div class="secondary-action-row">
+      <button id="btnOneByOne" class="btn-secondary-full">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        One by One
+      </button>
+    </div>
+
+    <div id="progressPanel" class="card-panel progress-panel hidden">
+      <div class="card-header">
+        <span id="progressLabel" class="card-title">Opening tabs...</span>
+        <button id="btnStop" class="stop-btn" disabled>Stop</button>
+      </div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-fill" ></div>
+      </div>
+      <p id="progressText" class="progress-text">0 / 0</p>
+    </div>
+
+  </div><!-- /tab-main -->
+
+  <!-- ═══════════════ SAVED LISTS TAB ═══════════════ -->
+  <div id="tab-lists" class="tab-panel">
+    <div class="lists-panel">
+
+      <!-- SEARCH + SORT ROW -->
+      <div class="list-toolbar">
+        <input type="text" id="listSearch" class="list-search" placeholder="Search lists…" autocomplete="off" />
+        <button id="btnSortAZ"   class="qa-btn" title="Sort A–Z">A–Z</button>
+        <button id="btnSortDate" class="qa-btn" title="Sort by date">Date</button>
+      </div>
+
+      <!-- DROPDOWN -->
+      <div class="dropdown-section">
+        <label class="field-label" for="savedListSelect">Your saved lists</label>
+        <div class="select-wrap">
+          <select id="savedListSelect" class="list-select">
+            <option value="">-- Select a list --</option>
+          </select>
+          <svg class="select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+
+      <!-- LIST ACTION BUTTONS -->
+      <div class="list-actions">
+        <button id="btnLoadList"   class="btn-primary-sm"  disabled>Load</button>
+        <button id="btnNewList"    class="btn-outline-sm">New</button>
+        <button id="btnEditList"   class="btn-outline-sm"  disabled>Edit</button>
+        <button id="btnDupeList"   class="btn-outline-sm"  disabled>Duplicate</button>
+        <button id="btnDeleteList" class="btn-danger-sm"   disabled>Delete</button>
+      </div>
+
+      <!-- LIST EDITOR -->
+      <div id="listEditor" class="list-editor hidden">
+        <div class="editor-header">
+          <span id="editorTitle" class="card-title">New List</span>
+        </div>
+        <input type="text" id="listNameInput" class="text-input" placeholder="List name (e.g. SEO Competitors)" maxlength="80" />
+        <textarea id="listUrlsInput" class="url-textarea list-textarea" placeholder="Paste URLs — one per line…"></textarea>
+        <div class="editor-footer">
+          <button id="btnSaveList"   class="btn-primary-sm">Save List</button>
+          <button id="btnCancelEdit" class="btn-ghost-sm">Cancel</button>
+          <span id="listUrlCount" class="list-url-count">0 URLs</span>
+        </div>
+      </div>
+
+      <!-- SAVED LISTS TABLE -->
+      <div id="savedListsTable" class="lists-table">
+        <div class="empty-state small">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>
+          <p>No saved lists yet</p>
+          <span>Click "New" to create your first list</span>
+        </div>
+      </div>
+
+      <!-- EXPORT -->
+      <div class="export-row">
+        <button id="btnExportLists" class="btn-ghost-sm">Export All Lists (JSON)</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ SETTINGS TAB ═══════════════ -->
+  <div id="tab-settings" class="tab-panel">
+    <div class="settings-wrap">
+
+      <div class="settings-section">
+        <h3 class="section-label">Open Mode</h3>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="openMode" value="tab" checked />
+            <span class="radio-custom"></span>
+            <span>New tab</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="openMode" value="window" />
+            <span class="radio-custom"></span>
+            <span>New window</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="openMode" value="group" />
+            <span class="radio-custom"></span>
+            <span>Tab groups</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section" id="groupBySection">
+        <h3 class="section-label">Group By</h3>
+        <div class="radio-group">
+          <label class="radio-item">
+            <input type="radio" name="groupBy" value="domain" checked />
+            <span class="radio-custom"></span>
+            <span>Domain</span>
+          </label>
+          <label class="radio-item">
+            <input type="radio" name="groupBy" value="tld" />
+            <span class="radio-custom"></span>
+            <span>TLD (.com, .org…)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="section-label">Limits &amp; Timing</h3>
+        <div class="input-row">
+          <label class="input-label">
+            <input type="checkbox" id="limitEnabled" class="checkbox-input" />
+            <span>Open only first</span>
+          </label>
+          <div class="number-input-wrap">
+            <input type="number" id="limitCount" class="number-input" min="1" max="9999" value="10" />
+            <span class="number-unit">URLs</span>
+          </div>
+        </div>
+        <div class="input-row">
+          <label class="input-label">Delay between opens</label>
+          <div class="number-input-wrap">
+            <input type="number" id="delayInput" class="number-input" min="0" max="60" step="0.1" value="0.5" />
+            <span class="number-unit">sec</span>
+          </div>
+        </div>
+        <div class="input-row">
+          <label class="input-label">One-by-one wait</label>
+          <div class="number-input-wrap">
+            <input type="number" id="oneByOneWait" class="number-input" min="1" max="120" value="5" />
+            <span class="number-unit">sec</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="section-label">Behavior</h3>
+        <div class="checkbox-group">
+          <label class="checkbox-item">
+            <input type="checkbox" id="inactiveLoad" class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span><strong>Open tabs in background</strong><em>Don't switch to new tabs</em></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="randomOrder" class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span><strong>Random order</strong><em>Shuffle before opening</em></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="reverseOrder" class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span><strong>Reverse order</strong><em>Open last URL first</em></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="preserveInput" class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span><strong>Preserve input</strong><em>Keep textarea after opening</em></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="ignoreDuplicates" class="checkbox-input" checked />
+            <span class="checkbox-custom"></span>
+            <span><strong>Ignore duplicates</strong><em>Remove dupes before opening</em></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="handleNonURLs" class="checkbox-input" />
+            <span class="checkbox-custom"></span>
+            <span><strong>Search non-URLs</strong><em>Opens via Google Search</em></span>
+          </label>
+          <label class="checkbox-item">
+            <input type="checkbox" id="rememberList" class="checkbox-input" checked />
+            <span class="checkbox-custom"></span>
+            <span><strong>Remember URL list</strong><em>Restore on next open</em></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h3 class="section-label">Keyboard Shortcuts</h3>
+        <div class="shortcut-list">
+          <div class="shortcut-row"><kbd>Ctrl</kbd><kbd>Enter</kbd><span>Open all URLs</span></div>
+          <div class="shortcut-row"><kbd>Ctrl</kbd><kbd>⇧</kbd><kbd>V</kbd><span>Paste from clipboard</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════ HISTORY TAB ═══════════════ -->
+  <div id="tab-history" class="tab-panel">
+    <div class="history-wrap">
+      <div class="history-header">
+        <h3 class="section-label">Recent Sessions</h3>
+        <button id="btnClearHistory" class="btn-ghost-sm danger">Clear All</button>
+      </div>
+      <div id="historyList" class="history-list">
+        <div class="empty-state">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <p>No history yet</p>
+          <span>Sessions appear after opening URLs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden" role="alert" aria-live="polite"></div>
+
+  <!-- SCRIPTS -->
+  <script src="libs/xlsx.full.min.js"></script>
+  <script src="utils/validator.js"></script>
+  <script src="utils/formatter.js"></script>
+  <script src="services/storageService.js"></script>
+  <script src="services/urlParserService.js"></script>
+  <script src="services/openService.js"></script>
+  <script src="utils/dropdowns.js"></script>
+  <script src="ui/popup.js"></script>
+</body>
+</html>

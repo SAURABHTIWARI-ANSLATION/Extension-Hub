@@ -23,11 +23,6 @@
   font-weight: 700; font-style: normal; font-display: swap;
 }
 
-/* Make the HTML `hidden` attribute win over any component display rules. */
-[hidden] {
-  display: none !important;
-}
-
 /* ═══════════════════════════════════════════════════════════
    DESIGN TOKENS — Light Mode
    ═══════════════════════════════════════════════════════════ */
@@ -310,10 +305,6 @@ body {
   overflow: hidden;
 }
 
-#inputSection {
-  overflow: visible;
-}
-
 .card-header {
   display: flex;
   align-items: center;
@@ -465,9 +456,8 @@ body {
    ═══════════════════════════════════════════════════════════ */
 .history-dropdown {
   position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  left: 12px;
+  right: 12px;
   background: var(--bg-elevated);
   border: 1px solid var(--border-mid);
   border-radius: var(--r);
@@ -628,30 +618,11 @@ body {
   height: 18px;
   border-radius: var(--r-sm);
   overflow: hidden;
-  display: block;
+  display: flex;
   background: var(--bg-muted);
   border: 1px solid var(--border);
   margin-bottom: 3px;
 }
-
-.spec-bar-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-.spec-bar-svg text {
-  fill: rgba(255,255,255,0.92);
-  font-size: 6px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  user-select: none;
-}
-
-.spec-bar-seg.seg-inline  { fill: var(--color-inline); }
-.spec-bar-seg.seg-id      { fill: var(--color-id); }
-.spec-bar-seg.seg-class   { fill: var(--color-class); }
-.spec-bar-seg.seg-element { fill: var(--color-element); }
 
 /* BUG FIX #6: zero-specificity indicator */
 .spec-bar.is-zero {
@@ -711,10 +682,6 @@ body {
   line-height: 1;
   display: block;
 }
-.spec-val-num.inline  { color: var(--color-inline); }
-.spec-val-num.id      { color: var(--color-id); }
-.spec-val-num.class   { color: var(--color-class); }
-.spec-val-num.element { color: var(--color-element); }
 .spec-val-lbl {
   font-size: 8.5px;
   color: var(--text-muted);

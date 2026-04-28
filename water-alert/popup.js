@@ -11,6 +11,7 @@ const TIPS = [
   "Drinking water can reduce headaches and improve energy levels naturally.",
 ];
 
+
 let currentConsumed = 0;
 let currentGoal = 3000;
 

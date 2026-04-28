@@ -186,8 +186,8 @@ document.getElementById("applyCustomSize").addEventListener("click", () => {
 
 /* ── Init / Load saved state ──────────────────────────────── */
 chrome.storage.local.get(["dark", "last", "history", "pinned"], d => {
-  // Default to light mode if never set
-  applyDark(d.dark === true);
+  // Default to dark mode if never set
+  applyDark(d.dark !== false);
 
   if (Array.isArray(d.history) && d.history.length) {
     allHistory = d.history;
@@ -769,7 +769,7 @@ function runBatch(urls, mode, grid) {
     imgWrap.appendChild(skel);
 
     const img = new Image();
-    const thumbUrl = getThumUrl(url, mode);
+    const thumbUrl = getThumUrls(url, mode)[0];
     img.src = thumbUrl;
     img.className = "batch-thumb";
     img.alt = domainOf(raw);
@@ -839,7 +839,7 @@ function setupCompare(inputId, btnId, prevId) {
     prev.appendChild(loader);
 
     const img = new Image();
-    img.src = getThumUrl(url, "desktop");
+    img.src = getThumUrls(url, "desktop")[0];
     img.className = "cmp-preview-img";
     img.alt = domainOf(raw);
 

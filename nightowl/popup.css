@@ -12,9 +12,9 @@
       --ink-2:         #1A1A2E;
       --ink-3:         #4A5280;
       --ink-4:         #8890B0;
-      --btn-bg:        #0D4DB5;
+      --btn-bg:        #000000;
       --btn-text:      #FFFFFF;
-      --btn-hover:     #0A3A8C;
+      --btn-hover:     #1A1A2E;
       --accent-blue:   #0D4DB5;
       --accent-blue-s: #EEF3FF;
       --radius:        13px;
@@ -22,7 +22,7 @@
       --radius-xs:     6px;
       --shadow-xs:  0 1px 4px rgba(10,58,140,0.08);
       --shadow-sm:  0 3px 10px rgba(10,58,140,0.12);
-      --shadow-btn: 0 4px 14px rgba(13,77,181,0.28);
+      --shadow-btn: 0 4px 14px rgba(0,0,0,0.28);
       --font: 'Manrope', -apple-system, sans-serif;
     }
 
@@ -286,12 +286,12 @@
     .qc-btn[data-color="#1A1A2E"] { background: #1A1A2E; }
     .qc-btn[data-color="#0D1B2A"] { background: #0D1B2A; }
     .qc-btn:hover { transform: scale(1.15); }
-    .qc-btn.active { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(13,77,181,0.12); }
+    .qc-btn.active { border-color: var(--ink); box-shadow: 0 0 0 2px rgba(0,0,0,0.12); }
     .qc-btn.active::after {
       content: ''; position: absolute; top: 50%; left: 50%;
       transform: translate(-50%,-50%);
       width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(13,77,181,0.5);
+      background: rgba(0,0,0,0.5);
     }
 
     /* ── SHADE GRID ── */
@@ -309,12 +309,12 @@
     .shade-btn[data-shade="forest"] { background: rgba(40,160,80,0.35); }
     .shade-btn[data-shade="violet"] { background: rgba(130,80,255,0.35); }
     .shade-btn:hover { transform: scale(1.08); }
-    .shade-btn.active { border-color: var(--accent-blue); box-shadow: 0 0 0 2px rgba(13,77,181,0.12); }
+    .shade-btn.active { border-color: var(--ink); box-shadow: 0 0 0 2px rgba(0,0,0,0.12); }
     .shade-btn.active::after {
       content: ''; position: absolute; top: 50%; left: 50%;
       transform: translate(-50%,-50%);
       width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(13,77,181,0.4);
+      background: rgba(0,0,0,0.4);
     }
 
     /* ── FONT FAMILY GRID ── */

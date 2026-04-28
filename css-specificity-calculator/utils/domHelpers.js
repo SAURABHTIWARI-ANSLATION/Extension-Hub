@@ -1,13 +1,14 @@
 /**
  * domHelpers.js
 */
-export function el(tag, { cls, text, attrs } = {}) {
+export function el(tag, { cls, text, attrs, style } = {}) {
   const node = document.createElement(tag);
   if (cls) {
     (Array.isArray(cls) ? cls : [cls]).forEach(c => c && node.classList.add(c));
   }
   if (text !== undefined) node.textContent = text;
   if (attrs) Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+  if (style) Object.assign(node.style, style);
   return node;
 }
 
@@ -27,10 +28,10 @@ export function clear(node) {
 }
 
 /**
- * Show or hide a node (CSP-safe, no inline styles).
+ * Show or hide a node via display style.
  */
-export function setVisible(node, visible) {
-  node.hidden = !visible;
+export function setVisible(node, visible, displayType = 'block') {
+  node.style.display = visible ? displayType : 'none';
 }
 
 /**

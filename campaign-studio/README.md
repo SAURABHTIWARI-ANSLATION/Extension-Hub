@@ -14,7 +14,7 @@ Manual UTM links banana repetitive aur error-prone hota hai. Ye extension isi wo
 - Instant live URL generation
 - Existing query parameters ke sath safe merge
 - One-click copy
-- T.LY-powered URL shortening
+- Token-free URL shortening
 - Keyboard shortcuts
 - Premium blue campaign-studio popup
 - Chrome MV3 and CSP-safe structure
@@ -66,7 +66,7 @@ Generated UTM URL ko one-click copy karne ke liye.
 
 ### `storage`
 
-Theme, history, presets, aur locally saved `T.LY` API token ke liye.
+Theme, history, aur presets ke liye.
 
 ## CSP Notes
 
@@ -93,11 +93,11 @@ Is implementation me:
 
 ## URL Shortener
 
-Shortener tab `T.LY` API use karta hai. Is feature ko use karne ke liye apna `T.LY` API token shortener tab me paste karo. Token browser storage me locally save hota hai.
+Shortener tab `is.gd` API use karta hai. User ko sirf long URL paste karna hota hai aur extension directly short URL generate karta hai.
 
 ## Notes
 
-- Shortener tab ko `T.LY` API token chahiye
+- Shortener tab me user se koi API token nahi manga jata
 - Extension currently focused hai clean UTM building plus quick shortening workflow par
 
 ## Tech Stack

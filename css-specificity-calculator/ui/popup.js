@@ -35,6 +35,7 @@ const compBlock      = $('comparisonBlock');
 const guideBody      = $('guideBody');
 const infoModal      = $('infoModal');
 const historyDrop    = $('historyDropdown');
+const appMain        = document.querySelector('.app-main'); // BUG FIX #12
 
 // Result 1
 const r1Sel   = $('result1Selector');
@@ -79,15 +80,12 @@ async function init() {
   const theme = await getTheme();
   applyTheme(theme);
 
-  // Ensure modal never shows by default (guards against cached DOM/state).
-  hideInfoModal();
-
   // Wire events
   themeBtn.addEventListener('click', toggleTheme);
 
-  infoBtn.addEventListener('click', showInfoModal);
-  closeInfo.addEventListener('click', hideInfoModal);
-  infoModal.addEventListener('click', e => { if (e.target === infoModal) hideInfoModal(); });
+  infoBtn.addEventListener('click',   () => setVisible(infoModal, true, 'flex'));
+  closeInfo.addEventListener('click', () => setVisible(infoModal, false));
+  infoModal.addEventListener('click', e => { if (e.target === infoModal) setVisible(infoModal, false); });
 
   calcBtn.addEventListener('click', runCalculate);
   clearBtn.addEventListener('click', clearAll);
@@ -105,13 +103,6 @@ async function init() {
   sel1.addEventListener('keydown', e => { if (e.key === 'Enter') runCalculate(); });
   sel2.addEventListener('keydown', e => { if (e.key === 'Enter') runCalculate(); });
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      hideInfoModal();
-      setVisible(historyDrop, false);
-    }
-  });
-
   // History
   sel1.addEventListener('focus', () => openHistory(sel1));
   sel2.addEventListener('focus', () => openHistory(sel2));
@@ -122,14 +113,6 @@ async function init() {
   });
 
   setStatus('ready', 'Ready — enter a CSS selector');
-}
-
-function showInfoModal() {
-  setVisible(infoModal, true);
-}
-
-function hideInfoModal() {
-  setVisible(infoModal, false);
 }
 
 // ── Theme ──────────────────────────────────────────────────────
@@ -145,13 +128,10 @@ async function toggleTheme() {
 }
 
 // ── History Dropdown ───────────────────────────────────────────
-// Positioned relative to the focused input's wrapper (no inline styles).
+// BUG FIX #2 & #12: positioned relative to appMain, outside any overflow:hidden card
 async function openHistory(inputEl) {
   const history = await getHistory();
   if (!history.length) { setVisible(historyDrop, false); return; }
-
-  const wrap = inputEl.closest('.input-wrap');
-  if (wrap && historyDrop.parentElement !== wrap) wrap.appendChild(historyDrop);
 
   clear(historyDrop);
 
@@ -196,6 +176,10 @@ async function openHistory(inputEl) {
     historyDrop.appendChild(row);
   });
 
+  // Position relative to appMain using input's bounding rect
+  const inputRect  = inputEl.getBoundingClientRect();
+  const mainRect   = appMain.getBoundingClientRect();
+  historyDrop.style.top  = (inputRect.bottom - mainRect.top + appMain.scrollTop + 3) + 'px';
   setVisible(historyDrop, true);
 }
 
@@ -322,67 +306,30 @@ function renderBar(container, [a, b, c, d]) {
   }
   container.classList.remove('is-zero');
 
-  const active = [
-    { val: a, cls: 'seg-inline',  label: 'I'  },
-    { val: b, cls: 'seg-id',      label: 'ID' },
-    { val: c, cls: 'seg-class',   label: 'C'  },
-    { val: d, cls: 'seg-element', label: 'E'  },
-  ].filter(s => s.val > 0);
+  const segments = [
+    { val: a, color: 'var(--color-inline)',  label: 'I'  },
+    { val: b, color: 'var(--color-id)',      label: 'ID' },
+    { val: c, color: 'var(--color-class)',   label: 'C'  },
+    { val: d, color: 'var(--color-element)', label: 'E'  },
+  ];
 
-  // Keep very small segments visible.
-  const MIN = 7;
-  const rawWidths = active.map(s => (s.val / total) * 100);
-  let widths = rawWidths.map(w => Math.max(w, MIN));
-  const sum = widths.reduce((acc, w) => acc + w, 0);
-  if (sum > 100) {
-    widths = widths.map(w => (w / sum) * 100);
-  } else if (sum < 100 && widths.length) {
-    widths[widths.length - 1] += (100 - sum);
-  }
-
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 100 10');
-  svg.setAttribute('preserveAspectRatio', 'none');
-  svg.classList.add('spec-bar-svg');
-
-  let x = 0;
-  active.forEach((seg, i) => {
-    const w = widths[i];
-
-    const rect = document.createElementNS(ns, 'rect');
-    rect.setAttribute('x', String(x));
-    rect.setAttribute('y', '0');
-    rect.setAttribute('width', String(w));
-    rect.setAttribute('height', '10');
-    rect.classList.add('spec-bar-seg', seg.cls);
-    svg.appendChild(rect);
-
-    if (w >= 10) {
-      const t = document.createElementNS(ns, 'text');
-      t.setAttribute('x', String(x + (w / 2)));
-      t.setAttribute('y', '5');
-      t.setAttribute('text-anchor', 'middle');
-      t.setAttribute('dominant-baseline', 'middle');
-      t.textContent = seg.label;
-      svg.appendChild(t);
-    }
-
-    x += w;
+  segments.forEach(({ val, color, label }) => {
+    if (val <= 0) return;
+    const pct = Math.max((val / total) * 100, 7);
+    const seg = el('div', { cls: 'spec-segment', text: label, style: { background: color, width: `${pct}%` } });
+    container.appendChild(seg);
   });
-
-  container.appendChild(svg);
 }
 
 // 4 boxes always shown (zero shows as "0" in that box)
 function renderValues(container, [a, b, c, d]) {
   clear(container);
-  const NUM_CLASSES = ['inline', 'id', 'class', 'element'];
+  const COLORS = ['var(--color-inline)', 'var(--color-id)', 'var(--color-class)', 'var(--color-element)'];
   const LABELS = ['Inline', 'IDs', 'Classes', 'Elements'];
 
   [a, b, c, d].forEach((val, i) => {
     const box = el('div', { cls: 'spec-val-box' });
-    const num = el('span', { cls: ['spec-val-num', NUM_CLASSES[i]], text: String(val) });
+    const num = el('span', { cls: 'spec-val-num', text: String(val), style: { color: COLORS[i] } });
     const lbl = el('span', { cls: 'spec-val-lbl', text: LABELS[i] });
     append(box, num, lbl);
     container.appendChild(box);

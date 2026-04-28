@@ -117,12 +117,12 @@
       </div>
     </section>
 
-    <!-- ── HISTORY DROPDOWN (JS moves under focused input) ── -->
+    <!-- ── HISTORY DROPDOWN (outside card so overflow:hidden doesn't clip) ── -->
     <div class="history-dropdown" id="historyDropdown" role="listbox"
-         aria-label="Recent selectors" hidden></div>
+         aria-label="Recent selectors" style="display:none;"></div>
 
     <!-- ── RESULTS CARD ────────────────────────────── -->
-    <section class="card" id="resultsSection" hidden aria-live="polite">
+    <section class="card" id="resultsSection" style="display:none;" aria-live="polite">
       <div class="card-header">
         <span class="card-label">Results</span>
         <button class="ghost-btn icon-ghost-btn" id="copyResultsBtn" title="Copy results">
@@ -153,7 +153,7 @@
       </div>
 
       <!-- Comparison block (2 selectors only) -->
-      <div class="comparison-block" id="comparisonBlock" hidden>
+      <div class="comparison-block" id="comparisonBlock" style="display:none;">
 
         <div class="vs-divider"><span>VS</span></div>
 
@@ -194,7 +194,7 @@
               <span class="why-toggle-text">Why does this win?</span>
             </button>
           </div>
-          <div class="why-body" id="whyBody" role="region" hidden></div>
+          <div class="why-body" id="whyBody" role="region" style="display:none;"></div>
         </div>
 
       </div><!-- /comparison-block -->
@@ -208,7 +208,7 @@
           <polyline points="6 9 12 15 18 9"/>
         </svg>
       </button>
-      <div class="guide-body" id="guideBody" hidden>
+      <div class="guide-body" id="guideBody" style="display:none;">
         <div class="hierarchy-rows">
           <div class="hierarchy-row">
             <div class="h-chip chip-inline">Inline</div>
@@ -261,7 +261,7 @@
 </div><!-- /app -->
 
 <!-- INFO MODAL -->
-<div class="modal-backdrop" id="infoModal" hidden
+<div class="modal-backdrop" id="infoModal" style="display:none;"
      role="dialog" aria-modal="true" aria-labelledby="infoModalTitle">
   <div class="modal">
     <div class="modal-header">

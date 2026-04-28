@@ -81,8 +81,8 @@ body {
   align-items: flex-start;
   gap: 12px;
   padding: 18px 20px;
-  background: var(--panel);
-  border: 1px solid var(--line);
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 55%, #3b82f6 100%);
+  border: 1px solid #1d4ed8;
   border-radius: var(--radius-l);
 }
 
@@ -91,7 +91,7 @@ body {
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: rgba(255, 255, 255, 0.78);
   margin-bottom: 5px;
 }
 
@@ -106,21 +106,21 @@ body {
 }
 
 .title-main {
-  color: var(--text);
+  color: #ffffff;
 }
 
 .title-accent {
-  color: var(--accent);
+  color: #dbeafe;
   font-size: 18px;
   letter-spacing: -0.02em;
 }
 
 .subtitle {
   font-size: 10.5px;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.88);
   line-height: 1.55;
   max-width: 245px;
-  opacity: 0.82;
+  opacity: 1;
 }
 
 .hero-side {
@@ -137,9 +137,9 @@ body {
   justify-content: center;
   padding: 6px 10px;
   border-radius: 999px;
-  background: var(--chip-bg);
-  border: 1px solid var(--line);
-  color: var(--text);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #ffffff;
   font-size: 9.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
@@ -150,9 +150,10 @@ body {
 .theme-btn {
   width: 36px;
   height: 36px;
-  border: 1px solid var(--line);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: var(--radius-s);
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -161,7 +162,7 @@ body {
   transition: background var(--transition), transform 0.15s;
 }
 
-.theme-btn:hover { background: var(--chip-bg); }
+.theme-btn:hover { background: rgba(255, 255, 255, 0.22); }
 .theme-btn:active { transform: scale(0.95); }
 
 /* -- Tab Bar ------------------------------------------------------ */

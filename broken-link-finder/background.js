@@ -1,20 +1,51 @@
 // background.js — Service Worker (Manifest V3)
 // Uses plain functions (no ES module imports) for MV3 service worker compatibility.
 
+// ─── Defaults ──────────────────────────────────────────────────────────────────
+const DEFAULT_TIMEOUT_MS    = 10_000;
+const DEFAULT_CONCURRENCY   = 8;
+const DEFAULT_SLOW_MS       = 3_000;
+const DEFAULT_CACHE_TTL     = 5 * 60 * 1000; // 5 min
+const MAX_CACHE_ENTRIES     = 2000;
+
+// ─── URL Normalization (FIXES CSP ERROR) ──────────────────────────────────────
+function normalizeUrl(url) {
+  if (!url) return null;
+  
+  try {
+    const u = new URL(url);
+    
+    // 🔥 Upgrade HTTP to HTTPS (fixes CSP connect-src https: error)
+    if (u.protocol === 'http:') {
+      u.protocol = 'https:';
+    }
+    
+    return u.href;
+  } catch {
+    return null;
+  }
+}
+
+function shouldSkipHttp(url) {
+  // Skip HTTP URLs entirely (OPTION 2 - Smart Filter)
+  if (url && url.startsWith('http://')) {
+    return true;
+  }
+  return false;
+}
+
 // ─── In-memory cache ───────────────────────────────────────────────────────────
 const linkCache = new Map();
-const CACHE_TTL = 5 * 60 * 1000; // 5 min
-const MAX_CACHE = 2000;
 
 function cacheGet(url) {
   const entry = linkCache.get(url);
   if (!entry) return null;
-  if (Date.now() - entry.ts > CACHE_TTL) { linkCache.delete(url); return null; }
+  if (Date.now() - entry.ts > DEFAULT_CACHE_TTL) { linkCache.delete(url); return null; }
   return entry.result;
 }
 
 function cacheSet(url, result) {
-  if (linkCache.size >= MAX_CACHE) {
+  if (linkCache.size >= MAX_CACHE_ENTRIES) {
     linkCache.delete(linkCache.keys().next().value);
   }
   linkCache.set(url, { result, ts: Date.now() });
@@ -30,51 +61,71 @@ function cacheClearDomain(domain) {
 setInterval(() => {
   const now = Date.now();
   for (const [k, v] of linkCache.entries()) {
-    if (now - v.ts > CACHE_TTL) linkCache.delete(k);
+    if (now - v.ts > DEFAULT_CACHE_TTL) linkCache.delete(k);
   }
 }, 60_000);
 
 // ─── Link checking ─────────────────────────────────────────────────────────────
-const TIMEOUT_MS = 10_000;
-const SLOW_MS = 3_000;
-const SKIP = ['mailto:', 'tel:', 'javascript:', 'data:', 'blob:', 'chrome:', 'chrome-extension:'];
+const SKIP_PREFIXES = ['mailto:', 'tel:', 'javascript:', 'data:', 'blob:', 'chrome:', 'chrome-extension:'];
 
 function shouldSkip(url) {
   if (!url || url === '#') return true;
-  for (const s of SKIP) if (url.startsWith(s)) return true;
+  for (const s of SKIP_PREFIXES) if (url.startsWith(s)) return true;
+  // Skip HTTP URLs (CSP compliance)
+  if (shouldSkipHttp(url)) return true;
   return false;
 }
 
-async function doFetch(url, method) {
+async function doFetch(url, method, timeoutMs) {
+  // Normalize URL first (HTTP → HTTPS)
+  const normalizedUrl = normalizeUrl(url);
+  if (!normalizedUrl) {
+    return {
+      url, finalUrl: url,
+      status: 0, ok: false,
+      responseTime: 0,
+      redirectChain: [],
+      redirectCount: 0,
+      tooManyRedirects: false,
+      networkError: true,
+      timedOut: false,
+      error: 'Invalid URL',
+      skippedDueToCSP: url?.startsWith('http://')
+    };
+  }
+
+  const timeout = Number.isFinite(timeoutMs) && timeoutMs > 0 ? timeoutMs : DEFAULT_TIMEOUT_MS;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), TIMEOUT_MS);
+  const timer = setTimeout(() => ctrl.abort(), timeout);
   const t0 = Date.now();
 
   try {
-    const resp = await fetch(url, { method, signal: ctrl.signal, redirect: 'manual' });
+    const resp = await fetch(normalizedUrl, { method, signal: ctrl.signal, redirect: 'manual' });
     clearTimeout(timer);
     const responseTime = Date.now() - t0;
 
-    // Track redirect chain
     const redirectChain = [];
-    let finalUrl = url;
+    let finalUrl = normalizedUrl;
     let finalStatus = resp.status;
     let hops = 0;
     let curr = resp;
-    let currUrl = url;
+    let currUrl = normalizedUrl;
 
     while (curr.status >= 300 && curr.status < 400 && hops < 8) {
       const loc = curr.headers.get('location');
       if (!loc) break;
       try {
         const nextUrl = new URL(loc, currUrl).href;
-        redirectChain.push({ from: currUrl, to: nextUrl, status: curr.status });
-        currUrl = nextUrl;
-        finalUrl = nextUrl;
+        const normalizedNextUrl = normalizeUrl(nextUrl);
+        if (!normalizedNextUrl) break;
+        
+        redirectChain.push({ from: currUrl, to: normalizedNextUrl, status: curr.status });
+        currUrl = normalizedNextUrl;
+        finalUrl = normalizedNextUrl;
         hops++;
         const c2 = new AbortController();
-        const t2 = setTimeout(() => c2.abort(), TIMEOUT_MS);
-        curr = await fetch(nextUrl, { method: 'HEAD', signal: c2.signal, redirect: 'manual' })
+        const t2 = setTimeout(() => c2.abort(), timeout);
+        curr = await fetch(normalizedNextUrl, { method: 'HEAD', signal: c2.signal, redirect: 'manual' })
           .catch(() => ({ status: 0, headers: new Headers() }));
         clearTimeout(t2);
         finalStatus = curr.status;
@@ -91,11 +142,12 @@ async function doFetch(url, method) {
       tooManyRedirects: redirectChain.length > 3,
       networkError: false,
       timedOut: false,
+      upgradedToHttps: url !== normalizedUrl
     };
   } catch (err) {
     clearTimeout(timer);
     return {
-      url, finalUrl: url,
+      url, finalUrl: normalizedUrl,
       status: 0, ok: false,
       responseTime: Date.now() - t0,
       redirectChain: [],
@@ -104,22 +156,35 @@ async function doFetch(url, method) {
       networkError: true,
       timedOut: err.name === 'AbortError',
       error: err.message,
+      upgradedToHttps: url !== normalizedUrl
     };
   }
 }
 
-async function checkLinkStatus(url) {
+async function checkLinkStatus(url, timeoutMs) {
   if (shouldSkip(url)) {
+    // Special handling for HTTP URLs
+    if (url && url.startsWith('http://')) {
+      return { 
+        url, 
+        skipped: true, 
+        ok: false, 
+        status: null, 
+        responseTime: 0, 
+        redirectChain: [],
+        reason: 'HTTP URLs are blocked by CSP. Upgrade to HTTPS.',
+        statusCategory: 'blocked'
+      };
+    }
     return { url, skipped: true, ok: true, status: null, responseTime: 0, redirectChain: [] };
   }
 
   const cached = cacheGet(url);
   if (cached) return cached;
 
-  let result = await doFetch(url, 'HEAD');
-  // 405 Method Not Allowed → retry with GET
+  let result = await doFetch(url, 'HEAD', timeoutMs);
   if (result.status === 405 || result.networkError) {
-    const r2 = await doFetch(url, 'GET');
+    const r2 = await doFetch(url, 'GET', timeoutMs);
     if (!r2.networkError || result.networkError) result = r2;
   }
 
@@ -127,11 +192,15 @@ async function checkLinkStatus(url) {
   return result;
 }
 
-function classifyStatus(r) {
-  if (r.skipped) return 'skipped';
+function classifyStatus(r, slowMs) {
+  const threshold = Number.isFinite(slowMs) && slowMs > 0 ? slowMs : DEFAULT_SLOW_MS;
+  if (r.skipped) {
+    if (r.reason === 'HTTP URLs are blocked by CSP. Upgrade to HTTPS.') return 'blocked';
+    return 'skipped';
+  }
   if (r.networkError && !r.status) return r.timedOut ? 'slow' : 'error';
   const s = r.status;
-  if (s >= 200 && s < 300) return r.responseTime > SLOW_MS ? 'slow' : 'live';
+  if (s >= 200 && s < 300) return r.responseTime > threshold ? 'slow' : 'live';
   if (s >= 300 && s < 400) return 'redirect';
   if (s === 404 || s === 410) return 'broken';
   if (s >= 400 && s < 500) return 'broken';
@@ -151,7 +220,6 @@ async function saveScanHistory(domain, stats) {
     live: stats.live,
     redirects: stats.redirects,
   });
-  // Keep last 10 per domain
   history[domain] = history[domain].slice(0, 10);
   await chrome.storage.local.set({ scanHistory: history });
 }
@@ -165,9 +233,8 @@ chrome.runtime.onInstalled.addListener(() => {
           autoHighlight: true,
           showNotifications: false,
           checkExternalLinks: false,
-          darkMode: false,
-          timeout: 10000,
-          concurrency: 8,
+          timeout: DEFAULT_TIMEOUT_MS,
+          concurrency: DEFAULT_CONCURRENCY,
         },
       });
     }
@@ -190,12 +257,23 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === 'scanPage') {
     chrome.tabs.sendMessage(targetTab.id, { action: 'findAllLinks' });
   } else if (info.menuItemId === 'scanLink') {
-    const result = await checkLinkStatus(info.linkUrl);
+    const result = await checkLinkStatus(info.linkUrl, DEFAULT_TIMEOUT_MS);
+    
+    let message = `${info.linkUrl}\n`;
+    if (result.upgradedToHttps) {
+      message += `⚠️ Upgraded from HTTP to HTTPS\n`;
+    }
+    if (result.skipped && result.reason) {
+      message += `🚫 ${result.reason}\n`;
+    } else {
+      message += `Status: ${result.ok ? 'Working' : 'Broken'} (${result.status || 'ERR'})\n`;
+    }
+    
     chrome.notifications.create({
       type: 'basic',
       iconUrl: 'icons/icon128.png',
       title: 'Link Check Result',
-      message: `${info.linkUrl}\nStatus: ${result.ok ? 'Working' : 'Broken'} (${result.status || 'ERR'})`,
+      message: message,
     });
   }
 });
@@ -204,19 +282,18 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
   if (request.type === 'CHECK_LINK') {
-    checkLinkStatus(request.url)
+    const timeout = request.timeout || DEFAULT_TIMEOUT_MS;
+    checkLinkStatus(request.url, timeout)
       .then((r) => sendResponse({ ...r, statusCategory: classifyStatus(r) }))
       .catch((e) => sendResponse({ ok: false, status: 0, error: e.message }));
     return true;
   }
 
   if (request.type === 'BATCH_CHECK') {
-    const links = Array.isArray(request.links) ? request.links : [];
-    const concurrency = Number.isFinite(request.concurrency) ? request.concurrency : 8;
-    batchCheck(links, concurrency, (done, total, result) => {
-      // Send progress updates back via storage (service worker can't push to popup directly)
-      chrome.storage.session?.set({ scanProgress: { done, total } }).catch(() => {});
-    })
+    const links       = Array.isArray(request.links) ? request.links : [];
+    const concurrency = Number.isFinite(request.concurrency) ? request.concurrency : DEFAULT_CONCURRENCY;
+    const timeout     = Number.isFinite(request.timeout) ? request.timeout : DEFAULT_TIMEOUT_MS;
+    batchCheck(links, concurrency, timeout)
       .then((results) => sendResponse({ results }))
       .catch((e) => sendResponse({ error: e.message }));
     return true;
@@ -240,10 +317,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.domain) cacheClearDomain(request.domain);
     else linkCache.clear();
     sendResponse({ ok: true });
+    return false;
   }
 
   if (request.type === 'BULK_SCAN') {
-    handleBulkScan(request.baseUrl, request.maxDepth || 2)
+    const concurrency = Number.isFinite(request.concurrency) ? request.concurrency : DEFAULT_CONCURRENCY;
+    const timeout     = Number.isFinite(request.timeout)     ? request.timeout     : DEFAULT_TIMEOUT_MS;
+    handleBulkScan(request.baseUrl, request.maxDepth || 2, concurrency, timeout)
       .then((results) => sendResponse({ results }))
       .catch((e) => sendResponse({ error: e.message }));
     return true;
@@ -254,16 +334,15 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 // ─── Batch check ───────────────────────────────────────────────────────────────
-async function batchCheck(links, concurrency, onProgress) {
+async function batchCheck(links, concurrency, timeout) {
   const results = new Array(links.length);
   let idx = 0;
 
   async function worker() {
     while (idx < links.length) {
       const i = idx++;
-      const r = await checkLinkStatus(links[i].url);
+      const r = await checkLinkStatus(links[i].url, timeout);
       results[i] = { ...links[i], ...r, statusCategory: classifyStatus(r) };
-      if (onProgress) onProgress(results.filter(Boolean).length, links.length, results[i]);
     }
   }
 
@@ -272,7 +351,7 @@ async function batchCheck(links, concurrency, onProgress) {
 }
 
 // ─── Bulk crawl ────────────────────────────────────────────────────────────────
-async function handleBulkScan(baseUrl, maxDepth) {
+async function handleBulkScan(baseUrl, maxDepth, concurrency, timeout) {
   const visited = new Set();
   const pageResults = {};
 
@@ -281,10 +360,13 @@ async function handleBulkScan(baseUrl, maxDepth) {
     visited.add(url);
 
     try {
-      const resp = await fetch(url);
+      const normalizedUrl = normalizeUrl(url);
+      if (!normalizedUrl) return;
+      
+      const resp = await fetch(normalizedUrl);
       const html = await resp.text();
       const links = extractLinks(html, url);
-      const results = await batchCheck(links.map((u) => ({ url: u })), 6, null);
+      const results = await batchCheck(links.map((u) => ({ url: u })), concurrency, timeout);
 
       pageResults[url] = results.map((r) => ({
         ...r,
@@ -315,7 +397,10 @@ function extractLinks(html, base) {
   while ((m = re.exec(html)) !== null) {
     try {
       const abs = new URL(m[1], base).href;
-      if (abs.startsWith('http')) links.add(abs);
+      if (abs.startsWith('http')) {
+        // Store original but will be normalized when checked
+        links.add(abs);
+      }
     } catch (_) {}
   }
   return [...links];

@@ -1,6 +1,5 @@
 {
   "manifest_version": 3,
-  "default_locale": "en",
   "name": "Campaign Studio",
   "description": "Build UTM campaign URLs & shorten links. Includes history, presets, QR codes, dark mode, and CSV export.",
   "version": "3.0",
@@ -14,7 +13,7 @@
   },
   "permissions": ["clipboardWrite", "storage"],
   "host_permissions": [
-    "https://api.t.ly/*",
+    "https://is.gd/*",
     "https://api.qrserver.com/*"
   ],
   "icons": {
@@ -23,6 +22,6 @@
     "128": "icons/icon128.png"
   },
   "content_security_policy": {
-    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; style-src 'self'; img-src 'self' data: https://api.qrserver.com; connect-src 'self' https://api.t.ly https://api.qrserver.com"
+    "extension_pages": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'; style-src 'self'; img-src 'self' data: https://api.qrserver.com; connect-src 'self' https://is.gd https://api.qrserver.com"
   }
 }

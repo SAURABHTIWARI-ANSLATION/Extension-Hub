@@ -42,9 +42,15 @@ function findAllLinks(checkExternal = false) {
       if (!url || url === '#' || url.startsWith('javascript:') || url.startsWith('data:')) return;
       const abs = new URL(url, window.location.href).href;
       if (seen.has(abs)) return;
-      if (!checkExternal && isExternal(abs)) return;
+      const external = isExternal(abs);
+      if (!checkExternal && external) return;
       seen.add(abs);
-      links.push({ url: abs, domType, text: (text || '').trim().slice(0, 80) });
+      // linkType drives the External filter tab and the type badge in the popup.
+      // For anchor links: 'external' | 'internal'. For resource assets: use the domType.
+      const linkType = (domType === 'anchor')
+        ? (external ? 'external' : 'internal')
+        : domType;
+      links.push({ url: abs, domType, linkType, text: (text || '').trim().slice(0, 80) });
     } catch (_) {}
   }
 

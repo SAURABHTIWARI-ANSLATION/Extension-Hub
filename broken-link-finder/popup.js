@@ -3,10 +3,20 @@
 
 'use strict';
 
+// ─── Default settings ──────────────────────────────────────────────────────────
+const DEFAULT_SETTINGS = {
+  checkExternalLinks: false,
+  autoHighlight: true,
+  showNotifications: false,
+  timeout: 10000,
+  concurrency: 8,
+};
+
 // ─── State ─────────────────────────────────────────────────────────────────────
 let scanResults = [];
+let bulkScanResults = {};   // keyed by page URL, value = array of link results
 let activeFilter = 'all';
-let settings = {};
+let settings = { ...DEFAULT_SETTINGS };
 let darkMode = false;
 
 // ─── Selectors ─────────────────────────────────────────────────────────────────
@@ -20,28 +30,49 @@ document.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
   await loadHistory();
   setStatus('Ready', 'ready');
+  // Sync any dropdowns that were pre-built by dropdown.js before settings loaded
+  syncAllDropdowns();
 });
+
+function syncAllDropdowns() {
+  ['exportFilter', 'bulkDepth', 'settingTimeout', 'settingConcurrency'].forEach((id) => {
+    if (window.BGDropdowns) window.BGDropdowns.sync(id);
+  });
+}
 
 async function loadSettings() {
   const data = await chrome.storage.sync.get(['settings', 'darkMode']);
-  settings = data.settings || {
-    checkExternalLinks: false,
-    autoHighlight: true,
-    showNotifications: false,
-  };
+  settings = { ...DEFAULT_SETTINGS, ...(data.settings || {}) };
   darkMode = data.darkMode || false;
 
-  $('settingExternal').checked = settings.checkExternalLinks;
+  $('settingExternal').checked      = settings.checkExternalLinks;
   $('settingAutoHighlight').checked = settings.autoHighlight;
   $('settingNotifications').checked = settings.showNotifications;
+
+  // Timeout select
+  const timeoutEl = $('settingTimeout');
+  if (timeoutEl) {
+    timeoutEl.value = String(settings.timeout || DEFAULT_SETTINGS.timeout);
+    if (window.BGDropdowns) window.BGDropdowns.sync('settingTimeout');
+  }
+
+  // Concurrency select
+  const concEl = $('settingConcurrency');
+  if (concEl) {
+    concEl.value = String(settings.concurrency || DEFAULT_SETTINGS.concurrency);
+    if (window.BGDropdowns) window.BGDropdowns.sync('settingConcurrency');
+  }
+
   updateThemeIcon(darkMode);
 }
 
 async function saveSettings() {
   settings = {
     checkExternalLinks: $('settingExternal').checked,
-    autoHighlight: $('settingAutoHighlight').checked,
-    showNotifications: $('settingNotifications').checked,
+    autoHighlight:      $('settingAutoHighlight').checked,
+    showNotifications:  $('settingNotifications').checked,
+    timeout:            parseInt($('settingTimeout').value, 10)     || DEFAULT_SETTINGS.timeout,
+    concurrency:        parseInt($('settingConcurrency').value, 10) || DEFAULT_SETTINGS.concurrency,
   };
   await chrome.storage.sync.set({ settings, darkMode });
 }
@@ -55,7 +86,6 @@ async function updateCurrentUrl() {
       el.textContent = tab.url.length > 60 ? tab.url.slice(0, 60) + '…' : tab.url;
       el.title = tab.url;
 
-      // Pre-fill bulk URL input
       const bulkInput = $('bulkUrl');
       if (bulkInput && !bulkInput.value) {
         try { bulkInput.value = new URL(tab.url).origin; } catch (_) {}
@@ -89,9 +119,15 @@ function setupEventListeners() {
     $('settingsPanel').classList.toggle('hidden');
   });
 
-  // Settings inputs — save on change
+  // Settings checkboxes
   ['settingExternal', 'settingAutoHighlight', 'settingNotifications'].forEach((id) => {
     $(id).addEventListener('change', saveSettings);
+  });
+
+  // Settings selects — native change fires from BGDropdowns item click
+  ['settingTimeout', 'settingConcurrency'].forEach((id) => {
+    const el = $(id);
+    if (el) el.addEventListener('change', saveSettings);
   });
 
   // Scan
@@ -119,15 +155,27 @@ function setupEventListeners() {
     } catch (_) {}
   });
 
-  // Export
-  $('exportCSV').addEventListener('click', () => exportData('csv'));
+  // Export — Page Scan
+  $('exportCSV').addEventListener('click',  () => exportData('csv'));
   $('exportJSON').addEventListener('click', () => exportData('json'));
+  $('exportTXT').addEventListener('click',  () => exportData('txt'));
+
+  // Export — Bulk Scan
+  $('bulkExportCSV').addEventListener('click',  () => exportBulkData('csv'));
+  $('bulkExportJSON').addEventListener('click', () => exportBulkData('json'));
+  $('bulkExportTXT').addEventListener('click',  () => exportBulkData('txt'));
 
   // Bulk scan
   $('bulkScanBtn').addEventListener('click', startBulkScan);
 
   // Results list — event delegation
   $('resultsList').addEventListener('click', handleResultClick);
+  
+  // Clear all history button
+  const clearAllHistoryBtn = $('clearAllHistoryBtn');
+  if (clearAllHistoryBtn) {
+    clearAllHistoryBtn.addEventListener('click', clearAllHistory);
+  }
 }
 
 // ─── View management ───────────────────────────────────────────────────────────
@@ -165,7 +213,6 @@ async function startScan() {
         checkExternal: settings.checkExternalLinks,
       });
     } catch (e) {
-      // Content script not injected yet — try injecting it
       await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['content.js'] });
       resp = await chrome.tabs.sendMessage(tab.id, {
         action: 'findAllLinks',
@@ -185,8 +232,7 @@ async function startScan() {
 
     setStatus(`Checking ${links.length} links…`, 'scanning');
 
-    // Batch-check via background
-    let checked = 0;
+    // Batch-check via background — use current settings values
     const BATCH = 20;
     const allResults = [];
 
@@ -195,13 +241,14 @@ async function startScan() {
       const batchResp = await chrome.runtime.sendMessage({
         type: 'BATCH_CHECK',
         links: batch,
-        concurrency: 8,
+        concurrency: settings.concurrency,
+        timeout: settings.timeout,
       });
 
       if (batchResp?.results) {
         allResults.push(...batchResp.results);
       }
-      checked = Math.min(i + BATCH, links.length);
+      const checked = Math.min(i + BATCH, links.length);
       showProgress(checked, links.length);
       updateStats(allResults);
       renderResults(allResults);
@@ -233,6 +280,18 @@ async function startScan() {
       await chrome.tabs.sendMessage(tab.id, { action: 'highlightBroken', links: brokenLinks });
     }
 
+    // Show notification if enabled
+    if (settings.showNotifications) {
+      try {
+        chrome.notifications.create({
+          type: 'basic',
+          iconUrl: 'icons/icon128.png',
+          title: 'Scan Complete',
+          message: `${allResults.length} links checked, ${broken} broken`,
+        });
+      } catch (_) {}
+    }
+
   } catch (err) {
     setStatus('Scan failed: ' + err.message, 'error');
     $('scanBtn').disabled = false;
@@ -252,9 +311,9 @@ function buildStats(results) {
 
 function updateStats(results) {
   const s = buildStats(results);
-  $('statTotal').textContent = s.total;
-  $('statBroken').textContent = s.broken;
-  $('statRedirects').textContent = s.redirects;
+  $('statTotal').textContent       = s.total;
+  $('statBroken').textContent      = s.broken;
+  $('statRedirects').textContent   = s.redirects;
   $('statSuccessRate').textContent = s.successRate + '%';
 }
 
@@ -267,18 +326,18 @@ function setFilter(filter) {
 
 function getFilteredResults(results) {
   switch (activeFilter) {
-    case 'broken': return results.filter((r) => r.statusCategory === 'broken' || r.statusCategory === 'error');
+    case 'broken':   return results.filter((r) => r.statusCategory === 'broken' || r.statusCategory === 'error');
     case 'redirect': return results.filter((r) => r.statusCategory === 'redirect');
-    case 'slow': return results.filter((r) => r.statusCategory === 'slow');
-    case 'image': return results.filter((r) => r.domType === 'image');
+    case 'slow':     return results.filter((r) => r.statusCategory === 'slow');
+    case 'image':    return results.filter((r) => r.domType === 'image');
     case 'external': return results.filter((r) => r.linkType === 'external');
-    default: return results;
+    default:         return results;
   }
 }
 
 // ─── Render results (CSP-safe) ─────────────────────────────────────────────────
 function renderResults(results) {
-  const list = $('resultsList');
+  const list  = $('resultsList');
   const empty = $('emptyState');
 
   if (!results.length) {
@@ -291,12 +350,11 @@ function renderResults(results) {
   empty.classList.add('hidden');
   showElement(list);
 
-  // Clear
   while (list.firstChild) list.removeChild(list.firstChild);
 
   if (filtered.length === 0) {
     const msg = document.createElement('div');
-    msg.className = 'no-results-msg';
+    msg.className   = 'no-results-msg';
     msg.textContent = 'No links match this filter.';
     list.appendChild(msg);
     return;
@@ -307,13 +365,12 @@ function renderResults(results) {
   thead.className = 'results-thead';
   ['URL', 'Status', 'Type', 'Time', ''].forEach((col) => {
     const th = document.createElement('span');
-    th.className = 'th';
+    th.className   = 'th';
     th.textContent = col;
     thead.appendChild(th);
   });
   list.appendChild(thead);
 
-  // Rows
   filtered.forEach((r) => {
     list.appendChild(buildRow(r));
   });
@@ -321,40 +378,40 @@ function renderResults(results) {
 
 function buildRow(r) {
   const row = document.createElement('div');
-  row.className = 'result-row';
-  row.dataset.url = r.url;
+  row.className    = 'result-row';
+  row.dataset.url  = r.url;
   row.dataset.status = r.statusCategory;
 
   // URL cell
   const urlCell = document.createElement('div');
   urlCell.className = 'cell cell-url';
 
-  const urlLink = document.createElement('a');
-  urlLink.className = 'url-link';
-  urlLink.href = '#';
-  urlLink.dataset.url = r.url;
-  urlLink.title = r.url;
-  urlLink.textContent = truncate(r.url, 55);
-
   if (r.tooManyRedirects) {
     const flag = document.createElement('span');
-    flag.className = 'flag-badge';
+    flag.className   = 'flag-badge';
     flag.textContent = '3+ hops';
     urlCell.appendChild(flag);
   }
+
+  const urlLink = document.createElement('a');
+  urlLink.className   = 'url-link';
+  urlLink.href        = '#';
+  urlLink.dataset.url = r.url;
+  urlLink.title       = r.url;
+  urlLink.textContent = truncate(r.url, 55);
   urlCell.appendChild(urlLink);
 
   // Status cell
   const statusCell = document.createElement('div');
   statusCell.className = 'cell cell-status';
   const badge = document.createElement('span');
-  badge.className = 'status-badge status-' + r.statusCategory;
+  badge.className   = 'status-badge status-' + r.statusCategory;
   badge.textContent = r.status || 'ERR';
   statusCell.appendChild(badge);
 
   if (r.redirectCount > 0) {
     const hops = document.createElement('span');
-    hops.className = 'hops-badge';
+    hops.className   = 'hops-badge';
     hops.textContent = r.redirectCount + ' hop' + (r.redirectCount > 1 ? 's' : '');
     statusCell.appendChild(hops);
   }
@@ -363,28 +420,23 @@ function buildRow(r) {
   const typeCell = document.createElement('div');
   typeCell.className = 'cell cell-type';
   const typeBadge = document.createElement('span');
-  typeBadge.className = 'type-badge type-' + (r.linkType || 'internal');
+  typeBadge.className   = 'type-badge type-' + (r.linkType || 'internal');
   typeBadge.textContent = r.linkType || 'internal';
   typeCell.appendChild(typeBadge);
 
   // Time cell
   const timeCell = document.createElement('div');
-  timeCell.className = 'cell cell-time';
+  timeCell.className   = 'cell cell-time';
   timeCell.textContent = r.responseTime > 0 ? formatMs(r.responseTime) : '—';
 
   // Actions cell
   const actCell = document.createElement('div');
   actCell.className = 'cell cell-actions';
-
-  const openBtn = makeActionBtn('open', r.url, svgOpen());
-  const copyBtn = makeActionBtn('copy', r.url, svgCopy());
-  actCell.appendChild(openBtn);
-  actCell.appendChild(copyBtn);
-
-  // Broken link suggestion button
+  actCell.appendChild(makeActionBtn('open',  r.url, svgOpen()));
+  actCell.appendChild(makeActionBtn('copy',  r.url, svgCopy()));
   if (r.statusCategory === 'broken' || r.statusCategory === 'error') {
-    const fixBtn = makeActionBtn('suggest', r.url, svgFix());
-    fixBtn.title = 'Suggest alternatives';
+    const fixBtn   = makeActionBtn('suggest', r.url, svgFix());
+    fixBtn.title   = 'Suggest alternatives';
     actCell.appendChild(fixBtn);
   }
 
@@ -394,7 +446,6 @@ function buildRow(r) {
   row.appendChild(timeCell);
   row.appendChild(actCell);
 
-  // Expand row for redirect chain / suggestions (lazy)
   row.addEventListener('click', (e) => {
     if (e.target.closest('.cell-actions')) return;
     toggleExpand(row, r);
@@ -419,10 +470,10 @@ function toggleExpand(row, r) {
   const fullUrlWrap = document.createElement('div');
   fullUrlWrap.className = 'expand-section';
   const fullLabel = document.createElement('span');
-  fullLabel.className = 'expand-label';
+  fullLabel.className   = 'expand-label';
   fullLabel.textContent = 'Full URL';
   const fullUrl = document.createElement('span');
-  fullUrl.className = 'expand-value';
+  fullUrl.className   = 'expand-value';
   fullUrl.textContent = r.url;
   fullUrlWrap.appendChild(fullLabel);
   fullUrlWrap.appendChild(fullUrl);
@@ -430,22 +481,22 @@ function toggleExpand(row, r) {
 
   // Redirect chain
   if (r.redirectChain && r.redirectChain.length > 0) {
-    const chainWrap = document.createElement('div');
+    const chainWrap  = document.createElement('div');
     chainWrap.className = 'expand-section';
     const chainLabel = document.createElement('span');
-    chainLabel.className = 'expand-label';
+    chainLabel.className   = 'expand-label';
     chainLabel.textContent = 'Redirect chain';
     chainWrap.appendChild(chainLabel);
 
-    r.redirectChain.forEach((hop, i) => {
-      const hopEl = document.createElement('div');
+    r.redirectChain.forEach((hop) => {
+      const hopEl     = document.createElement('div');
       hopEl.className = 'redirect-hop';
       const hopStatus = document.createElement('span');
-      hopStatus.className = 'hop-status';
+      hopStatus.className   = 'hop-status';
       hopStatus.textContent = hop.status;
       const hopArrow = document.createTextNode(' → ');
-      const hopTo = document.createElement('span');
-      hopTo.className = 'hop-url';
+      const hopTo    = document.createElement('span');
+      hopTo.className   = 'hop-url';
       hopTo.textContent = truncate(hop.to, 50);
       hopEl.appendChild(hopStatus);
       hopEl.appendChild(hopArrow);
@@ -455,14 +506,14 @@ function toggleExpand(row, r) {
     exp.appendChild(chainWrap);
   }
 
-  // Fix suggestions for broken links
+  // Fix suggestions
   if (r.statusCategory === 'broken' || r.statusCategory === 'error') {
     const suggestions = suggestAlternatives(r.url);
     if (suggestions.length) {
-      const sugWrap = document.createElement('div');
+      const sugWrap  = document.createElement('div');
       sugWrap.className = 'expand-section';
       const sugLabel = document.createElement('span');
-      sugLabel.className = 'expand-label';
+      sugLabel.className   = 'expand-label';
       sugLabel.textContent = 'Possible alternatives';
       sugWrap.appendChild(sugLabel);
 
@@ -470,13 +521,13 @@ function toggleExpand(row, r) {
         const sugRow = document.createElement('div');
         sugRow.className = 'suggestion-row';
         const reason = document.createElement('span');
-        reason.className = 'suggestion-reason';
+        reason.className   = 'suggestion-reason';
         reason.textContent = s.reason;
         const link = document.createElement('a');
-        link.className = 'suggestion-link';
-        link.href = '#';
-        link.textContent = truncate(s.url, 45);
-        link.dataset.url = s.url;
+        link.className      = 'suggestion-link';
+        link.href           = '#';
+        link.textContent    = truncate(s.url, 45);
+        link.dataset.url    = s.url;
         link.addEventListener('click', (e) => {
           e.preventDefault();
           chrome.tabs.create({ url: s.url, active: false });
@@ -500,7 +551,7 @@ function handleResultClick(e) {
   e.stopPropagation();
 
   const action = btn.dataset.action;
-  const url = btn.dataset.url;
+  const url    = btn.dataset.url;
 
   if (action === 'open') {
     chrome.tabs.create({ url, active: false });
@@ -509,7 +560,6 @@ function handleResultClick(e) {
       .then(() => setStatus('URL copied', 'success'))
       .catch(() => setStatus('Copy failed', 'error'));
   } else if (action === 'suggest') {
-    // Handled by row expand
     const row = btn.closest('.result-row');
     if (row) {
       const r = scanResults.find((x) => x.url === url);
@@ -523,21 +573,28 @@ async function startBulkScan() {
   const baseUrl = $('bulkUrl').value.trim();
   if (!baseUrl) { setStatus('Enter a URL', 'warning'); return; }
 
-  try {
-    new URL(baseUrl);
-  } catch (_) { setStatus('Invalid URL', 'error'); return; }
+  try { new URL(baseUrl); }
+  catch (_) { setStatus('Invalid URL', 'error'); return; }
 
   const maxDepth = parseInt($('bulkDepth').value, 10);
   $('bulkScanBtn').disabled = true;
   showElement($('bulkProgress'));
   $('bulkProgressLabel').textContent = 'Scanning…';
   $('bulkProgressFill').value = 10;
+  $('bulkExportRow').classList.add('hidden');
+  bulkScanResults = {};
 
   const bulkResultsEl = $('bulkResults');
   while (bulkResultsEl.firstChild) bulkResultsEl.removeChild(bulkResultsEl.firstChild);
 
   try {
-    const resp = await chrome.runtime.sendMessage({ type: 'BULK_SCAN', baseUrl, maxDepth });
+    const resp = await chrome.runtime.sendMessage({
+      type: 'BULK_SCAN',
+      baseUrl,
+      maxDepth,
+      concurrency: settings.concurrency,
+      timeout: settings.timeout,
+    });
 
     if (resp?.error) throw new Error(resp.error);
 
@@ -548,11 +605,13 @@ async function startBulkScan() {
     const pages = resp?.results || {};
     if (!Object.keys(pages).length) {
       const msg = document.createElement('p');
-      msg.className = 'no-results-msg';
+      msg.className   = 'no-results-msg';
       msg.textContent = 'No results found.';
       bulkResultsEl.appendChild(msg);
     } else {
+      bulkScanResults = pages;
       renderBulkResults(pages, bulkResultsEl);
+      showElement($('bulkExportRow'));
     }
   } catch (err) {
     setStatus('Bulk scan failed: ' + err.message, 'error');
@@ -563,20 +622,20 @@ async function startBulkScan() {
 
 function renderBulkResults(pages, container) {
   for (const [pageUrl, links] of Object.entries(pages)) {
-    const section = document.createElement('div');
+    const section   = document.createElement('div');
     section.className = 'bulk-page-section';
 
-    const heading = document.createElement('div');
+    const heading   = document.createElement('div');
     heading.className = 'bulk-page-heading';
 
     const pageTitle = document.createElement('span');
-    pageTitle.className = 'bulk-page-url';
+    pageTitle.className   = 'bulk-page-url';
     pageTitle.textContent = truncate(pageUrl, 50);
-    pageTitle.title = pageUrl;
+    pageTitle.title       = pageUrl;
 
-    const counts = buildStats(links);
-    const countBadge = document.createElement('span');
-    countBadge.className = 'bulk-count-badge' + (counts.broken > 0 ? ' has-broken' : '');
+    const counts      = buildStats(links);
+    const countBadge  = document.createElement('span');
+    countBadge.className   = 'bulk-count-badge' + (counts.broken > 0 ? ' has-broken' : '');
     countBadge.textContent = counts.broken + ' broken / ' + counts.total + ' total';
 
     heading.appendChild(pageTitle);
@@ -585,12 +644,10 @@ function renderBulkResults(pages, container) {
 
     const brokenLinks = links.filter((r) => r.statusCategory === 'broken' || r.statusCategory === 'error');
     if (brokenLinks.length > 0) {
-      brokenLinks.forEach((r) => {
-        section.appendChild(buildRow(r));
-      });
+      brokenLinks.forEach((r) => section.appendChild(buildRow(r)));
     } else {
       const ok = document.createElement('div');
-      ok.className = 'bulk-all-ok';
+      ok.className   = 'bulk-all-ok';
       ok.textContent = 'All links healthy';
       section.appendChild(ok);
     }
@@ -599,13 +656,17 @@ function renderBulkResults(pages, container) {
   }
 }
 
-// ─── History ───────────────────────────────────────────────────────────────────
+// ─── History management (FIXED with delete functionality) ────────────────────────
+
 async function loadHistory() {
   const list = $('historyList');
+  const clearAllBtn = $('clearAllHistoryBtn');
+  
   while (list.firstChild) list.removeChild(list.firstChild);
 
   const history = await chrome.runtime.sendMessage({ type: 'GET_SCAN_HISTORY' });
-  if (!history || !Object.keys(history).length) {
+  
+  if (!history || Object.keys(history).length === 0) {
     const empty = document.createElement('div');
     empty.className = 'empty-state';
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -624,19 +685,53 @@ async function loadHistory() {
     empty.appendChild(svg);
     empty.appendChild(msg);
     list.appendChild(empty);
+    if (clearAllBtn) clearAllBtn.classList.add('hidden');
     return;
   }
 
-  for (const [domain, scans] of Object.entries(history)) {
+  if (clearAllBtn) clearAllBtn.classList.remove('hidden');
+  
+  // Sort domains alphabetically
+  const sortedDomains = Object.keys(history).sort();
+  
+  for (const domain of sortedDomains) {
+    const scans = history[domain];
     const section = document.createElement('div');
     section.className = 'history-domain';
+    section.dataset.domain = domain;
 
     const domainLabel = document.createElement('div');
     domainLabel.className = 'history-domain-name';
-    domainLabel.textContent = domain;
+    
+    const domainText = document.createElement('span');
+    domainText.className = 'history-domain-text';
+    domainText.textContent = domain;
+    
+    const domainActions = document.createElement('div');
+    domainActions.className = 'history-domain-actions';
+    
+    const deleteDomainBtn = document.createElement('button');
+    deleteDomainBtn.className = 'history-delete-domain';
+    deleteDomainBtn.title = 'Delete all history for this domain';
+    deleteDomainBtn.appendChild(svgTrash());
+    deleteDomainBtn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (confirm(`Delete all scan history for "${domain}"?`)) {
+        await deleteDomainHistory(domain);
+        await loadHistory();
+        setStatus(`Deleted history for ${domain}`, 'success');
+      }
+    });
+    
+    domainActions.appendChild(deleteDomainBtn);
+    domainLabel.appendChild(domainText);
+    domainLabel.appendChild(domainActions);
     section.appendChild(domainLabel);
 
-    scans.forEach((scan) => {
+    // Sort scans by time (newest first)
+    const sortedScans = [...scans].sort((a, b) => b.time - a.time);
+    
+    sortedScans.forEach((scan) => {
       const entry = document.createElement('div');
       entry.className = 'history-entry';
 
@@ -646,17 +741,34 @@ async function loadHistory() {
 
       const stats = document.createElement('span');
       stats.className = 'history-stats';
+      
       const brokenSpan = document.createElement('span');
       brokenSpan.className = scan.broken > 0 ? 'history-broken' : 'history-ok';
       brokenSpan.textContent = scan.broken + ' broken';
+      
       const totalSpan = document.createElement('span');
       totalSpan.className = 'history-total';
       totalSpan.textContent = ' / ' + scan.total + ' total';
+      
       stats.appendChild(brokenSpan);
       stats.appendChild(totalSpan);
+      
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'history-delete-scan';
+      deleteBtn.title = 'Delete this scan';
+      deleteBtn.appendChild(svgClose());
+      deleteBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        if (confirm(`Delete scan from ${formatDate(scan.time)}?`)) {
+          await deleteScanHistory(domain, scan.time);
+          await loadHistory();
+          setStatus('Scan deleted', 'success');
+        }
+      });
 
       entry.appendChild(time);
       entry.appendChild(stats);
+      entry.appendChild(deleteBtn);
       section.appendChild(entry);
     });
 
@@ -664,51 +776,202 @@ async function loadHistory() {
   }
 }
 
+async function deleteDomainHistory(domain) {
+  const stored = await chrome.storage.local.get(['scanHistory']);
+  const history = stored.scanHistory || {};
+  
+  if (history[domain]) {
+    delete history[domain];
+    await chrome.storage.local.set({ scanHistory: history });
+  }
+}
+
+async function deleteScanHistory(domain, scanTime) {
+  const stored = await chrome.storage.local.get(['scanHistory']);
+  const history = stored.scanHistory || {};
+  
+  if (history[domain]) {
+    history[domain] = history[domain].filter(scan => scan.time !== scanTime);
+    
+    // If domain has no more scans, delete the domain entry
+    if (history[domain].length === 0) {
+      delete history[domain];
+    }
+    
+    await chrome.storage.local.set({ scanHistory: history });
+  }
+}
+
+async function clearAllHistory() {
+  if (confirm('Delete ALL scan history? This action cannot be undone.')) {
+    await chrome.storage.local.set({ scanHistory: {} });
+    await loadHistory();
+    setStatus('All history cleared', 'success');
+  }
+}
+
 // ─── Export ────────────────────────────────────────────────────────────────────
-function exportData(format) {
+
+/** Resolve which page-scan records to export based on the filter dropdown. */
+function getExportData() {
   const filterVal = $('exportFilter').value;
   let data = scanResults;
-  if (filterVal === 'broken') data = data.filter((r) => r.statusCategory === 'broken' || r.statusCategory === 'error');
+  if (filterVal === 'broken')   data = data.filter((r) => r.statusCategory === 'broken' || r.statusCategory === 'error');
   else if (filterVal === 'redirect') data = data.filter((r) => r.statusCategory === 'redirect');
-  else if (filterVal === 'live') data = data.filter((r) => r.statusCategory === 'live');
+  else if (filterVal === 'live')     data = data.filter((r) => r.statusCategory === 'live');
+  return { data, filterVal };
+}
 
+/** Page-scan export entry point. */
+function exportData(format) {
+  const { data, filterVal } = getExportData();
   if (!data.length) { setStatus('No data to export', 'warning'); return; }
 
-  if (format === 'csv') {
-    const headers = ['URL', 'Status', 'Category', 'Type', 'Response Time (ms)', 'Redirect Count', 'Final URL', 'Error'];
-    const rows = data.map((r) => [
-      csvEscape(r.url),
-      r.status || '',
-      r.statusCategory || '',
-      r.linkType || r.domType || '',
-      r.responseTime || '',
-      r.redirectCount || 0,
-      csvEscape(r.finalUrl || ''),
-      csvEscape(r.error || ''),
-    ]);
-    const csv = [headers, ...rows].map((row) => row.join(',')).join('\n');
-    downloadBlob(csv, 'text/csv', 'broken-links.csv');
-  } else {
-    const payload = {
-      exportedAt: new Date().toISOString(),
-      filter: filterVal,
-      total: data.length,
-      links: data.map((r) => ({
-        url: r.url,
-        finalUrl: r.finalUrl,
-        status: r.status,
-        statusCategory: r.statusCategory,
-        linkType: r.linkType,
-        domType: r.domType,
-        responseTime: r.responseTime,
-        redirectCount: r.redirectCount,
-        redirectChain: r.redirectChain,
-        error: r.error,
-      })),
-    };
-    downloadBlob(JSON.stringify(payload, null, 2), 'application/json', 'broken-links.json');
+  switch (format) {
+    case 'csv':  downloadBlob(buildCsv(data),              'text/csv',        'broken-links.csv');  break;
+    case 'json': downloadBlob(buildJson(data, filterVal),  'application/json','broken-links.json'); break;
+    case 'txt':  downloadBlob(buildTxt(data, filterVal),   'text/plain',      'broken-links.txt');  break;
   }
   setStatus('Export complete', 'success');
+}
+
+/** Bulk-scan export entry point – flattens all pages into one file. */
+function exportBulkData(format) {
+  if (!Object.keys(bulkScanResults).length) {
+    setStatus('No bulk data to export', 'warning');
+    return;
+  }
+
+  // Flatten all page results into a single array, preserving sourcePage
+  const flat = Object.entries(bulkScanResults).flatMap(([pageUrl, links]) =>
+    links.map((r) => ({ ...r, sourcePage: pageUrl }))
+  );
+
+  if (!flat.length) { setStatus('No data to export', 'warning'); return; }
+
+  switch (format) {
+    case 'csv':  downloadBlob(buildCsv(flat, true),              'text/csv',        'bulk-scan.csv');  break;
+    case 'json': downloadBlob(buildBulkJson(bulkScanResults),     'application/json','bulk-scan.json'); break;
+    case 'txt':  downloadBlob(buildBulkTxt(bulkScanResults),      'text/plain',      'bulk-scan.txt');  break;
+  }
+  setStatus('Bulk export complete', 'success');
+}
+
+// ── Format builders ────────────────────────────────────────────────────────────
+
+function buildCsv(data, includeSourcePage = false) {
+  const headers = [
+    'URL', 'Status', 'Category', 'Type',
+    'Response Time (ms)', 'Redirect Count', 'Final URL', 'Error',
+    ...(includeSourcePage ? ['Source Page'] : []),
+  ];
+  const rows = data.map((r) => [
+    csvEscape(r.url),
+    r.status || '',
+    r.statusCategory || '',
+    r.linkType || r.domType || '',
+    r.responseTime || '',
+    r.redirectCount || 0,
+    csvEscape(r.finalUrl || ''),
+    csvEscape(r.error || ''),
+    ...(includeSourcePage ? [csvEscape(r.sourcePage || '')] : []),
+  ]);
+  return [headers, ...rows].map((row) => row.join(',')).join('\n');
+}
+
+function buildJson(data, filter) {
+  return JSON.stringify({
+    exportedAt: new Date().toISOString(),
+    filter: filter || 'all',
+    total: data.length,
+    links: data.map(linkToJsonObj),
+  }, null, 2);
+}
+
+function buildBulkJson(pages) {
+  return JSON.stringify({
+    exportedAt: new Date().toISOString(),
+    pages: Object.fromEntries(
+      Object.entries(pages).map(([pageUrl, links]) => [
+        pageUrl,
+        { total: links.length, links: links.map(linkToJsonObj) },
+      ])
+    ),
+  }, null, 2);
+}
+
+function buildTxt(data, filter) {
+  const sep    = '─'.repeat(72);
+  const header = [
+    'BROKEN LINK FINDER PRO — EXPORT',
+    `Exported : ${new Date().toLocaleString()}`,
+    `Filter   : ${filter || 'all'}`,
+    `Total    : ${data.length} link(s)`,
+    sep,
+  ].join('\n');
+
+  const body = data.map((r, i) => {
+    const lines = [
+      `[${i + 1}] ${r.url}`,
+      `    Status   : ${r.status || 'ERR'} (${r.statusCategory || '—'})`,
+      `    Type     : ${r.linkType || r.domType || '—'}`,
+      `    Time     : ${r.responseTime ? r.responseTime + ' ms' : '—'}`,
+    ];
+    if (r.finalUrl && r.finalUrl !== r.url) lines.push(`    Final URL: ${r.finalUrl}`);
+    if (r.redirectCount > 0)               lines.push(`    Redirects: ${r.redirectCount} hop(s)`);
+    if (r.error)                           lines.push(`    Error    : ${r.error}`);
+    return lines.join('\n');
+  });
+
+  return [header, ...body].join('\n\n');
+}
+
+function buildBulkTxt(pages) {
+  const sep    = '═'.repeat(72);
+  const subSep = '─'.repeat(72);
+  const lines  = [
+    'BROKEN LINK FINDER PRO — BULK SCAN EXPORT',
+    `Exported : ${new Date().toLocaleString()}`,
+    `Pages    : ${Object.keys(pages).length}`,
+    sep,
+  ];
+
+  for (const [pageUrl, links] of Object.entries(pages)) {
+    const stats = buildStats(links);
+    lines.push(`\nPAGE: ${pageUrl}`);
+    lines.push(`Total: ${stats.total}  |  Broken: ${stats.broken}  |  Redirects: ${stats.redirects}`);
+    lines.push(subSep);
+
+    if (links.length === 0) {
+      lines.push('  (no links found)');
+    } else {
+      links.forEach((r, i) => {
+        lines.push(`  [${i + 1}] ${r.url}`);
+        lines.push(`       Status: ${r.status || 'ERR'} (${r.statusCategory || '—'})  |  Type: ${r.linkType || r.domType || '—'}  |  Time: ${r.responseTime ? r.responseTime + ' ms' : '—'}`);
+        if (r.finalUrl && r.finalUrl !== r.url) lines.push(`       Final : ${r.finalUrl}`);
+        if (r.error)                            lines.push(`       Error : ${r.error}`);
+      });
+    }
+  }
+
+  return lines.join('\n');
+}
+
+// ── Shared helpers ─────────────────────────────────────────────────────────────
+
+function linkToJsonObj(r) {
+  return {
+    url:           r.url,
+    finalUrl:      r.finalUrl,
+    status:        r.status,
+    statusCategory:r.statusCategory,
+    linkType:      r.linkType,
+    domType:       r.domType,
+    responseTime:  r.responseTime,
+    redirectCount: r.redirectCount,
+    redirectChain: r.redirectChain,
+    error:         r.error,
+  };
 }
 
 function csvEscape(val) {
@@ -718,7 +981,7 @@ function csvEscape(val) {
 
 function downloadBlob(content, type, filename) {
   const blob = new Blob([content], { type });
-  const url = URL.createObjectURL(blob);
+  const url  = URL.createObjectURL(blob);
   chrome.downloads.download({ url, filename, saveAs: true }, () => {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   });
@@ -735,6 +998,11 @@ function suggestAlternatives(url) {
       parts.pop();
       suggestions.push({ url: u.origin + '/' + parts.join('/') + '/', reason: 'Parent path' });
     }
+    if (u.hostname.startsWith('www.')) {
+      suggestions.push({ url: `${u.protocol}//${u.hostname.slice(4)}${u.pathname}`, reason: 'Without www' });
+    } else {
+      suggestions.push({ url: `${u.protocol}//www.${u.hostname}${u.pathname}`, reason: 'With www' });
+    }
     if (u.protocol === 'http:') suggestions.push({ url: 'https://' + u.hostname + u.pathname, reason: 'Try HTTPS' });
   } catch (_) {}
   return suggestions.slice(0, 3);
@@ -745,13 +1013,13 @@ function showProgress(done, total) {
   const wrap = $('progressWrap');
   wrap.classList.remove('hidden');
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
-  $('progressFill').value = pct;
+  $('progressFill').value        = pct;
   $('progressLabel').textContent = done + ' / ' + total;
 }
 
 function hideProgress() {
   $('progressWrap').classList.add('hidden');
-  $('progressFill').value = 0;
+  $('progressFill').value        = 0;
   $('progressLabel').textContent = '0 / 0';
 }
 
@@ -761,8 +1029,7 @@ function showElement(el) {
 
 function setStatus(msg, type) {
   $('statusText').textContent = msg;
-  const dot = $('statusDot');
-  dot.className = 'status-dot status-' + (type || 'ready');
+  $('statusDot').className    = 'status-dot status-' + (type || 'ready');
 }
 
 function applyTheme(dark) {
@@ -794,7 +1061,6 @@ async function copyTextToClipboard(text) {
     await navigator.clipboard.writeText(text);
     return;
   } catch (_) {}
-
   const ta = document.createElement('textarea');
   ta.value = text;
   ta.setAttribute('readonly', '');
@@ -809,28 +1075,28 @@ async function copyTextToClipboard(text) {
 // ─── SVG icon helpers ──────────────────────────────────────────────────────────
 function makeActionBtn(action, url, svgEl) {
   const btn = document.createElement('button');
-  btn.className = 'action-btn';
+  btn.className      = 'action-btn';
   btn.dataset.action = action;
-  btn.dataset.url = url;
+  btn.dataset.url    = url;
   btn.title = action === 'open' ? 'Open in new tab' : action === 'copy' ? 'Copy URL' : 'Suggest fix';
   btn.appendChild(svgEl);
   return btn;
 }
 
 function svgOpen() {
-  const ns = 'http://www.w3.org/2000/svg';
+  const ns  = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'currentColor');
-  const path = document.createElementNS(ns, 'path');
-  path.setAttribute('d', 'M8.636 3.5a.5.5 0 00-.5-.5H1.5A1.5 1.5 0 000 4.5v10A1.5 1.5 0 001.5 16h10a1.5 1.5 0 001.5-1.5V7.864a.5.5 0 00-1 0V14.5a.5.5 0 01-.5.5h-10a.5.5 0 01-.5-.5v-10a.5.5 0 01.5-.5h6.636a.5.5 0 00.5-.5z');
-  const path2 = document.createElementNS(ns, 'path');
-  path2.setAttribute('d', 'M16 .5a.5.5 0 00-.5-.5h-5a.5.5 0 000 1h3.793L6.146 9.146a.5.5 0 10.708.708L15 1.707V5.5a.5.5 0 001 0v-5z');
-  svg.appendChild(path); svg.appendChild(path2);
+  const p1 = document.createElementNS(ns, 'path');
+  p1.setAttribute('d', 'M8.636 3.5a.5.5 0 00-.5-.5H1.5A1.5 1.5 0 000 4.5v10A1.5 1.5 0 001.5 16h10a1.5 1.5 0 001.5-1.5V7.864a.5.5 0 00-1 0V14.5a.5.5 0 01-.5.5h-10a.5.5 0 01-.5-.5v-10a.5.5 0 01.5-.5h6.636a.5.5 0 00.5-.5z');
+  const p2 = document.createElementNS(ns, 'path');
+  p2.setAttribute('d', 'M16 .5a.5.5 0 00-.5-.5h-5a.5.5 0 000 1h3.793L6.146 9.146a.5.5 0 10.708.708L15 1.707V5.5a.5.5 0 001 0v-5z');
+  svg.appendChild(p1); svg.appendChild(p2);
   return svg;
 }
 
 function svgCopy() {
-  const ns = 'http://www.w3.org/2000/svg';
+  const ns  = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'currentColor');
   const path = document.createElementNS(ns, 'path');
@@ -841,11 +1107,37 @@ function svgCopy() {
 }
 
 function svgFix() {
-  const ns = 'http://www.w3.org/2000/svg';
+  const ns  = 'http://www.w3.org/2000/svg';
   const svg = document.createElementNS(ns, 'svg');
   svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'currentColor');
   const path = document.createElementNS(ns, 'path');
   path.setAttribute('d', 'M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 01-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 01.872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 012.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 012.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 01.872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 01-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 01-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 110-5.858 2.929 2.929 0 010 5.858z');
+  svg.appendChild(path);
+  return svg;
+}
+
+function svgTrash() {
+  const ns  = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', '0 0 16 16');
+  svg.setAttribute('fill', 'currentColor');
+  svg.setAttribute('width', '12');
+  svg.setAttribute('height', '12');
+  const path = document.createElementNS(ns, 'path');
+  path.setAttribute('d', 'M5.5 5.5A.5.5 0 016 5h4a.5.5 0 01.5.5v7a.5.5 0 01-.5.5H6a.5.5 0 01-.5-.5v-7zm2-3a.5.5 0 00-.5.5V4h3v-1a.5.5 0 00-.5-.5h-2zM4 5h8v1H4V5z');
+  svg.appendChild(path);
+  return svg;
+}
+
+function svgClose() {
+  const ns  = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', '0 0 16 16');
+  svg.setAttribute('fill', 'currentColor');
+  svg.setAttribute('width', '12');
+  svg.setAttribute('height', '12');
+  const path = document.createElementNS(ns, 'path');
+  path.setAttribute('d', 'M4.646 4.646a.5.5 0 01.708 0L8 7.293l2.646-2.647a.5.5 0 01.708.708L8.707 8l2.647 2.646a.5.5 0 01-.708.708L8 8.707l-2.646 2.647a.5.5 0 01-.708-.708L7.293 8 4.646 5.354a.5.5 0 010-.708z');
   svg.appendChild(path);
   return svg;
 }

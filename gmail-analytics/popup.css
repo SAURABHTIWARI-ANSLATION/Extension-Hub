@@ -1,5 +1,25 @@
+/* Import Manrope Font */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+
 /* Theme Variables */
 :root {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #F9FAFB;
+  --text-primary: #111111;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --border-color: #E5E7EB;
+  --accent-color: #2563EB;
+  --accent-hover: #1D4ED8;
+  --spam-color: #EF4444;
+  --success-color: #10B981;
+  --warning-color: #F59E0B;
+  --danger-color: #EF4444;
+}
+
+/* Dark Theme Override (optional - keeping for compatibility) */
+body.dark-theme {
   --bg-primary: #0A0C12;
   --bg-secondary: #1A1D24;
   --bg-tertiary: #111318;
@@ -7,27 +27,8 @@
   --text-secondary: #CBD5E0;
   --text-muted: #718096;
   --border-color: #2D3748;
-  --accent-color: #667eea;
-  --accent-hover: #5a67d8;
-  --spam-color: #f56565;
-  --success-color: #48bb78;
-  --warning-color: #ed8936;
-  --danger-color: #f56565;
-}
-
-body.light-theme {
-  --bg-primary: #F7FAFC;
-  --bg-secondary: #FFFFFF;
-  --bg-tertiary: #F7FAFC;
-  --text-primary: #1A202C;
-  --text-secondary: #4A5568;
-  --text-muted: #718096;
-  --border-color: #E2E8F0;
-  --accent-color: #667eea;
-  --accent-hover: #5a67d8;
-  --spam-color: #f56565;
-  --success-color: #48bb78;
-  --warning-color: #ed8936;
+  --accent-color: #2563EB;
+  --accent-hover: #1D4ED8;
 }
 
 * {
@@ -37,11 +38,11 @@ body.light-theme {
 }
 
 body {
-  width: 450px;
-  min-height: 550px;
+  width: 480px;
+  min-height: 600px;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   overflow: hidden;
   transition: background 0.3s ease, color 0.3s ease;
 }
@@ -50,28 +51,30 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  max-height: 650px;
+  max-height: 700px;
   overflow: hidden;
 }
 
 /* Header */
 header {
   background: var(--bg-secondary);
-  padding: 12px 16px;
+  padding: 14px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-color);
   position: relative;
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .brand svg {
@@ -84,21 +87,34 @@ header {
 }
 
 .icon-btn {
-  background: var(--bg-tertiary);
+  background: transparent;
   border: 1px solid var(--border-color);
-  border-radius: 6px;
-  padding: 6px 8px;
+  border-radius: 8px;
+  padding: 6px 10px;
   cursor: pointer;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.icon-btn svg {
+  width: 16px;
+  height: 16px;
 }
 
 .icon-btn:hover {
-  background: var(--bg-secondary);
+  background: var(--accent-color);
   border-color: var(--accent-color);
-  color: var(--accent-color);
+  color: white;
   transform: translateY(-1px);
+}
+
+.icon-btn:hover svg {
+  stroke: white;
 }
 
 .status-dot {
@@ -118,15 +134,15 @@ header {
 /* Dropdown Menus */
 .menu-dropdown {
   position: absolute;
-  top: 50px;
+  top: 52px;
   right: 16px;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: 12px;
   z-index: 1000;
-  min-width: 150px;
+  min-width: 160px;
   overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
 }
 
 #export-dropdown {
@@ -137,14 +153,22 @@ header {
   padding: 10px 14px;
   cursor: pointer;
   font-size: 12px;
+  font-weight: 500;
   color: var(--text-secondary);
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-item svg {
+  width: 14px;
+  height: 14px;
 }
 
 .menu-item:hover {
   background: var(--bg-tertiary);
   color: var(--accent-color);
-  padding-left: 18px;
 }
 
 .hidden {
@@ -186,34 +210,34 @@ header {
   gap: 16px;
 }
 
-.error-icon {
-  font-size: 48px;
-  animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+.error-icon svg {
+  stroke: var(--text-muted);
+  width: 56px;
+  height: 56px;
 }
 
 #not-logged-in h3 {
   font-size: 18px;
-  margin-bottom: 8px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
 }
 
 #not-logged-in p {
   font-size: 13px;
-  color: var(--text-muted);
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .primary-btn {
   background: var(--accent-color);
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: 10px;
   font-size: 13px;
   font-weight: 600;
+  font-family: 'Manrope', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -221,10 +245,10 @@ header {
 .primary-btn:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
-/* Content */
+/* Content - Allow email section to grow */
 #content {
   flex: 1;
   overflow-y: auto;
@@ -232,19 +256,21 @@ header {
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-height: 0;
 }
 
-/* Stats */
+/* Stats - Keep compact */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12px;
+  flex-shrink: 0;
 }
 
 .stat-card {
   background: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 14px;
+  padding: 14px;
   display: flex;
   gap: 12px;
   border: 1px solid var(--border-color);
@@ -254,10 +280,13 @@ header {
 .stat-card:hover {
   border-color: var(--accent-color);
   transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.stat-icon {
-  font-size: 28px;
+.stat-icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: var(--accent-color);
 }
 
 .stat-info {
@@ -266,37 +295,51 @@ header {
 
 .stat-label {
   font-size: 11px;
-  color: var(--text-muted);
+  font-weight: 600;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .stat-value {
   font-size: 28px;
-  font-weight: 700;
-  color: var(--accent-color);
+  font-weight: 800;
+  color: var(--text-primary);
 }
 
-/* Filters */
+/* Filters - Keep compact */
 .filter-section {
   background: var(--bg-secondary);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 14px;
+  padding: 14px;
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
 .filter-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   font-size: 12px;
+  font-weight: 600;
   color: var(--text-secondary);
+}
+
+.filter-header span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-header svg {
+  width: 14px;
+  height: 14px;
 }
 
 .filter-count {
   color: var(--accent-color);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .filter-container {
@@ -306,12 +349,14 @@ header {
 }
 
 .filter-btn {
-  padding: 6px 12px;
+  padding: 6px 14px;
   background: var(--bg-tertiary);
   border: 1px solid var(--border-color);
-  border-radius: 20px;
+  border-radius: 24px;
   color: var(--text-secondary);
   font-size: 11px;
+  font-weight: 600;
+  font-family: 'Manrope', sans-serif;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -331,13 +376,13 @@ header {
 
 /* Spam Filter Button Styling */
 .filter-btn[data-filter="spam"] {
-  background: rgba(245, 101, 101, 0.1);
-  border-color: var(--spam-color);
+  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(239, 68, 68, 0.3);
   color: var(--spam-color);
 }
 
 .filter-btn[data-filter="spam"]:hover {
-  background: rgba(245, 101, 101, 0.2);
+  background: rgba(239, 68, 68, 0.15);
 }
 
 .filter-btn[data-filter="spam"].active {
@@ -346,64 +391,85 @@ header {
   color: white;
 }
 
-/* Email List */
+/* Email Section - FIXED: Increased height */
 .emails-section {
   background: var(--bg-secondary);
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid var(--border-color);
   overflow: hidden;
   transition: all 0.3s ease;
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
-  padding: 12px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--border-color);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.section-header span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.section-header svg {
+  width: 14px;
+  height: 14px;
 }
 
 .section-badge {
   background: var(--accent-color);
   padding: 2px 8px;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 600;
   color: white;
 }
 
+/* FIXED: Email list with much larger height */
 .email-list {
-  max-height: 300px;
+  flex: 1;
   overflow-y: auto;
   padding: 8px;
+  min-height: 500px;
+  max-height: 550px;
+  height: auto;
 }
 
 .email-list::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 .email-list::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-  border-radius: 3px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
 }
 
 .email-list::-webkit-scrollbar-thumb {
   background: var(--border-color);
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .email-list::-webkit-scrollbar-thumb:hover {
   background: var(--accent-color);
 }
 
+/* Email Row - Increased padding for better readability */
 .email-row {
-  padding: 12px;
+  padding: 14px;
   background: var(--bg-tertiary);
-  border-radius: 8px;
-  margin-bottom: 8px;
+  border-radius: 10px;
+  margin-bottom: 10px;
   border-left: 3px solid transparent;
   cursor: pointer;
   transition: all 0.2s;
@@ -413,44 +479,50 @@ header {
   background: var(--bg-secondary);
   border-left-color: var(--accent-color);
   transform: translateX(2px);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 /* Spam Email Styling */
 .email-row.spam-email {
-  background: rgba(245, 101, 101, 0.1);
+  background: rgba(239, 68, 68, 0.05);
   border-left-color: var(--spam-color);
 }
 
 .email-row.spam-email:hover {
-  background: rgba(245, 101, 101, 0.15);
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .row-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 6px;
 }
 
 .sender {
   font-size: 12px;
-  font-weight: 600;
-  color: var(--text-secondary);
+  font-weight: 700;
+  color: var(--text-primary);
 }
 
 .time {
   font-size: 10px;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
 .subject {
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-secondary);
   margin-bottom: 4px;
 }
 
 .snippet {
   font-size: 10px;
+  font-weight: 500;
   color: var(--text-muted);
   margin-bottom: 8px;
   line-height: 1.4;
@@ -458,18 +530,18 @@ header {
 
 .priority-badge, .category-badge {
   font-size: 9px;
-  padding: 2px 6px;
-  border-radius: 10px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
   margin-left: 6px;
-  font-weight: 500;
 }
 
-.priority-badge.high { background: rgba(245, 101, 101, 0.2); color: var(--danger-color); }
-.priority-badge.medium { background: rgba(237, 137, 54, 0.2); color: var(--warning-color); }
-.priority-badge.low { background: rgba(72, 187, 120, 0.2); color: var(--success-color); }
-.category-badge.work { background: rgba(66, 153, 225, 0.2); color: #4299e1; }
-.category-badge.personal { background: rgba(72, 187, 120, 0.2); color: #48bb78; }
-.category-badge.spam { background: rgba(245, 101, 101, 0.2); color: var(--spam-color); }
+.priority-badge.high { background: rgba(239, 68, 68, 0.12); color: var(--danger-color); }
+.priority-badge.medium { background: rgba(245, 158, 11, 0.12); color: var(--warning-color); }
+.priority-badge.low { background: rgba(16, 185, 129, 0.12); color: var(--success-color); }
+.category-badge.work { background: rgba(37, 99, 235, 0.12); color: var(--accent-color); }
+.category-badge.personal { background: rgba(16, 185, 129, 0.12); color: var(--success-color); }
+.category-badge.spam { background: rgba(239, 68, 68, 0.12); color: var(--spam-color); }
 
 .email-actions {
   display: flex;
@@ -481,8 +553,10 @@ header {
   background: transparent;
   border: 1px solid var(--border-color);
   padding: 4px 10px;
-  border-radius: 4px;
+  border-radius: 6px;
   font-size: 10px;
+  font-weight: 600;
+  font-family: 'Manrope', sans-serif;
   cursor: pointer;
   color: var(--text-muted);
   transition: all 0.2s;
@@ -500,34 +574,48 @@ header {
   padding: 40px;
 }
 
-.empty-icon {
-  font-size: 48px;
+.empty-icon svg {
+  width: 48px;
+  height: 48px;
+  stroke: var(--text-muted);
   margin-bottom: 12px;
   opacity: 0.5;
 }
 
 .empty-title {
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
-/* Quick Actions */
+/* Quick Actions - Keep at bottom */
 .quick-actions {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
+  flex-shrink: 0;
 }
 
 .action-btn {
   flex: 1;
-  padding: 10px;
+  padding: 10px 12px;
   border: none;
   border-radius: 10px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
   cursor: pointer;
   text-align: center;
   transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.action-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
 .action-btn.primary { 
@@ -549,12 +637,12 @@ header {
 
 .action-btn:hover { 
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .action-btn.primary:hover {
   background: var(--accent-hover);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
 }
 
 .action-btn.secondary:hover {
@@ -563,16 +651,32 @@ header {
   color: var(--accent-color);
 }
 
+.action-btn.secondary:hover svg {
+  stroke: var(--accent-color);
+}
+
 .action-btn.tertiary:hover {
   background: var(--warning-color);
   border-color: var(--warning-color);
   color: white;
 }
 
+/* Update Info - Keep at bottom */
 .update-info {
   text-align: center;
   padding: 10px;
   font-size: 10px;
+  font-weight: 500;
   color: var(--text-muted);
   border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.update-info svg {
+  width: 10px;
+  height: 10px;
 }
