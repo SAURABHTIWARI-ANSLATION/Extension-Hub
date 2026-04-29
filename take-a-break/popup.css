@@ -167,15 +167,15 @@ body {
   color: var(--text);
 }
 
-/* Gear icon via CSS */
-#settingsBtn::before {
-  content: '';
-  display: block;
-  width: 14px;
-  height: 14px;
-  border: 2px solid currentColor;
-  border-radius: 50%;
+/* Settings icon (SVG) */
+#settingsBtn {
   position: relative;
+}
+
+#settingsBtn .icon {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 /* ── Nav Tabs ─────────────────────────────────────────────────────────────── */

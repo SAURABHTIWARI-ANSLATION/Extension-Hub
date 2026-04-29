@@ -439,7 +439,7 @@ function _toggleQuietFields(enabled) {
 }
 
 async function _saveSettings() {
-  const saves = [
+  await Promise.all([
     _send({
       action: 'pomodoro:settings',
       settings: {
@@ -461,13 +461,13 @@ async function _saveSettings() {
         quietEnd:        document.getElementById('cfgQuietEnd').value   || '07:00',
       },
     }),
-    _send({ action: 'eyecare:toggle',   enabled: document.getElementById('cfgEyeCare').checked }),
-    _send({ action: 'eyecare:interval', minutes: _getIntVal('cfgEyeInterval', 10, 60) }),
-    _send({ action: 'breaks:toggle',    enabled: document.getElementById('cfgBreaks').checked }),
-    _send({ action: 'breaks:interval',  minutes: _getIntVal('cfgBreakInterval', 30, 240) }),
-  ];
+  ]);
 
-  await Promise.all(saves);
+  // Save wellness settings in a deterministic order so scheduling/clearing is reliable.
+  await _send({ action: 'eyecare:interval', minutes: _getIntVal('cfgEyeInterval', 10, 60) });
+  await _send({ action: 'eyecare:toggle',   enabled: document.getElementById('cfgEyeCare').checked });
+  await _send({ action: 'breaks:interval',  minutes: _getIntVal('cfgBreakInterval', 30, 240) });
+  await _send({ action: 'breaks:toggle',    enabled: document.getElementById('cfgBreaks').checked });
 
   const fb = document.getElementById('saveFeedback');
   fb.textContent = 'Settings saved ✓';

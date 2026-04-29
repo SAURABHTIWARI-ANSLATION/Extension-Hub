@@ -21,6 +21,14 @@ const HydrationModule = (() => {
       return;
     }
 
+    // If the Pomodoro "break over" popup is open, defer hydration so the user
+    // doesn't get two popups at the same time.
+    if (await _isPomodoroBreakPopupOpen()) {
+      console.log('[HydrationModule] Deferred (pomodoro popup open)');
+      chrome.alarms.create('tab:hydration:snooze', { delayInMinutes: 5 });
+      return;
+    }
+
     await _openAlertWindow();
   }
 
@@ -84,6 +92,17 @@ const HydrationModule = (() => {
       });
     } catch (err) {
       console.error('[HydrationModule] Failed to open alert window:', err);
+    }
+  }
+
+  async function _isPomodoroBreakPopupOpen() {
+    try {
+      const popups = await chrome.windows.getAll({ populate: true, windowTypes: ['popup'] });
+      return popups.some(w =>
+        w.tabs && w.tabs.some(t => t.url && t.url.includes('pomodoro-alert.html'))
+      );
+    } catch (_) {
+      return false;
     }
   }
 

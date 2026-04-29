@@ -57,9 +57,8 @@ const PomodoroModule = (() => {
       pomodoro.totalTime     = settings.workTime;
       pomodoro.deepWorkActive = false;
 
-      // Open the hydration alert window on break end — great time to drink
-      // Use HydrationModule directly so window-dedup logic is reused
-      await HydrationModule.onAlarm();
+      // Break end popup (separate from hydration reminders)
+      await _openBreakEndPopup();
 
       if (settings.autoStart) {
         pomodoro.running   = true;
@@ -76,6 +75,71 @@ const PomodoroModule = (() => {
 
     pomodoro.timeLeft = pomodoro.totalTime;
     await StorageService.setKey('pomodoro', pomodoro);
+  }
+
+  // ── Break-end popup window ───────────────────────────────────────────────
+
+  let _breakEndWindowId = null;
+
+  async function _openBreakEndPopup() {
+    // If a previous popup is still open, focus it
+    if (_breakEndWindowId !== null) {
+      try {
+        await chrome.windows.get(_breakEndWindowId);
+        await chrome.windows.update(_breakEndWindowId, { focused: true });
+        return;
+      } catch (_) {
+        _breakEndWindowId = null;
+      }
+    }
+
+    // Safety scan in case the service worker restarted
+    try {
+      const popups = await chrome.windows.getAll({ populate: true, windowTypes: ['popup'] });
+      const orphan = popups.find(w =>
+        w.tabs && w.tabs.some(t => t.url && t.url.includes('pomodoro-alert.html'))
+      );
+      if (orphan) {
+        _breakEndWindowId = orphan.id;
+        await chrome.windows.update(orphan.id, { focused: true });
+        return;
+      }
+    } catch (_) {
+      // ignore
+    }
+
+    // If a hydration alert popup is currently open, close it so the break-end
+    // popup doesn't compete with it.
+    try {
+      const popups = await chrome.windows.getAll({ populate: true, windowTypes: ['popup'] });
+      const hydrationPopup = popups.find(w =>
+        w.tabs && w.tabs.some(t => t.url && t.url.includes('alert.html'))
+      );
+      if (hydrationPopup && hydrationPopup.id) {
+        await chrome.windows.remove(hydrationPopup.id);
+      }
+    } catch (_) {
+      // ignore
+    }
+
+    try {
+      const win = await chrome.windows.create({
+        url:     chrome.runtime.getURL('pomodoro-alert.html'),
+        type:    'popup',
+        width:   380,
+        height:  320,
+        focused: true,
+      });
+      _breakEndWindowId = win.id;
+      chrome.windows.onRemoved.addListener(function _onClose(closedId) {
+        if (closedId === _breakEndWindowId) {
+          _breakEndWindowId = null;
+          chrome.windows.onRemoved.removeListener(_onClose);
+        }
+      });
+    } catch (err) {
+      console.error('[PomodoroModule] Failed to open break-end popup:', err);
+    }
   }
 
   // ── Controls (called from popup via messages) ─────────────────────────────
