@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Time to Hydrate</title>
+  <link rel="stylesheet" href="alert.css" />
+</head>
+<body>
+
+<div class="drops-container" id="dropsContainer"></div>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="alert-header">
+    <div class="drop-icon" aria-hidden="true"></div>
+    <h2>Time to Hydrate</h2>
+    <p>Your body needs water right now</p>
+  </div>
+
+  <!-- Progress ring -->
+  <div class="ring-wrap">
+    <svg class="ring-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle class="ring-bg"   cx="60" cy="60" r="50"/>
+      <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50"
+              stroke-dasharray="314" stroke-dashoffset="314"/>
+    </svg>
+    <div class="ring-center">
+      <span class="ring-pct" id="ringPct">0%</span>
+      <span class="ring-lbl">of goal</span>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="status-row">
+    <span class="status-text" id="statusText">0 / 3000 ml</span>
+    <span class="streak-badge" id="streakBadge">0 day streak</span>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Actions -->
+  <div class="btn-row">
+    <button class="btn-secondary" id="snoozeBtn">Snooze 5 min</button>
+    <button class="btn-primary"   id="drinkBtn">+250 ml</button>
+  </div>
+
+</div>
+
+<script src="alert.js"></script>
+</body>
+</html>

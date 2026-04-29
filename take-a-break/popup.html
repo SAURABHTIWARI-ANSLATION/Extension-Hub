@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Take a Break</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header class="header">
+    <div class="brand">
+      <div class="brand-icon" id="brandIcon" aria-hidden="true"></div>
+      <span class="brand-name">Take a Break</span>
+    </div>
+    <div class="header-actions">
+      <button class="btn-icon-sm" id="settingsBtn" aria-label="Settings" title="Settings"></button>
+    </div>
+  </header>
+
+  <!-- ── Nav Tabs ───────────────────────────────────────────── -->
+  <nav class="nav-tabs" role="tablist">
+    <button class="nav-tab active" data-panel="focus"  role="tab" aria-selected="true">Focus</button>
+    <button class="nav-tab"        data-panel="water"  role="tab">Water</button>
+    <button class="nav-tab"        data-panel="dash"   role="tab">Dashboard</button>
+    <button class="nav-tab"        data-panel="config" role="tab">Settings</button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PANEL: Focus (Pomodoro)
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="panel active" id="panel-focus" role="tabpanel">
+
+    <!-- Mode selector -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="work">Focus</button>
+      <button class="mode-tab" data-mode="shortBreak">Short</button>
+      <button class="mode-tab" data-mode="longBreak">Long</button>
+    </div>
+
+    <!-- Timer ring -->
+    <div class="timer-wrap">
+      <svg class="ring" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle class="ring-track" cx="100" cy="100" r="88"/>
+        <circle class="ring-progress" id="ringProgress" cx="100" cy="100" r="88"
+                stroke-dasharray="553" stroke-dashoffset="0"/>
+      </svg>
+      <div class="timer-center">
+        <div class="time-display" id="timeDisplay">25:00</div>
+        <div class="mode-label" id="modeLabel">Focus Time</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="timer-controls">
+      <button class="ctrl-btn" id="resetBtn" aria-label="Reset"></button>
+      <button class="btn-primary" id="mainBtn">
+        <span class="btn-icon-wrap" id="mainBtnIcon"></span>
+        <span id="mainBtnLabel">Start</span>
+      </button>
+      <button class="ctrl-btn" id="skipBtn" aria-label="Skip"></button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-cell">
+        <span class="stat-num" id="statSessions">0</span>
+        <span class="stat-lbl">Sessions</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-cell">
+        <span class="stat-num" id="statFocused">0m</span>
+        <span class="stat-lbl">Focused</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-cell">
+        <span class="stat-num" id="statStreak">0</span>
+        <span class="stat-lbl">Streak</span>
+      </div>
+    </div>
+
+    <!-- Deep Work mode button -->
+    <button class="deep-work-btn" id="deepWorkBtn">
+      <span class="deep-work-icon" aria-hidden="true"></span>
+      Deep Work Mode — 90 min
+    </button>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PANEL: Water / Hydration
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="panel" id="panel-water" role="tabpanel" hidden>
+
+    <!-- Progress ring -->
+    <div class="hydration-ring-wrap">
+      <svg class="h-ring" viewBox="0 0 140 140" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle class="h-ring-track" cx="70" cy="70" r="58"/>
+        <circle class="h-ring-fill" id="hRingFill" cx="70" cy="70" r="58"
+                stroke-dasharray="364" stroke-dashoffset="364"/>
+      </svg>
+      <div class="h-ring-center">
+        <span class="h-percent" id="hPercent">0%</span>
+        <span class="h-label">of goal</span>
+      </div>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="h-stats-grid">
+      <div class="h-stat">
+        <span class="h-stat-num" id="hConsumed">0</span>
+        <span class="h-stat-lbl">consumed (ml)</span>
+      </div>
+      <div class="h-stat">
+        <span class="h-stat-num" id="hRemaining">3000</span>
+        <span class="h-stat-lbl">remaining (ml)</span>
+      </div>
+      <div class="h-stat">
+        <span class="h-stat-num" id="hStreak">0</span>
+        <span class="h-stat-lbl">day streak</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="h-progress-bar">
+      <div class="h-progress-fill" id="hProgressFill"></div>
+    </div>
+
+    <!-- Quick log buttons -->
+    <div class="drink-btns">
+      <button class="drink-btn" data-amount="150">+150 ml</button>
+      <button class="drink-btn active" data-amount="250">+250 ml</button>
+      <button class="drink-btn" data-amount="500">+500 ml</button>
+    </div>
+
+    <button class="btn-primary wide" id="logWaterBtn">Log Water</button>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PANEL: Dashboard
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="panel" id="panel-dash" role="tabpanel" hidden>
+
+    <div class="dash-header">
+      <span class="dash-title">Today</span>
+      <span class="dash-date" id="dashDate"></span>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="dash-card-icon focus-icon" aria-hidden="true"></div>
+        <div class="dash-card-body">
+          <span class="dash-card-num" id="dashFocus">0m</span>
+          <span class="dash-card-lbl">Focus time</span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-icon water-icon" aria-hidden="true"></div>
+        <div class="dash-card-body">
+          <span class="dash-card-num" id="dashWater">0 ml</span>
+          <span class="dash-card-lbl">Hydration</span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-icon break-icon" aria-hidden="true"></div>
+        <div class="dash-card-body">
+          <span class="dash-card-num" id="dashBreaks">0</span>
+          <span class="dash-card-lbl">Breaks taken</span>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-icon streak-icon" aria-hidden="true"></div>
+        <div class="dash-card-body">
+          <span class="dash-card-num" id="dashStreak">0</span>
+          <span class="dash-card-lbl">Hydration streak</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Weekly bar chart (focus) -->
+    <div class="chart-wrap">
+      <div class="chart-label">Focus minutes — last 7 days</div>
+      <div class="bar-chart" id="barChart"></div>
+      <div class="bar-days" id="barDays"></div>
+    </div>
+
+    <!-- Motivational tip -->
+    <div class="tip-card" id="tipCard"></div>
+
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════
+       PANEL: Settings
+  ══════════════════════════════════════════════════════════════ -->
+  <section class="panel" id="panel-config" role="tabpanel" hidden>
+
+    <div class="settings-scroll">
+
+      <!-- Pomodoro settings -->
+      <div class="settings-section">
+        <div class="settings-section-title">Pomodoro</div>
+
+        <div class="field-row">
+          <label class="field-label" for="cfgWork">Focus duration</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgWork" type="number" min="1" max="120" value="25"/>
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="cfgShort">Short break</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgShort" type="number" min="1" max="60" value="5"/>
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="cfgLong">Long break</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgLong" type="number" min="1" max="60" value="15"/>
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="cfgInterval">Long break every</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgInterval" type="number" min="2" max="10" value="4"/>
+            <span class="field-unit">sessions</span>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle-label" for="cfgAutoStart">Auto-start next session</label>
+          <label class="toggle">
+            <input type="checkbox" id="cfgAutoStart"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Hydration settings -->
+      <div class="settings-section">
+        <div class="settings-section-title">Hydration</div>
+
+        <div class="field-row">
+          <label class="field-label" for="cfgGoal">Daily goal</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgGoal" type="number" min="500" max="8000" value="3000"/>
+            <span class="field-unit">ml</span>
+          </div>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="cfgWaterInterval">Reminder every</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgWaterInterval" type="number" min="5" max="120" value="30"/>
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+        <div class="toggle-row">
+          <label class="toggle-label" for="cfgQuiet">Quiet hours</label>
+          <label class="toggle">
+            <input type="checkbox" id="cfgQuiet"/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="quiet-fields" id="quietFields">
+          <div class="field-row sub">
+            <label class="field-label" for="cfgQuietStart">Start</label>
+            <input class="field-input time-input" id="cfgQuietStart" type="time" value="22:00"/>
+          </div>
+          <div class="field-row sub">
+            <label class="field-label" for="cfgQuietEnd">End</label>
+            <input class="field-input time-input" id="cfgQuietEnd" type="time" value="07:00"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wellness settings -->
+      <div class="settings-section">
+        <div class="settings-section-title">Wellness</div>
+
+        <div class="toggle-row">
+          <label class="toggle-label" for="cfgEyeCare">Eye care (20-20-20)</label>
+          <label class="toggle">
+            <input type="checkbox" id="cfgEyeCare" checked/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="cfgEyeInterval">Eye break every</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgEyeInterval" type="number" min="10" max="60" value="20"/>
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+
+        <div class="toggle-row">
+          <label class="toggle-label" for="cfgBreaks">Break reminders</label>
+          <label class="toggle">
+            <input type="checkbox" id="cfgBreaks" checked/>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="field-row">
+          <label class="field-label" for="cfgBreakInterval">Break every</label>
+          <div class="field-input-wrap">
+            <input class="field-input" id="cfgBreakInterval" type="number" min="30" max="240" value="60"/>
+            <span class="field-unit">min</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-primary wide" id="saveSettingsBtn">Save Settings</button>
+      <div class="save-feedback" id="saveFeedback" aria-live="polite"></div>
+
+    </div><!-- /settings-scroll -->
+  </section>
+
+</div><!-- /app -->
+
+<script src="popup.js"></script>
+</body>
+</html>
