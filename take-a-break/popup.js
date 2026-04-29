@@ -1,13 +1,13 @@
 'use strict';
 
 // ── Popup Controller ──────────────────────────────────────────────────────────
-// Manages all four panels: Focus, Water, Dashboard, Settings.
-// All DOM writes go through textContent / setAttribute — no innerHTML.
+// Manages four panels: Focus, Water, Dashboard, Settings.
+// All DOM writes use textContent / setAttribute — no innerHTML anywhere.
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
-const RING_CIRCUMFERENCE   = 553;   // 2π × 88
-const H_RING_CIRCUMFERENCE = 364;   // 2π × 58
+const RING_CIRCUMFERENCE   = 553;  // 2π × 88  (focus ring)
+const H_RING_CIRCUMFERENCE = 364;  // 2π × 58  (hydration ring)
 
 const MODE_LABELS = {
   work:       'Focus Time',
@@ -20,16 +20,49 @@ const TIPS = [
   'Drink water before you feel thirsty — thirst signals mild dehydration.',
   'Keep a water bottle on your desk as a visual cue to sip regularly.',
   'Start your morning with a full glass of water to jumpstart your system.',
-  'Your brain is 75% water. Hydration improves focus and mood.',
+  'Your brain is 75% water. Hydration directly improves focus and mood.',
   'Dark urine means dehydration. Aim for pale yellow throughout the day.',
   'The 20-20-20 rule: look 20 feet away for 20 seconds every 20 minutes.',
-  'Short breaks improve overall productivity more than working through them.',
-  'Standing up for even 2 minutes every hour reduces fatigue significantly.',
+  'Short breaks improve overall productivity more than powering through.',
+  'Standing up for even 2 minutes per hour reduces fatigue significantly.',
 ];
 
-const SVG_NS = 'http://www.w3.org/2000/svg';
+// ── State ─────────────────────────────────────────────────────────────────────
 
-// ── SVG icon builders (CSP-safe) ──────────────────────────────────────────────
+let _localTick   = null;
+let _drinkAmount = 250;
+let _activePanel = 'focus';
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+function _send(msg) {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage(msg, (res) => {
+      if (chrome.runtime.lastError) {
+        console.warn('[Popup] sendMessage error:', chrome.runtime.lastError.message);
+      }
+      resolve(res || {});
+    });
+  });
+}
+
+function _clamp(val, min, max) {
+  return Math.min(Math.max(parseInt(val, 10) || min, min), max);
+}
+
+function _getIntVal(id, min, max) {
+  const el = document.getElementById(id);
+  return el ? _clamp(el.value, min, max) : min;
+}
+
+function _setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+// ── SVG icon builders (CSP-safe, no innerHTML) ────────────────────────────────
+
+const SVG_NS = 'http://www.w3.org/2000/svg';
 
 function _svgEl(tag, attrs) {
   const el = document.createElementNS(SVG_NS, tag);
@@ -46,48 +79,39 @@ function _makeSvg(w, h, ...children) {
   return svg;
 }
 
-function makePlayIcon() {
+function _makePlayIcon() {
   return _makeSvg(16, 16, _svgEl('polygon', { points: '3,2 14,8 3,14' }));
 }
 
-function makePauseIcon() {
+function _makePauseIcon() {
   return _makeSvg(16, 16,
     _svgEl('rect', { x: '2',  y: '2', width: '4', height: '12', rx: '1' }),
     _svgEl('rect', { x: '10', y: '2', width: '4', height: '12', rx: '1' }),
   );
 }
 
-// ── State ─────────────────────────────────────────────────────────────────────
-
-let _localTick = null;
-let _drinkAmount = 250;
-let _activePanel = 'focus';
-
-// ── Message helpers ───────────────────────────────────────────────────────────
-
-function _send(msg) {
-  return new Promise((resolve) => {
-    chrome.runtime.sendMessage(msg, (res) => resolve(res || {}));
-  });
-}
-
 // ── Panel routing ─────────────────────────────────────────────────────────────
 
 function _showPanel(name) {
   _activePanel = name;
+
   document.querySelectorAll('.nav-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.panel === name);
-    t.setAttribute('aria-selected', t.dataset.panel === name ? 'true' : 'false');
-  });
-  document.querySelectorAll('.panel').forEach(p => {
-    const visible = p.id === `panel-${name}`;
-    p.hidden = !visible;
-    if (visible) p.removeAttribute('hidden');
+    const active = t.dataset.panel === name;
+    t.classList.toggle('active', active);
+    t.setAttribute('aria-selected', active ? 'true' : 'false');
   });
 
-  // Refresh the newly visible panel
-  if (name === 'water') _loadHydration();
-  if (name === 'dash')  _loadDashboard();
+  document.querySelectorAll('.panel').forEach(p => {
+    const visible = p.id === `panel-${name}`;
+    if (visible) {
+      p.removeAttribute('hidden');
+    } else {
+      p.setAttribute('hidden', '');
+    }
+  });
+
+  if (name === 'water')  _loadHydration();
+  if (name === 'dash')   _loadDashboard();
   if (name === 'config') _loadSettings();
 }
 
@@ -97,9 +121,9 @@ function _showPanel(name) {
 
 function _renderPomodoro(pom) {
   if (!pom) return;
-  const { timeLeft, totalTime, mode, running, completedToday } = pom;
+  const { timeLeft, totalTime, mode, running, completedToday, session } = pom;
 
-  // Clock display
+  // Clock
   const t = timeLeft ?? totalTime ?? 0;
   const m = String(Math.floor(t / 60)).padStart(2, '0');
   const s = String(t % 60).padStart(2, '0');
@@ -108,12 +132,12 @@ function _renderPomodoro(pom) {
   // Mode label
   document.getElementById('modeLabel').textContent = MODE_LABELS[mode] || 'Focus Time';
 
-  // Ring progress
-  const pct  = totalTime > 0 ? t / totalTime : 1;
+  // Ring progress (fills as time is consumed)
+  const pct    = totalTime > 0 ? t / totalTime : 1;
   const offset = RING_CIRCUMFERENCE * (1 - pct);
   document.getElementById('ringProgress').setAttribute('stroke-dashoffset', String(offset));
 
-  // App-level mode class (for CSS accent colors)
+  // CSS accent colour
   document.getElementById('app').setAttribute('data-mode', mode);
 
   // Mode tabs
@@ -121,21 +145,28 @@ function _renderPomodoro(pom) {
     tab.classList.toggle('active', tab.dataset.mode === mode);
   });
 
-  // Play/pause button
+  // Play/Pause button
   const icon  = document.getElementById('mainBtnIcon');
   const label = document.getElementById('mainBtnLabel');
-  const newIcon = running ? makePauseIcon() : makePlayIcon();
-  icon.replaceChildren(newIcon);
+  icon.replaceChildren(running ? _makePauseIcon() : _makePlayIcon());
   label.textContent = running ? 'Pause' : 'Start';
 
-  // Stats
+  // Stats — use actual focusMinutesToday from analytics for accuracy
   document.getElementById('statSessions').textContent = completedToday ?? 0;
-  document.getElementById('statFocused').textContent  = `${(completedToday ?? 0) * 25}m`;
-  document.getElementById('statStreak').textContent   = pom.session ?? 0;
+  document.getElementById('statStreak').textContent   = session ?? 0;
 
   // Deep work button state
-  const dwBtn = document.getElementById('deepWorkBtn');
-  dwBtn.classList.toggle('active', mode === 'deepWork' && running);
+  document.getElementById('deepWorkBtn').classList.toggle(
+    'active', mode === 'deepWork' && running
+  );
+}
+
+// Update the "focused today" stat from analytics (not a hardcoded ×25 calc)
+function _updateFocusStat() {
+  chrome.storage.local.get('analytics', ({ analytics }) => {
+    const mins = (analytics && analytics.focusMinutesToday) || 0;
+    document.getElementById('statFocused').textContent = `${mins}m`;
+  });
 }
 
 function _startLocalTick() {
@@ -153,10 +184,12 @@ function _startLocalTick() {
 }
 
 function _stopLocalTick() {
-  if (_localTick) { clearInterval(_localTick); _localTick = null; }
+  if (_localTick) {
+    clearInterval(_localTick);
+    _localTick = null;
+  }
 }
 
-// Alarm sound (played when timer finishes, detected via storage change)
 function _playAlarm() {
   try {
     const audio = new Audio(chrome.runtime.getURL('icons/alarm.mp3'));
@@ -166,18 +199,27 @@ function _playAlarm() {
   } catch (_) {}
 }
 
-// Watch for session completions from background
-chrome.storage.onChanged.addListener((changes) => {
-  if (!changes.pomodoro) return;
-  const oldVal = changes.pomodoro.oldValue;
-  const newVal = changes.pomodoro.newValue;
+// Watch for background-driven state changes (session completions, etc.)
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'local') return;
 
-  // Session just ended
-  if (oldVal?.running && !newVal?.running && newVal?.timeLeft === newVal?.totalTime) {
-    _playAlarm();
+  if (changes.pomodoro) {
+    const oldVal = changes.pomodoro.oldValue;
+    const newVal = changes.pomodoro.newValue;
+
+    // Detect session completion: was running, now stopped, timer reset
+    if (oldVal?.running && !newVal?.running && newVal?.timeLeft === newVal?.totalTime) {
+      _playAlarm();
+      _stopLocalTick();
+      _updateFocusStat();
+    }
+
+    if (_activePanel === 'focus' && newVal) _renderPomodoro(newVal);
   }
 
-  if (_activePanel === 'focus' && newVal) _renderPomodoro(newVal);
+  if (changes.hydration && _activePanel === 'water') {
+    _renderHydration(changes.hydration.newValue || {});
+  }
 });
 
 function _initFocusPanel() {
@@ -201,9 +243,7 @@ function _initFocusPanel() {
           chrome.storage.local.get('pomodoro', ({ pomodoro: p }) => _renderPomodoro(p));
         });
       } else {
-        _send({ action: 'pomodoro:start' }).then(() => {
-          _startLocalTick();
-        });
+        _send({ action: 'pomodoro:start' }).then(() => _startLocalTick());
       }
     });
   });
@@ -216,13 +256,18 @@ function _initFocusPanel() {
     });
   });
 
-  // Skip
+  // Skip — cycles work → shortBreak → longBreak → work, handles deepWork gracefully
   document.getElementById('skipBtn').addEventListener('click', () => {
     chrome.storage.local.get('pomodoro', ({ pomodoro }) => {
       if (!pomodoro) return;
-      const next =
-        pomodoro.mode === 'work'       ? 'shortBreak' :
-        pomodoro.mode === 'shortBreak' ? 'longBreak'  : 'work';
+      let next;
+      if (pomodoro.mode === 'work' || pomodoro.mode === 'deepWork') {
+        next = 'shortBreak';
+      } else if (pomodoro.mode === 'shortBreak') {
+        next = 'longBreak';
+      } else {
+        next = 'work';
+      }
       _stopLocalTick();
       _send({ action: 'pomodoro:switchMode', mode: next }).then(() => {
         chrome.storage.local.get('pomodoro', ({ pomodoro: p }) => _renderPomodoro(p));
@@ -251,26 +296,24 @@ function _renderHydration(data) {
   const pct       = Math.min(Math.round((consumed / goal) * 100), 100);
   const remaining = Math.max(goal - consumed, 0);
 
-  document.getElementById('hPercent').textContent    = `${pct}%`;
-  document.getElementById('hConsumed').textContent   = consumed.toLocaleString();
-  document.getElementById('hRemaining').textContent  = remaining.toLocaleString();
-  document.getElementById('hStreak').textContent     = streak;
+  document.getElementById('hPercent').textContent   = `${pct}%`;
+  document.getElementById('hConsumed').textContent  = consumed.toLocaleString();
+  document.getElementById('hRemaining').textContent = remaining.toLocaleString();
+  document.getElementById('hStreak').textContent    = streak;
 
-  // Ring
   const offset = H_RING_CIRCUMFERENCE - (pct / 100) * H_RING_CIRCUMFERENCE;
   document.getElementById('hRingFill').setAttribute('stroke-dashoffset', String(offset));
-
-  // Progress bar
   document.getElementById('hProgressFill').style.width = `${pct}%`;
 }
 
 async function _loadHydration() {
-  const result = await new Promise(r => chrome.storage.local.get('hydration', r));
-  _renderHydration(result.hydration || {});
+  chrome.storage.local.get('hydration', ({ hydration }) => {
+    _renderHydration(hydration || {});
+  });
 }
 
 function _initHydrationPanel() {
-  // Drink amount selector
+  // Amount selector
   document.querySelectorAll('.drink-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       _drinkAmount = parseInt(btn.dataset.amount, 10) || 250;
@@ -282,14 +325,14 @@ function _initHydrationPanel() {
   // Log water
   document.getElementById('logWaterBtn').addEventListener('click', async () => {
     const btn = document.getElementById('logWaterBtn');
-    btn.disabled = true;
-    btn.textContent = 'Logged!';
+    btn.disabled    = true;
+    btn.textContent = 'Logged! ✓';
 
     await _send({ action: 'hydration:log', amount: _drinkAmount });
     await _loadHydration();
 
     setTimeout(() => {
-      btn.disabled = false;
+      btn.disabled    = false;
       btn.textContent = 'Log Water';
     }, 1200);
   });
@@ -300,31 +343,29 @@ function _initHydrationPanel() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function _loadDashboard() {
-  const result = await new Promise(r =>
-    chrome.storage.local.get(['analytics', 'hydration', 'pomodoro'], r)
-  );
+  chrome.storage.local.get(['analytics', 'hydration'], ({ analytics, hydration }) => {
+    const a = analytics || {};
+    const h = hydration || {};
 
-  const analytics  = result.analytics  || {};
-  const hydration  = result.hydration  || {};
-  const pomodoro   = result.pomodoro   || {};
+    // Date label
+    const dateStr = new Date().toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric',
+    });
+    document.getElementById('dashDate').textContent = dateStr;
 
-  // Date label
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-  document.getElementById('dashDate').textContent = dateStr;
+    // Stat cards
+    document.getElementById('dashFocus').textContent  = `${a.focusMinutesToday || 0}m`;
+    document.getElementById('dashWater').textContent  = `${(h.consumed || 0).toLocaleString()} ml`;
+    document.getElementById('dashBreaks').textContent = a.breaksToday || 0;
+    document.getElementById('dashStreak').textContent = h.streak || 0;
 
-  // Stat cards
-  document.getElementById('dashFocus').textContent  = `${analytics.focusMinutesToday || 0}m`;
-  document.getElementById('dashWater').textContent  = `${hydration.consumed || 0} ml`;
-  document.getElementById('dashBreaks').textContent = analytics.breaksToday || 0;
-  document.getElementById('dashStreak').textContent = hydration.streak || 0;
+    // Bar chart
+    _renderBarChart(a.weeklyFocus || []);
 
-  // Bar chart — weekly focus
-  _renderBarChart(analytics.weeklyFocus || []);
-
-  // Tip
-  const tipEl = document.getElementById('tipCard');
-  tipEl.textContent = TIPS[Math.floor(Math.random() * TIPS.length)];
+    // Rotating tip
+    document.getElementById('tipCard').textContent =
+      TIPS[Math.floor(Math.random() * TIPS.length)];
+  });
 }
 
 function _renderBarChart(data) {
@@ -333,12 +374,12 @@ function _renderBarChart(data) {
   chart.replaceChildren();
   daysRow.replaceChildren();
 
-  // Ensure 7 slots
+  // Ensure exactly 7 slots (oldest → newest, newest = today)
   const vals = Array.from({ length: 7 }, (_, i) => data[i] || 0);
   const max  = Math.max(...vals, 1);
 
   const dayNames = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  const today = new Date().getDay(); // 0=Sun
+  const todayDay = new Date().getDay(); // 0=Sun
 
   vals.forEach((val, idx) => {
     // Bar
@@ -348,11 +389,12 @@ function _renderBarChart(data) {
     if (idx === vals.length - 1) bar.classList.add('today');
     chart.appendChild(bar);
 
-    // Day label
-    const dayOffset = (today - (6 - idx) + 7) % 7;
+    // Day label — slot 6 = today, slot 5 = yesterday, etc.
+    const daysAgo  = 6 - idx;
+    const dayIndex = ((todayDay - daysAgo) % 7 + 7) % 7;
     const lbl = document.createElement('span');
-    lbl.className = 'day-lbl';
-    lbl.textContent = dayNames[dayOffset];
+    lbl.className   = 'day-lbl';
+    lbl.textContent = dayNames[dayIndex];
     daysRow.appendChild(lbl);
   });
 }
@@ -362,40 +404,33 @@ function _renderBarChart(data) {
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function _loadSettings() {
-  const result = await new Promise(r =>
-    chrome.storage.local.get(['pomodoroSettings', 'hydration', 'eyeCare', 'breaks'], r)
+  chrome.storage.local.get(
+    ['pomodoroSettings', 'hydration', 'eyeCare', 'breaks'],
+    ({ pomodoroSettings: ps = {}, hydration: hyd = {}, eyeCare: ec = {}, breaks: brk = {} }) => {
+
+      // Pomodoro
+      _setVal('cfgWork',     Math.round((ps.workTime           || 25 * 60) / 60));
+      _setVal('cfgShort',    Math.round((ps.shortBreak         || 5  * 60) / 60));
+      _setVal('cfgLong',     Math.round((ps.longBreak          || 15 * 60) / 60));
+      _setVal('cfgInterval', ps.longBreakInterval || 4);
+      document.getElementById('cfgAutoStart').checked = ps.autoStart || false;
+
+      // Hydration
+      _setVal('cfgGoal',          hyd.goal            || 3000);
+      _setVal('cfgWaterInterval', hyd.intervalMinutes || 30);
+      document.getElementById('cfgQuiet').checked = hyd.quietEnabled || false;
+      _setVal('cfgQuietStart', hyd.quietStart || '22:00');
+      _setVal('cfgQuietEnd',   hyd.quietEnd   || '07:00');
+      _toggleQuietFields(hyd.quietEnabled);
+
+      // Wellness
+      document.getElementById('cfgEyeCare').checked = ec.enabled !== false;
+      _setVal('cfgEyeInterval', ec.intervalMinutes || 20);
+
+      document.getElementById('cfgBreaks').checked = brk.enabled !== false;
+      _setVal('cfgBreakInterval', brk.intervalMinutes || 60);
+    }
   );
-
-  const ps  = result.pomodoroSettings || {};
-  const hyd = result.hydration        || {};
-  const ec  = result.eyeCare          || {};
-  const brk = result.breaks           || {};
-
-  // Pomodoro
-  _setInputVal('cfgWork',     Math.round((ps.workTime     || 25 * 60) / 60));
-  _setInputVal('cfgShort',    Math.round((ps.shortBreak   || 5  * 60) / 60));
-  _setInputVal('cfgLong',     Math.round((ps.longBreak    || 15 * 60) / 60));
-  _setInputVal('cfgInterval', ps.longBreakInterval || 4);
-  document.getElementById('cfgAutoStart').checked = ps.autoStart || false;
-
-  // Hydration
-  _setInputVal('cfgGoal',          hyd.goal             || 3000);
-  _setInputVal('cfgWaterInterval', hyd.intervalMinutes  || 30);
-  document.getElementById('cfgQuiet').checked      = hyd.quietEnabled || false;
-  _setInputVal('cfgQuietStart',    hyd.quietStart || '22:00');
-  _setInputVal('cfgQuietEnd',      hyd.quietEnd   || '07:00');
-  _toggleQuietFields(hyd.quietEnabled);
-
-  // Wellness
-  document.getElementById('cfgEyeCare').checked    = ec.enabled !== false;
-  _setInputVal('cfgEyeInterval',   ec.intervalMinutes  || 20);
-  document.getElementById('cfgBreaks').checked      = brk.enabled !== false;
-  _setInputVal('cfgBreakInterval', brk.intervalMinutes || 60);
-}
-
-function _setInputVal(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.value = val;
 }
 
 function _toggleQuietFields(enabled) {
@@ -404,57 +439,46 @@ function _toggleQuietFields(enabled) {
 }
 
 async function _saveSettings() {
-  // Pomodoro
-  const pomSettings = {
-    workTime:          _getIntVal('cfgWork',     1, 120) * 60,
-    shortBreak:        _getIntVal('cfgShort',    1, 60)  * 60,
-    longBreak:         _getIntVal('cfgLong',     1, 60)  * 60,
-    longBreakInterval: _getIntVal('cfgInterval', 2, 10),
-    autoStart:         document.getElementById('cfgAutoStart').checked,
-    deepWorkTime:      90 * 60,
-  };
-  await _send({ action: 'pomodoro:settings', settings: pomSettings });
+  const saves = [
+    _send({
+      action: 'pomodoro:settings',
+      settings: {
+        workTime:          _getIntVal('cfgWork',     1, 120) * 60,
+        shortBreak:        _getIntVal('cfgShort',    1,  60) * 60,
+        longBreak:         _getIntVal('cfgLong',     1,  60) * 60,
+        longBreakInterval: _getIntVal('cfgInterval', 2,  10),
+        autoStart:         document.getElementById('cfgAutoStart').checked,
+        deepWorkTime:      90 * 60,
+      },
+    }),
+    _send({
+      action: 'hydration:settings',
+      settings: {
+        goal:            _getIntVal('cfgGoal', 500, 8000),
+        intervalMinutes: _getIntVal('cfgWaterInterval', 5, 120),
+        quietEnabled:    document.getElementById('cfgQuiet').checked,
+        quietStart:      document.getElementById('cfgQuietStart').value || '22:00',
+        quietEnd:        document.getElementById('cfgQuietEnd').value   || '07:00',
+      },
+    }),
+    _send({ action: 'eyecare:toggle',   enabled: document.getElementById('cfgEyeCare').checked }),
+    _send({ action: 'eyecare:interval', minutes: _getIntVal('cfgEyeInterval', 10, 60) }),
+    _send({ action: 'breaks:toggle',    enabled: document.getElementById('cfgBreaks').checked }),
+    _send({ action: 'breaks:interval',  minutes: _getIntVal('cfgBreakInterval', 30, 240) }),
+  ];
 
-  // Hydration
-  await _send({
-    action: 'hydration:settings',
-    settings: {
-      goal:            _getIntVal('cfgGoal', 500, 8000),
-      intervalMinutes: _getIntVal('cfgWaterInterval', 5, 120),
-      quietEnabled:    document.getElementById('cfgQuiet').checked,
-      quietStart:      document.getElementById('cfgQuietStart').value || '22:00',
-      quietEnd:        document.getElementById('cfgQuietEnd').value   || '07:00',
-    },
-  });
+  await Promise.all(saves);
 
-  // Eye care
-  const eyeEnabled = document.getElementById('cfgEyeCare').checked;
-  await _send({ action: 'eyecare:toggle',   enabled: eyeEnabled });
-  await _send({ action: 'eyecare:interval', minutes: _getIntVal('cfgEyeInterval', 10, 60) });
-
-  // Breaks
-  const brksEnabled = document.getElementById('cfgBreaks').checked;
-  await _send({ action: 'breaks:toggle',   enabled: brksEnabled });
-  await _send({ action: 'breaks:interval', minutes: _getIntVal('cfgBreakInterval', 30, 240) });
-
-  // Feedback
   const fb = document.getElementById('saveFeedback');
-  fb.textContent = 'Settings saved';
+  fb.textContent = 'Settings saved ✓';
   fb.classList.add('visible');
   setTimeout(() => fb.classList.remove('visible'), 2000);
 }
 
-function _getIntVal(id, min, max) {
-  const el = document.getElementById(id);
-  if (!el) return min;
-  return Math.min(Math.max(parseInt(el.value, 10) || min, min), max);
-}
-
 function _initSettingsPanel() {
-  document.getElementById('cfgQuiet').addEventListener('change', (e) => {
+  document.getElementById('cfgQuiet').addEventListener('change', e => {
     _toggleQuietFields(e.target.checked);
   });
-
   document.getElementById('saveSettingsBtn').addEventListener('click', _saveSettings);
 }
 
@@ -463,15 +487,15 @@ function _initSettingsPanel() {
 // ══════════════════════════════════════════════════════════════════════════════
 
 async function init() {
-  // Wire up nav tabs
+  // Nav tabs
   document.querySelectorAll('.nav-tab').forEach(tab => {
     tab.addEventListener('click', () => _showPanel(tab.dataset.panel));
   });
 
-  // Wire settings shortcut button
+  // Settings shortcut
   document.getElementById('settingsBtn').addEventListener('click', () => _showPanel('config'));
 
-  // Init each panel's interactive controls
+  // Wire panels
   _initFocusPanel();
   _initHydrationPanel();
   _initSettingsPanel();
@@ -479,7 +503,7 @@ async function init() {
   // Load initial pomodoro state
   chrome.storage.local.get('pomodoro', ({ pomodoro }) => {
     if (pomodoro) {
-      // Recompute timeLeft based on startedAt
+      // Recompute live timeLeft from startedAt
       if (pomodoro.running && pomodoro.startedAt) {
         const elapsed = Math.floor((Date.now() - pomodoro.startedAt) / 1000);
         pomodoro.timeLeft = Math.max(0, pomodoro.totalTime - elapsed);
@@ -489,13 +513,15 @@ async function init() {
     } else {
       _renderPomodoro({
         timeLeft: 25 * 60, totalTime: 25 * 60,
-        mode: 'work', running: false,
-        session: 0, completedToday: 0,
+        mode: 'work', running: false, session: 0, completedToday: 0,
       });
     }
   });
 
-  // Record popup open as "last activity" for smart activity detection
+  // Load focus stat from analytics (accurate across sessions)
+  _updateFocusStat();
+
+  // Record popup open timestamp for activity detection
   chrome.storage.local.get('appState', ({ appState }) => {
     const state = appState || {};
     state.lastActivity = Date.now();

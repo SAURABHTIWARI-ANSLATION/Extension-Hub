@@ -4,16 +4,15 @@
 // Single source of truth for all scheduled alarms.
 // Uses chrome.alarms (survives service worker sleep) + timestamp math.
 //
-// Alarm names:
-//   tab:pomodoro     — fires every 15s to tick the Pomodoro
-//   tab:hydration    — fires when hydration reminder is due
-//   tab:eyecare      — fires when 20-20-20 check is due
-//   tab:breaks       — fires when break reminder is due
-//   tab:activity     — fires to check for long continuous activity
+// Alarm names (all prefixed "tab:"):
+//   tab:pomodoro  — ticks every 15 s to drive the Pomodoro countdown
+//   tab:hydration — fires when a hydration reminder is due
+//   tab:eyecare   — fires when a 20-20-20 check is due
+//   tab:breaks    — fires when a break reminder is due
+//   tab:activity  — fires every 5 min to detect long continuous sessions
+//   tab:daily     — fires every 30 min to check for a new calendar day
 
 const TimerEngine = (() => {
-
-  const PREFIX = 'tab:';
 
   const ALARMS = {
     POMODORO:  'tab:pomodoro',
@@ -37,7 +36,7 @@ const TimerEngine = (() => {
   // ── Pomodoro Timer ────────────────────────────────────────────────────────
 
   function startPomodoro() {
-    // Tick every 15 seconds; timestamp math handles actual countdown
+    // Tick every 15 seconds; timestamp arithmetic handles the actual countdown
     _create(ALARMS.POMODORO, { periodInMinutes: 0.25 });
   }
 
@@ -47,14 +46,18 @@ const TimerEngine = (() => {
 
   // ── Hydration Reminder ────────────────────────────────────────────────────
 
+  /**
+   * Schedule (or re-schedule) the hydration alarm.
+   * Hydration is always scheduled — it defaults to 30 min if not configured.
+   */
   function scheduleHydration(intervalMinutes) {
-    const mins = Number(intervalMinutes) || 30;
+    const mins = Math.max(1, Number(intervalMinutes) || 30);
     _clear(ALARMS.HYDRATION);
     _create(ALARMS.HYDRATION, {
       delayInMinutes:  mins,
       periodInMinutes: mins,
     });
-    console.log(`[TimerEngine] scheduleHydration → alarm "${ALARMS.HYDRATION}" set for every ${mins} min`);
+    console.log(`[TimerEngine] Hydration alarm set — every ${mins} min`);
   }
 
   function clearHydration() {
@@ -64,10 +67,11 @@ const TimerEngine = (() => {
   // ── Eye Care Reminder ─────────────────────────────────────────────────────
 
   function scheduleEyeCare(intervalMinutes) {
+    const mins = Math.max(1, Number(intervalMinutes) || 20);
     _clear(ALARMS.EYECARE);
     _create(ALARMS.EYECARE, {
-      delayInMinutes: intervalMinutes,
-      periodInMinutes: intervalMinutes,
+      delayInMinutes:  mins,
+      periodInMinutes: mins,
     });
   }
 
@@ -78,10 +82,11 @@ const TimerEngine = (() => {
   // ── Break Reminder ────────────────────────────────────────────────────────
 
   function scheduleBreaks(intervalMinutes) {
+    const mins = Math.max(1, Number(intervalMinutes) || 60);
     _clear(ALARMS.BREAKS);
     _create(ALARMS.BREAKS, {
-      delayInMinutes: intervalMinutes,
-      periodInMinutes: intervalMinutes,
+      delayInMinutes:  mins,
+      periodInMinutes: mins,
     });
   }
 
@@ -98,11 +103,11 @@ const TimerEngine = (() => {
   // ── Daily Reset ───────────────────────────────────────────────────────────
 
   function scheduleDailyReset() {
-    // Check every 30 min whether it's a new day
+    // Poll every 30 min; the handler checks whether the calendar date has changed
     _create(ALARMS.DAILY, { periodInMinutes: 30 });
   }
 
-  // ── Restore all alarms on startup ─────────────────────────────────────────
+  // ── Restore all alarms on service-worker revival ──────────────────────────
 
   async function restoreAll(state) {
     const { pomodoro, hydration, eyeCare, breaks } = state;
@@ -111,26 +116,28 @@ const TimerEngine = (() => {
       startPomodoro();
     }
 
-    // Hydration: always restore — default to 30 min if not stored
+    // Hydration: always restore — health reminders don't need an opt-in flag
     scheduleHydration((hydration && hydration.intervalMinutes) || 30);
-    console.log('[TimerEngine] restoreAll → hydration alarm restored');
 
     if (eyeCare && eyeCare.enabled) {
       scheduleEyeCare(eyeCare.intervalMinutes || 20);
     }
+
     if (breaks && breaks.enabled) {
       scheduleBreaks(breaks.intervalMinutes || 60);
     }
+
     startActivityMonitor();
     scheduleDailyReset();
+    console.log('[TimerEngine] All alarms restored on startup');
   }
 
   return {
     ALARMS,
     startPomodoro, stopPomodoro,
     scheduleHydration, clearHydration,
-    scheduleEyeCare, clearEyeCare,
-    scheduleBreaks, clearBreaks,
+    scheduleEyeCare,  clearEyeCare,
+    scheduleBreaks,   clearBreaks,
     startActivityMonitor,
     scheduleDailyReset,
     restoreAll,

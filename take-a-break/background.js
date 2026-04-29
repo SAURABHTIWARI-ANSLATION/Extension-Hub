@@ -94,7 +94,9 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
 
 // ── Message Router (from popup) ───────────────────────────────────────────────
 
-chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (!sender || sender.id !== chrome.runtime.id) return;
+
   _handleMessage(msg).then(sendResponse).catch((err) => {
     console.error('[Take a Break] message error:', err);
     sendResponse({ ok: false, error: err.message });

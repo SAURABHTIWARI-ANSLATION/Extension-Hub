@@ -46,11 +46,17 @@ button { cursor: pointer; border: none; font: inherit; }
 
 /* ── Body ───────────────────────────────────────────────────────────────── */
 
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+
 body {
   font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
-  width: 360px;
+  width: 100%;
   min-height: 380px;
   display: flex;
   align-items: center;

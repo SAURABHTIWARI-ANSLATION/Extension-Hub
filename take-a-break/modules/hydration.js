@@ -4,69 +4,65 @@
 
 const HydrationModule = (() => {
 
-  // Track the alert window by ID so we can reuse/focus it instead of scanning
-  // all open windows on every alarm tick.
+  // Track the alert window by ID so we never scan all windows on every alarm.
+  // Reset to null when the user closes the window (via onRemoved listener).
   let _alertWindowId = null;
 
+  // ── Alarm handler ─────────────────────────────────────────────────────────
+
   async function onAlarm() {
-    console.log('[HydrationModule] onAlarm fired at', new Date().toLocaleTimeString());
+    console.log('[HydrationModule] Alarm fired at', new Date().toLocaleTimeString());
 
-    const [pomodoro, hydration] = await Promise.all([
-      StorageService.getWithDefaults('pomodoro'),
-      StorageService.getWithDefaults('hydration'),
-    ]);
-
-    const allowed = Scheduler.canFireHydration(pomodoro, hydration);
-    console.log('[HydrationModule] Scheduler.canFireHydration →', allowed, { pomodoro, hydration });
+    const hydration = await StorageService.getWithDefaults('hydration');
+    const allowed   = Scheduler.canFireHydration(hydration);
 
     if (!allowed) {
-      console.log('[HydrationModule] Alert suppressed by scheduler.');
+      console.log('[HydrationModule] Alert suppressed (quiet hours)');
       return;
     }
 
     await _openAlertWindow();
   }
 
-  // Opens the floating water-alert popup window.
-  // • If a window is already open → bring it to front (no duplicate).
-  // • If the tracked window was closed → open a fresh one.
-  // • Only ONE alert window exists at any time.
-  async function _openAlertWindow() {
-    console.log('[HydrationModule] _openAlertWindow called, tracked ID:', _alertWindowId);
+  // ── Alert window management ───────────────────────────────────────────────
 
+  /**
+   * Opens the floating hydration-alert popup.
+   * - If our tracked window is still open → focus it (no duplicate).
+   * - If it was closed (stale ID) → fall through to create a new one.
+   * - Safety scan catches orphaned windows after a service-worker restart.
+   */
+  async function _openAlertWindow() {
     // 1. Try to reuse the tracked window
     if (_alertWindowId !== null) {
       try {
-        const existing = await chrome.windows.get(_alertWindowId);
-        // Window still exists — focus it and bail out
+        await chrome.windows.get(_alertWindowId);
         await chrome.windows.update(_alertWindowId, { focused: true });
-        console.log('[HydrationModule] Reused existing alert window', _alertWindowId);
+        console.log('[HydrationModule] Focused existing alert window', _alertWindowId);
         return;
-      } catch (_err) {
-        // Window was closed by the user — clear the stale ID and fall through
-        console.log('[HydrationModule] Tracked window gone, opening fresh one');
+      } catch (_) {
+        // Window was closed; clear stale ID and continue
         _alertWindowId = null;
       }
     }
 
-    // 2. Safety scan: make sure no orphaned alert.html popup slipped through
-    //    (e.g. after a service-worker restart that cleared _alertWindowId)
+    // 2. Safety scan: catch orphaned alert.html popups after SW restart
     try {
-      const allPopups = await chrome.windows.getAll({ populate: true, windowTypes: ['popup'] });
-      const orphan = allPopups.find(win =>
-        win.tabs && win.tabs.some(tab => tab.url && tab.url.includes('alert.html'))
+      const popups = await chrome.windows.getAll({ populate: true, windowTypes: ['popup'] });
+      const orphan = popups.find(w =>
+        w.tabs && w.tabs.some(t => t.url && t.url.includes('alert.html'))
       );
       if (orphan) {
         _alertWindowId = orphan.id;
         await chrome.windows.update(orphan.id, { focused: true });
-        console.log('[HydrationModule] Found orphan alert window', orphan.id, '— focused it');
+        console.log('[HydrationModule] Re-adopted orphan alert window', orphan.id);
         return;
       }
     } catch (err) {
-      console.warn('[HydrationModule] Window scan failed:', err);
+      console.warn('[HydrationModule] Window scan error:', err);
     }
 
-    // 3. Create a brand new popup window
+    // 3. Create a fresh popup window
     try {
       const win = await chrome.windows.create({
         url:     chrome.runtime.getURL('alert.html'),
@@ -78,28 +74,29 @@ const HydrationModule = (() => {
       _alertWindowId = win.id;
       console.log('[HydrationModule] Created alert window', win.id);
 
-      // Clear the tracked ID when the window is closed by the user
+      // Auto-clear ID when window is closed by the user
       chrome.windows.onRemoved.addListener(function _onClose(closedId) {
         if (closedId === _alertWindowId) {
           _alertWindowId = null;
-          console.log('[HydrationModule] Alert window closed by user');
           chrome.windows.onRemoved.removeListener(_onClose);
+          console.log('[HydrationModule] Alert window closed');
         }
       });
     } catch (err) {
-      console.error('[HydrationModule] Failed to create alert window:', err);
+      console.error('[HydrationModule] Failed to open alert window:', err);
     }
   }
+
+  // ── Public API ────────────────────────────────────────────────────────────
 
   async function logDrink(amountMl = 250) {
     const hydration = await StorageService.getWithDefaults('hydration');
     hydration.consumed = (hydration.consumed || 0) + amountMl;
 
-    // Log entry
     if (!Array.isArray(hydration.logs)) hydration.logs = [];
     hydration.logs.push({ time: Date.now(), amount: amountMl });
 
-    // Keep only today's logs
+    // Keep only today's log entries
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
     hydration.logs = hydration.logs.filter(l => l.time >= todayStart.getTime());
@@ -113,7 +110,6 @@ const HydrationModule = (() => {
     Object.assign(hydration, newSettings);
     await StorageService.setKey('hydration', hydration);
 
-    // Reschedule alarm with new interval
     if (newSettings.intervalMinutes) {
       TimerEngine.scheduleHydration(newSettings.intervalMinutes);
     }
@@ -126,11 +122,12 @@ const HydrationModule = (() => {
     if (hydration.lastDate === today) return;
 
     const metGoal = (hydration.consumed || 0) >= (hydration.goal || 3000);
-    hydration.streak = metGoal ? (hydration.streak || 0) + 1 : 0;
+    hydration.streak  = metGoal ? (hydration.streak || 0) + 1 : 0;
     hydration.consumed = 0;
-    hydration.logs = [];
+    hydration.logs    = [];
     hydration.lastDate = today;
     await StorageService.setKey('hydration', hydration);
+    console.log('[HydrationModule] Daily reset — streak:', hydration.streak);
   }
 
   return { onAlarm, logDrink, updateSettings, dailyReset };

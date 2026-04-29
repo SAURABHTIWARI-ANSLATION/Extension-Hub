@@ -2,7 +2,7 @@
 
 // ── Eye Care Module ───────────────────────────────────────────────────────────
 // Implements the 20-20-20 rule: every 20 minutes, look at something
-// 20 feet away for 20 seconds.
+// 20 feet away for 20 seconds to reduce eye strain.
 
 const EyeCareModule = (() => {
 
@@ -16,7 +16,7 @@ const EyeCareModule = (() => {
     if (!Scheduler.canFireEyeCare(pomodoro)) return;
 
     NotificationService.show('tab:eyecare', {
-      title: '20-20-20 eye break',
+      title:   '20-20-20 Eye Break',
       message: 'Look at something 20 feet away for 20 seconds to rest your eyes.',
       priority: 1,
     });

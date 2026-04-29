@@ -7,81 +7,79 @@
 const StorageService = (() => {
 
   const DEFAULTS = {
-    // --- Pomodoro ---
+
+    // ── Pomodoro runtime state ────────────────────────────────────────────────
     pomodoro: {
-      mode: 'work',       // 'work' | 'shortBreak' | 'longBreak' | 'deepWork'
-      running: false,
-      startedAt: null,
-      totalTime: 25 * 60,
-      timeLeft: 25 * 60,
-      session: 0,
-      completedToday: 0,
+      mode:           'work',   // 'work' | 'shortBreak' | 'longBreak' | 'deepWork'
+      running:        false,
+      startedAt:      null,     // Date.now() when current session started
+      totalTime:      25 * 60,  // seconds for the current phase
+      timeLeft:       25 * 60,
+      session:        0,        // sessions since last long break
+      completedToday: 0,        // work/deepWork sessions finished today
       deepWorkActive: false,
     },
 
-    // --- Pomodoro settings ---
+    // ── Pomodoro settings ─────────────────────────────────────────────────────
     pomodoroSettings: {
-      workTime: 25 * 60,
-      shortBreak: 5 * 60,
-      longBreak: 15 * 60,
-      deepWorkTime: 90 * 60,
+      workTime:          25 * 60,
+      shortBreak:         5 * 60,
+      longBreak:         15 * 60,
+      deepWorkTime:      90 * 60,
       longBreakInterval: 4,
-      autoStart: false,
+      autoStart:         false,
     },
 
-    // --- Hydration ---
+    // ── Hydration ─────────────────────────────────────────────────────────────
     hydration: {
-      consumed: 0,
-      goal: 3000,
-      streak: 0,
-      lastDate: '',
+      consumed:       0,
+      goal:           3000,
+      streak:         0,
+      lastDate:       '',
       intervalMinutes: 30,
-      quietEnabled: false,
-      quietStart: '22:00',
-      quietEnd: '07:00',
-      logs: [],   // [{time: timestamp, amount: 250}]
+      quietEnabled:   false,
+      quietStart:     '22:00',
+      quietEnd:       '07:00',
+      logs:           [],  // [{ time: timestamp, amount: ml }]
     },
 
-    // --- Eye care ---
+    // ── Eye care ──────────────────────────────────────────────────────────────
     eyeCare: {
-      enabled: true,
+      enabled:         true,
       intervalMinutes: 20,
     },
 
-    // --- Breaks ---
+    // ── Breaks ────────────────────────────────────────────────────────────────
     breaks: {
-      enabled: true,
+      enabled:         true,
       intervalMinutes: 60,
     },
 
-    // --- Analytics ---
+    // ── Analytics ─────────────────────────────────────────────────────────────
     analytics: {
-      focusMinutesToday: 0,
-      breaksToday: 0,
-      hydrationToday: 0,
-      lastAnalyticsDate: '',
-      weeklyFocus: [],      // last 7 days [minutes]
-      weeklyHydration: [],  // last 7 days [ml]
+      focusMinutesToday:  0,
+      breaksToday:        0,
+      hydrationToday:     0,
+      lastAnalyticsDate:  '',
+      weeklyFocus:        [],  // last 7 days [minutes/day]
+      weeklyHydration:    [],  // last 7 days [ml/day]
     },
 
-    // --- App state ---
+    // ── App state ─────────────────────────────────────────────────────────────
     appState: {
-      mode: 'auto',   // 'auto' | 'work' | 'relax'
       lastActivity: null,
-      onboarded: false,
+      onboarded:    false,
     },
   };
 
+  // ── Core read/write ───────────────────────────────────────────────────────
+
   async function get(keys) {
-    return new Promise((resolve) => {
-      chrome.storage.local.get(keys, resolve);
-    });
+    return new Promise((resolve) => chrome.storage.local.get(keys, resolve));
   }
 
   async function set(data) {
-    return new Promise((resolve) => {
-      chrome.storage.local.set(data, resolve);
-    });
+    return new Promise((resolve) => chrome.storage.local.set(data, resolve));
   }
 
   async function getKey(key) {
@@ -93,16 +91,27 @@ const StorageService = (() => {
     return set({ [key]: value });
   }
 
+  /**
+   * Retrieve a key, merging stored data with DEFAULTS so every field exists.
+   * Newly added default fields automatically appear without migration code.
+   */
   async function getWithDefaults(key) {
-    const result = await getKey(key);
-    if (result === null) return DEFAULTS[key] ?? null;
-    // Deep merge with defaults so new fields always exist
-    if (typeof DEFAULTS[key] === 'object' && !Array.isArray(DEFAULTS[key])) {
-      return Object.assign({}, DEFAULTS[key], result);
+    const stored = await getKey(key);
+    const def    = DEFAULTS[key];
+
+    if (stored === null) return def ?? null;
+
+    // Deep-merge only plain objects (not arrays)
+    if (def && typeof def === 'object' && !Array.isArray(def)) {
+      return Object.assign({}, def, stored);
     }
-    return result;
+    return stored;
   }
 
+  /**
+   * Write defaults for any key that has never been stored.
+   * Called once on install; safe to call multiple times.
+   */
   async function initDefaults() {
     const existing = await get(Object.keys(DEFAULTS));
     const toSet = {};
@@ -117,7 +126,6 @@ const StorageService = (() => {
   return { get, set, getKey, setKey, getWithDefaults, initDefaults, DEFAULTS };
 })();
 
-// Export for service worker context
 if (typeof globalThis !== 'undefined') {
   globalThis.StorageService = StorageService;
 }

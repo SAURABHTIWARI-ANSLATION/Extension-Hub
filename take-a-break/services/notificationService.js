@@ -1,58 +1,46 @@
 'use strict';
 
 // ── NotificationService ───────────────────────────────────────────────────────
-// Prevents duplicate notifications and enforces priority ordering.
+// Thin wrapper around chrome.notifications.
+// Prevents duplicate IDs and enforces a minimum gap between notifications.
 
 const NotificationService = (() => {
 
-  // Track in-flight notification IDs to prevent dupes
-  const _active = new Set();
+  const MIN_GAP_MS = 8000;  // Minimum ms between any two notifications
+  let _lastShownAt = 0;
 
-  // Minimum gap between any two notifications (ms)
-  const MIN_GAP_MS = 8000;
-  let _lastNotifiedAt = 0;
-
-  function _canNotify() {
-    return Date.now() - _lastNotifiedAt >= MIN_GAP_MS;
+  function _gapElapsed() {
+    return Date.now() - _lastShownAt >= MIN_GAP_MS;
   }
 
   /**
-   * Create a notification, auto-clearing any previous one with the same id.
-   * @param {string} id        - Unique notification ID
-   * @param {object} opts      - chrome.notifications.create options (title, message, iconUrl)
-   * @param {boolean} force    - Bypass gap check (for critical events)
+   * Show a notification. Auto-clears any existing notification with the same id.
+   *
+   * @param {string}  id     - Unique notification identifier
+   * @param {object}  opts   - { title, message, iconUrl?, priority? }
+   * @param {boolean} force  - Skip gap check (use for session-complete events)
    */
   function show(id, opts, force = false) {
-    if (!force && !_canNotify()) return;
+    if (!force && !_gapElapsed()) return;
 
-    // Clear any existing notification with same id before creating
+    // Clear same-id notification first (avoids Chrome's "update vs create" quirk)
     chrome.notifications.clear(id, () => {
       chrome.notifications.create(id, {
-        type: 'basic',
-        iconUrl: opts.iconUrl || 'icons/icon48.png',
-        title: opts.title || 'Take a Break',
-        message: opts.message || '',
+        type:     'basic',
+        iconUrl:  opts.iconUrl || 'icons/icon48.png',
+        title:    opts.title   || 'Take a Break',
+        message:  opts.message || '',
         priority: opts.priority ?? 1,
-        ...opts,
       });
-      _active.add(id);
-      _lastNotifiedAt = Date.now();
+      _lastShownAt = Date.now();
     });
   }
 
   function clear(id) {
     chrome.notifications.clear(id);
-    _active.delete(id);
   }
 
-  function clearAll() {
-    for (const id of _active) {
-      chrome.notifications.clear(id);
-    }
-    _active.clear();
-  }
-
-  return { show, clear, clearAll };
+  return { show, clear };
 })();
 
 if (typeof globalThis !== 'undefined') {
