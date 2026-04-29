@@ -146,6 +146,7 @@
     updateMixerVisibility();
     onMixChange();
     bindEvents();
+    syncModeBtns(); // sets up needs-permission classes and mic badge
     setInterval(refreshStatus, 2500);
     chrome.runtime.onMessage.addListener(handleBgMessage);
   }
@@ -155,7 +156,13 @@
     const res = await bg('getMicPermission');
     micPermissionGranted = res?.granted === true;
 
-    if (!micPermissionGranted) {
+    // Show the permission gate only on first launch (never asked before).
+    // If user previously skipped or already granted, go straight to app.
+    const stored = await chrome.storage.local.get('micPermissionAsked');
+    const alreadyAsked = stored.micPermissionAsked === true;
+
+    if (!micPermissionGranted && !alreadyAsked) {
+      await chrome.storage.local.set({ micPermissionAsked: true });
       DOMHelpers.show(el.permissionGate);
       DOMHelpers.hide(el.app);
     } else {
@@ -169,27 +176,87 @@
     el.pgGrantBtn.textContent = 'Requesting...';
     DOMHelpers.hide(el.pgError);
 
+    let stream = null;
     try {
-      // Use offscreen context for permission probing to match real recording path.
-      const res = await bg('probeMicPermission');
-      if (!res?.success) {
-        throw Object.assign(new Error(res?.error || 'Microphone permission failed'), {
-          name: res?.name || 'NotAllowedError'
-        });
+      // Pre-check: if Chrome already has mic as 'denied', getUserMedia will throw
+      // immediately with no prompt. Surface that to the user before calling.
+      try {
+        const perm = await navigator.permissions.query({ name: 'microphone' });
+        if (perm.state === 'denied') {
+          // Throw a synthetic NotAllowedError so the catch block shows fix steps
+          const e = new Error('Microphone permission is blocked in Chrome settings');
+          e.name = 'NotAllowedError';
+          throw e;
+        }
+      } catch (permQueryErr) {
+        // permissions.query itself failed (some builds don't support it) — proceed
+        if (permQueryErr.name === 'NotAllowedError') throw permQueryErr;
       }
+
+      // ✅ Request directly in the sidebar (user-visible context).
+      // Chrome requires a user gesture + visible page for the permission prompt.
+      // Routing through background → offscreen BREAKS the prompt silently.
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+
+      // Permission granted — stop the probe stream immediately.
+      stream.getTracks().forEach(t => t.stop());
+      stream = null;
 
       micPermissionGranted = true;
       await bg('setMicPermission', { granted: true });
       DOMHelpers.hide(el.permissionGate);
       DOMHelpers.show(el.app);
+      syncModeBtns();
+      updateMicStatusBadge();
       toast('Microphone access granted', 'success');
     } catch (err) {
+      if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
       micPermissionGranted = false;
       el.pgGrantBtn.disabled = false;
-      el.pgGrantBtn.textContent = 'Allow Microphone Access';
-      el.pgError.textContent = err.name === 'NotAllowedError'
-        ? 'Microphone blocked. Allow mic for this extension and also check system-level mic permission, then try again.'
-        : 'Could not access microphone: ' + err.message;
+
+      DOMHelpers.clearElement(el.pgError);
+
+      // Map error names to actionable messages.
+      if (err.name === 'NotAllowedError') {
+        el.pgGrantBtn.textContent = 'Retry Permission';
+
+        const msg = document.createElement('strong');
+        msg.textContent = 'Microphone blocked in browser.';
+        el.pgError.appendChild(msg);
+
+        const intro = document.createElement('span');
+        intro.textContent = ' To fix:';
+        el.pgError.appendChild(intro);
+
+        const ol = document.createElement('ol');
+        ol.className = 'pg-steps';
+        [
+          'Click the lock / info icon in the Chrome address bar',
+          'Find "Microphone" and set it to "Allow"',
+          'Close and reopen this side panel'
+        ].forEach(step => {
+          const li = document.createElement('li');
+          li.textContent = step;
+          ol.appendChild(li);
+        });
+        el.pgError.appendChild(ol);
+      } else if (err.name === 'NotFoundError') {
+        el.pgGrantBtn.textContent = 'Retry';
+        const msg = document.createElement('span');
+        msg.textContent = 'No microphone found. Connect a microphone and try again.';
+        el.pgError.appendChild(msg);
+      } else if (err.name === 'NotReadableError') {
+        el.pgGrantBtn.textContent = 'Retry';
+        const msg = document.createElement('span');
+        msg.textContent = 'Microphone is busy or in use by another app. Close it and retry.';
+        el.pgError.appendChild(msg);
+      } else {
+        el.pgGrantBtn.textContent = 'Retry';
+        const msg = document.createElement('span');
+        msg.textContent = 'Could not access microphone: ' + (err.message || err.name);
+        el.pgError.appendChild(msg);
+      }
+
       DOMHelpers.show(el.pgError);
     }
   }
@@ -198,6 +265,8 @@
     micPermissionGranted = false;
     DOMHelpers.hide(el.permissionGate);
     DOMHelpers.show(el.app);
+    syncModeBtns();      // update needs-permission classes + mic badge
+    updateMicStatusBadge();
   }
 
   /* ── Tab detection ────────────────────────────────────────────────────── */
@@ -391,9 +460,74 @@
     document.addEventListener('mouseup', onCropDragEnd);
   }
 
-  /* ── Mode ─────────────────────────────────────────────────────────────── */
+  /* ── Mic status badge ─────────────────────────────────────────────────── */
+  function updateMicStatusBadge() {
+    let badge = document.getElementById('micStatusBadge');
+    if (!badge) {
+      // Inject once after the mode-nav
+      const modeNav = document.querySelector('.mode-nav');
+      if (!modeNav) return;
+      badge = document.createElement('div');
+      badge.id = 'micStatusBadge';
+      badge.className = 'mic-status-badge';
+      modeNav.insertAdjacentElement('afterend', badge);
+    }
+
+    DOMHelpers.clearElement(badge);
+
+    const dot = document.createElement('span');
+    dot.className = 'mic-status-dot';
+    const label = document.createElement('span');
+
+    if (micPermissionGranted) {
+      badge.className = 'mic-status-badge ready';
+      dot.textContent = '●';
+      label.textContent = 'Mic Ready';
+    } else {
+      badge.className = 'mic-status-badge blocked';
+      dot.textContent = '●';
+      label.textContent = 'Mic Blocked';
+
+      // Offer quick grant link
+      const grantLink = document.createElement('button');
+      grantLink.className = 'mic-status-grant';
+      grantLink.textContent = 'Grant access';
+      grantLink.addEventListener('click', () => {
+        el.pgTitle.textContent = 'Allow Microphone Access';
+        el.pgDesc.textContent = 'Grant microphone permission to enable Mic and Tab+Mic recording modes.';
+        DOMHelpers.clearElement(el.pgError);
+        DOMHelpers.hide(el.pgError);
+        el.pgGrantBtn.disabled = false;
+        el.pgGrantBtn.textContent = 'Allow Microphone Access';
+        DOMHelpers.show(el.permissionGate);
+        DOMHelpers.hide(el.app);
+      });
+      badge.appendChild(dot);
+      badge.appendChild(label);
+      badge.appendChild(grantLink);
+      return;
+    }
+
+    badge.appendChild(dot);
+    badge.appendChild(label);
+  }
+
+
   function setMode(mode) {
     if (!el.startBtn.disabled) {
+      // Gate mic-dependent modes behind permission
+      if ((mode === 'mic' || mode === 'tab+mic') && !micPermissionGranted) {
+        // Show the permission gate with contextual messaging — only once per session
+        el.pgTitle.textContent = 'Microphone Required';
+        el.pgDesc.textContent = 'This recording mode needs microphone access. Click below to grant permission.';
+        DOMHelpers.clearElement(el.pgError);
+        DOMHelpers.hide(el.pgError);
+        el.pgGrantBtn.disabled = false;
+        el.pgGrantBtn.textContent = 'Allow Microphone Access';
+        DOMHelpers.show(el.permissionGate);
+        DOMHelpers.hide(el.app);
+        return;
+      }
       currentMode = mode;
       syncModeBtns();
     }
@@ -403,7 +537,20 @@
     [el.modeTab, el.modeMic, el.modeBoth].forEach(btn => {
       btn.classList.toggle('active', btn.dataset.mode === currentMode);
     });
+
+    // Visually mark mic-dependent modes when permission is not granted
+    [el.modeMic, el.modeBoth].forEach(btn => {
+      if (!micPermissionGranted) {
+        btn.classList.add('needs-permission');
+        btn.setAttribute('title', 'Microphone permission required — click to grant');
+      } else {
+        btn.classList.remove('needs-permission');
+        btn.removeAttribute('title');
+      }
+    });
+
     updateMixerVisibility();
+    updateMicStatusBadge();
   }
 
   function updateMixerVisibility() {
