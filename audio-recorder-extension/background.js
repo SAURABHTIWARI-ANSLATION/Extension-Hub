@@ -116,7 +116,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       case 'setMixLevels':      return setMixLevels(request.mic, request.tab);
       case 'getMicPermission':  return getMicPermission();
       case 'setMicPermission':  return setMicPermission(request.granted);
-      case 'probeMicPermission': return probeMicPermission();
+      // NOTE: probeMicPermission intentionally removed.
+      // Mic permission MUST be requested directly from sidebar.js (user-visible context).
+      // Requesting from background/offscreen silently fails Chrome's user-gesture requirement.
       case 'getRecordingData':  return getRecordingData(request.id);
       case 'replaceRecordingData': {
         if (!request.id || !request.data) return { success: false, error: 'Missing recording data' };
@@ -162,30 +164,6 @@ async function getMicPermission() {
 async function setMicPermission(granted) {
   await chrome.storage.local.set({ micPermission: granted === true });
   return { success: true };
-}
-
-async function probeMicPermission() {
-  try {
-    await createOffscreenDocument();
-    const res = await sendToOffscreen({ action: 'probeMicrophone' });
-    const granted = res?.success === true;
-    await chrome.storage.local.set({ micPermission: granted });
-    if (granted) return { success: true, granted: true };
-    return {
-      success: false,
-      granted: false,
-      error: res?.error || 'Microphone permission denied',
-      name: res?.name || 'NotAllowedError'
-    };
-  } catch (error) {
-    await chrome.storage.local.set({ micPermission: false });
-    return {
-      success: false,
-      granted: false,
-      error: error?.message || 'Microphone permission probe failed',
-      name: error?.name || 'Error'
-    };
-  }
 }
 
 /* ── Recording control ─────────────────────────────────────────────────── */

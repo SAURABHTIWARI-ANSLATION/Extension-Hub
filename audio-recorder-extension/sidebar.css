@@ -2139,3 +2139,62 @@ html[data-theme="dark"] .crop-handle { box-shadow: 0 0 0 2px rgba(0,0,0,0.35); }
 }
 
 .complete-actions .btn { justify-content: center; }
+
+/* ============================================================
+   MIC STATUS BADGE (injected after .mode-nav)
+============================================================ */
+.mic-status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  letter-spacing: 0.02em;
+}
+
+.mic-status-badge.ready  { color: var(--success); }
+.mic-status-badge.blocked { color: var(--danger); }
+
+.mic-status-dot { font-size: 9px; line-height: 1; }
+
+.mic-status-grant {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  background: none;
+  border: none;
+  padding: 1px 4px;
+  cursor: pointer;
+  text-decoration: underline;
+  font-family: var(--font);
+}
+.mic-status-grant:hover { color: var(--primary-hover); }
+
+/* ============================================================
+   MODE BUTTONS — needs-permission state
+============================================================ */
+.mode-btn.needs-permission {
+  opacity: 0.55;
+  cursor: pointer; /* still clickable — triggers the gate */
+}
+.mode-btn.needs-permission::after {
+  content: ' 🔒';
+  font-size: 10px;
+}
+
+/* ============================================================
+   PERMISSION GATE — steps list
+============================================================ */
+.pg-steps {
+  margin: 8px 0 0 0;
+  padding-left: 20px;
+  text-align: left;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--danger);
+}
+.pg-steps li { margin-bottom: 2px; }
