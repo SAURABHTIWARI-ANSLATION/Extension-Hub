@@ -137,7 +137,7 @@
     await getCurrentTab();
     await checkMicPermission();
     await loadSettings();
-    initQuickSettingsUI();
+    await initQuickSettingsUI();
     await loadAudioDevices();
     await loadStagedRecording(false);
     await loadHistory();
@@ -258,6 +258,32 @@
       }
 
       DOMHelpers.show(el.pgError);
+    }
+  }
+
+  /**
+   * Live mic permission check via navigator.permissions API.
+   * Returns true if mic is 'granted', false for 'denied' or 'prompt'.
+   * Falls back to the cached flag if the Permissions API is unavailable.
+   */
+  async function verifyMicPermissionLive() {
+    try {
+      const perm = await navigator.permissions.query({ name: 'microphone' });
+      if (perm.state === 'granted') {
+        micPermissionGranted = true;
+        await bg('setMicPermission', { granted: true });
+        return true;
+      }
+      if (perm.state === 'denied') {
+        micPermissionGranted = false;
+        await bg('setMicPermission', { granted: false });
+        return false;
+      }
+      // 'prompt' — permission not yet requested; fall through to gate
+      return false;
+    } catch {
+      // Permissions API not available — trust cached flag
+      return micPermissionGranted;
     }
   }
 
@@ -514,20 +540,34 @@
 
 
   function setMode(mode) {
-    if (!el.startBtn.disabled) {
-      // Gate mic-dependent modes behind permission
-      if ((mode === 'mic' || mode === 'tab+mic') && !micPermissionGranted) {
-        // Show the permission gate with contextual messaging — only once per session
-        el.pgTitle.textContent = 'Microphone Required';
-        el.pgDesc.textContent = 'This recording mode needs microphone access. Click below to grant permission.';
-        DOMHelpers.clearElement(el.pgError);
-        DOMHelpers.hide(el.pgError);
-        el.pgGrantBtn.disabled = false;
-        el.pgGrantBtn.textContent = 'Allow Microphone Access';
-        DOMHelpers.show(el.permissionGate);
-        DOMHelpers.hide(el.app);
-        return;
-      }
+    if (el.startBtn.disabled) return; // recording in progress — ignore
+    if (mode === 'mic' || mode === 'tab+mic') {
+      // Async: check live permission, then either switch mode or show gate
+      verifyMicPermissionLive().then(granted => {
+        if (!granted) {
+          el.pgTitle.textContent = 'Microphone Required';
+          el.pgDesc.textContent = 'This recording mode needs microphone access. Click below to grant permission.';
+          DOMHelpers.clearElement(el.pgError);
+          DOMHelpers.hide(el.pgError);
+          el.pgGrantBtn.disabled = false;
+          el.pgGrantBtn.textContent = 'Allow Microphone Access';
+          DOMHelpers.show(el.permissionGate);
+          DOMHelpers.hide(el.app);
+          return;
+        }
+        currentMode = mode;
+        syncModeBtns();
+      }).catch(() => {
+        // Fallback: use cached flag
+        if (!micPermissionGranted) {
+          DOMHelpers.show(el.permissionGate);
+          DOMHelpers.hide(el.app);
+          return;
+        }
+        currentMode = mode;
+        syncModeBtns();
+      });
+    } else {
       currentMode = mode;
       syncModeBtns();
     }
@@ -561,13 +601,21 @@
 
   /* ── Recording controls ───────────────────────────────────────────────── */
   async function onStartClick() {
-    if ((currentMode === 'mic' || currentMode === 'tab+mic') && !micPermissionGranted) {
-      // Re-show permission gate
-      DOMHelpers.show(el.permissionGate);
-      DOMHelpers.hide(el.app);
-      el.pgTitle.textContent = 'Microphone Required';
-      el.pgDesc.textContent = 'This recording mode needs microphone access. Grant permission to continue.';
-      return;
+    if (currentMode === 'mic' || currentMode === 'tab+mic') {
+      // Always re-verify live permission state — stored flags can be stale
+      // (e.g. user revoked mic in Chrome settings since last grant).
+      const live = await verifyMicPermissionLive();
+      if (!live) {
+        el.pgTitle.textContent = 'Microphone Required';
+        el.pgDesc.textContent = 'This recording mode needs microphone access. Grant permission to continue.';
+        DOMHelpers.clearElement(el.pgError);
+        DOMHelpers.hide(el.pgError);
+        el.pgGrantBtn.disabled = false;
+        el.pgGrantBtn.textContent = 'Allow Microphone Access';
+        DOMHelpers.show(el.permissionGate);
+        DOMHelpers.hide(el.app);
+        return;
+      }
     }
 
     if ((currentMode === 'tab' || currentMode === 'tab+mic') && !currentTabId) {
@@ -1301,10 +1349,13 @@
   }
 
   /* ── Quick settings UI ──────────────────────────────────────────────── */
-  function initQuickSettingsUI() {
+  async function initQuickSettingsUI() {
     if (!el.qsToggle || !el.qsBody) return;
-    const saved = localStorage.getItem('qsOpen');
-    const open = saved === '1';
+    let open = false;
+    try {
+      const stored = await chrome.storage.local.get('uiPrefs');
+      open = stored?.uiPrefs?.qsOpen === true;
+    } catch (_) {}
     setQuickSettingsOpen(open);
   }
 
@@ -1318,7 +1369,11 @@
     el.qsToggle.setAttribute('aria-expanded', String(!!open));
     if (open) DOMHelpers.show(el.qsBody);
     else DOMHelpers.hide(el.qsBody);
-    localStorage.setItem('qsOpen', open ? '1' : '0');
+    chrome.storage.local.get('uiPrefs').then(stored => {
+      const prefs = stored?.uiPrefs || {};
+      prefs.qsOpen = !!open;
+      chrome.storage.local.set({ uiPrefs: prefs });
+    }).catch(() => {});
   }
 
   function setExportFormat(fmt) {
@@ -1515,7 +1570,7 @@
 
   function buildStagedFilenameFromInput() {
     const base = (el.completeName && String(el.completeName.value || '').trim()) || stagedBaseName();
-    const clean = base.replace(/[\\\\/:*?\"<>|]+/g, '_').replace(/\\s+/g, ' ').trim().substring(0, 80);
+    const clean = base.replace(/[\\/:\*?"<>|]+/g, '_').replace(/\s+/g, ' ').trim().substring(0, 80);
     const ext = stagedExt();
     if (!clean) return 'recording.' + ext;
     return clean.toLowerCase().endsWith('.' + ext) ? clean : (clean + '.' + ext);
