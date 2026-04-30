@@ -1,30 +1,30 @@
 // offscreen.js — Audio capture and recording (Manifest V3 offscreen document)
 // ─────────────────────────────────────────────────────────────────────────────
-// ARCHITECTURE NOTE:
-//   • Mic permission is NEVER requested here. It must be granted via the
-//     sidebar (user-visible context) before any recording involving mic starts.
+// ARCHITECTURE:
+//   • Mic permission is NEVER requested here — must be granted via sidebar.js.
+//   • background.js calls startRecording with a pre-obtained tabCapture streamId.
 //   • All streams are cleaned up on every stop/error path via cleanup().
 // ─────────────────────────────────────────────────────────────────────────────
 
 /* ── Module state ──────────────────────────────────────────────────────────── */
-let mediaRecorder     = null;
-let audioChunks       = [];
-let currentStream     = null;     // the stream fed into MediaRecorder
-let originalStreams   = [];       // pre-mix streams that need separate cleanup
-let audioContext      = null;     // shared AudioContext (created once per recording)
-let analyserNode      = null;
-let sourceNode        = null;
-let levelInterval     = null;
-let recordingMimeType = null;
-let stopResolver      = null;
-let stopPromise       = null;
-let isPaused          = false;
+let mediaRecorder      = null;
+let audioChunks        = [];
+let currentStream      = null;     // stream fed into MediaRecorder
+let originalStreams    = [];       // pre-mix streams for separate cleanup
+let audioContext       = null;     // shared AudioContext (created once per recording)
+let analyserNode       = null;
+let sourceNode         = null;
+let levelInterval      = null;
+let recordingMimeType  = null;
+let stopResolver       = null;
+let stopPromise        = null;
+let isPaused           = false;
 let recordingStartTime = null;
-let pausedDuration    = 0;
-let pausedAt          = null;
-let recordingMode     = 'tab';
-let mixMicGainNode    = null;
-let mixTabGainNode    = null;
+let pausedDuration     = 0;
+let pausedAt           = null;
+let recordingMode      = 'tab';
+let mixMicGainNode     = null;
+let mixTabGainNode     = null;
 
 /* ── Message router ────────────────────────────────────────────────────────── */
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
@@ -67,7 +67,7 @@ async function startRecording(tabId, mode, streamId) {
 
     // ── Mic only ──────────────────────────────────────────────────────────
     } else if (recordingMode === 'mic') {
-      // NOTE: permission must already be granted by the sidebar at this point.
+      // Permission must already be granted by the sidebar at this point.
       stream = await getMicStream();
 
     // ── Tab + Mic (mixed) ─────────────────────────────────────────────────
@@ -77,29 +77,29 @@ async function startRecording(tabId, mode, streamId) {
 
       const tabStream = await getTabStream(streamId);
 
+      // FIX: Use an explicit boolean flag instead of relying on `stream` being
+      // undefined to detect mic failure. This is clearer and avoids subtle
+      // bugs if stream were ever set earlier in the same branch.
       let micStream = null;
+      let micFailed = false;
+
       try {
         micStream = await getMicStream();
       } catch (micErr) {
-        // Mic failed after permission was supposedly granted.
-        // Fall back to tab-only gracefully and notify the UI.
+        micFailed = true;
         const reason = friendlyMicError(micErr);
         notifyBackground('recordingNotice', {
           level: 'warning',
           message: `${reason} — recording tab audio only.`
         });
         recordingMode = 'tab';
-        stream = tabStream;
       }
 
-      // BUG FIX: original code used `if (!stream)` which is correct in logic
-      // but relied on stream being undefined after mic failure. We now use an
-      // explicit flag: if micStream was obtained successfully, mix the two.
-      if (!stream && micStream) {
+      if (!micFailed && micStream) {
         // Both streams available — mix via Web Audio API
         stream = await mixStreams(tabStream, micStream);
-      } else if (!stream) {
-        // Mic acquisition failed above, stream was set to tabStream
+      } else {
+        // Mic failed (or no mic stream) — use tab audio only
         stream = tabStream;
       }
     }
@@ -109,20 +109,18 @@ async function startRecording(tabId, mode, streamId) {
     // Set up level analyser — reuses audioContext if mixStreams already created it
     setupLevelAnalyser(stream);
 
-    // Pick the best supported MIME type
     const settings = await getStoredSettings();
     recordingMimeType = pickMimeType(settings.exportFormat);
 
-    // Create and configure MediaRecorder
     mediaRecorder = new MediaRecorder(currentStream, {
       mimeType: recordingMimeType,
       audioBitsPerSecond: 128_000
     });
 
-    audioChunks       = [];
-    isPaused          = false;
-    pausedDuration    = 0;
-    pausedAt          = null;
+    audioChunks        = [];
+    isPaused           = false;
+    pausedDuration     = 0;
+    pausedAt           = null;
     recordingStartTime = Date.now();
 
     stopPromise = new Promise(resolve => { stopResolver = resolve; });
@@ -199,13 +197,12 @@ function friendlyMicError(err) {
 
 /* ── Web Audio mixing ──────────────────────────────────────────────────────── */
 async function mixStreams(tabStream, micStream) {
-  // Create a single AudioContext for mixing (also used later by setupLevelAnalyser)
-  const ctx = new AudioContext();
+  const ctx  = new AudioContext();
   audioContext = ctx;
 
-  const dest     = ctx.createMediaStreamDestination();
-  const tabSrc   = ctx.createMediaStreamSource(tabStream);
-  const micSrc   = ctx.createMediaStreamSource(micStream);
+  const dest   = ctx.createMediaStreamDestination();
+  const tabSrc = ctx.createMediaStreamSource(tabStream);
+  const micSrc = ctx.createMediaStreamSource(micStream);
 
   mixTabGainNode = ctx.createGain();
   mixMicGainNode = ctx.createGain();
@@ -242,7 +239,7 @@ function setupLevelAnalyser(stream) {
 
     sourceNode   = ctx.createMediaStreamSource(stream);
     analyserNode = ctx.createAnalyser();
-    analyserNode.fftSize              = 256;
+    analyserNode.fftSize               = 256;
     analyserNode.smoothingTimeConstant = 0.8;
     sourceNode.connect(analyserNode);
 
@@ -274,8 +271,8 @@ function setupLevelAnalyser(stream) {
 function pauseRecording() {
   if (mediaRecorder && mediaRecorder.state === 'recording' && !isPaused) {
     mediaRecorder.pause();
-    isPaused  = true;
-    pausedAt  = Date.now();
+    isPaused = true;
+    pausedAt = Date.now();
     return { success: true };
   }
   return { success: false, error: 'Cannot pause — recorder not active' };
@@ -316,10 +313,16 @@ async function stopRecording() {
 /* ── Device enumeration ────────────────────────────────────────────────────── */
 async function listAudioDevices() {
   try {
+    // enumerateDevices() returns device labels only if mic permission was previously
+    // granted by the sidebar. If not, labels will be empty strings — that's fine,
+    // we don't call getUserMedia here to avoid permission bypass.
     const devices = await navigator.mediaDevices.enumerateDevices();
     const inputs  = devices
       .filter(d => d && d.kind === 'audioinput')
-      .map(d => ({ deviceId: d.deviceId, label: d.label || `Microphone (${d.deviceId.slice(0, 8)})` }));
+      .map(d => ({
+        deviceId: d.deviceId,
+        label: d.label || `Microphone (${d.deviceId.slice(0, 8)})`
+      }));
     return { success: true, devices: inputs };
   } catch (err) {
     return { success: false, devices: [], error: err.message };
@@ -328,18 +331,17 @@ async function listAudioDevices() {
 
 /* ── MIME type selection ───────────────────────────────────────────────────── */
 function pickMimeType(exportFormat) {
-  // Prefer the user's chosen format, then fall back gracefully
   const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
 
   try {
     if (
-      exportFormat === 'mp3'
-      && typeof MediaRecorder !== 'undefined'
-      && MediaRecorder.isTypeSupported('audio/mpeg')
+      exportFormat === 'mp3' &&
+      typeof MediaRecorder !== 'undefined' &&
+      MediaRecorder.isTypeSupported('audio/mpeg')
     ) {
       candidates.unshift('audio/mpeg');
     }
-  } catch {/* ignore */}
+  } catch { /* ignore */ }
 
   for (const mime of candidates) {
     if (MediaRecorder.isTypeSupported(mime)) return mime;
@@ -356,11 +358,10 @@ function getElapsedSeconds() {
 
 /* ── Save recording ────────────────────────────────────────────────────────── */
 async function saveRecording(blob, duration) {
-  const settings  = await getStoredSettings();
-  let outputBlob  = blob;
-  let mimeType    = blob.type || recordingMimeType || 'audio/webm';
+  const settings = await getStoredSettings();
+  let outputBlob = blob;
+  let mimeType   = blob.type || recordingMimeType || 'audio/webm';
 
-  // WAV conversion (in-process, no external library)
   if (settings.exportFormat === 'wav') {
     try {
       outputBlob = await convertToWav(blob);
@@ -375,12 +376,12 @@ async function saveRecording(blob, duration) {
     });
   }
 
-  const maxGB   = Math.max(1, Number(settings.maxStorageGB) || 1);
+  const maxGB    = Math.max(1, Number(settings.maxStorageGB) || 1);
   const maxBytes = maxGB * 1024 * 1024 * 1024;
   const HARD_CAP = 120 * 1024 * 1024; // 120 MB per recording
   const size     = Number(outputBlob?.size) || 0;
 
-  if (size <= 0)                         throw new Error('Recording data is empty');
+  if (size <= 0)                          throw new Error('Recording data is empty');
   if (size > Math.min(maxBytes, HARD_CAP)) throw new Error('Recording too large to save safely');
 
   const base64 = await blobToBase64(outputBlob);
@@ -406,27 +407,27 @@ async function convertToWav(blob) {
 }
 
 function encodeWav(buffer) {
-  const numChannels   = buffer.numberOfChannels;
-  const sampleRate    = buffer.sampleRate;
-  const totalSamples  = buffer.length;
-  const blockAlign    = numChannels * 2;
-  const dataSize      = totalSamples * blockAlign;
-  const wavBuf        = new ArrayBuffer(44 + dataSize);
-  const view          = new DataView(wavBuf);
+  const numChannels  = buffer.numberOfChannels;
+  const sampleRate   = buffer.sampleRate;
+  const totalSamples = buffer.length;
+  const blockAlign   = numChannels * 2;
+  const dataSize     = totalSamples * blockAlign;
+  const wavBuf       = new ArrayBuffer(44 + dataSize);
+  const view         = new DataView(wavBuf);
 
   const str = (offset, s) => {
     for (let i = 0; i < s.length; i++) view.setUint8(offset + i, s.charCodeAt(i));
   };
 
-  str(0,  'RIFF');  view.setUint32(4,  36 + dataSize, true);
-  str(8,  'WAVE');  str(12, 'fmt ');
-  view.setUint32(16, 16, true);        // PCM chunk size
-  view.setUint16(20, 1,  true);        // PCM format
+  str(0,  'RIFF'); view.setUint32(4,  36 + dataSize, true);
+  str(8,  'WAVE'); str(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1,  true);
   view.setUint16(22, numChannels, true);
   view.setUint32(24, sampleRate,  true);
   view.setUint32(28, sampleRate * blockAlign, true);
   view.setUint16(32, blockAlign,  true);
-  view.setUint16(34, 16, true);        // bits per sample
+  view.setUint16(34, 16, true);
   str(36, 'data'); view.setUint32(40, dataSize, true);
 
   const channels = [];
@@ -477,39 +478,37 @@ function cleanup() {
   if (levelInterval) { clearInterval(levelInterval); levelInterval = null; }
 
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    try { mediaRecorder.stop(); } catch {/* ignore */}
+    try { mediaRecorder.stop(); } catch { /* ignore */ }
   }
 
-  // Stop the main stream's tracks
   if (currentStream) {
     currentStream.getTracks().forEach(t => t.stop());
   }
 
-  // Stop original pre-mix streams (tab + mic individually)
   for (const s of originalStreams) {
-    try { s.getTracks().forEach(t => t.stop()); } catch {/* ignore */}
+    try { s.getTracks().forEach(t => t.stop()); } catch { /* ignore */ }
   }
 
-  if (sourceNode)  { try { sourceNode.disconnect();  } catch {/* ignore */} }
-  if (analyserNode){ try { analyserNode.disconnect(); } catch {/* ignore */} }
-  if (audioContext){ audioContext.close().catch(() => {}); }
+  if (sourceNode)   { try { sourceNode.disconnect();  } catch { /* ignore */ } }
+  if (analyserNode) { try { analyserNode.disconnect(); } catch { /* ignore */ } }
+  if (audioContext) { audioContext.close().catch(() => {}); }
 
-  // Reset all state
-  mediaRecorder     = null;
-  audioChunks       = [];
-  currentStream     = null;
-  originalStreams   = [];
-  audioContext      = null;
-  sourceNode        = null;
-  analyserNode      = null;
-  recordingMimeType = null;
-  stopPromise       = null;
-  stopResolver      = null;
-  isPaused          = false;
-  pausedDuration    = 0;
-  pausedAt          = null;
+  // Reset all module-level state
+  mediaRecorder      = null;
+  audioChunks        = [];
+  currentStream      = null;
+  originalStreams    = [];
+  audioContext       = null;
+  sourceNode         = null;
+  analyserNode       = null;
+  recordingMimeType  = null;
+  stopPromise        = null;
+  stopResolver       = null;
+  isPaused           = false;
+  pausedDuration     = 0;
+  pausedAt           = null;
   recordingStartTime = null;
-  recordingMode     = 'tab';
-  mixMicGainNode    = null;
-  mixTabGainNode    = null;
+  recordingMode      = 'tab';
+  mixMicGainNode     = null;
+  mixTabGainNode     = null;
 }
