@@ -1,4 +1,5 @@
 (() => {
+  const HAS_DOM = typeof document !== 'undefined' && typeof Node !== 'undefined';
   const BRAND = {
     primary: '#2563EB',
     background: '#FFFFFF',
@@ -48,6 +49,7 @@
   }
 
   function isEditableTarget(target) {
+    if (!HAS_DOM) return false;
     if (!target) return false;
     const el = target.nodeType === Node.ELEMENT_NODE ? target : target.parentElement;
     if (!el) return false;
@@ -57,6 +59,7 @@
   }
 
   function xpathForNode(node) {
+    if (!HAS_DOM) return null;
     if (!node) return null;
     const isText = node.nodeType === Node.TEXT_NODE;
     const base = isText ? node.parentNode : node;
@@ -97,6 +100,7 @@
   }
 
   function nodeFromXPath(xpath) {
+    if (!HAS_DOM) return null;
     if (!xpath) return null;
     try {
       const result = document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null);

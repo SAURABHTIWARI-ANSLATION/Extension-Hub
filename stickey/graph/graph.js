@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const nodeCount = document.getElementById('nodeCount');
   const edgeCount = document.getElementById('edgeCount');
   const filterInput = document.getElementById('filterInput');
+  const clearFilterBtn = document.getElementById('clearFilterBtn');
+  const resetViewBtn = document.getElementById('resetViewBtn');
   const list = document.getElementById('list');
 
   const ctx = canvas.getContext('2d');
@@ -33,7 +35,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', resizeCanvas);
   resizeCanvas();
 
-  const resp = await chrome.runtime.sendMessage({ action: 'stickey_getAllAnnotations' });
+  async function safeRuntimeMessage(payload) {
+    if (!chrome?.runtime?.id) return null;
+    try {
+      return await chrome.runtime.sendMessage(payload);
+    } catch {
+      return null;
+    }
+  }
+
+  const resp = await safeRuntimeMessage({ action: 'stickey_getAllAnnotations' });
   const all = resp?.allAnnotations || {};
 
   const nodes = Object.values(all).map((ann) => ({
@@ -66,6 +77,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   state.byId = byId;
   nodeCount.textContent = String(nodes.length);
   edgeCount.textContent = String(edges.length);
+
+  function syncClear() {
+    const has = Boolean(String(filterInput.value || '').trim());
+    if (clearFilterBtn) clearFilterBtn.hidden = !has;
+  }
 
   function renderList() {
     const q = String(filterInput.value || '').trim().toLowerCase();
@@ -109,13 +125,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     el.appendChild(meta);
 
     el.addEventListener('click', async () => {
-      await chrome.runtime.sendMessage({ action: 'stickey_navigateTo', id: n.id });
+      await safeRuntimeMessage({ action: 'stickey_navigateTo', id: n.id });
     });
 
     return el;
   }
 
-  filterInput.addEventListener('input', renderList);
+  filterInput.addEventListener('input', () => {
+    syncClear();
+    renderList();
+  });
+  filterInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      filterInput.value = '';
+      syncClear();
+      renderList();
+      e.preventDefault();
+    }
+  });
+  clearFilterBtn?.addEventListener('click', () => {
+    filterInput.value = '';
+    syncClear();
+    renderList();
+    filterInput.focus();
+  });
+  syncClear();
   renderList();
 
   function worldToScreen(pt) {
@@ -182,8 +216,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   canvas.addEventListener('click', async (e) => {
     const n = pickNode(e.clientX, e.clientY);
     if (!n) return;
-    await chrome.runtime.sendMessage({ action: 'stickey_navigateTo', id: n.id });
+    await safeRuntimeMessage({ action: 'stickey_navigateTo', id: n.id });
   });
+
+  function resetView() {
+    state.scale = 1;
+    state.panX = 0;
+    state.panY = 0;
+  }
+  resetViewBtn?.addEventListener('click', () => resetView());
 
   function tick() {
     const repulsion = 1400;
@@ -270,4 +311,3 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   loop();
 });
-

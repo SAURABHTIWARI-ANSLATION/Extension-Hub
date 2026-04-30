@@ -1,4 +1,4 @@
-importScripts('../shared/shared.js');
+importScripts(chrome.runtime.getURL('shared/shared.js'));
 
 /* global Stickey */
 
@@ -287,6 +287,12 @@ function makeSnippet(ann, query) {
   return text.slice(start, end);
 }
 
+function sanitizeColor(color, fallback) {
+  const c = String(color || '').toLowerCase();
+  const allowed = ['yellow', 'pink', 'blue', 'green', 'orange', 'purple'];
+  return allowed.includes(c) ? c : fallback;
+}
+
 function sanitizeAnnotation(annotation, sender) {
   if (!annotation || typeof annotation !== 'object') return null;
   if (!annotation.id || typeof annotation.id !== 'string') return null;
@@ -321,7 +327,10 @@ function sanitizeAnnotation(annotation, sender) {
           h: utils.clampNumber(note.size?.h ?? 220, 140, 900)
         },
         minimized: Boolean(note.minimized),
-        anchorId: note.anchorId ? String(note.anchorId) : null
+        anchorId: note.anchorId ? String(note.anchorId) : null,
+        color: sanitizeColor(note.color, 'yellow'),
+        pinned: Boolean(note.pinned),
+        z: utils.clampNumber(note.z ?? 0, 0, 60000)
       }
     };
   }
@@ -331,7 +340,7 @@ function sanitizeAnnotation(annotation, sender) {
   return {
     ...base,
     highlight: {
-      color: String(highlight.color || 'yellow'),
+      color: sanitizeColor(highlight.color, 'yellow'),
       exactText: String(highlight.exactText || '').slice(0, 4000),
       comment: String(highlight.comment || '').slice(0, 2000),
       selectors: {

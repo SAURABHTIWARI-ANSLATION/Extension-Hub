@@ -11,7 +11,13 @@
     let t = 0;
     return (...args) => {
       clearTimeout(t);
-      t = setTimeout(() => fn(...args), ms);
+      t = setTimeout(() => {
+        try {
+          Promise.resolve(fn(...args)).catch(() => {});
+        } catch {
+          // ignore
+        }
+      }, ms);
     };
   }
 
@@ -30,6 +36,11 @@
       this.linkModeForId = null;
 
       this.drag = { id: null, startX: 0, startY: 0, originX: 0, originY: 0 };
+      this.noteZCounter = 1;
+      this.lastRestoreAt = 0;
+      this.contextInvalidated = false;
+      this._warnedInvalidated = false;
+      this.observer = null;
 
       this.root = null;
       this.panel = null;
@@ -38,6 +49,7 @@
       this.hovercard = null;
       this.toolbar = null;
       this.toolbarRange = null;
+      this.toolbarColorRow = null;
       this._saveDebounced = debounce((annotation) => this.upsert(annotation), 450);
       this._restoreDebounced = debounce(() => this.restoreMissingHighlights(), 700);
     }
@@ -49,6 +61,30 @@
       this.renderAll();
       this.installListeners();
       this.installObserver();
+    }
+
+    _isContextInvalidatedError(err) {
+      const msg = String(err?.message || err || '');
+      return msg.includes('Extension context invalidated');
+    }
+
+    async safeSendMessage(payload) {
+      if (this.contextInvalidated) return null;
+      if (!chrome?.runtime?.id) return null;
+      try {
+        return await chrome.runtime.sendMessage(payload);
+      } catch (err) {
+        const msg = String(err?.message || err || '');
+        if (this._isContextInvalidatedError(err) || msg.includes('Receiving end does not exist.')) {
+          this.contextInvalidated = true;
+          if (!this._warnedInvalidated) {
+            this._warnedInvalidated = true;
+            console.warn('[Stickey] Extension reloaded/unavailable; disable persistence until page refresh.');
+          }
+          return null;
+        }
+        return null;
+      }
     }
 
     buildUI() {
@@ -193,10 +229,14 @@
       toolbar.dataset.open = 'false';
       toolbar.setAttribute('aria-hidden', 'true');
 
+      const colorRow = this.colorRow(this.settings.highlightColor || 'yellow', (color) => {
+        this.setHighlightColor(color);
+      });
       const hlBtn = this.toolbarButton('Highlight', () => this.highlightFromToolbar(false));
       const noteBtn = this.toolbarButton('Note', () => this.highlightFromToolbar(true));
       const linkSelBtn = this.toolbarButton('Link', () => this.highlightFromToolbar(true, true));
 
+      toolbar.appendChild(colorRow);
       toolbar.appendChild(hlBtn);
       toolbar.appendChild(noteBtn);
       toolbar.appendChild(linkSelBtn);
@@ -230,6 +270,37 @@
       this.hovercardTitle = hcTitle;
       this.hovercardText = hcText;
       this.toolbar = toolbar;
+      this.toolbarColorRow = colorRow;
+    }
+
+    colorRow(activeColor, onPick) {
+      const row = document.createElement('div');
+      row.className = 'stickey-color-row';
+      const colors = ['yellow', 'pink', 'blue', 'green', 'orange', 'purple'];
+      for (const c of colors) {
+        const sw = document.createElement('button');
+        sw.type = 'button';
+        sw.className = 'stickey-color-swatch';
+        sw.dataset.color = c;
+        sw.dataset.active = c === activeColor ? 'true' : 'false';
+        sw.title = c;
+        sw.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          Array.from(row.querySelectorAll('.stickey-color-swatch')).forEach((x) => {
+            x.dataset.active = x.dataset.color === c ? 'true' : 'false';
+          });
+          onPick(c);
+        });
+        row.appendChild(sw);
+      }
+      return row;
+    }
+
+    setHighlightColor(color) {
+      this.settings.highlightColor = color;
+      this.updateToolbarColorRow();
+      this.safeSendMessage({ action: 'stickey_updateSettings', settings: { highlightColor: color } }).catch(() => {});
     }
 
     chip(label, value, active) {
@@ -261,60 +332,60 @@
       return btn;
     }
 
+    iconButton(title, iconName, onClick) {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'stickey-icon-btn';
+      btn.title = title;
+      btn.appendChild(this.icon(iconName));
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClick();
+      });
+      return btn;
+    }
+
     icon(name) {
-      const ns = 'http://www.w3.org/2000/svg';
-      const svg = document.createElementNS(ns, 'svg');
-      svg.setAttribute('viewBox', '0 0 16 16');
-      svg.setAttribute('width', '16');
-      svg.setAttribute('height', '16');
-      svg.setAttribute('fill', 'none');
-      svg.setAttribute('stroke', 'currentColor');
-      svg.setAttribute('stroke-width', '1.6');
-      svg.setAttribute('stroke-linecap', 'round');
-      svg.setAttribute('stroke-linejoin', 'round');
-      svg.setAttribute('aria-hidden', 'true');
-
-      const p = (d) => {
-        const path = document.createElementNS(ns, 'path');
-        path.setAttribute('d', d);
-        svg.appendChild(path);
-      };
-      const line = (x1, y1, x2, y2) => {
-        const l = document.createElementNS(ns, 'line');
-        l.setAttribute('x1', String(x1)); l.setAttribute('y1', String(y1));
-        l.setAttribute('x2', String(x2)); l.setAttribute('y2', String(y2));
-        svg.appendChild(l);
-      };
-      const rect = (x, y, w, h, rx) => {
-        const r = document.createElementNS(ns, 'rect');
-        r.setAttribute('x', x); r.setAttribute('y', y);
-        r.setAttribute('width', w); r.setAttribute('height', h);
-        if (rx) r.setAttribute('rx', rx);
-        svg.appendChild(r);
-      };
-
-      if (name === 'panel') { rect(2, 2, 12, 12, 2); line(2, 6, 14, 6); }
-      else if (name === 'note') { rect(4, 2, 8, 12, 1.5); line(6, 5.5, 10, 5.5); line(6, 8, 9, 8); }
-      else if (name === 'close') { p('M4 4l8 8 M12 4L4 12'); }
-      else if (name === 'link') { p('M6.5 8a1.5 1.5 0 0 1 1.5-1.5H11a1.5 1.5 0 0 1 0 3H8A1.5 1.5 0 0 1 6.5 8z'); p('M9.5 8a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1 0-3h3A1.5 1.5 0 0 1 9.5 8z'); }
-      else { line(8, 3, 8, 13); line(3, 8, 13, 8); }
-      return svg;
+      return Stickey.dom.svgIcon(name);
     }
 
     async loadSettings() {
-      const resp = await chrome.runtime.sendMessage({ action: 'stickey_getSettings' });
+      const resp = await this.safeSendMessage({ action: 'stickey_getSettings' });
       if (resp?.settings) this.settings = resp.settings;
+      this.updateToolbarColorRow();
+    }
+
+    updateToolbarColorRow() {
+      const row = this.toolbarColorRow;
+      if (!row) return;
+      const active = this.settings.highlightColor || 'yellow';
+      Array.from(row.querySelectorAll('.stickey-color-swatch')).forEach((x) => {
+        x.dataset.active = x.dataset.color === active ? 'true' : 'false';
+      });
     }
 
     async loadPageAnnotations() {
-      const resp = await chrome.runtime.sendMessage({
+      const resp = await this.safeSendMessage({
         action: 'stickey_getAnnotationsForPage',
         pageUrl: this.pageUrl,
         pageTitle: document.title
       });
       const annotations = resp?.annotations || {};
-      Object.entries(annotations).forEach(([id, ann]) => this.annotations.set(id, ann));
+      Object.entries(annotations).forEach(([id, ann]) => {
+        this.ensureAnnotationDefaults(ann);
+        this.annotations.set(id, ann);
+      });
       if (resp?.pageKey) this.pageKey = resp.pageKey;
+
+      // Rebuild z counter from persisted notes (best-effort)
+      let maxZ = 0;
+      for (const ann of this.annotations.values()) {
+        if (ann.type !== 'note') continue;
+        const z = Number(ann.note?.z || 0);
+        if (Number.isFinite(z)) maxZ = Math.max(maxZ, z);
+      }
+      this.noteZCounter = Math.max(1, maxZ + 1);
     }
 
     installListeners() {
@@ -324,12 +395,20 @@
       });
 
       document.addEventListener('mousedown', (e) => {
-        const note = e.target?.closest?.('.stickey-note');
-        const header = e.target?.closest?.('.stickey-note-header');
-        if (!note || !header) return;
+        const dragHandle = e.target?.closest?.('.stickey-note-drag');
+        const note = dragHandle?.closest?.('.stickey-note');
+        if (!note || !dragHandle) return;
         const id = note.dataset.id;
         const ann = this.annotations.get(id);
         if (!ann?.note) return;
+
+        // Bring to front on interaction (non-pinned only)
+        if (!ann.note.pinned) {
+          ann.note.z = this.noteZCounter++;
+          this.applyNoteZIndex(note, ann.note);
+          this._saveDebounced(ann);
+        }
+
         this.drag.id = id;
         this.drag.startX = e.clientX;
         this.drag.startY = e.clientY;
@@ -372,7 +451,8 @@
       const obs = new MutationObserver(() => {
         this._restoreDebounced();
       });
-      obs.observe(document.body, { subtree: true, childList: true, characterData: true });
+      obs.observe(document.body, { subtree: true, childList: true });
+      this.observer = obs;
     }
 
     async onMessage(msg) {
@@ -388,6 +468,10 @@
           return { success: true };
         case 'stickey_focusAnnotation':
           this.focusAnnotation(msg.id);
+          return { success: true };
+        case 'stickey_removeAnnotationLocal':
+          await this.deleteAnnotationLocal(String(msg.id || ''));
+          this.renderList();
           return { success: true };
         default:
           return { success: false };
@@ -456,10 +540,27 @@
       badge.textContent = ann.type === 'note' ? 'Note' : 'Highlight';
 
       const title = document.createElement('span');
+      title.className = 'stickey-item-label';
       title.textContent = ann.type === 'note' ? (ann.note?.title || 'Untitled') : (ann.highlight?.exactText || 'Highlight').slice(0, 48);
+
+      const actions = document.createElement('div');
+      actions.className = 'stickey-item-actions';
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'stickey-item-action';
+      delBtn.title = `Delete ${ann.type}`;
+      delBtn.appendChild(this.icon('trash'));
+      delBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.deleteAnnotation(ann.id);
+      });
 
       row.appendChild(badge);
       row.appendChild(title);
+      row.appendChild(actions);
+      actions.appendChild(delBtn);
 
       const snippet = document.createElement('div');
       snippet.className = 'stickey-item-snippet';
@@ -483,12 +584,23 @@
     }
 
     selectAnnotation(id) {
+      const prevId = this.selectedId;
       this.selectedId = id;
       const nodes = this.list.querySelectorAll('.stickey-item');
       nodes.forEach((n) => {
         n.dataset.selected = n.dataset.id === id ? 'true' : 'false';
       });
+      this._setDomSelected(prevId, false);
+      this._setDomSelected(id, true);
       this.renderDetail();
+    }
+
+    _setDomSelected(id, selected) {
+      if (!id) return;
+      const spans = this.renderedHighlights.get(id);
+      if (spans && spans.length) spans.forEach((s) => (s.dataset.selected = selected ? 'true' : 'false'));
+      const noteEl = this.renderedNotes.get(id);
+      if (noteEl) noteEl.dataset.selected = selected ? 'true' : 'false';
     }
 
     renderDetail() {
@@ -657,19 +769,38 @@
     }
 
     restoreMissingHighlights() {
+      const now = Date.now();
+      if (now - this.lastRestoreAt < 2500) return;
+
+      let missing = 0;
+      for (const ann of this.annotations.values()) {
+        if (ann.type !== 'highlight') continue;
+        if (!this.renderedHighlights.has(ann.id)) missing += 1;
+      }
+      if (missing === 0) return;
+      this.lastRestoreAt = now;
+
+      let restored = 0;
       for (const ann of this.annotations.values()) {
         if (ann.type !== 'highlight') continue;
         if (this.renderedHighlights.has(ann.id)) continue;
         this.renderHighlight(ann);
+        restored += 1;
+        if (restored >= 40) break; // avoid heavy work on large pages
       }
     }
 
     wrapBySearchingText(ann) {
       const text = String(ann.highlight?.exactText || '').trim();
       if (!text || text.length < 3) return [];
+      const bodyTextLen = document.body?.textContent?.length || 0;
+      if (bodyTextLen > 2_000_000) return [];
       const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
       let node;
+      let visited = 0;
       while ((node = walker.nextNode())) {
+        visited += 1;
+        if (visited > 15000) return [];
         if (this.isInsideStickeyUI(node)) continue;
         const idx = node.textContent.indexOf(text);
         if (idx !== -1) {
@@ -745,8 +876,8 @@
         span.addEventListener('click', (e) => {
           e.preventDefault();
           e.stopPropagation();
-          this.setPanelOpen(true);
           this.selectAnnotation(ann.id);
+          this.openHighlightEditor(ann, span);
         }, true);
 
         const parent = target.parentNode;
@@ -774,6 +905,18 @@
       this.hovercard.style.display = 'none';
     }
 
+    ensureAnnotationDefaults(ann) {
+      if (!ann || typeof ann !== 'object') return;
+      if (ann.type === 'note' && ann.note) {
+        ann.note.color = ann.note.color || 'yellow';
+        ann.note.pinned = Boolean(ann.note.pinned);
+        if (!Number.isFinite(Number(ann.note.z))) ann.note.z = 0;
+      }
+      if (ann.type === 'highlight' && ann.highlight) {
+        ann.highlight.color = ann.highlight.color || 'yellow';
+      }
+    }
+
     createFloatingNote() {
       const id = utils.createId('note');
       const note = {
@@ -791,12 +934,16 @@
           position: { x: window.scrollX + 120, y: window.scrollY + 120 },
           size: { w: 320, h: 240 },
           minimized: false,
-          anchorId: null
+          anchorId: null,
+          color: 'yellow',
+          pinned: false,
+          z: this.noteZCounter++
         }
       };
       this.annotations.set(id, note);
       this.upsert(note);
       this.renderNote(note);
+      this.setNoteEditing(note, this.renderedNotes.get(id), true);
       this.setPanelOpen(true);
       this.selectAnnotation(id);
       this.focusAnnotation(id);
@@ -824,11 +971,15 @@
           },
           size: { w: 340, h: 260 },
           minimized: false,
-          anchorId: highlightAnn.id
+          anchorId: highlightAnn.id,
+          color: 'yellow',
+          pinned: false,
+          z: this.noteZCounter++
         }
       };
       this.annotations.set(id, note);
       this.renderNote(note);
+      this.setNoteEditing(note, this.renderedNotes.get(id), true);
       return note;
     }
 
@@ -839,48 +990,93 @@
       const el = document.createElement('div');
       el.className = 'stickey-note stickey-ui';
       el.dataset.id = ann.id;
+      el.dataset.color = ann.note.color || 'yellow';
+      el.dataset.pinned = ann.note.pinned ? 'true' : 'false';
+      el.dataset.editing = 'true';
       el.setAttribute('data-stickey-root', 'true');
-      el.style.width = `${ann.note.size?.w || 320}px`;
+      el.style.setProperty('--stickey-note-w', `${ann.note.size?.w || 320}px`);
+      this.applyNoteZIndex(el, ann.note);
 
       const header = document.createElement('div');
       header.className = 'stickey-note-header';
-      const handle = document.createElement('div');
-      handle.className = 'stickey-note-handle';
-      const title = document.createElement('input');
-      title.className = 'stickey-note-title';
-      title.type = 'text';
-      title.placeholder = 'Untitled';
-      title.value = ann.note.title || '';
-      title.addEventListener('input', () => {
-        ann.note.title = title.value;
+      const drag = document.createElement('div');
+      drag.className = 'stickey-note-drag';
+      drag.title = 'Drag note';
+
+      const titleWrap = document.createElement('div');
+      titleWrap.className = 'stickey-note-title-wrap';
+      const titleDisplay = document.createElement('div');
+      titleDisplay.className = 'stickey-note-title-display';
+      titleDisplay.textContent = (ann.note.title || '').trim() || 'Untitled';
+      const titleInput = document.createElement('input');
+      titleInput.className = 'stickey-note-title-input';
+      titleInput.type = 'text';
+      titleInput.placeholder = 'Untitled';
+      titleInput.value = ann.note.title || '';
+      titleInput.addEventListener('input', () => {
+        ann.note.title = titleInput.value;
+        titleDisplay.textContent = (ann.note.title || '').trim() || 'Untitled';
         this.updateTagsFromAnnotation(ann);
         this._saveDebounced(ann);
         this.renderList();
       });
+      titleWrap.appendChild(titleDisplay);
+      titleWrap.appendChild(titleInput);
 
-      const closeBtn = document.createElement('button');
-      closeBtn.type = 'button';
-      closeBtn.className = 'stickey-icon-btn';
-      closeBtn.title = 'Delete note';
-      closeBtn.appendChild(this.icon('close'));
-      closeBtn.addEventListener('click', () => this.deleteAnnotation(ann.id));
+      const actions = document.createElement('div');
+      actions.className = 'stickey-note-actions';
 
-      header.appendChild(handle);
-      header.appendChild(title);
-      header.appendChild(closeBtn);
+      const paletteBtn = this.iconButton('Color', 'palette', () => this.openNoteColorPicker(ann, el, paletteBtn));
+      const pinBtn = this.iconButton('Pin', 'pin', () => {
+        ann.note.pinned = !ann.note.pinned;
+        el.dataset.pinned = ann.note.pinned ? 'true' : 'false';
+        this.applyNoteZIndex(el, ann.note);
+        this._saveDebounced(ann);
+      });
+      const editBtn = this.iconButton('Edit', 'edit', async () => {
+        const editing = el.dataset.editing === 'true';
+        this.setNoteEditing(ann, el, !editing);
+        if (editing) await this.upsert(ann);
+      });
+      const saveBtn = this.iconButton('Save', 'save', async () => {
+        await this.upsert(ann);
+        this.setNoteEditing(ann, el, false);
+        el.classList.remove('stickey-flash');
+        el.getBoundingClientRect();
+        el.classList.add('stickey-flash');
+      });
+      const delBtn = this.iconButton('Delete', 'trash', () => this.deleteAnnotation(ann.id));
+
+      actions.appendChild(paletteBtn);
+      actions.appendChild(pinBtn);
+      actions.appendChild(editBtn);
+      actions.appendChild(saveBtn);
+      actions.appendChild(delBtn);
+
+      header.appendChild(drag);
+      header.appendChild(titleWrap);
+      header.appendChild(actions);
 
       const body = document.createElement('div');
       body.className = 'stickey-note-body';
+      const content = document.createElement('div');
+      content.className = 'stickey-note-content';
+      content.textContent = ann.note.content || '';
+      content.addEventListener('dblclick', () => this.setNoteEditing(ann, el, true));
+
       const textarea = document.createElement('textarea');
       textarea.className = 'stickey-note-text';
       textarea.placeholder = 'Write… use #tags';
       textarea.value = ann.note.content || '';
       textarea.addEventListener('input', () => {
         ann.note.content = textarea.value;
+        content.textContent = ann.note.content || '';
         this.updateTagsFromAnnotation(ann);
         this._saveDebounced(ann);
         this.renderList();
       });
+
+      body.appendChild(content);
       body.appendChild(textarea);
 
       el.appendChild(header);
@@ -889,11 +1085,168 @@
       document.body.appendChild(el);
 
       this.renderedNotes.set(ann.id, el);
+      this.setNoteEditing(ann, el, false);
     }
 
     positionNoteElement(el, note) {
-      el.style.left = `${note.position.x}px`;
-      el.style.top = `${note.position.y}px`;
+      el.style.setProperty('--stickey-note-x', `${note.position.x}px`);
+      el.style.setProperty('--stickey-note-y', `${note.position.y}px`);
+    }
+
+    applyNoteZIndex(el, note) {
+      const pinned = Boolean(note?.pinned);
+      const z = Number(note?.z || 0);
+      el.style.zIndex = pinned ? '2147483645' : String(2147483000 + Math.max(0, Math.min(60000, z)));
+    }
+
+    setNoteEditing(ann, el, editing) {
+      if (!ann?.note || !el) return;
+      el.dataset.editing = editing ? 'true' : 'false';
+      if (editing) {
+        const input = el.querySelector('.stickey-note-title-input');
+        const textarea = el.querySelector('.stickey-note-text');
+        if (input && document.activeElement !== input) input.focus();
+        if (textarea) textarea.value = ann.note.content || '';
+      } else {
+        const titleDisplay = el.querySelector('.stickey-note-title-display');
+        const content = el.querySelector('.stickey-note-content');
+        if (titleDisplay) titleDisplay.textContent = (ann.note.title || '').trim() || 'Untitled';
+        if (content) content.textContent = ann.note.content || '';
+      }
+    }
+
+    openNoteColorPicker(ann, noteEl, buttonEl) {
+      if (!ann?.note || !noteEl || !buttonEl) return;
+      this.ensurePopover();
+      const pop = this.popover;
+      pop.dataset.type = 'noteColor';
+      pop.textContent = '';
+
+      const title = document.createElement('div');
+      title.className = 'stickey-popover-title';
+      title.textContent = 'Note color';
+
+      const row = document.createElement('div');
+      row.className = 'stickey-color-row';
+      const colors = ['yellow', 'pink', 'blue', 'green', 'orange', 'purple'];
+      for (const c of colors) {
+        const sw = document.createElement('button');
+        sw.type = 'button';
+        sw.className = 'stickey-color-swatch';
+        sw.dataset.color = c;
+        sw.dataset.active = (ann.note.color === c) ? 'true' : 'false';
+        sw.title = c;
+        sw.addEventListener('click', () => {
+          ann.note.color = c;
+          noteEl.dataset.color = c;
+          Array.from(row.querySelectorAll('.stickey-color-swatch')).forEach((x) => {
+            x.dataset.active = x.dataset.color === c ? 'true' : 'false';
+          });
+          this._saveDebounced(ann);
+          pop.style.display = 'none';
+        });
+        row.appendChild(sw);
+      }
+
+      pop.appendChild(title);
+      pop.appendChild(row);
+
+      const rect = buttonEl.getBoundingClientRect();
+      pop.style.left = `${Math.max(8, rect.left + window.scrollX - 10)}px`;
+      pop.style.top = `${Math.max(8, rect.bottom + window.scrollY + 8)}px`;
+      pop.style.display = 'block';
+    }
+
+    openHighlightEditor(ann, anchorEl) {
+      if (!ann?.highlight || !anchorEl) return;
+      this.hideHover();
+      this.ensurePopover();
+      const pop = this.popover;
+      pop.dataset.type = 'highlight';
+      pop.textContent = '';
+
+      const title = document.createElement('div');
+      title.className = 'stickey-popover-title';
+      title.textContent = 'Highlight';
+
+      const row = this.colorRow(ann.highlight.color || 'yellow', (color) => {
+        ann.highlight.color = color;
+        const spans = this.renderedHighlights.get(ann.id) || [];
+        spans.forEach((s) => (s.dataset.color = color));
+        this._saveDebounced(ann);
+      });
+
+      const comment = document.createElement('textarea');
+      comment.className = 'stickey-popover-textarea';
+      comment.placeholder = 'Add a note…';
+      comment.value = ann.highlight.comment || '';
+      comment.addEventListener('input', () => {
+        ann.highlight.comment = comment.value;
+        this.updateTagsFromAnnotation(ann);
+        this._saveDebounced(ann);
+        this.renderList();
+      });
+
+      const actions = document.createElement('div');
+      actions.className = 'stickey-popover-actions';
+
+      const openBtn = document.createElement('button');
+      openBtn.type = 'button';
+      openBtn.className = 'stickey-btn';
+      openBtn.textContent = 'Details';
+      openBtn.addEventListener('click', () => {
+        pop.style.display = 'none';
+        this.setPanelOpen(true);
+        this.selectAnnotation(ann.id);
+      });
+
+      const saveBtn = document.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.className = 'stickey-btn stickey-btn-primary';
+      saveBtn.textContent = 'Save';
+      saveBtn.addEventListener('click', async () => {
+        await this.upsert(ann);
+        pop.style.display = 'none';
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'stickey-btn';
+      delBtn.textContent = 'Remove';
+      delBtn.addEventListener('click', async () => {
+        pop.style.display = 'none';
+        await this.deleteAnnotation(ann.id);
+      });
+
+      actions.appendChild(openBtn);
+      actions.appendChild(delBtn);
+      actions.appendChild(saveBtn);
+
+      pop.appendChild(title);
+      pop.appendChild(row);
+      pop.appendChild(comment);
+      pop.appendChild(actions);
+
+      const rect = anchorEl.getBoundingClientRect();
+      pop.style.left = `${Math.max(8, rect.left + window.scrollX)}px`;
+      pop.style.top = `${Math.max(8, rect.bottom + window.scrollY + 8)}px`;
+      pop.style.display = 'block';
+    }
+
+    ensurePopover() {
+      if (this.popover) return;
+      const pop = document.createElement('div');
+      pop.className = 'stickey-popover stickey-ui';
+      pop.setAttribute('data-stickey-root', 'true');
+      pop.style.display = 'none';
+      document.body.appendChild(pop);
+      document.addEventListener('mousedown', (e) => {
+        if (pop.style.display !== 'block') return;
+        if (e.target?.closest?.('.stickey-popover')) return;
+        if (e.target?.closest?.('.stickey-icon-btn')) return;
+        pop.style.display = 'none';
+      }, true);
+      this.popover = pop;
     }
 
     updateTagsFromAnnotation(ann) {
@@ -925,7 +1278,7 @@
     }
 
     async setLink(idA, idB, linked) {
-      await chrome.runtime.sendMessage({ action: 'stickey_setLink', idA, idB, linked });
+      await this.safeSendMessage({ action: 'stickey_setLink', idA, idB, linked });
       const a = this.annotations.get(idA);
       const b = this.annotations.get(idB);
       if (a) {
@@ -960,7 +1313,7 @@
 
     async deleteAnnotation(id) {
       await this.deleteAnnotationLocal(id);
-      await chrome.runtime.sendMessage({ action: 'stickey_deleteAnnotation', id });
+      await this.safeSendMessage({ action: 'stickey_deleteAnnotation', id });
       this.renderList();
     }
 
@@ -994,7 +1347,7 @@
 
     async upsert(annotation) {
       this.updateTagsFromAnnotation(annotation);
-      await chrome.runtime.sendMessage({ action: 'stickey_upsertAnnotation', annotation });
+      await this.safeSendMessage({ action: 'stickey_upsertAnnotation', annotation });
     }
   }
 

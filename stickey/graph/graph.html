@@ -4,14 +4,35 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Stickey Graph</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
     <link rel="stylesheet" href="graph.css" />
   </head>
   <body>
     <div class="app">
       <aside class="sidebar">
         <div class="sidebar-header">
-          <div class="title">Graph View</div>
-          <div class="sub">Links across notes and highlights</div>
+          <div class="brand">
+            <div class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <rect x="2" y="2" width="12" height="12" rx="2.5"/>
+                <path d="M5 5.5h6M5 8h4"/>
+                <path d="M10 10.5l2 2-1.5 0.5L10 12v-1.5z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="title">Stickey Graph</div>
+              <div class="sub">Links across notes and highlights</div>
+            </div>
+          </div>
+
+          <div class="header-actions">
+            <button id="resetViewBtn" class="icon-btn" type="button" title="Reset view" aria-label="Reset view">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 6a5 5 0 1 1 1 6"/>
+                <path d="M4 6V3M4 6h3"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="stats">
@@ -26,7 +47,20 @@
         </div>
 
         <div class="search">
-          <input id="filterInput" class="input" type="text" placeholder="Filter nodes…" autocomplete="off" spellcheck="false" />
+          <div class="searchbar">
+            <div class="search-icon" aria-hidden="true">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="7" cy="7" r="4.5"/>
+                <line x1="10.5" y1="10.5" x2="14" y2="14"/>
+              </svg>
+            </div>
+            <input id="filterInput" class="input" type="text" placeholder="Filter nodes…" autocomplete="off" spellcheck="false" />
+            <button id="clearFilterBtn" class="clear-btn" type="button" title="Clear filter" aria-label="Clear filter" hidden>
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 4l8 8M12 4L4 12"/>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div id="list" class="list"></div>
@@ -34,7 +68,7 @@
 
       <main class="main">
         <canvas id="canvas"></canvas>
-        <div class="hint">Scroll to zoom &middot; Drag to pan &middot; Click node to open</div>
+        <div class="hint">Scroll to zoom · Drag to pan · Click node to open</div>
       </main>
     </div>
 

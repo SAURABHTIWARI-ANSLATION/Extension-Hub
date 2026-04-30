@@ -101,6 +101,28 @@
         p('M3 5h10M5 5V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M7 8v4M9 8v4');
         rect(4, 5, 8, 8, 1);
         break;
+      case 'save':
+        // Down arrow into tray
+        p('M8 2v7');
+        p('M5.5 6.5 8 9l2.5-2.5');
+        rect(3, 10, 10, 4, 1.5);
+        break;
+      case 'pin':
+        // Simple pushpin
+        p('M6 2h4l1 3-2 2v3l-1 1-1-1V7L5 5z');
+        p('M8 13v2');
+        break;
+      case 'edit':
+        p('M4 12l1.5-4.5L11.5 1.5 14.5 4.5 8.5 10.5 4 12z');
+        p('M10.8 2.2l3 3');
+        break;
+      case 'palette':
+        circle(8, 8, 5.5);
+        circle(6.3, 6.4, 0.7);
+        circle(9.6, 5.6, 0.7);
+        circle(10.4, 8.4, 0.7);
+        p('M6 11.5c.8 1.2 2.2 1.8 3.6 1.6');
+        break;
       case 'convert':
         p('M4 4h5l3 3v5H4z');
         p('M9 4v3h3');
