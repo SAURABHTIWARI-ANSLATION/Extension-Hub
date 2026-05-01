@@ -1,142 +1,149 @@
 // offscreen.js — Audio capture and recording (Manifest V3 offscreen document)
+// ─────────────────────────────────────────────────────────────────────────────
+// ARCHITECTURE:
+//   • Mic permission is NEVER requested here — must be granted via sidebar.js.
+//   • background.js calls startRecording with a pre-obtained tabCapture streamId.
+//   • All streams are cleaned up on every stop/error path via cleanup().
+// ─────────────────────────────────────────────────────────────────────────────
 
-let mediaRecorder = null;
-let audioChunks = [];
-let currentStream = null;
-let audioContext = null;
-let sourceNode = null;
-let analyserNode = null;
-let levelInterval = null;
-let recordingMimeType = null;
-let stopPromise = null;
-let stopResolver = null;
-let isPaused = false;
+/* ── Module state ──────────────────────────────────────────────────────────── */
+let mediaRecorder      = null;
+let audioChunks        = [];
+let currentStream      = null;     // stream fed into MediaRecorder
+let originalStreams    = [];       // pre-mix streams for separate cleanup
+let audioContext       = null;     // shared AudioContext (created once per recording)
+let analyserNode       = null;
+let sourceNode         = null;
+let levelInterval      = null;
+let recordingMimeType  = null;
+let stopResolver       = null;
+let stopPromise        = null;
+let isPaused           = false;
 let recordingStartTime = null;
-let pausedDuration = 0;
-let pausedAt = null;
-let recordingMode = 'tab';
-let mixMicGainNode = null;
-let mixTabGainNode = null;
+let pausedDuration     = 0;
+let pausedAt           = null;
+let recordingMode      = 'tab';
+let mixMicGainNode     = null;
+let mixTabGainNode     = null;
 
+/* ── Message router ────────────────────────────────────────────────────────── */
 chrome.runtime.onMessage.addListener((request, _sender, sendResponse) => {
   const handlers = {
-    startRecording: () => startRecording(request.tabId, request.mode, request.streamId),
-    stopRecording:  () => stopRecording(),
-    pauseRecording: () => pauseRecording(),
-    resumeRecording: () => resumeRecording(),
-    probeMicrophone: () => probeMicrophone(),
+    startRecording:   () => startRecording(request.tabId, request.mode, request.streamId),
+    stopRecording:    () => stopRecording(),
+    pauseRecording:   () => pauseRecording(),
+    resumeRecording:  () => resumeRecording(),
     listAudioDevices: () => listAudioDevices(),
-    setMixLevels: () => setMixLevels(request.mic, request.tab)
+    setMixLevels:     () => setMixLevels(request.mic, request.tab)
   };
 
   const handler = handlers[request.action];
   if (!handler) return false;
 
   Promise.resolve()
-    .then(() => handler())
+    .then(handler)
     .then(sendResponse)
-    .catch((error) => sendResponse({ success: false, error: error.message || 'Unknown offscreen error' }));
+    .catch(err => sendResponse({ success: false, error: err.message || 'Offscreen error' }));
 
-  return true;
+  return true; // keep channel open for async response
 });
 
-async function probeMicrophone() {
-  let stream = null;
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-    return { success: true };
-  } catch (error) {
-    const name = error?.name || 'Error';
-    const message = error?.message || 'Microphone permission failed';
-    return { success: false, name, error: message };
-  } finally {
-    if (stream) stream.getTracks().forEach(track => track.stop());
-  }
-}
-
+/* ── Recording start ───────────────────────────────────────────────────────── */
 async function startRecording(tabId, mode, streamId) {
-  if (mediaRecorder && mediaRecorder.state === 'recording') {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
     return { success: false, error: 'Recorder already running' };
   }
 
+  const ALLOWED_MODES = ['tab', 'mic', 'tab+mic'];
+  recordingMode = ALLOWED_MODES.includes(mode) ? mode : 'tab';
+
   try {
     let stream;
-    const allowedModes = ['tab', 'mic', 'tab+mic'];
-    recordingMode = mode || 'tab';
-    if (!allowedModes.includes(recordingMode)) {
-      throw new Error('Invalid recording mode: ' + recordingMode);
-    }
 
-    if (mode === 'tab') {
+    // ── Tab only ──────────────────────────────────────────────────────────
+    if (recordingMode === 'tab') {
       if (!streamId) throw new Error('Missing tab stream ID');
-      stream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          mandatory: {
-            chromeMediaSource: 'tab',
-            chromeMediaSourceId: streamId
-          }
-        }
-      });
-    } else if (mode === 'mic') {
-      // Microphone — getUserMedia triggered after user interaction in sidebar
-      stream = await getMicStreamWithSettings();
-    } else if (mode === 'tab+mic') {
-      // Combine tab audio + microphone using Web Audio API
-      if (!streamId) throw new Error('Missing tab stream ID for combined mode');
-      const tabStream = await navigator.mediaDevices.getUserMedia({
-        audio: {
-          mandatory: {
-            chromeMediaSource: 'tab',
-            chromeMediaSourceId: streamId
-          }
-        }
-      });
-      const micStream = await getMicStreamWithSettings();
-      stream = await mixStreams(tabStream, micStream);
+      stream = await getTabStream(streamId);
+
+    // ── Mic only ──────────────────────────────────────────────────────────
+    } else if (recordingMode === 'mic') {
+      // Permission must already be granted by the sidebar at this point.
+      stream = await getMicStream();
+
+    // ── Tab + Mic (mixed) ─────────────────────────────────────────────────
     } else {
-      throw new Error('Invalid recording mode: ' + mode);
+      // recordingMode === 'tab+mic'
+      if (!streamId) throw new Error('Missing tab stream ID for combined mode');
+
+      const tabStream = await getTabStream(streamId);
+
+      // FIX: Use an explicit boolean flag instead of relying on `stream` being
+      // undefined to detect mic failure. This is clearer and avoids subtle
+      // bugs if stream were ever set earlier in the same branch.
+      let micStream = null;
+      let micFailed = false;
+
+      try {
+        micStream = await getMicStream();
+      } catch (micErr) {
+        micFailed = true;
+        const reason = friendlyMicError(micErr);
+        notifyBackground('recordingNotice', {
+          level: 'warning',
+          message: `${reason} — recording tab audio only.`
+        });
+        recordingMode = 'tab';
+      }
+
+      if (!micFailed && micStream) {
+        // Both streams available — mix via Web Audio API
+        stream = await mixStreams(tabStream, micStream);
+      } else {
+        // Mic failed (or no mic stream) — use tab audio only
+        stream = tabStream;
+      }
     }
 
     currentStream = stream;
+
+    // Set up level analyser — reuses audioContext if mixStreams already created it
     setupLevelAnalyser(stream);
 
-    const settings = await getExportSettings();
+    const settings = await getStoredSettings();
     recordingMimeType = pickMimeType(settings.exportFormat);
+
     mediaRecorder = new MediaRecorder(currentStream, {
       mimeType: recordingMimeType,
-      audioBitsPerSecond: 128000
+      audioBitsPerSecond: 128_000
     });
 
-    audioChunks = [];
-    isPaused = false;
-    pausedDuration = 0;
-    pausedAt = null;
+    audioChunks        = [];
+    isPaused           = false;
+    pausedDuration     = 0;
+    pausedAt           = null;
     recordingStartTime = Date.now();
 
-    stopPromise = new Promise((resolve) => { stopResolver = resolve; });
+    stopPromise = new Promise(resolve => { stopResolver = resolve; });
 
-    mediaRecorder.ondataavailable = (event) => {
-      if (event.data && event.data.size > 0) audioChunks.push(event.data);
+    mediaRecorder.ondataavailable = ({ data }) => {
+      if (data && data.size > 0) audioChunks.push(data);
     };
 
-    mediaRecorder.onerror = async (event) => {
-      const message = event?.error?.message || 'MediaRecorder error';
-      chrome.runtime.sendMessage({ action: 'recordingError', error: message }).catch(() => {});
+    mediaRecorder.onerror = ({ error }) => {
+      const msg = error?.message || 'MediaRecorder error';
+      notifyBackground('recordingError', { error: msg });
       if (stopResolver) { stopResolver(); stopResolver = null; }
       cleanup();
     };
 
     mediaRecorder.onstop = async () => {
-      const blob = new Blob(audioChunks, { type: recordingMimeType || 'audio/webm' });
+      const blob     = new Blob(audioChunks, { type: recordingMimeType || 'audio/webm' });
       const duration = getElapsedSeconds();
       if (stopResolver) { stopResolver(); stopResolver = null; }
       try {
         await saveRecording(blob, duration);
-      } catch (error) {
-        chrome.runtime.sendMessage({
-          action: 'recordingError',
-          error: error?.message || 'Failed to save recording'
-        }).catch(() => {});
+      } catch (err) {
+        notifyBackground('recordingError', { error: err?.message || 'Failed to save recording' });
       } finally {
         cleanup();
       }
@@ -144,82 +151,123 @@ async function startRecording(tabId, mode, streamId) {
 
     mediaRecorder.start(1000);
     return { success: true, mimeType: recordingMimeType };
-  } catch (error) {
+
+  } catch (err) {
     cleanup();
-    return { success: false, error: error.message };
+    return { success: false, error: err.message };
   }
 }
 
-async function getSettings() {
-  try {
-    const data = await chrome.storage.local.get('settings');
-    return data.settings || {};
-  } catch (_) {
-    return {};
-  }
+/* ── Stream helpers ────────────────────────────────────────────────────────── */
+async function getTabStream(streamId) {
+  return navigator.mediaDevices.getUserMedia({
+    audio: {
+      mandatory: {
+        chromeMediaSource:   'tab',
+        chromeMediaSourceId: streamId
+      }
+    },
+    video: false
+  });
 }
 
-async function getMicStreamWithSettings() {
-  const s = await getSettings();
-  const id = String(s.micDeviceId || '').trim();
-  if (id) {
+async function getMicStream() {
+  const settings = await getStoredSettings();
+  const deviceId = String(settings.micDeviceId || '').trim();
+
+  if (deviceId) {
     try {
       return await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: { exact: id } },
+        audio: { deviceId: { exact: deviceId } },
         video: false
       });
-    } catch (_) {
-      // Fall back to default mic if the saved device is unavailable.
+    } catch {
+      // Saved device is gone — fall back to system default
     }
   }
-  return await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+  return navigator.mediaDevices.getUserMedia({ audio: true, video: false });
 }
 
-async function listAudioDevices() {
-  try {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const audioInputs = devices
-      .filter(d => d && d.kind === 'audioinput')
-      .map(d => ({ deviceId: d.deviceId, label: d.label || '' }));
-    return { success: true, devices: audioInputs };
-  } catch (e) {
-    return { success: false, devices: [], error: e.message };
-  }
+function friendlyMicError(err) {
+  if (err.name === 'NotAllowedError')  return 'Microphone permission denied';
+  if (err.name === 'NotFoundError')    return 'No microphone found';
+  if (err.name === 'NotReadableError') return 'Microphone busy or in use';
+  return 'Microphone unavailable';
 }
 
+/* ── Web Audio mixing ──────────────────────────────────────────────────────── */
 async function mixStreams(tabStream, micStream) {
-  const ctx = new AudioContext();
+  const ctx  = new AudioContext();
   audioContext = ctx;
 
-  const tabSource = ctx.createMediaStreamSource(tabStream);
-  const micSource = ctx.createMediaStreamSource(micStream);
-  const dest = ctx.createMediaStreamDestination();
+  const dest   = ctx.createMediaStreamDestination();
+  const tabSrc = ctx.createMediaStreamSource(tabStream);
+  const micSrc = ctx.createMediaStreamSource(micStream);
 
-  const tabGain = ctx.createGain();
-  tabGain.gain.value = 1.0;
-  const micGain = ctx.createGain();
-  micGain.gain.value = 1.0;
-  mixTabGainNode = tabGain;
-  mixMicGainNode = micGain;
+  mixTabGainNode = ctx.createGain();
+  mixMicGainNode = ctx.createGain();
+  mixTabGainNode.gain.value = 1.0;
+  mixMicGainNode.gain.value = 1.0;
 
-  tabSource.connect(tabGain);
-  micSource.connect(micGain);
-  tabGain.connect(dest);
-  micGain.connect(dest);
+  tabSrc.connect(mixTabGainNode).connect(dest);
+  micSrc.connect(mixMicGainNode).connect(dest);
 
-  // Keep original streams for cleanup
-  dest._originalStreams = [tabStream, micStream];
+  // Track original streams so cleanup() can stop their tracks properly
+  originalStreams = [tabStream, micStream];
+
   return dest.stream;
 }
 
 function setMixLevels(mic, tab) {
   const m = Number(mic);
   const t = Number(tab);
-  if (mixMicGainNode && Number.isFinite(m)) mixMicGainNode.gain.value = Math.max(0, Math.min(1, m));
-  if (mixTabGainNode && Number.isFinite(t)) mixTabGainNode.gain.value = Math.max(0, Math.min(1, t));
+  if (mixMicGainNode && Number.isFinite(m)) {
+    mixMicGainNode.gain.value = Math.max(0, Math.min(1, m));
+  }
+  if (mixTabGainNode && Number.isFinite(t)) {
+    mixTabGainNode.gain.value = Math.max(0, Math.min(1, t));
+  }
   return { success: true };
 }
 
+/* ── Level analyser ────────────────────────────────────────────────────────── */
+function setupLevelAnalyser(stream) {
+  try {
+    // Reuse the audioContext created by mixStreams, or create a new one.
+    const ctx = audioContext || new AudioContext();
+    if (!audioContext) audioContext = ctx;
+
+    sourceNode   = ctx.createMediaStreamSource(stream);
+    analyserNode = ctx.createAnalyser();
+    analyserNode.fftSize               = 256;
+    analyserNode.smoothingTimeConstant = 0.8;
+    sourceNode.connect(analyserNode);
+
+    const samples = new Uint8Array(analyserNode.fftSize);
+
+    levelInterval = setInterval(() => {
+      if (!analyserNode || isPaused) return;
+      analyserNode.getByteTimeDomainData(samples);
+
+      let sumSq = 0;
+      let peak  = 0;
+      for (let i = 0; i < samples.length; i++) {
+        const n = (samples[i] - 128) / 128;
+        sumSq += n * n;
+        const a = Math.abs(n);
+        if (a > peak) peak = a;
+      }
+
+      const level = Math.max(0, Math.min(1, Math.sqrt(sumSq / samples.length)));
+      notifyBackground('recordingLevel',    { level });
+      notifyBackground('recordingWavePeak', { peak: Math.max(0, Math.min(1, peak)) });
+    }, 100);
+  } catch {
+    // Level metering is non-critical; swallow errors silently
+  }
+}
+
+/* ── Pause / Resume ────────────────────────────────────────────────────────── */
 function pauseRecording() {
   if (mediaRecorder && mediaRecorder.state === 'recording' && !isPaused) {
     mediaRecorder.pause();
@@ -227,7 +275,7 @@ function pauseRecording() {
     pausedAt = Date.now();
     return { success: true };
   }
-  return { success: false, error: 'Cannot pause' };
+  return { success: false, error: 'Cannot pause — recorder not active' };
 }
 
 function resumeRecording() {
@@ -238,134 +286,116 @@ function resumeRecording() {
     isPaused = false;
     return { success: true };
   }
-  return { success: false, error: 'Cannot resume' };
+  return { success: false, error: 'Cannot resume — recorder not paused' };
 }
 
+/* ── Stop ──────────────────────────────────────────────────────────────────── */
 async function stopRecording() {
+  if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+    cleanup();
+    return { success: true };
+  }
   try {
-    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-      cleanup();
-      return { success: true };
-    }
     mediaRecorder.stop();
     await Promise.race([
       stopPromise,
-      new Promise((_, reject) => setTimeout(() => reject(new Error('Stop timed out')), 12000))
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Stop timed out after 12s')), 12_000)
+      )
     ]);
     return { success: true };
-  } catch (error) {
+  } catch (err) {
     cleanup();
-    return { success: false, error: error.message };
+    return { success: false, error: err.message };
   }
 }
 
-function setupLevelAnalyser(stream) {
+/* ── Device enumeration ────────────────────────────────────────────────────── */
+async function listAudioDevices() {
   try {
-    const ctx = audioContext || new AudioContext();
-    if (!audioContext) audioContext = ctx;
-
-    const source = ctx.createMediaStreamSource(stream);
-    sourceNode = source;
-    const analyser = ctx.createAnalyser();
-    analyser.fftSize = 256;
-    analyser.smoothingTimeConstant = 0.8;
-    analyserNode = analyser;
-    source.connect(analyser);
-
-    const samples = new Uint8Array(analyser.fftSize);
-    levelInterval = setInterval(() => {
-      if (!analyserNode || isPaused) return;
-      analyserNode.getByteTimeDomainData(samples);
-      let sumSq = 0;
-      let peak = 0;
-      for (let i = 0; i < samples.length; i++) {
-        const n = (samples[i] - 128) / 128;
-        sumSq += n * n;
-        const a = Math.abs(n);
-        if (a > peak) peak = a;
-      }
-      const rms = Math.sqrt(sumSq / samples.length);
-      const level = Math.max(0, Math.min(1, rms));
-      chrome.runtime.sendMessage({ action: 'recordingLevel', level }).catch(() => {});
-      chrome.runtime.sendMessage({ action: 'recordingWavePeak', peak: Math.max(0, Math.min(1, peak)) }).catch(() => {});
-    }, 100);
-  } catch (_) {}
+    // enumerateDevices() returns device labels only if mic permission was previously
+    // granted by the sidebar. If not, labels will be empty strings — that's fine,
+    // we don't call getUserMedia here to avoid permission bypass.
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const inputs  = devices
+      .filter(d => d && d.kind === 'audioinput')
+      .map(d => ({
+        deviceId: d.deviceId,
+        label: d.label || `Microphone (${d.deviceId.slice(0, 8)})`
+      }));
+    return { success: true, devices: inputs };
+  } catch (err) {
+    return { success: false, devices: [], error: err.message };
+  }
 }
 
+/* ── MIME type selection ───────────────────────────────────────────────────── */
 function pickMimeType(exportFormat) {
-  const options = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
-  // Best-effort MP3 support (not available on all Chromium builds).
+  const candidates = ['audio/webm;codecs=opus', 'audio/webm', 'audio/mp4'];
+
   try {
-    if (typeof MediaRecorder !== 'undefined'
-      && typeof MediaRecorder.isTypeSupported === 'function'
-      && MediaRecorder.isTypeSupported('audio/mpeg')) {
-      // Prefer MP3 only when user selected it.
-      if (exportFormat === 'mp3') options.unshift('audio/mpeg');
+    if (
+      exportFormat === 'mp3' &&
+      typeof MediaRecorder !== 'undefined' &&
+      MediaRecorder.isTypeSupported('audio/mpeg')
+    ) {
+      candidates.unshift('audio/mpeg');
     }
-  } catch (_) {}
-  for (const mime of options) {
+  } catch { /* ignore */ }
+
+  for (const mime of candidates) {
     if (MediaRecorder.isTypeSupported(mime)) return mime;
   }
   return 'audio/webm';
 }
 
+/* ── Timing ────────────────────────────────────────────────────────────────── */
 function getElapsedSeconds() {
   if (!recordingStartTime) return 0;
-  const currentPause = (isPaused && pausedAt) ? (Date.now() - pausedAt) : 0;
-  return Math.max(0, Date.now() - recordingStartTime - pausedDuration - currentPause) / 1000;
+  const currentPausedMs = (isPaused && pausedAt) ? (Date.now() - pausedAt) : 0;
+  return Math.max(0, Date.now() - recordingStartTime - pausedDuration - currentPausedMs) / 1000;
 }
 
+/* ── Save recording ────────────────────────────────────────────────────────── */
 async function saveRecording(blob, duration) {
+  const settings = await getStoredSettings();
   let outputBlob = blob;
-  let mimeType = blob.type || recordingMimeType || 'audio/webm';
+  let mimeType   = blob.type || recordingMimeType || 'audio/webm';
 
-  const settings = await getExportSettings();
-  if (settings.exportFormat === 'mp3' && !String(mimeType || '').includes('mpeg')) {
-    // If the build can't record MP3 natively, fall back to WebM and inform the UI.
-    chrome.runtime.sendMessage({
-      action: 'recordingNotice',
-      level: 'warning',
-      message: 'MP3 export is not supported in this browser build. Saved as WebM instead.'
-    }).catch(() => {});
-  }
   if (settings.exportFormat === 'wav') {
     try {
       outputBlob = await convertToWav(blob);
-      mimeType = 'audio/wav';
-    } catch (_) {
-      // Fall back to webm if WAV conversion fails
+      mimeType   = 'audio/wav';
+    } catch {
+      // Silently fall back to WebM
     }
+  } else if (settings.exportFormat === 'mp3' && !String(mimeType).includes('mpeg')) {
+    notifyBackground('recordingNotice', {
+      level:   'warning',
+      message: 'MP3 export not supported in this browser build — saved as WebM instead.'
+    });
   }
 
-  // Guard against huge payloads that can freeze/crash base64 encoding.
-  const maxGB = Math.max(1, Number(settings.maxStorageGB) || 1);
+  const maxGB    = Math.max(1, Number(settings.maxStorageGB) || 1);
   const maxBytes = maxGB * 1024 * 1024 * 1024;
-  const hardCap = 120 * 1024 * 1024; // 120MB per recording, safety cap
-  const size = Number(outputBlob?.size) || 0;
-  if (size <= 0) throw new Error('Recording data is empty');
-  if (size > Math.min(maxBytes, hardCap)) throw new Error('Recording too large to process safely');
+  const HARD_CAP = 120 * 1024 * 1024; // 120 MB per recording
+  const size     = Number(outputBlob?.size) || 0;
+
+  if (size <= 0)                          throw new Error('Recording data is empty');
+  if (size > Math.min(maxBytes, HARD_CAP)) throw new Error('Recording too large to save safely');
 
   const base64 = await blobToBase64(outputBlob);
-  chrome.runtime.sendMessage({
-    action: 'recordingComplete',
-    data: base64,
+  notifyBackground('recordingComplete', {
+    data:     base64,
     mimeType,
     duration,
-    mode: recordingMode
-  }).catch(() => {});
+    mode:     recordingMode
+  });
 }
 
-async function getExportSettings() {
-  try {
-    const data = await chrome.storage.local.get('settings');
-    return data.settings || { exportFormat: 'webm', maxStorageGB: 1 };
-  } catch (_) {
-    return { exportFormat: 'webm', maxStorageGB: 1 };
-  }
-}
-
+/* ── WAV encoder ───────────────────────────────────────────────────────────── */
 async function convertToWav(blob) {
-  const AC = window.AudioContext || window.webkitAudioContext;
+  const AC  = window.AudioContext || window.webkitAudioContext;
   if (!AC) throw new Error('WAV conversion not supported');
   const ctx = new AC();
   try {
@@ -377,51 +407,50 @@ async function convertToWav(blob) {
 }
 
 function encodeWav(buffer) {
-  const numChannels = buffer.numberOfChannels;
-  const sampleRate = buffer.sampleRate;
-  const samplesPerChannel = buffer.length;
-  const bytesPerSample = 2;
-  const blockAlign = numChannels * bytesPerSample;
-  const dataSize = samplesPerChannel * blockAlign;
-  const wavBuffer = new ArrayBuffer(44 + dataSize);
-  const view = new DataView(wavBuffer);
-  const writeStr = (offset, str) => { for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i)); };
+  const numChannels  = buffer.numberOfChannels;
+  const sampleRate   = buffer.sampleRate;
+  const totalSamples = buffer.length;
+  const blockAlign   = numChannels * 2;
+  const dataSize     = totalSamples * blockAlign;
+  const wavBuf       = new ArrayBuffer(44 + dataSize);
+  const view         = new DataView(wavBuf);
 
-  writeStr(0, 'RIFF');
-  view.setUint32(4, 36 + dataSize, true);
-  writeStr(8, 'WAVE');
-  writeStr(12, 'fmt ');
+  const str = (offset, s) => {
+    for (let i = 0; i < s.length; i++) view.setUint8(offset + i, s.charCodeAt(i));
+  };
+
+  str(0,  'RIFF'); view.setUint32(4,  36 + dataSize, true);
+  str(8,  'WAVE'); str(12, 'fmt ');
   view.setUint32(16, 16, true);
-  view.setUint16(20, 1, true);
+  view.setUint16(20, 1,  true);
   view.setUint16(22, numChannels, true);
-  view.setUint32(24, sampleRate, true);
+  view.setUint32(24, sampleRate,  true);
   view.setUint32(28, sampleRate * blockAlign, true);
-  view.setUint16(32, blockAlign, true);
+  view.setUint16(32, blockAlign,  true);
   view.setUint16(34, 16, true);
-  writeStr(36, 'data');
-  view.setUint32(40, dataSize, true);
+  str(36, 'data'); view.setUint32(40, dataSize, true);
 
   const channels = [];
   for (let ch = 0; ch < numChannels; ch++) channels.push(buffer.getChannelData(ch));
 
   let offset = 44;
-  for (let i = 0; i < samplesPerChannel; i++) {
+  for (let i = 0; i < totalSamples; i++) {
     for (let ch = 0; ch < numChannels; ch++) {
       const s = Math.max(-1, Math.min(1, channels[ch][i] || 0));
       view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
       offset += 2;
     }
   }
-  return new Blob([wavBuffer], { type: 'audio/wav' });
+  return new Blob([wavBuf], { type: 'audio/wav' });
 }
 
 function blobToBase64(blob) {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const value = String(reader.result || '');
-      const encoded = value.split(',')[1] || '';
-      if (!encoded) { reject(new Error('Failed to encode recording')); return; }
+    const reader    = new FileReader();
+    reader.onload   = () => {
+      const result  = String(reader.result || '');
+      const encoded = result.split(',')[1] || '';
+      if (!encoded) { reject(new Error('Failed to encode recording as base64')); return; }
       resolve(encoded);
     };
     reader.onerror = () => reject(reader.error || new Error('FileReader failed'));
@@ -429,39 +458,57 @@ function blobToBase64(blob) {
   });
 }
 
+/* ── Settings helper ───────────────────────────────────────────────────────── */
+async function getStoredSettings() {
+  try {
+    const data = await chrome.storage.local.get('settings');
+    return data.settings || { exportFormat: 'webm', maxStorageGB: 1 };
+  } catch {
+    return { exportFormat: 'webm', maxStorageGB: 1 };
+  }
+}
+
+/* ── Message helper ────────────────────────────────────────────────────────── */
+function notifyBackground(action, payload) {
+  chrome.runtime.sendMessage({ action, ...payload }).catch(() => {});
+}
+
+/* ── Cleanup ───────────────────────────────────────────────────────────────── */
 function cleanup() {
   if (levelInterval) { clearInterval(levelInterval); levelInterval = null; }
 
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-    try { mediaRecorder.stop(); } catch (_) {}
+    try { mediaRecorder.stop(); } catch { /* ignore */ }
   }
 
   if (currentStream) {
     currentStream.getTracks().forEach(t => t.stop());
-    // Clean up mixed streams
-    if (currentStream._originalStreams) {
-      currentStream._originalStreams.forEach(s => s.getTracks().forEach(t => t.stop()));
-    }
   }
 
-  if (sourceNode) { try { sourceNode.disconnect(); } catch (_) {} }
-  if (analyserNode) { try { analyserNode.disconnect(); } catch (_) {} }
+  for (const s of originalStreams) {
+    try { s.getTracks().forEach(t => t.stop()); } catch { /* ignore */ }
+  }
+
+  if (sourceNode)   { try { sourceNode.disconnect();  } catch { /* ignore */ } }
+  if (analyserNode) { try { analyserNode.disconnect(); } catch { /* ignore */ } }
   if (audioContext) { audioContext.close().catch(() => {}); }
 
-  mediaRecorder = null;
-  audioChunks = [];
-  currentStream = null;
-  audioContext = null;
-  sourceNode = null;
-  analyserNode = null;
-  recordingMimeType = null;
-  stopPromise = null;
-  stopResolver = null;
-  isPaused = false;
-  pausedDuration = 0;
-  pausedAt = null;
+  // Reset all module-level state
+  mediaRecorder      = null;
+  audioChunks        = [];
+  currentStream      = null;
+  originalStreams    = [];
+  audioContext       = null;
+  sourceNode         = null;
+  analyserNode       = null;
+  recordingMimeType  = null;
+  stopPromise        = null;
+  stopResolver       = null;
+  isPaused           = false;
+  pausedDuration     = 0;
+  pausedAt           = null;
   recordingStartTime = null;
-  recordingMode = 'tab';
-  mixMicGainNode = null;
-  mixTabGainNode = null;
+  recordingMode      = 'tab';
+  mixMicGainNode     = null;
+  mixTabGainNode     = null;
 }

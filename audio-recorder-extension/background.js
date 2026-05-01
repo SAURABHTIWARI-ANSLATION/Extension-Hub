@@ -1,6 +1,10 @@
 // background.js — Service Worker (Manifest V3)
-// Opens the side panel when the extension icon is clicked
+// ARCHITECTURE:
+//   • Mic permission MUST be requested from sidebar (user-visible context).
+//   • Never call getUserMedia from here — Chrome silently blocks it.
+//   • background.js owns state + routing; offscreen.js owns recording logic.
 importScripts('utils/blobStore.js');
+importScripts('utils/formatters.js'); // single Formatters definition — no duplication
 
 let recordingState = {
   recording: false,
@@ -14,33 +18,11 @@ let recordingState = {
 
 let hasHydratedState = false;
 
-/* ── Formatters (inline — no ES module imports in SW) ─────────────────── */
-const Formatters = {
-  generateFilename(siteName, mode, format) {
-    const d = new Date();
-    const dateStr = [
-      d.getFullYear(),
-      String(d.getMonth() + 1).padStart(2, '0'),
-      String(d.getDate()).padStart(2, '0')
-    ].join('-');
-    const timeStr = [
-      String(d.getHours()).padStart(2, '0'),
-      String(d.getMinutes()).padStart(2, '0'),
-      String(d.getSeconds()).padStart(2, '0')
-    ].join('-');
-    const site = String(siteName || 'recording')
-      .replace(/[^a-z0-9]/gi, '_')
-      .substring(0, 28);
-    return `audio_${site}_${mode}_${dateStr}_${timeStr}.${format}`;
-  }
-};
-
 /* ── Open sidebar on icon click ─────────────────────────────────────────── */
 chrome.action.onClicked.addListener(async (tab) => {
   try {
     await chrome.sidePanel.open({ windowId: tab.windowId });
   } catch (e) {
-    // Side panel API might not be available in all builds
     console.warn('Side panel open error:', e.message);
   }
 });
@@ -48,7 +30,6 @@ chrome.action.onClicked.addListener(async (tab) => {
 /* ── Lifecycle ─────────────────────────────────────────────────────────── */
 chrome.runtime.onInstalled.addListener(async () => {
   try {
-    // Enable side panel globally
     await chrome.sidePanel.setOptions({ enabled: true });
   } catch (_) {}
 
@@ -69,7 +50,6 @@ chrome.runtime.onInstalled.addListener(async () => {
         }
       });
     }
-    // Initialize permission flag if missing
     if (data.micPermission === undefined) {
       await chrome.storage.local.set({ micPermission: false });
     }
@@ -82,6 +62,7 @@ chrome.runtime.onStartup.addListener(() => {
 
 /* ── Message Router ────────────────────────────────────────────────────── */
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  // Only accept messages from our own extension
   if (!sender || sender.id !== chrome.runtime.id) {
     sendResponse({ success: false, error: 'Untrusted sender' });
     return false;
@@ -105,9 +86,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       case 'showRecording':     return showRecording(request.id);
       case 'getSettings':       return getSettings();
       case 'updateSettings':    return updateSettings(request.settings);
-      case 'getStagedRecording': return getStagedRecording();
-      case 'downloadStagedRecording': return downloadStagedRecording(request.id, request.filename);
-      case 'discardStagedRecording':  return discardStagedRecording(request.id);
+      case 'getStagedRecording':            return getStagedRecording();
+      case 'downloadStagedRecording':       return downloadStagedRecording(request.id, request.filename);
+      case 'discardStagedRecording':        return discardStagedRecording(request.id);
       case 'replaceStagedRecordingData': {
         if (!request.id || !request.data) return { success: false, error: 'Missing staged recording data' };
         return replaceStagedRecordingData(request.id, request.data, request.mimeType, request.duration);
@@ -116,7 +97,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       case 'setMixLevels':      return setMixLevels(request.mic, request.tab);
       case 'getMicPermission':  return getMicPermission();
       case 'setMicPermission':  return setMicPermission(request.granted);
-      case 'probeMicPermission': return probeMicPermission();
+      // NOTE: probeMicPermission intentionally omitted.
+      // Mic permission MUST be requested from sidebar.js (user gesture + visible context).
       case 'getRecordingData':  return getRecordingData(request.id);
       case 'replaceRecordingData': {
         if (!request.id || !request.data) return { success: false, error: 'Missing recording data' };
@@ -126,12 +108,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       case 'recordingComplete': return stageRecording(request.data, request.mimeType, request.duration, request.mode);
       case 'recordingLevel':    return handleLevelUpdate(request.level);
       case 'recordingWavePeak': return handleWavePeakUpdate(request.peak);
+      case 'recordingNotice':   return handleRecordingNotice(request.level, request.message);
       case 'recordingError':    return handleRecordingError(request.error);
       default: return { success: false, error: 'Unknown action: ' + action };
     }
   };
+
   route().then(sendResponse).catch(e => sendResponse({ success: false, error: e.message }));
-  return true;
+  return true; // keep message channel open for async response
 });
 
 /* ── State helpers ─────────────────────────────────────────────────────── */
@@ -164,30 +148,6 @@ async function setMicPermission(granted) {
   return { success: true };
 }
 
-async function probeMicPermission() {
-  try {
-    await createOffscreenDocument();
-    const res = await sendToOffscreen({ action: 'probeMicrophone' });
-    const granted = res?.success === true;
-    await chrome.storage.local.set({ micPermission: granted });
-    if (granted) return { success: true, granted: true };
-    return {
-      success: false,
-      granted: false,
-      error: res?.error || 'Microphone permission denied',
-      name: res?.name || 'NotAllowedError'
-    };
-  } catch (error) {
-    await chrome.storage.local.set({ micPermission: false });
-    return {
-      success: false,
-      granted: false,
-      error: error?.message || 'Microphone permission probe failed',
-      name: error?.name || 'Error'
-    };
-  }
-}
-
 /* ── Recording control ─────────────────────────────────────────────────── */
 async function startRecording(tabId, mode) {
   await hydrateState();
@@ -200,6 +160,7 @@ async function startRecording(tabId, mode) {
     await createOffscreenDocument();
     let streamId = null;
 
+    // Tab capture stream must be obtained in the background SW (only place with tabCapture API)
     if (mode === 'tab' || mode === 'tab+mic') {
       if (!tabId) return { success: false, error: 'Missing tab ID' };
       if (!chrome.tabCapture || typeof chrome.tabCapture.getMediaStreamId !== 'function') {
@@ -212,6 +173,7 @@ async function startRecording(tabId, mode) {
     const response = await sendToOffscreen({ action: 'startRecording', tabId, mode, streamId });
     if (!response?.success) throw new Error(response?.error || 'Offscreen start failed');
 
+    // Update mic permission flag after a successful mic or tab+mic start
     if (mode === 'mic' || mode === 'tab+mic') {
       await chrome.storage.local.set({ micPermission: true });
     }
@@ -291,7 +253,7 @@ async function resumeRecording() {
   }
 }
 
-/* ── Level update ─────────────────────────────────────────────────────── */
+/* ── Level updates ─────────────────────────────────────────────────────── */
 function handleLevelUpdate(level) {
   const val = Number(level);
   recordingState.level = Number.isFinite(val) ? Math.max(0, Math.min(1, val)) : 0;
@@ -306,6 +268,12 @@ function handleWavePeakUpdate(peak) {
   return { success: true };
 }
 
+function handleRecordingNotice(level, message) {
+  broadcast({ action: 'recordingNotice', level: level || 'info', message: String(message || '') });
+  return { success: true };
+}
+
+/* ── Size utilities ─────────────────────────────────────────────────────── */
 const MAX_SINGLE_RECORDING_BYTES = 120 * 1024 * 1024; // must match BlobStore safety cap
 
 function estimateBase64Bytes(base64) {
@@ -323,11 +291,11 @@ function maxBytesFromSettings(settings) {
   return maxGB * 1024 * 1024 * 1024;
 }
 
-/* ── Save recording ─────────────────────────────────────────────────────── */
+/* ── Save / Stage recording ─────────────────────────────────────────────── */
 async function stageRecording(base64Data, mimeType, duration, modeOverride) {
   if (!base64Data) return { success: false, error: 'Missing data' };
 
-  // Keep a single staged recording to avoid unbounded storage usage.
+  // Discard any previous staged recording to avoid unbounded storage usage
   const prev = await getStagedRecording();
   if (prev?.id) {
     await BlobStore.remove(prev.id).catch(() => {});
@@ -358,7 +326,7 @@ async function stageRecording(base64Data, mimeType, duration, modeOverride) {
     duration: Number(duration) || 0,
     mode: recordingMode,
     createdAt: Date.now(),
-    exportFormat: settings.exportFormat || (ext === 'wav' ? 'wav' : ext === 'mp3' ? 'mp3' : 'webm')
+    exportFormat: settings.exportFormat || ext
   };
 
   await chrome.storage.local.set({ stagedRecording: staged });
@@ -381,12 +349,18 @@ async function discardStagedRecording(id) {
   return { success: true };
 }
 
+/**
+ * FIX: sanitizeFilename had double-escaped backslashes in its regex literals.
+ * `\\\\` in a JS string literal = literal `\\`, then the regex engine sees `\\` = one backslash.
+ * `\\s+` in a string-constructed regex means whitespace, but here it was a regex literal so
+ * `\\s` = a literal backslash followed by 's', NOT whitespace. Fixed both.
+ */
 function sanitizeFilename(name) {
   const s = String(name || '').trim();
   if (!s) return '';
   return s
-    .replace(/[\\\\/:*?\"<>|]+/g, '_')
-    .replace(/\\s+/g, ' ')
+    .replace(/[\\/:*?"<>|]+/g, '_')   // FIX: was /[\\\\/:*?\"<>|]+/g (over-escaped)
+    .replace(/\s+/g, ' ')              // FIX: was /\\s+/g (broken — matched literal \s)
     .trim()
     .substring(0, 120);
 }
@@ -418,7 +392,6 @@ async function downloadStagedRecording(id, filenameOverride) {
       dl.downloadId
     );
   } else {
-    // If history is disabled, remove the blob after download.
     await BlobStore.remove(staged.id).catch(() => {});
   }
 
@@ -458,6 +431,7 @@ async function replaceStagedRecordingData(id, base64Data, mimeType, duration) {
   return { success: true, staged: next };
 }
 
+/* ── Mix levels ─────────────────────────────────────────────────────────── */
 async function setMixLevels(mic, tab) {
   try {
     await createOffscreenDocument();
@@ -474,6 +448,7 @@ async function setMixLevels(mic, tab) {
   }
 }
 
+/* ── Download helper ────────────────────────────────────────────────────── */
 function downloadFile(options) {
   return new Promise(resolve => {
     chrome.downloads.download(options, downloadId => {
@@ -486,6 +461,7 @@ function downloadFile(options) {
   });
 }
 
+/* ── History ────────────────────────────────────────────────────────────── */
 async function saveToHistory(id, filename, size, mimeType, duration, mode, format, downloadId) {
   const data = await chrome.storage.local.get('recordings');
   const recordings = Array.isArray(data.recordings) ? data.recordings : [];
@@ -504,7 +480,6 @@ async function saveToHistory(id, filename, size, mimeType, duration, mode, forma
   await chrome.storage.local.set({ recordings });
 }
 
-/* ── History & Settings ─────────────────────────────────────────────────── */
 async function getHistory() {
   const data = await chrome.storage.local.get('recordings');
   return Array.isArray(data.recordings) ? data.recordings : [];
@@ -535,6 +510,7 @@ async function clearHistory() {
   return { success: true };
 }
 
+/* ── Settings ────────────────────────────────────────────────────────────── */
 async function getSettings() {
   const data = await chrome.storage.local.get('settings');
   return data.settings || {
@@ -554,6 +530,7 @@ async function updateSettings(settings) {
   return { success: true, settings: updated };
 }
 
+/* ── Device listing ─────────────────────────────────────────────────────── */
 async function listAudioDevices() {
   try {
     await createOffscreenDocument();
@@ -565,6 +542,7 @@ async function listAudioDevices() {
   }
 }
 
+/* ── Recording data ─────────────────────────────────────────────────────── */
 async function getRecordingData(id) {
   if (!id) return { success: false, error: 'Missing id' };
   let row = null;
@@ -574,13 +552,7 @@ async function getRecordingData(id) {
     return { success: false, error: e?.message || 'Failed to load recording data' };
   }
   if (!row) return { success: false, error: 'Recording data not found' };
-  return {
-    success: true,
-    id: row.id,
-    data: row.data,
-    mimeType: row.mimeType,
-    size: row.size
-  };
+  return { success: true, id: row.id, data: row.data, mimeType: row.mimeType, size: row.size };
 }
 
 async function replaceRecordingData(id, base64Data, mimeType, duration) {
@@ -615,12 +587,7 @@ async function getStorageStats() {
   const settings = await getSettings();
   const maxGB = Math.max(1, Number(settings.maxStorageGB) || 1);
   const maxBytes = maxGB * 1024 * 1024 * 1024;
-  return {
-    success: true,
-    count: stats.count,
-    usedBytes: stats.totalBytes,
-    maxBytes
-  };
+  return { success: true, count: stats.count, usedBytes: stats.totalBytes, maxBytes };
 }
 
 /* ── Utilities ─────────────────────────────────────────────────────────── */
@@ -645,6 +612,7 @@ async function handleRecordingError(errorMessage) {
   return { success: true };
 }
 
+/* ── Offscreen document management ─────────────────────────────────────── */
 async function createOffscreenDocument() {
   try {
     if (typeof chrome.runtime.getContexts === 'function') {

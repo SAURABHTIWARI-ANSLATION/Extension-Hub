@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stickey</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="root">
+      <!-- Header -->
+      <header class="header">
+        <div class="brand">
+          <div class="brand-mark">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="12" height="12" rx="2.5"/>
+              <path d="M5 5.5h6M5 8h4"/>
+              <path d="M10 10.5l2 2-1.5 0.5L10 12v-1.5z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="brand-name">Stickey</div>
+            <div class="brand-sub">Annotations</div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button id="openGraphBtn" class="icon-btn" type="button" title="Open graph view">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="4" cy="8" r="2"/>
+              <circle cx="12" cy="4" r="2"/>
+              <circle cx="12" cy="12" r="2"/>
+              <line x1="5.8" y1="7.1" x2="10.2" y2="4.9"/>
+              <line x1="5.8" y1="8.9" x2="10.2" y2="11.1"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Stats -->
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value" id="totalCount">0</div>
+          <div class="stat-label">total</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="pageCount">0</div>
+          <div class="stat-label">this page</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value" id="linkCount">0</div>
+          <div class="stat-label">links</div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button id="newNoteBtn" class="btn btn-primary" type="button">
+          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 3v10M3 8h10"/>
+          </svg>
+          New note
+        </button>
+        <button id="togglePanelBtn" class="btn" type="button">
+          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="12" height="12" rx="2"/>
+            <line x1="2" y1="6" x2="14" y2="6"/>
+          </svg>
+          Panel
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="search">
+        <input id="queryInput" class="input" type="text" placeholder="Search all annotations…" autocomplete="off" spellcheck="false" />
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <button class="chip" data-type="all" data-active="true" type="button">All</button>
+        <button class="chip" data-type="note" data-active="false" type="button">Notes</button>
+        <button class="chip" data-type="highlight" data-active="false" type="button">Highlights</button>
+      </div>
+
+      <!-- Results -->
+      <div id="results" class="results"></div>
+
+      <!-- Footer -->
+      <footer class="footer">Stored locally in your browser</footer>
+    </div>
+    <script src="../shared/shared.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

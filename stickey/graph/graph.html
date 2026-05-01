@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Stickey Graph</title>
+    <link rel="stylesheet" href="graph.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <div class="title">Graph View</div>
+          <div class="sub">Links across notes and highlights</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div id="nodeCount" class="stat-value">0</div>
+            <div class="stat-label">nodes</div>
+          </div>
+          <div class="stat">
+            <div id="edgeCount" class="stat-value">0</div>
+            <div class="stat-label">links</div>
+          </div>
+        </div>
+
+        <div class="search">
+          <input id="filterInput" class="input" type="text" placeholder="Filter nodes…" autocomplete="off" spellcheck="false" />
+        </div>
+
+        <div id="list" class="list"></div>
+      </aside>
+
+      <main class="main">
+        <canvas id="canvas"></canvas>
+        <div class="hint">Scroll to zoom &middot; Drag to pan &middot; Click node to open</div>
+      </main>
+    </div>
+
+    <script src="../shared/shared.js"></script>
+    <script src="graph.js"></script>
+  </body>
+</html>
