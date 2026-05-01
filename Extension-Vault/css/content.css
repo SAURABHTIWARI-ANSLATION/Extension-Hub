@@ -1,0 +1,101 @@
+/* ExtensionVault Content Script Styles */
+/* Injected only on Chrome Web Store pages */
+
+#extensionvault-btn-container {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 12px 0;
+    padding: 12px 14px;
+    background: #ffffff;
+    border: 1.5px solid #2563EB;
+    border-radius: 10px;
+    font-family: 'Google Sans', 'Segoe UI', Arial, sans-serif;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+    min-width: 160px;
+}
+
+.ev-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #2563EB;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.ev-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.ev-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 14px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, opacity 0.15s;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+}
+
+.ev-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.ev-btn-zip {
+    background: #2563EB;
+    color: #ffffff;
+}
+
+.ev-btn-zip:not(:disabled):hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.ev-btn-crx {
+    background: #f0f4ff;
+    color: #2563EB;
+    border: 1.5px solid #bfdbfe;
+}
+
+.ev-btn-crx:not(:disabled):hover {
+    background: #dbeafe;
+    transform: translateY(-1px);
+}
+
+.ev-btn-icon {
+    font-size: 14px;
+}
+
+.ev-status {
+    font-size: 11.5px;
+    min-height: 16px;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.ev-status--loading {
+    color: #92400e;
+    background: #fef3c7;
+    padding: 3px 7px;
+}
+
+.ev-status--success {
+    color: #065f46;
+    background: #d1fae5;
+    padding: 3px 7px;
+}
+
+.ev-status--error {
+    color: #991b1b;
+    background: #fee2e2;
+    padding: 3px 7px;
+}
