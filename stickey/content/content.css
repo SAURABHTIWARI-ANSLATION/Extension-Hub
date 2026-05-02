@@ -557,12 +557,12 @@
 }
 .stickey-color-swatch:hover { transform: scale(1.15); }
 .stickey-color-swatch[data-active="true"] { border-color: var(--stickey-heading); }
-.stickey-color-swatch[data-color="yellow"] { background: rgba(250, 204, 21, 0.70); }
-.stickey-color-swatch[data-color="green"]  { background: rgba(34, 197, 94, 0.65); }
-.stickey-color-swatch[data-color="blue"]   { background: rgba(37, 99, 235, 0.55); }
-.stickey-color-swatch[data-color="pink"]   { background: rgba(236, 72, 153, 0.55); }
-.stickey-color-swatch[data-color="orange"] { background: rgba(249, 115, 22, 0.55); }
-.stickey-color-swatch[data-color="purple"] { background: rgba(168, 85, 247, 0.55); }
+.stickey-color-swatch[data-color="yellow"] { background: #FACC15; }
+.stickey-color-swatch[data-color="green"]  { background: #22C55E; }
+.stickey-color-swatch[data-color="blue"]   { background: #2563EB; }
+.stickey-color-swatch[data-color="pink"]   { background: #EC4899; }
+.stickey-color-swatch[data-color="orange"] { background: #F97316; }
+.stickey-color-swatch[data-color="purple"] { background: #A855F7; }
 
 /* ── Sticky Notes ─────────────────────────────────── */
 .stickey-note {
@@ -573,7 +573,8 @@
   transform: translate3d(var(--stickey-note-x, 120px), var(--stickey-note-y, 120px), 0);
   border: 1px solid rgba(17, 17, 17, 0.14);
   border-radius: 14px;
-  background: var(--stickey-note-bg, rgba(250, 204, 21, 0.40));
+  /* Opaque note background so page content never bleeds through */
+  background: var(--stickey-note-bg, #FEF08A);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
   pointer-events: auto;
   overflow: hidden;
@@ -584,12 +585,12 @@
   box-shadow: var(--stickey-shadow), 0 0 0 3px var(--stickey-primary-ring);
 }
 
-.stickey-note[data-color="yellow"] { --stickey-note-bg: rgba(250, 204, 21, 0.40); }
-.stickey-note[data-color="pink"]   { --stickey-note-bg: rgba(236, 72, 153, 0.30); }
-.stickey-note[data-color="blue"]   { --stickey-note-bg: rgba(37, 99, 235, 0.24); }
-.stickey-note[data-color="green"]  { --stickey-note-bg: rgba(34, 197, 94, 0.26); }
-.stickey-note[data-color="orange"] { --stickey-note-bg: rgba(249, 115, 22, 0.26); }
-.stickey-note[data-color="purple"] { --stickey-note-bg: rgba(168, 85, 247, 0.26); }
+.stickey-note[data-color="yellow"] { --stickey-note-bg: #FEF08A; }
+.stickey-note[data-color="pink"]   { --stickey-note-bg: #FBCFE8; }
+.stickey-note[data-color="blue"]   { --stickey-note-bg: #BFDBFE; }
+.stickey-note[data-color="green"]  { --stickey-note-bg: #BBF7D0; }
+.stickey-note[data-color="orange"] { --stickey-note-bg: #FED7AA; }
+.stickey-note[data-color="purple"] { --stickey-note-bg: #E9D5FF; }
 
 .stickey-note-header {
   display: flex;
@@ -598,8 +599,7 @@
   padding: 10px 10px;
   border-bottom: 1px solid rgba(17, 17, 17, 0.12);
   user-select: none;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.94);
 }
 
 .stickey-note-drag {
@@ -674,13 +674,13 @@
   line-height: 1.5;
   outline: none;
   color: var(--stickey-heading);
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(255, 255, 255, 0.96);
   box-sizing: border-box;
   transition: border-color 0.12s, box-shadow 0.12s, background 0.12s;
 }
 .stickey-note-text::placeholder { color: var(--stickey-subtext); }
 .stickey-note-text:focus {
-  background: rgba(255, 255, 255, 0.88);
+  background: #FFFFFF;
   border-color: rgba(17, 17, 17, 0.22);
   box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.10);
 }

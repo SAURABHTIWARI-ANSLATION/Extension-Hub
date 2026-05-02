@@ -3,6 +3,7 @@
   "name": "Stickey",
   "version": "1.2.0",
   "description": "A unified annotation system: highlights, sticky notes, and linked knowledge stored locally.",
+
   "permissions": [
     "storage",
     "activeTab",
@@ -10,9 +11,11 @@
     "contextMenus",
     "tabs"
   ],
+
   "host_permissions": [
     "<all_urls>"
   ],
+
   "action": {
     "default_popup": "popup/popup.html",
     "default_icon": {
@@ -21,41 +24,40 @@
       "128": "assets/icons/icon128.png"
     }
   },
+
   "background": {
     "service_worker": "background/service_worker.js"
   },
+
   "content_scripts": [
     {
-      "matches": [
-        "<all_urls>"
-      ],
+      "matches": ["<all_urls>"],
       "js": [
         "shared/shared.js",
         "utils/domHelpers.js",
         "content/content.js"
       ],
-      "css": [
-        "content/content.css"
-      ],
+      "css": ["content/content.css"],
       "run_at": "document_idle"
     }
   ],
+
   "web_accessible_resources": [
     {
       "resources": [
         "assets/fonts/*",
         "utils/domHelpers.js"
       ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "matches": ["<all_urls>"]
     }
   ],
+
   "icons": {
     "16": "assets/icons/icon16.png",
     "48": "assets/icons/icon48.png",
     "128": "assets/icons/icon128.png"
   },
+
   "commands": {
     "toggle-panel": {
       "suggested_key": {
@@ -65,8 +67,10 @@
       "description": "Toggle Stickey panel"
     }
   },
+
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; frame-src 'none'; form-action 'none'; worker-src 'self';"
   },
+
   "minimum_chrome_version": "114"
 }

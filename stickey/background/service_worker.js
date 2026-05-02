@@ -1,4 +1,8 @@
-importScripts(chrome.runtime.getURL('shared/shared.js'));
+try {
+  importScripts('../shared/shared.js');
+} catch (err) {
+  importScripts(chrome.runtime.getURL('shared/shared.js'));
+}
 
 /* global Stickey */
 
