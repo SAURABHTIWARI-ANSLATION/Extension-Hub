@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Stickey</title>
+    <link rel="stylesheet" href="../shared/theme.css" />
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
@@ -36,56 +37,75 @@
         </div>
       </header>
 
-      <!-- Stats -->
-      <div class="stats">
-        <div class="stat">
-          <div class="stat-value" id="totalCount">0</div>
-          <div class="stat-label">total</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="pageCount">0</div>
-          <div class="stat-label">this page</div>
-        </div>
-        <div class="stat">
-          <div class="stat-value" id="linkCount">0</div>
-          <div class="stat-label">links</div>
-        </div>
-      </div>
+      <main class="main">
+        <!-- Stats -->
+        <section class="card stats">
+          <div class="stat">
+            <div class="stat-value" id="totalCount">0</div>
+            <div class="stat-label">total</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="pageCount">0</div>
+            <div class="stat-label">this page</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value" id="linkCount">0</div>
+            <div class="stat-label">links</div>
+          </div>
+        </section>
 
-      <!-- Actions -->
-      <div class="actions">
-        <button id="newNoteBtn" class="btn btn-primary" type="button">
-          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-            <path d="M8 3v10M3 8h10"/>
-          </svg>
-          New note
-        </button>
-        <button id="togglePanelBtn" class="btn" type="button">
-          <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-            <rect x="2" y="2" width="12" height="12" rx="2"/>
-            <line x1="2" y1="6" x2="14" y2="6"/>
-          </svg>
-          Panel
-        </button>
-      </div>
+        <!-- Actions -->
+        <section class="card actions">
+          <button id="newNoteBtn" class="btn btn-primary" type="button">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <path d="M8 3v10M3 8h10"/>
+            </svg>
+            New note
+          </button>
+          <button id="togglePanelBtn" class="btn" type="button">
+            <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="12" height="12" rx="2"/>
+              <line x1="2" y1="6" x2="14" y2="6"/>
+            </svg>
+            Panel
+          </button>
+        </section>
 
-      <!-- Search -->
-      <div class="search">
-        <input id="queryInput" class="input" type="text" placeholder="Search all annotations…" autocomplete="off" spellcheck="false" />
-      </div>
+        <!-- Search + Filters -->
+        <section class="card discover">
+          <div class="search">
+            <div class="searchbar">
+              <div class="search-icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="7" cy="7" r="4.5"/>
+                  <line x1="10.5" y1="10.5" x2="14" y2="14"/>
+                </svg>
+              </div>
+              <input id="queryInput" class="input" type="text" placeholder="Search all annotations…" autocomplete="off" spellcheck="false" />
+              <button id="clearQueryBtn" class="icon-btn icon-btn-sm" type="button" title="Clear search" aria-label="Clear search" hidden>
+                <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M4 4l8 8M12 4L4 12"/>
+                </svg>
+              </button>
+            </div>
+          </div>
 
-      <!-- Filters -->
-      <div class="filters">
-        <button class="chip" data-type="all" data-active="true" type="button">All</button>
-        <button class="chip" data-type="note" data-active="false" type="button">Notes</button>
-        <button class="chip" data-type="highlight" data-active="false" type="button">Highlights</button>
-      </div>
+          <div class="filters" role="tablist" aria-label="Filter">
+            <button class="chip" role="tab" data-type="all" data-active="true" aria-selected="true" type="button">All</button>
+            <button class="chip" role="tab" data-type="note" data-active="false" aria-selected="false" type="button">Notes</button>
+            <button class="chip" role="tab" data-type="highlight" data-active="false" aria-selected="false" type="button">Highlights</button>
+          </div>
+        </section>
 
-      <!-- Results -->
-      <div id="results" class="results"></div>
+        <!-- Results -->
+        <section class="card results-card">
+          <div id="banner" class="banner" role="status" aria-live="polite" hidden></div>
+          <div id="results" class="results"></div>
+        </section>
 
-      <!-- Footer -->
-      <footer class="footer">Stored locally in your browser</footer>
+        <!-- Footer -->
+        <footer class="footer">Stored locally in your browser</footer>
+      </main>
     </div>
     <script src="../shared/shared.js"></script>
     <script src="popup.js"></script>

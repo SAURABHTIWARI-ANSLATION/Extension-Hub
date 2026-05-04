@@ -1,0 +1,70 @@
+/* PiP Master Notifications - CSP Compliant with Enhanced Design */
+.pip-notification {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  padding: 14px 24px;
+  border-radius: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 10000000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+  animation: pipSlideIn 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  backdrop-filter: blur(10px);
+  letter-spacing: 0.3px;
+}
+
+.pip-notification-success {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8);
+  color: white;
+  border-left: 4px solid #60A5FA;
+}
+
+.pip-notification-error {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  color: white;
+  border-left: 4px solid #F87171;
+}
+
+.pip-notification-info {
+  background: linear-gradient(135deg, #6B7280, #4B5563);
+  color: white;
+  border-left: 4px solid #9CA3AF;
+}
+
+@keyframes pipSlideIn {
+  from {
+    transform: translateX(100%) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* YouTube button styling - Enhanced with your colors */
+.pip-youtube-button {
+  opacity: 0.9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.pip-youtube-button:hover {
+  opacity: 1;
+  transform: scale(1.05);
+  background: rgba(37, 99, 235, 0.2);
+}
+
+.pip-youtube-button svg {
+  display: block;
+  transition: transform 0.2s;
+}
+
+.pip-youtube-button:active svg {
+  transform: scale(0.95);
+}

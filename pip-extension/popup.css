@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 340px;
+  background: #FFFFFF;
+  font-family: 'Manrope', sans-serif;
+  padding: 0;
+}
+
+.container {
+  padding: 24px 20px 20px;
+}
+
+/* ── Header ── */
+.header {
+  margin-bottom: 24px;
+}
+
+.brand-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.header h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  color: #111111;
+  line-height: 1;
+}
+
+.header-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #2563EB;
+  background: #EFF4FF;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.header p {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6B7280;
+  letter-spacing: 0.1px;
+}
+
+/* ── Divider ── */
+.divider {
+  height: 1px;
+  background: #F3F4F6;
+  margin: 0 0 20px;
+}
+
+/* ── Stat Cards ── */
+.status-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #F9FAFB;
+  border-radius: 12px;
+  padding: 14px 16px;
+  border: 1px solid #F3F4F6;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: #E5E7EB;
+  border-radius: 12px 0 0 12px;
+}
+
+.stat-card.active::before {
+  background: #2563EB;
+}
+
+.stat-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: #111111;
+  letter-spacing: -1px;
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+/* ── Primary Button ── */
+.primary-button {
+  width: 100%;
+  background: #2563EB;
+  color: #FFFFFF;
+  border: none;
+  padding: 13px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: 'Manrope', sans-serif;
+  letter-spacing: 0.1px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background 0.15s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.primary-button:hover {
+  background: #1D4ED8;
+}
+
+.primary-button:active {
+  background: #1E40AF;
+  transform: scale(0.99);
+}
+
+.primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-label {
+  flex: 1;
+  text-align: center;
+}
+
+.btn-arrow {
+  font-size: 16px;
+  font-weight: 400;
+  opacity: 0.7;
+}
+
+/* ── Info Rows ── */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 11px 0;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}
+
+.info-key {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #6B7280;
+}
+
+.info-value {
+  font-size: 12px;
+  font-weight: 600;
+  color: #111111;
+}
+
+.info-value kbd {
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  border-radius: 5px;
+  padding: 2px 7px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #111111;
+  margin: 0 2px;
+}
+
+/* ── Platforms ── */
+.platforms-section {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.platforms-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #6B7280;
+  margin-bottom: 10px;
+}
+
+.platform-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.platform-tags span {
+  font-size: 11px;
+  font-weight: 600;
+  color: #111111;
+  background: #F3F4F6;
+  border-radius: 6px;
+  padding: 4px 10px;
+  border: 1px solid #E5E7EB;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  cursor: default;
+}
+
+.platform-tags span:hover {
+  background: #EFF4FF;
+  color: #2563EB;
+  border-color: #BFCFF8;
+}
+
+/* ── Tip ── */
+.tip-block {
+  background: #F9FAFB;
+  border-left: 3px solid #2563EB;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.tip-title {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: #2563EB;
+  margin-bottom: 6px;
+}
+
+.tip-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6B7280;
+  line-height: 1.7;
+}
+
+/* ── Footer ── */
+.footer {
+  text-align: center;
+  font-size: 10px;
+  font-weight: 600;
+  color: #D1D5DB;
+  letter-spacing: 0.3px;
+  padding-top: 4px;
+}

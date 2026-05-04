@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PiP Master</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+
+    <div class="header">
+      <div class="brand-row">
+        <h1>PiP Master</h1>
+        <span class="header-badge">Pro</span>
+      </div>
+      <p>Picture-in-Picture for any video</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="status-section">
+      <div class="stat-card" id="videoCard">
+        <div class="stat-value" id="videoCount">0</div>
+        <div class="stat-label">Videos Found</div>
+      </div>
+      <div class="stat-card" id="pipCard">
+        <div class="stat-value" id="pipStatus">—</div>
+        <div class="stat-label">PiP Active</div>
+      </div>
+    </div>
+
+    <button id="toggleButton" class="primary-button">
+      <span class="btn-label">Toggle PiP Mode</span>
+      <span class="btn-arrow">→</span>
+    </button>
+
+    <div>
+      <div class="info-row">
+        <span class="info-key">Shortcut</span>
+        <span class="info-value">
+          <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>
+        </span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Works on</span>
+        <span class="info-value">Any tab with video</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Resize</span>
+        <span class="info-value">Drag PiP window edges</span>
+      </div>
+    </div>
+
+    <div class="platforms-section">
+      <div class="platforms-label">Supported Platforms</div>
+      <div class="platform-tags">
+        <span>YouTube</span>
+        <span>Netflix</span>
+        <span>MxPlayer</span>
+        <span>HotStar</span>
+        <span>+ more</span>
+      </div>
+    </div>
+
+    <div class="tip-block">
+      <div class="tip-title">Quick Tip</div>
+      <div class="tip-text">
+        Click any video on the page to focus it first, then press the shortcut or use the button above.
+      </div>
+    </div>
+
+    <div class="footer">Made for seamless video watching</div>
+
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

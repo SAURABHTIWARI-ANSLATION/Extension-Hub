@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Live Web Editor",
+  "version": "2.0.0",
+  "description": "Edit and style any text on any webpage locally. All controls in the popup — no floating toolbar.",
+  "permissions": ["activeTab", "contextMenus"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; child-src 'none'; frame-src 'none'; worker-src 'self'; manifest-src 'self'; require-trusted-types-for 'script'; trusted-types default"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "toggle-edit-mode": {
+      "suggested_key": {
+        "default": "Ctrl+E",
+        "mac": "Command+E"
+      },
+      "description": "Toggle Edit Mode"
+    }
+  }
+}

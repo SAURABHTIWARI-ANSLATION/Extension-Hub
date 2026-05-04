@@ -1,0 +1,48 @@
+/* Stickey — shared theme tokens for extension pages (popup/graph) */
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Manrope';
+  src: url('../assets/fonts/Manrope-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-display: swap;
+}
+
+:root {
+  --stickey-primary:        #2563EB;
+  --stickey-primary-soft:   rgba(37, 99, 235, 0.08);
+  --stickey-primary-ring:   rgba(37, 99, 235, 0.20);
+  --stickey-primary-border: rgba(37, 99, 235, 0.30);
+  --stickey-primary-glow:   rgba(37, 99, 235, 0.22);
+
+  --stickey-bg:             #FFFFFF;
+  --stickey-surface:        #F4F6FA;
+  --stickey-surface-2:      #F9FAFB;
+
+  --stickey-heading:        #111111;
+  --stickey-text:           #374151;
+  --stickey-subtext:        #6B7280;
+  --stickey-divider:        rgba(17, 17, 17, 0.08);
+
+  --stickey-radius-sm:      7px;
+  --stickey-radius:         10px;
+  --stickey-radius-lg:      14px;
+  --stickey-font:           "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
