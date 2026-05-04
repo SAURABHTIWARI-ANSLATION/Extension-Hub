@@ -15,6 +15,8 @@
   let nextFireAt = null;
   let watchConfig = null;
   let watchTickId = null;
+  let lastBadgeText = '';
+  let lastBadgeAt = 0;
 
   // ── Interaction detection ────────────────────────────────────────────────
 
@@ -118,12 +120,33 @@
 
   function startOverlayTicker() {
     if (!nextFireAt) return;
-    updateOverlay(Math.max(0, Math.ceil((nextFireAt - Date.now()) / 1000)));
+    const first = Math.max(0, Math.ceil((nextFireAt - Date.now()) / 1000));
+    updateOverlay(first);
+    updateBadge(first);
     overlayTickId = setInterval(() => {
       if (!nextFireAt) return;
       const secLeft = Math.max(0, Math.ceil((nextFireAt - Date.now()) / 1000));
       updateOverlay(secLeft);
+      updateBadge(secLeft);
     }, 500);
+  }
+
+  function badgeTextFromSeconds(secLeft) {
+    if (!Number.isFinite(secLeft) || secLeft <= 0) return '';
+    if (secLeft >= 60) return `${Math.ceil(secLeft / 60)}m`;
+    return `${secLeft}s`;
+  }
+
+  function updateBadge(secLeft) {
+    const now = Date.now();
+    // Throttle to ~1/sec to keep messaging light.
+    if (now - lastBadgeAt < 900) return;
+    lastBadgeAt = now;
+
+    const text = badgeTextFromSeconds(secLeft);
+    if (text === lastBadgeText) return;
+    lastBadgeText = text;
+    chrome.runtime.sendMessage({ action: 'BADGE_UPDATE', text }).catch(() => {});
   }
 
   function getSearchText(searchIn) {
@@ -215,6 +238,8 @@
     watchConfig = null;
     clearTimers();
     removeOverlay();
+    lastBadgeText = '';
+    chrome.runtime.sendMessage({ action: 'BADGE_CLEAR' }).catch(() => {});
   }
 
   function startOverlayOnly(fireAt) {
@@ -240,6 +265,7 @@
   // ── Message listener ──────────────────────────────────────────────────────
 
   chrome.runtime.onMessage.addListener((msg) => {
+    if (msg.action === 'ARP_PING') return Promise.resolve({ ok: true });
     if (msg.action === 'ARP_START' && msg.state) startScheduler(msg.state);
     if (msg.action === 'ARP_STOP') stopScheduler();
     if (msg.action === 'ARP_STATE' && msg.state?.nextFireAt) startOverlayOnly(msg.state.nextFireAt);

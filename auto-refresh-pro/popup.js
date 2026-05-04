@@ -45,6 +45,8 @@ let countdownInterval = null;
 let activeTabsInterval = null;
 let notificationsEnabled = true;
 let errorTimeout = null;
+let lastOpenTabs = [];
+const openTabSelection = new Map(); // tabId -> boolean
 
 const PREFS_KEY = 'prefs_v1';
 
@@ -89,6 +91,7 @@ async function init() {
   // Poll active tabs every 2 seconds
   refreshActiveTabs();
   activeTabsInterval = setInterval(refreshActiveTabs, 2000);
+  refreshOpenTabsList();
 }
 
 function syncNotificationButton() {
@@ -396,6 +399,39 @@ function setupActiveTabs() {
     updateMainButton();
     updateStatusBar();
     refreshActiveTabs();
+    refreshOpenTabsList();
+  });
+
+  $('select-all-tabs-btn').addEventListener('click', () => {
+    for (const t of lastOpenTabs) openTabSelection.set(t.id, true);
+    renderOpenTabsList(lastOpenTabs);
+  });
+
+  $('clear-all-tabs-btn').addEventListener('click', () => {
+    for (const t of lastOpenTabs) openTabSelection.set(t.id, false);
+    renderOpenTabsList(lastOpenTabs);
+  });
+
+  $('start-selected-tabs-btn').addEventListener('click', async () => {
+    const selected = lastOpenTabs.filter((t) => openTabSelection.get(t.id));
+    if (!selected.length) {
+      showError('Select at least one tab.');
+      return;
+    }
+
+    const baseConfig = buildConfig();
+    let started = 0;
+    let failed = 0;
+
+    for (const tab of selected) {
+      const config = { ...baseConfig, url: tab.url || '' };
+      const res = await sendMsg({ action: 'START_REFRESH', tabId: tab.id, config });
+      if (res?.success === false) failed++;
+      else started++;
+    }
+
+    if (failed) showError(`Started on ${started} tab(s), failed on ${failed}.`);
+    refreshActiveTabs();
   });
 }
 
@@ -408,6 +444,90 @@ async function refreshActiveTabs() {
 
   renderTabList('alert-tabs-list', 'alert-empty', alertTabs, true);
   renderTabList('active-tabs-list', 'active-empty', refreshTabs, false);
+}
+
+async function refreshOpenTabsList() {
+  const res = await chrome.tabs.query({ currentWindow: true });
+  const refreshable = (res || []).filter((t) => {
+    const u = t.url || '';
+    return typeof t.id === 'number' && (u.startsWith('http://') || u.startsWith('https://'));
+  });
+
+  lastOpenTabs = refreshable;
+
+  // Initialize selection once (default select all).
+  if (!openTabSelection.size) {
+    for (const t of refreshable) openTabSelection.set(t.id, true);
+  } else {
+    // Keep selection map in sync (remove closed tabs, add new tabs selected by default).
+    const ids = new Set(refreshable.map((t) => t.id));
+    for (const id of Array.from(openTabSelection.keys())) {
+      if (!ids.has(id)) openTabSelection.delete(id);
+    }
+    for (const t of refreshable) {
+      if (!openTabSelection.has(t.id)) openTabSelection.set(t.id, true);
+    }
+  }
+
+  renderOpenTabsList(refreshable);
+}
+
+function renderOpenTabsList(tabs) {
+  const container = $('open-tabs-list');
+  const emptyEl = $('open-tabs-empty');
+
+  container.querySelectorAll('.open-tab-item').forEach((el) => el.remove());
+
+  if (!tabs.length) {
+    emptyEl.hidden = false;
+    return;
+  }
+  emptyEl.hidden = true;
+
+  tabs.forEach((tab) => {
+    const item = document.createElement('div');
+    item.className = 'open-tab-item';
+    item.tabIndex = 0;
+
+    const check = document.createElement('input');
+    check.type = 'checkbox';
+    check.checked = openTabSelection.get(tab.id) !== false;
+    check.addEventListener('change', () => openTabSelection.set(tab.id, check.checked));
+
+    const main = document.createElement('div');
+    main.className = 'open-tab-main';
+
+    const title = document.createElement('div');
+    title.className = 'open-tab-title';
+    title.textContent = tab.title || 'Untitled';
+
+    const url = document.createElement('div');
+    url.className = 'open-tab-url';
+    url.textContent = truncateUrl(tab.url || '');
+    url.title = tab.url || '';
+
+    main.appendChild(title);
+    main.appendChild(url);
+
+    item.appendChild(check);
+    item.appendChild(main);
+
+    item.addEventListener('click', (e) => {
+      if (e.target === check) return;
+      check.checked = !check.checked;
+      openTabSelection.set(tab.id, check.checked);
+    });
+
+    item.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        check.checked = !check.checked;
+        openTabSelection.set(tab.id, check.checked);
+      }
+    });
+
+    container.appendChild(item);
+  });
 }
 
 function renderTabList(listId, emptyId, tabs, isAlert) {

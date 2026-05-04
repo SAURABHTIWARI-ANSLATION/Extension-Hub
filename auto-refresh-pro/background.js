@@ -124,6 +124,24 @@ function urlMatches(url, urlContains) {
   return url.includes(urlContains);
 }
 
+async function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function ensureContentScriptReady(tabId, maxWaitMs = 2000) {
+  const started = Date.now();
+  while (Date.now() - started < maxWaitMs) {
+    try {
+      const res = await chrome.tabs.sendMessage(tabId, { action: 'ARP_PING' });
+      if (res?.ok) return true;
+    } catch {
+      // content script not ready yet
+    }
+    await sleep(150);
+  }
+  return false;
+}
+
 async function maybeAutoStart(tabId, url) {
   const rules = await getRules();
   const matches = (rules.autoStart || []).filter((r) => urlMatches(url, r.urlContains));
@@ -246,6 +264,11 @@ async function doRefresh(tabId, state, nextDelaySeconds = null) {
 async function stopRefresh(tabId) {
   await chrome.alarms.clear(alarmName(tabId, ALARM_PREFIX));
   await removeTabState(tabId);
+  try {
+    await chrome.action.setBadgeText({ tabId, text: '' });
+  } catch {
+    // ignore
+  }
 }
 
 // ── Alarm listener ────────────────────────────────────────────────────────────
@@ -313,17 +336,33 @@ async function handleMessage(msg, sender) {
         (state.mode === 'random' && (state.randomMin < 60 || state.randomMax < 60));
 
       if (needsSecondPrecision) {
+        // If the page is restricted (not http/https), fail fast with the correct message.
+        const tab = await chrome.tabs.get(tabId).catch(() => null);
+        const url = tab?.url || sender?.tab?.url || '';
+        if (!isHttpUrl(url)) {
+          await stopRefresh(tabId);
+          return { success: false, error: 'This page is restricted and does not allow the extension to run.' };
+        }
+
         state.scheduler = 'content';
         const delaySeconds = computeInitialDelaySeconds(state);
         state.nextFireAt = Date.now() + delaySeconds * 1000;
         state.currentDelaySeconds = delaySeconds;
         await setTabState(tabId, state);
+
+        // Content scripts are injected at document_idle; if user clicks quickly after navigation,
+        // the first sendMessage can fail even on allowed pages. Retry briefly before failing.
+        const ready = await ensureContentScriptReady(tabId, 2200);
+        if (!ready) {
+          await stopRefresh(tabId);
+          return { success: false, error: 'Extension is still loading on this page. Try again in a second.' };
+        }
+
         try {
           await chrome.tabs.sendMessage(tabId, { action: 'ARP_START', state });
         } catch {
-          // No receiver (restricted URL like chrome://, Chrome Web Store, etc.)
           await stopRefresh(tabId);
-          return { success: false, error: 'This page does not allow the extension to run.' };
+          return { success: false, error: 'Unable to start on this page. Try reloading the tab and starting again.' };
         }
       } else {
         state.scheduler = 'alarm';
@@ -410,6 +449,30 @@ async function handleMessage(msg, sender) {
 
     case 'SET_PREFS': {
       await setPrefs(msg.prefs || {});
+      return { success: true };
+    }
+
+    case 'BADGE_UPDATE': {
+      const senderTabId = sender?.tab?.id;
+      if (!senderTabId) return { success: false };
+      const text = typeof msg.text === 'string' ? msg.text.slice(0, 4) : '';
+      try {
+        await chrome.action.setBadgeBackgroundColor({ tabId: senderTabId, color: '#2563EB' });
+        await chrome.action.setBadgeText({ tabId: senderTabId, text });
+      } catch {
+        // ignore (restricted contexts)
+      }
+      return { success: true };
+    }
+
+    case 'BADGE_CLEAR': {
+      const senderTabId = sender?.tab?.id;
+      if (!senderTabId) return { success: false };
+      try {
+        await chrome.action.setBadgeText({ tabId: senderTabId, text: '' });
+      } catch {
+        // ignore
+      }
       return { success: true };
     }
 
