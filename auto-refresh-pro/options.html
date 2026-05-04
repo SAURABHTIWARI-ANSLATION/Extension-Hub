@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Refresh Pro — Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <header class="hdr">
+      <div class="brand">
+        <img class="logo" src="icons/icon48.png" alt="" />
+        <div class="meta">
+          <div class="title">Auto Refresh Pro</div>
+          <div class="subtitle">Settings</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button id="btn-save" class="btn primary">Save</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="card">
+        <h2>Auto-start URLs</h2>
+        <p class="hint">When a matching URL is opened (or restored after restart), refreshing starts automatically.</p>
+        <div id="autostart-list" class="list"></div>
+        <button id="autostart-add" class="btn">Add rule</button>
+      </section>
+
+      <section class="card">
+        <h2>Keyword Rules (Start when keyword appears)</h2>
+        <p class="hint">When a matching URL is open, the extension waits for the keyword to appear, then starts refreshing.</p>
+        <div id="keyword-list" class="list"></div>
+        <button id="keyword-add" class="btn">Add keyword rule</button>
+      </section>
+
+      <section class="card">
+        <h2>Alerts</h2>
+        <div class="row">
+          <label class="switch">
+            <input id="toggle-notifs" type="checkbox" />
+            <span class="track"><span class="thumb"></span></span>
+          </label>
+          <div>
+            <div class="row-title">Notifications</div>
+            <div class="hint">Show a Chrome notification when monitoring triggers.</div>
+          </div>
+        </div>
+        <div class="note">
+          Custom sound is not enabled by default. Chrome notifications typically use the OS default sound.
+        </div>
+      </section>
+
+      <div id="toast" class="toast" hidden>Saved</div>
+    </main>
+
+    <template id="autostart-row-tpl">
+      <div class="rowbox">
+        <div class="grid">
+          <div class="field">
+            <label>URL contains</label>
+            <input class="inp urlContains" type="text" placeholder="e.g. youtube.com/watch" />
+          </div>
+          <div class="field">
+            <label>Mode</label>
+            <select class="inp mode">
+              <option value="interval">Interval</option>
+              <option value="random">Random</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Interval (sec)</label>
+            <input class="inp intervalSeconds" type="number" min="1" value="30" />
+          </div>
+          <div class="field">
+            <label>Random Min (sec)</label>
+            <input class="inp randomMin" type="number" min="1" value="5" />
+          </div>
+          <div class="field">
+            <label>Random Max (sec)</label>
+            <input class="inp randomMax" type="number" min="1" value="30" />
+          </div>
+          <div class="field">
+            <label>Stop after N refreshes (0=∞)</label>
+            <input class="inp maxRefreshes" type="number" min="0" value="0" />
+          </div>
+        </div>
+
+        <div class="row">
+          <label class="chk">
+            <input class="hardRefresh" type="checkbox" />
+            <span>Hard refresh (bypass cache)</span>
+          </label>
+          <label class="chk">
+            <input class="stopOnInteraction" type="checkbox" />
+            <span>Stop on interaction</span>
+          </label>
+          <button class="btn danger remove">Remove</button>
+        </div>
+      </div>
+    </template>
+
+    <template id="keyword-row-tpl">
+      <div class="rowbox">
+        <div class="grid">
+          <div class="field">
+            <label>URL contains</label>
+            <input class="inp urlContains" type="text" placeholder="e.g. amazon.in" />
+          </div>
+          <div class="field">
+            <label>Keyword</label>
+            <input class="inp keyword" type="text" placeholder="e.g. available" />
+          </div>
+          <div class="field">
+            <label>Search In</label>
+            <select class="inp searchIn">
+              <option value="visual">Visual</option>
+              <option value="source">Source</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Interval (sec)</label>
+            <input class="inp intervalSeconds" type="number" min="1" value="30" />
+          </div>
+        </div>
+        <div class="row">
+          <label class="chk">
+            <input class="hardRefresh" type="checkbox" />
+            <span>Hard refresh (bypass cache)</span>
+          </label>
+          <label class="chk">
+            <input class="stopOnInteraction" type="checkbox" />
+            <span>Stop on interaction</span>
+          </label>
+          <button class="btn danger remove">Remove</button>
+        </div>
+      </div>
+    </template>
+
+    <script type="module" src="options.js"></script>
+  </body>
+</html>
+
