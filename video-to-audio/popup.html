@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video to Audio Converter</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="h-icon">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3S3 19.657 3 18s1.343-3 3-3 3 1.343 3 3zm12-2c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+      </svg>
+    </div>
+    <div class="h-text">
+      <h1>Video to Audio</h1>
+      <p>Convert · Local · No uploads</p>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <!-- 1. Drop zone -->
+    <div>
+      <div class="lbl">Upload Video</div>
+      <div id="dropzone">
+        <input type="file" id="file-input" accept=".mp4,.webm,.mov,video/mp4,video/webm,video/quicktime" />
+        <div class="dz-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="6" width="15" height="12" rx="2"/>
+            <path d="M17 9l5-3v12l-5-3V9z"/>
+          </svg>
+        </div>
+        <span class="dz-main">Drop video here</span>
+        <span class="dz-sub">or click to browse · MP4, WebM, MOV</span>
+        <span id="fname-badge">filename.mp4</span>
+      </div>
+    </div>
+
+    <!-- 2. Options -->
+    <div class="opts">
+      <div class="opt">
+        <label for="output-name">Output name</label>
+        <input type="text" id="output-name" placeholder="auto" />
+      </div>
+      <div class="opt">
+        <label for="quality">Quality</label>
+        <select id="quality">
+          <option value="2">High (VBR 2)</option>
+          <option value="4" selected>Medium (VBR 4)</option>
+          <option value="6">Low (VBR 6)</option>
+          <option value="128k">128 kbps</option>
+          <option value="192k">192 kbps</option>
+          <option value="320k">320 kbps</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 3. Convert button -->
+    <button id="convert-btn" disabled>
+      <svg class="btn-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3S3 19.657 3 18s1.343-3 3-3 3 1.343 3 3zm12-2c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+      </svg>
+      <span id="btn-text">Convert to MP3</span>
+    </button>
+
+    <!-- 4. Progress -->
+    <div id="prog-wrap">
+      <div class="prog-header">
+        <span class="prog-lbl" id="prog-lbl">Processing…</span>
+        <span class="prog-pct" id="prog-pct">0%</span>
+      </div>
+      <div class="prog-track">
+        <div class="prog-fill" id="prog-fill"></div>
+      </div>
+    </div>
+
+    <!-- 5. Audio player (hidden until conversion done) -->
+    <div id="player-section">
+      <audio id="audio-el"></audio>
+
+      <!-- file info row -->
+      <div class="pl-top">
+        <div class="pl-thumb">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 18V5l12-2v13M9 18c0 1.657-1.343 3-3 3S3 19.657 3 18s1.343-3 3-3 3 1.343 3 3zm12-2c0 1.657-1.343 3-3 3s-3-1.343-3-3 1.343-3 3-3 3 1.343 3 3z"/>
+          </svg>
+        </div>
+        <div class="pl-info">
+          <div class="pl-name" id="pl-name">output.mp3</div>
+          <div class="pl-meta" id="pl-meta">MP3 · 44.1 kHz · Stereo</div>
+        </div>
+      </div>
+
+      <!-- seek bar -->
+      <div class="pl-timeline">
+        <span class="pl-time" id="t-cur">0:00</span>
+        <input type="range" id="seek-bar" min="0" max="100" value="0" step="0.1" />
+        <span class="pl-time right" id="t-tot">0:00</span>
+      </div>
+
+      <!-- controls row -->
+      <div class="pl-controls">
+        <div class="pl-left">
+          <!-- play/pause -->
+          <button id="play-btn" title="Play / Pause">
+            <svg id="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <!-- volume -->
+          <div class="vol">
+            <svg class="vol-ico" id="vol-ico" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M11 5L6 9H2v6h4l5 4V5zM19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/>
+            </svg>
+            <input type="range" id="vol-bar" min="0" max="1" value="1" step="0.02" />
+          </div>
+        </div>
+        <!-- download -->
+        <button id="dl-btn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Download
+        </button>
+      </div>
+    </div>
+
+    <!-- 6. Log -->
+    <div>
+      <div class="lbl">Status</div>
+      <div class="log-box" id="log"></div>
+    </div>
+
+  </div><!-- /body -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <span class="badge blue">ffmpeg.wasm</span>
+    <span class="badge">100% Local</span>
+    <span class="badge">MV3</span>
+  </footer>
+
+  <script src="dropdowns.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
