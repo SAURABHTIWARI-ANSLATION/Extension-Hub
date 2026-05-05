@@ -110,11 +110,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (state.domain === d) opt.selected = true;
         domainSelect.appendChild(opt);
       });
+      if (window.CADropdowns?.sync) window.CADropdowns.sync("domainSelect");
     } catch (_) {
       const opt = document.createElement("option");
       opt.value = "";
       opt.textContent = "Auto";
       domainSelect.appendChild(opt);
+      if (window.CADropdowns?.sync) window.CADropdowns.sync("domainSelect");
     }
   }
 

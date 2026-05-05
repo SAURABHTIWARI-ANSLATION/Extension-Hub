@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Temp Mail",
   "short_name": "Temp Mail",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Generate a temporary inbox for OTPs, verification emails, and privacy-safe signups.",
   "permissions": [
     "storage",
