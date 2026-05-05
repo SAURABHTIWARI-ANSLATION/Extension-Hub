@@ -2,10 +2,11 @@
   "manifest_version": 3,
   "name": "Temp Mail",
   "short_name": "Temp Mail",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Generate a temporary inbox for OTPs, verification emails, and privacy-safe signups.",
   "permissions": [
-    "storage"
+    "storage",
+    "clipboardWrite"
   ],
   "host_permissions": [
     "https://api.mail.tm/*"
@@ -25,7 +26,7 @@
     "default_title": "Temp Mail"
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "extension_pages": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src https://api.mail.tm; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none';"
   },
   "minimum_chrome_version": "114"
 }
