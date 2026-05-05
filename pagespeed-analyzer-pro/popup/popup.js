@@ -30,7 +30,7 @@ let currentTabId   = null;
 let currentPayload = null;
 let currentFilter  = 'all';
 let currentRTab    = 'images';
-let settings       = { autoScan: false, darkMode: true };
+let settings       = { autoScan: false, darkMode: false };
 
 // ── DOM references ─────────────────────────────────────────────────────────────
 const $ = (id) => document.getElementById(id);
@@ -61,6 +61,7 @@ const DOM = {
   btnSaveSettings:  $('btn-save-settings'),
   btnExportJson:    $('btn-export-json'),
   btnExportTxt:     $('btn-export-txt'),
+  footerVersion:    $('footer-version'),
 };
 
 // ── State transitions ─────────────────────────────────────────────────────────
@@ -76,7 +77,7 @@ function showState(activeId) {
 // ── Theme ─────────────────────────────────────────────────────────────────────
 function applyTheme(dark) {
   document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
-  DOM.btnTheme.textContent = dark ? '☀' : '☾';
+  DOM.btnTheme.title = dark ? 'Switch to light theme' : 'Switch to dark theme';
 }
 
 // ── Initialise ────────────────────────────────────────────────────────────────
@@ -88,6 +89,12 @@ async function init() {
   applyTheme(settings.darkMode);
   DOM.settingDarkmode.checked  = settings.darkMode;
   DOM.settingAutoscan.checked  = settings.autoScan;
+
+  // Version label
+  try {
+    const v = chrome.runtime.getManifest().version;
+    if (DOM.footerVersion) DOM.footerVersion.textContent = `v${v}`;
+  } catch (_) {}
 
   // Wire tab navigation
   const tabBtns   = document.querySelectorAll('.tab-btn');
@@ -120,6 +127,8 @@ async function init() {
   DOM.btnTheme.addEventListener('click', () => {
     settings.darkMode = !settings.darkMode;
     applyTheme(settings.darkMode);
+    DOM.settingDarkmode.checked = settings.darkMode;
+    chrome.storage.local.set({ settings }).catch(() => {});
   });
   DOM.btnSettings.addEventListener('click',      () => DOM.settingsOverlay.classList.remove('state-panel--hidden'));
   DOM.btnCloseSettings.addEventListener('click', () => DOM.settingsOverlay.classList.add('state-panel--hidden'));
@@ -245,7 +254,7 @@ function renderSuggestions(suggestions) {
     : suggestions.filter((s) => s.category === currentFilter);
 
   if (filtered.length === 0) {
-    const empty = el('div', { cls: 'empty-msg', text: currentFilter === 'all' ? '✓ No issues found!' : 'No issues in this category.' });
+    const empty = el('div', { cls: 'empty-msg', text: currentFilter === 'all' ? 'No issues found.' : 'No issues in this category.' });
     list.appendChild(empty);
     return;
   }
@@ -324,7 +333,7 @@ function renderSEOPanel(seo, bp) {
         ? 'No H1 found'
         : seo.headings?.h1 > 1
         ? `${seo.headings.h1} H1 tags (should be 1)`
-        : '1 H1 found ✓',
+        : '1 H1 found',
     },
     {
       label:  'Open Graph',
@@ -340,7 +349,7 @@ function renderSEOPanel(seo, bp) {
     {
       label:  'HTTPS',
       pass:   bp.isHTTPS,
-      detail: bp.isHTTPS ? 'Secure ✓' : 'Not secure ✗',
+      detail: bp.isHTTPS ? 'Secure' : 'Not secure',
     },
     {
       label:  'HTML lang',
@@ -350,17 +359,17 @@ function renderSEOPanel(seo, bp) {
     {
       label:  'Charset',
       pass:   !!seo.hasCharset,
-      detail: seo.hasCharset ? 'Declared ✓' : 'Missing',
+      detail: seo.hasCharset ? 'Declared' : 'Missing',
     },
     {
       label:  'Favicon',
       pass:   bp.hasFavicon,
-      detail: bp.hasFavicon ? 'Found ✓' : 'Missing',
+      detail: bp.hasFavicon ? 'Found' : 'Missing',
     },
     {
       label:  'Web App Manifest',
       pass:   bp.hasManifest,
-      detail: bp.hasManifest ? 'Found ✓' : 'Not linked',
+      detail: bp.hasManifest ? 'Found' : 'Not linked',
     },
   ];
 
@@ -370,7 +379,7 @@ function renderSEOPanel(seo, bp) {
       attrs: { role: 'listitem' },
     });
 
-    const icon   = el('span', { cls: 'seo-check__icon', text: check.pass ? '✓' : check.warn ? '~' : '✗' });
+    const icon   = el('span', { cls: 'seo-check__icon', text: check.pass ? 'OK' : check.warn ? 'WARN' : 'FAIL' });
     const label  = el('span', { cls: 'seo-check__label', text: check.label });
     const detail = el('span', { cls: 'seo-check__detail', text: check.detail });
 

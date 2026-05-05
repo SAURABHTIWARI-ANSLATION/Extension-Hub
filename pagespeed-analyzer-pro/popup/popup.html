@@ -1,24 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PageSpeed Analyzer Pro</title>
+  <link rel="preload" href="popup.css" as="style">
   <link rel="stylesheet" href="popup.css">
 </head>
-<body>
+<body bgcolor="#F8FAFC">
+
+  <div class="shell">
 
   <!-- ═══════════════════════════════════════════
        HEADER
   ═══════════════════════════════════════════ -->
   <header class="app-header" role="banner">
     <div class="app-header__brand">
-      <span class="app-header__logo" aria-hidden="true">⚡</span>
+      <img class="app-header__logo-img" src="../icons/icon32.png" alt="" aria-hidden="true">
       <span class="app-header__name">PageSpeed Analyzer Pro</span>
     </div>
     <div class="app-header__actions">
-      <button class="icon-btn" id="btn-theme"    title="Toggle dark/light mode"  aria-label="Toggle theme">☀</button>
-      <button class="icon-btn" id="btn-settings" title="Settings"                aria-label="Open settings">⚙</button>
+      <button class="icon-btn icon-btn--icon" id="btn-theme" title="Toggle theme" aria-label="Toggle theme" type="button">
+        <span class="sr-only">Toggle theme</span>
+        <!-- Sun (light) -->
+        <svg class="theme-ico theme-ico--sun" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <!-- Moon (dark) -->
+        <svg class="theme-ico theme-ico--moon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 13.3A8.2 8.2 0 0 1 10.7 3a6.8 6.8 0 1 0 10.3 10.3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="icon-btn" id="btn-settings" title="Settings"                aria-label="Open settings">Settings</button>
     </div>
   </header>
 
@@ -26,7 +40,6 @@
        URL BAR
   ═══════════════════════════════════════════ -->
   <div class="url-bar" role="note" aria-label="Analysed URL">
-    <span class="url-bar__icon" aria-hidden="true">🌐</span>
     <span class="url-bar__text" id="current-url">—</span>
   </div>
 
@@ -44,14 +57,14 @@
 
     <!-- Error state -->
     <div class="state-panel state-panel--hidden" id="state-error" role="alert">
-      <div class="state-panel__icon" aria-hidden="true">⚠</div>
+      <div class="state-panel__icon" aria-hidden="true">Error</div>
       <p class="state-panel__text" id="error-message">Analysis failed</p>
       <button class="btn btn--primary" id="btn-retry-error">Retry</button>
     </div>
 
     <!-- Empty state (restricted page) -->
     <div class="state-panel state-panel--hidden" id="state-empty">
-      <div class="state-panel__icon" aria-hidden="true">🚫</div>
+      <div class="state-panel__icon" aria-hidden="true">Blocked</div>
       <p class="state-panel__text">Cannot analyse this page</p>
       <p class="state-panel__sub">Chrome extensions cannot access browser internal pages, the Chrome Web Store, or pages blocked by CSP.</p>
     </div>
@@ -70,7 +83,7 @@
           <div class="score-meta__timestamp" id="score-timestamp">—</div>
         </div>
         <button class="btn btn--primary" id="btn-reanalyse" aria-label="Re-run analysis">
-          ↻ Re-analyse
+          Re-analyse
         </button>
       </section>
 
@@ -148,11 +161,11 @@
   ═══════════════════════════════════════════ -->
   <footer class="app-footer" role="contentinfo">
     <div class="footer-left">
-      <button class="icon-btn icon-btn--sm" id="btn-export-json" title="Export JSON report" aria-label="Export JSON">⬇ JSON</button>
-      <button class="icon-btn icon-btn--sm" id="btn-export-txt"  title="Export text report" aria-label="Export text">⬇ TXT</button>
+      <button class="icon-btn icon-btn--sm" id="btn-export-json" title="Export JSON report" aria-label="Export JSON">JSON</button>
+      <button class="icon-btn icon-btn--sm" id="btn-export-txt"  title="Export text report" aria-label="Export text">TXT</button>
     </div>
     <div class="footer-right">
-      <span class="footer-version">v1.0.0</span>
+      <span class="footer-version" id="footer-version"></span>
     </div>
   </footer>
 
@@ -161,7 +174,7 @@
     <div class="overlay__card">
       <div class="overlay__header">
         <h2 class="overlay__title" id="settings-title">Settings</h2>
-        <button class="icon-btn" id="btn-close-settings" aria-label="Close settings">✕</button>
+        <button class="icon-btn" id="btn-close-settings" aria-label="Close settings">Close</button>
       </div>
       <div class="settings-body">
         <label class="setting-row">
@@ -179,5 +192,6 @@
 
   <!-- Script loaded last, type=module for ES module support -->
   <script type="module" src="popup.js"></script>
+</div>
 </body>
 </html>
