@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PageSpeed Analyzer Pro</title>
+  <link rel="preload" href="popup.css" as="style">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body bgcolor="#F8FAFC">
+
+  <div class="shell">
+
+  <!-- ═══════════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════════ -->
+  <header class="app-header" role="banner">
+    <div class="app-header__brand">
+      <img class="app-header__logo-img" src="../icons/icon32.png" alt="" aria-hidden="true">
+      <span class="app-header__name">PageSpeed Analyzer Pro</span>
+    </div>
+    <div class="app-header__actions">
+      <button class="icon-btn icon-btn--icon" id="btn-theme" title="Toggle theme" aria-label="Toggle theme" type="button">
+        <span class="sr-only">Toggle theme</span>
+        <!-- Sun (light) -->
+        <svg class="theme-ico theme-ico--sun" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <!-- Moon (dark) -->
+        <svg class="theme-ico theme-ico--moon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M21 13.3A8.2 8.2 0 0 1 10.7 3a6.8 6.8 0 1 0 10.3 10.3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="icon-btn" id="btn-settings" title="Settings"                aria-label="Open settings">Settings</button>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       URL BAR
+  ═══════════════════════════════════════════ -->
+  <div class="url-bar" role="note" aria-label="Analysed URL">
+    <span class="url-bar__text" id="current-url">—</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+  ═══════════════════════════════════════════ -->
+  <main class="app-main" role="main">
+
+    <!-- Loading state -->
+    <div class="state-panel" id="state-loading" aria-live="polite" aria-label="Analysing page">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="state-panel__text">Analysing page…</p>
+      <p class="state-panel__sub">Collecting Core Web Vitals &amp; resources</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="state-panel state-panel--hidden" id="state-error" role="alert">
+      <div class="state-panel__icon" aria-hidden="true">Error</div>
+      <p class="state-panel__text" id="error-message">Analysis failed</p>
+      <button class="btn btn--primary" id="btn-retry-error">Retry</button>
+    </div>
+
+    <!-- Empty state (restricted page) -->
+    <div class="state-panel state-panel--hidden" id="state-empty">
+      <div class="state-panel__icon" aria-hidden="true">Blocked</div>
+      <p class="state-panel__text">Cannot analyse this page</p>
+      <p class="state-panel__sub">Chrome extensions cannot access browser internal pages, the Chrome Web Store, or pages blocked by CSP.</p>
+    </div>
+
+    <!-- Results panel -->
+    <div class="results-panel state-panel--hidden" id="results-panel">
+
+      <!-- ── Score overview ──────────────────────── -->
+      <section class="score-section" aria-labelledby="score-heading">
+        <div class="score-gauge-wrap">
+          <div id="score-gauge" role="img" aria-label="Performance score gauge"></div>
+        </div>
+        <div class="score-meta">
+          <h2 class="score-meta__label" id="score-heading">Performance Score</h2>
+          <div class="score-meta__rating" id="score-rating-text">—</div>
+          <div class="score-meta__timestamp" id="score-timestamp">—</div>
+        </div>
+        <button class="btn btn--primary" id="btn-reanalyse" aria-label="Re-run analysis">
+          Re-analyse
+        </button>
+      </section>
+
+      <!-- ── Tab navigation ─────────────────────── -->
+      <nav class="tab-nav" role="tablist" aria-label="Analysis sections">
+        <button class="tab-btn tab-btn--active" role="tab" data-tab="metrics"     aria-selected="true"  aria-controls="panel-metrics">Metrics</button>
+        <button class="tab-btn"                 role="tab" data-tab="suggestions" aria-selected="false" aria-controls="panel-suggestions">Issues</button>
+        <button class="tab-btn"                 role="tab" data-tab="resources"   aria-selected="false" aria-controls="panel-resources">Resources</button>
+        <button class="tab-btn"                 role="tab" data-tab="seo"         aria-selected="false" aria-controls="panel-seo">SEO</button>
+      </nav>
+
+      <!-- ── PANEL: Metrics ─────────────────────── -->
+      <section class="tab-panel tab-panel--active" id="panel-metrics" role="tabpanel" aria-label="Core Web Vitals">
+        <div class="section-header">
+          <h3 class="section-title">Core Web Vitals</h3>
+          <div class="legend">
+            <span class="legend-dot legend-dot--good"></span><span>Good</span>
+            <span class="legend-dot legend-dot--average"></span><span>Avg</span>
+            <span class="legend-dot legend-dot--poor"></span><span>Poor</span>
+          </div>
+        </div>
+        <div class="metrics-grid" id="metrics-grid" role="list" aria-label="Performance metrics"></div>
+      </section>
+
+      <!-- ── PANEL: Suggestions ─────────────────── -->
+      <section class="tab-panel" id="panel-suggestions" role="tabpanel" aria-label="Optimisation suggestions">
+        <div class="section-header">
+          <h3 class="section-title">Issues &amp; Suggestions</h3>
+          <div class="filter-row" role="group" aria-label="Filter by category">
+            <button class="filter-btn filter-btn--active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="performance">Perf</button>
+            <button class="filter-btn" data-filter="seo">SEO</button>
+            <button class="filter-btn" data-filter="images">Images</button>
+            <button class="filter-btn" data-filter="accessibility">A11y</button>
+          </div>
+        </div>
+        <div class="suggestions-list" id="suggestions-list" role="list" aria-label="Suggestions"></div>
+      </section>
+
+      <!-- ── PANEL: Resources ──────────────────── -->
+      <section class="tab-panel" id="panel-resources" role="tabpanel" aria-label="Resource breakdown">
+        <div class="section-header">
+          <h3 class="section-title">Resources</h3>
+          <div class="resource-totals" id="resource-totals" aria-live="polite"></div>
+        </div>
+        <!-- Sub-tabs for resource types -->
+        <div class="sub-tab-nav" role="group" aria-label="Resource types">
+          <button class="sub-tab-btn sub-tab-btn--active" data-rtab="images">Images</button>
+          <button class="sub-tab-btn" data-rtab="scripts">Scripts</button>
+          <button class="sub-tab-btn" data-rtab="stylesheets">CSS</button>
+          <button class="sub-tab-btn" data-rtab="xhr">XHR</button>
+          <button class="sub-tab-btn" data-rtab="fonts">Fonts</button>
+        </div>
+        <div class="resource-list-header" aria-hidden="true">
+          <span>Resource</span>
+          <span>Size</span>
+          <span>Time</span>
+        </div>
+        <div class="resource-list" id="resource-list" role="list" aria-label="Resource list"></div>
+      </section>
+
+      <!-- ── PANEL: SEO ────────────────────────── -->
+      <section class="tab-panel" id="panel-seo" role="tabpanel" aria-label="SEO audit">
+        <div class="section-header">
+          <h3 class="section-title">SEO &amp; Best Practices</h3>
+        </div>
+        <div class="seo-grid" id="seo-grid" role="list" aria-label="SEO checks"></div>
+      </section>
+
+    </div><!-- /results-panel -->
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER / EXPORT
+  ═══════════════════════════════════════════ -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-left">
+      <button class="icon-btn icon-btn--sm" id="btn-export-json" title="Export JSON report" aria-label="Export JSON">JSON</button>
+      <button class="icon-btn icon-btn--sm" id="btn-export-txt"  title="Export text report" aria-label="Export text">TXT</button>
+    </div>
+    <div class="footer-right">
+      <span class="footer-version" id="footer-version"></span>
+    </div>
+  </footer>
+
+  <!-- Settings overlay -->
+  <div class="overlay state-panel--hidden" id="settings-overlay" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="overlay__card">
+      <div class="overlay__header">
+        <h2 class="overlay__title" id="settings-title">Settings</h2>
+        <button class="icon-btn" id="btn-close-settings" aria-label="Close settings">Close</button>
+      </div>
+      <div class="settings-body">
+        <label class="setting-row">
+          <span class="setting-row__label">Auto-scan on page load</span>
+          <input type="checkbox" id="setting-autoscan" class="toggle">
+        </label>
+        <label class="setting-row">
+          <span class="setting-row__label">Dark mode</span>
+          <input type="checkbox" id="setting-darkmode" class="toggle" checked>
+        </label>
+      </div>
+      <button class="btn btn--primary" id="btn-save-settings">Save Settings</button>
+    </div>
+  </div>
+
+  <!-- Script loaded last, type=module for ES module support -->
+  <script type="module" src="popup.js"></script>
+</div>
+</body>
+</html>
