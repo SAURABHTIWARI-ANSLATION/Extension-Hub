@@ -574,6 +574,35 @@ button { cursor: pointer; }
   font-weight: 600;
 }
 
+/* Filter tabs */
+.filter-tabs {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.filter-tab {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--r-sm);
+  background: var(--surface);
+  color: var(--ink-3);
+  font-family: var(--font);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.filter-tab:hover { background: var(--surface-2); color: var(--ink-2); }
+.filter-tab.is-active { background: var(--blue); color: var(--white); }
+.filter-tab svg { width: 13px; height: 13px; stroke-width: 1.2; }
+
 /* Search */
 .search-box {
   position: relative;
@@ -618,9 +647,18 @@ button { cursor: pointer; }
 .message-list::-webkit-scrollbar { width: 4px; }
 .message-list::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
 
+/* Message item wrapper with actions */
+.message-item-wrapper {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  border-radius: var(--r-md);
+  transition: background 0.15s;
+}
+
 /* Message item */
 .message-item {
-  width: 100%;
+  flex: 1;
   padding: 11px 14px;
   border: 1.5px solid var(--border);
   border-radius: var(--r-md);
@@ -678,6 +716,60 @@ button { cursor: pointer; }
   font-size: 11px;
   color: var(--ink-4);
   font-weight: 600;
+}
+
+/* Message actions */
+.message-actions {
+  display: flex;
+  gap: 4px;
+  align-items: stretch;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+.message-item-wrapper:hover .message-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  min-width: 34px;
+  height: 100%;
+  padding: 0;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--white);
+  color: var(--ink-3);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  flex-shrink: 0;
+}
+.action-btn:hover {
+  background: var(--surface-2);
+  color: var(--ink-2);
+  border-color: var(--border-2);
+}
+
+.star-btn:has(svg[fill="currentColor"]):hover {
+  color: #F59E0B;
+  border-color: #FCD34D;
+  background: #FFFBEB;
+}
+
+.archive-btn:hover {
+  color: var(--green);
+  border-color: var(--green-border);
+  background: var(--green-light);
+}
+
+.delete-btn:hover {
+  color: var(--red);
+  border-color: var(--red-border);
+  background: var(--red-light);
 }
 
 /* Empty state */
