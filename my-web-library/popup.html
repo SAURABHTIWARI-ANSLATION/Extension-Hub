@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self';">
+  <link rel="stylesheet" href="popup.css">
+  <title>My Web Library</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>
+        <span class="brand-mark">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6H20V18H4V6Z" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="white"/>
+            <path d="M8 4V8" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 4V8" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>
+          <span class="eyebrow">Personal knowledge space</span>
+          <span class="brand-title">My Web Library</span>
+        </span>
+      </h2>
+      <div class="header-actions">
+        <button id="settingsBtn" class="icon-btn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="3" stroke="#6B7280" stroke-width="2"/>
+            <path d="M19.4 15.05L18.3 15.7C18.1 15.85 17.8 15.75 17.75 15.5L17.5 14.3C17.45 14.05 17.6 13.8 17.85 13.7L18.95 13.2C19.2 13.1 19.45 12.9 19.45 12.65V11.35C19.45 11.1 19.2 10.9 18.95 10.8L17.85 10.3C17.6 10.2 17.45 9.95 17.5 9.7L17.75 8.5C17.8 8.25 18.05 8.15 18.3 8.3L19.4 8.95C19.6 9.05 19.85 9 19.95 8.8L20.45 7.9C20.6 7.6 20.5 7.3 20.2 7.15L19.1 6.5C18.9 6.35 18.85 6.1 18.95 5.85L19.35 4.75C19.45 4.45 19.3 4.15 19 4.05L17.9 3.65C17.65 3.55 17.4 3.65 17.3 3.9L16.85 5C16.75 5.25 16.5 5.4 16.25 5.35L15.05 5.1C14.8 5.05 14.65 4.8 14.75 4.55L15.25 3.45C15.35 3.2 15.25 2.9 15 2.8L13.9 2.4C13.65 2.3 13.4 2.4 13.3 2.65L12.8 3.75C12.7 4 12.45 4.15 12.2 4.1H11.8C11.55 4.15 11.3 4 11.2 3.75L10.7 2.65C10.6 2.4 10.35 2.3 10.1 2.4L9 2.8C8.75 2.9 8.65 3.15 8.75 3.4L9.25 4.5C9.35 4.75 9.2 5 8.95 5.05L7.75 5.3C7.5 5.35 7.25 5.2 7.15 4.95L6.7 3.85C6.6 3.6 6.35 3.5 6.1 3.6L5 4C4.7 4.1 4.55 4.4 4.65 4.7L5.05 5.8C5.15 6.05 5.05 6.3 4.8 6.4L3.7 6.9C3.45 7 3.3 7.25 3.4 7.5L3.9 8.6C4 8.85 3.9 9.1 3.65 9.2L2.55 9.7C2.3 9.8 2.15 10.05 2.25 10.3V11.6C2.15 11.85 2.3 12.1 2.55 12.2L3.65 12.7C3.9 12.8 4.05 13.05 3.95 13.3L3.5 14.4C3.4 14.65 3.5 14.9 3.75 15L4.85 15.5C5.1 15.6 5.2 15.85 5.1 16.1L4.65 17.2C4.55 17.45 4.65 17.75 4.95 17.85L6.05 18.25C6.3 18.35 6.55 18.25 6.65 18L7.15 16.9C7.25 16.65 7.5 16.5 7.75 16.55L8.95 16.8C9.2 16.85 9.35 17.1 9.25 17.35L8.75 18.45C8.65 18.7 8.75 18.95 9 19.05L10.1 19.45C10.35 19.55 10.6 19.45 10.7 19.2L11.2 18.1C11.3 17.85 11.55 17.7 11.8 17.75H12.2C12.45 17.7 12.7 17.85 12.8 18.1L13.3 19.2C13.4 19.45 13.65 19.55 13.9 19.45L15 19.05C15.25 18.95 15.35 18.7 15.25 18.45L14.75 17.35C14.65 17.1 14.8 16.85 15.05 16.8L16.25 16.55C16.5 16.5 16.75 16.65 16.85 16.9L17.35 18C17.45 18.25 17.7 18.35 17.95 18.25L19.05 17.85C19.3 17.75 19.4 17.5 19.3 17.25L18.85 16.15C18.75 15.9 18.85 15.65 19.1 15.55L20.2 15.05C20.5 14.9 20.6 14.6 20.45 14.35L19.95 13.45C19.85 13.25 19.9 13 20.1 12.85L20.85 12.3C21.05 12.15 21.15 11.9 21.05 11.65V11.5" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <button id="viewLibraryBtn" class="library-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 6H20V18H4V6Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <path d="M8 4V8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            <path d="M16 4V8" stroke="white" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Library
+        </button>
+      </div>
+    </div>
+
+    <!-- Save New Content Section -->
+    <div id="saveSection" class="save-section">
+      <div class="save-hero">
+        <div>
+          <p class="section-kicker">Save Current Page</p>
+          <h3>Capture pages with context</h3>
+          <p class="section-copy">Keep titles, notes, tags, and reading status in one focused library.</p>
+        </div>
+        <div class="hero-domain">
+          <span class="hero-domain-label">Current site</span>
+          <span id="pageDomain" class="hero-domain-value">Loading...</span>
+        </div>
+      </div>
+
+      <div class="surface-panel page-overview">
+        <div id="pageInfo">
+          <div class="info-row">
+            <strong>Title</strong>
+            <span id="pageTitle">Loading...</span>
+          </div>
+          <div class="info-row">
+            <strong>URL</strong>
+            <span id="pageUrl" class="url-text">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group surface-panel">
+          <label>Status</label>
+          <select id="statusSelect" class="status-select">
+            <option value="read-later">Read Later</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+
+        <div class="form-group surface-panel">
+          <label>Priority</label>
+          <div class="priority-buttons">
+            <button type="button" class="priority-btn" data-priority="low">Low</button>
+            <button type="button" class="priority-btn priority-active" data-priority="medium">Mid</button>
+            <button type="button" class="priority-btn" data-priority="high">High</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="surface-panel details-panel">
+        <div class="form-group">
+          <label>Tags</label>
+          <input type="text" id="tagsInput" placeholder="e.g., design, development, tutorial">
+          <div id="tagSuggestions" class="tag-suggestions"></div>
+        </div>
+
+        <div class="form-group form-group-compact">
+          <label>Notes</label>
+          <textarea id="notesInput" rows="3" placeholder="Add your thoughts or key takeaways..."></textarea>
+        </div>
+      </div>
+
+      <button id="saveBtn" class="save-btn">Save to Library</button>
+      <div id="saveMessage" class="message"></div>
+    </div>
+
+    <!-- Library View Section -->
+    <div id="libraryView" class="library-section" style="display: none;">
+      <div class="library-header">
+        <h3>My Library</h3>
+        <div class="library-header-actions">
+          <button id="exportBtn" class="icon-btn-small" title="Export Library">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3V15M12 15L9 12M12 15L15 12" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M5 17V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V17" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <button id="darkModeBtn" class="icon-btn-small" title="Dark Mode">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3V4M12 20V21M21 12H20M4 12H3M18.364 5.636L17.657 6.343M6.343 17.657L5.636 18.364M18.364 18.364L17.657 17.657M6.343 6.343L5.636 5.636" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="12" cy="12" r="4" stroke="#6B7280" stroke-width="2"/>
+            </svg>
+          </button>
+          <button id="backToSaveBtn" class="back-btn">Back</button>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <button class="filter-status-btn active" data-status="all">All</button>
+        <button class="filter-status-btn" data-status="read-later">Read Later</button>
+        <button class="filter-status-btn" data-status="in-progress">In Progress</button>
+        <button class="filter-status-btn" data-status="completed">Completed</button>
+      </div>
+
+      <div class="search-filter surface-panel">
+        <div class="search-input-wrap">
+          <span class="search-input-icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+              <path d="M20 20L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <input type="text" id="searchInput" placeholder="Search by title, tags, or notes...">
+        </div>
+        <div class="filter-tags" id="filterTags"></div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-value" id="totalCount">0</span>
+          <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="completedCount">0</span>
+          <span class="stat-label">Completed</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" id="readingCount">0</span>
+          <span class="stat-label">Reading</span>
+        </div>
+      </div>
+
+      <div id="savedItemsList" class="saved-items"></div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Settings</h3>
+          <button class="close-modal" id="closeModalBtn">×</button>
+        </div>
+        <div class="modal-body">
+          <div class="setting-item">
+            <label>Auto-tag suggestions</label>
+            <input type="checkbox" id="autoTagSetting" checked>
+          </div>
+          <div class="setting-item">
+            <label>Save page screenshot</label>
+            <input type="checkbox" id="saveScreenshotSetting">
+          </div>
+          <div class="setting-item">
+            <label>Default view</label>
+            <select id="defaultViewSetting">
+              <option value="save">Save View</option>
+              <option value="library">Library View</option>
+            </select>
+          </div>
+          <button id="clearAllBtn" class="danger-btn">Clear All Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="dropdowns.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
