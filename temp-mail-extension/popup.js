@@ -42,6 +42,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const historyList      = $("historyList");
   const clearHistoryBtn  = $("clearHistoryBtn");
   const domainSelect     = $("domainSelect");
+  const filterInboxBtn   = $("filterInboxBtn");
+  const filterArchivedBtn = $("filterArchivedBtn");
+  const filterStarredBtn = $("filterStarredBtn");
 
   /* ════════════════════════════════════════
      STATE
@@ -53,7 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
     domain: "",
     messages: [],
     seenIds: [],
-    selectedMessageId: ""
+    selectedMessageId: "",
+    deletedIds: [],
+    archivedIds: [],
+    starredIds: [],
+    currentFilter: "inbox"
   };
 
   let autoRefreshTimer    = null;
@@ -90,6 +97,9 @@ document.addEventListener("DOMContentLoaded", () => {
   autoRefreshBtn.addEventListener("click",   toggleAutoRefresh);
   historyToggleBtn.addEventListener("click", toggleHistoryPanel);
   clearHistoryBtn.addEventListener("click",  clearHistory);
+  filterInboxBtn.addEventListener("click",   () => setFilter("inbox"));
+  filterArchivedBtn.addEventListener("click", () => setFilter("archived"));
+  filterStarredBtn.addEventListener("click",  () => setFilter("starred"));
   searchInput.addEventListener("input",      () => {
     searchQuery = searchInput.value.trim().toLowerCase();
     renderMessages(state.messages);
@@ -146,6 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
         domain,
         messages: [],
         seenIds: [],
+        deletedIds: [],
+        archivedIds: [],
+        starredIds: [],
+        currentFilter: "inbox",
         selectedMessageId: ""
       });
 
@@ -244,11 +258,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     domainLabel.textContent = state.domain ? "@" + state.domain : "No domain";
-    const total = state.messages.length;
+    
+    // Count messages based on current filter
+    let visibleMessages = state.messages.filter(m => !state.deletedIds.includes(m.id));
+    if (state.currentFilter === "archived") {
+      visibleMessages = visibleMessages.filter(m => state.archivedIds.includes(m.id));
+    } else if (state.currentFilter === "starred") {
+      visibleMessages = visibleMessages.filter(m => state.starredIds.includes(m.id));
+    } else {
+      visibleMessages = visibleMessages.filter(m => !state.archivedIds.includes(m.id));
+    }
+    
+    const total = visibleMessages.length;
     messageCount.textContent = total + " message" + (total !== 1 ? "s" : "");
 
-    const unread = state.messages.filter((m) => m._unread).length;
-    if (unread > 0) {
+    // Show unread badge only in inbox
+    const inboxMessages = state.messages.filter(m => !state.deletedIds.includes(m.id) && !state.archivedIds.includes(m.id));
+    const unread = inboxMessages.filter((m) => m._unread).length;
+    if (unread > 0 && state.currentFilter === "inbox") {
       unreadBadge.textContent = unread;
       unreadBadge.classList.remove("hidden");
     } else {
@@ -260,34 +287,56 @@ document.addEventListener("DOMContentLoaded", () => {
      RENDER: MESSAGE LIST
   ════════════════════════════════════════ */
   function renderMessages(messages) {
+    // Filter by deletion status
+    let visibleMessages = messages.filter(m => !state.deletedIds.includes(m.id));
+    
+    // Filter by current filter type
+    if (state.currentFilter === "archived") {
+      visibleMessages = visibleMessages.filter(m => state.archivedIds.includes(m.id));
+    } else if (state.currentFilter === "starred") {
+      visibleMessages = visibleMessages.filter(m => state.starredIds.includes(m.id));
+    } else { // inbox
+      visibleMessages = visibleMessages.filter(m => !state.archivedIds.includes(m.id));
+    }
+    
+    // Apply search filter
     const filtered = searchQuery
-      ? messages.filter((m) => {
+      ? visibleMessages.filter((m) => {
           const sub  = (m.subject || "").toLowerCase();
           const from = (m.from?.address || "").toLowerCase();
           return sub.includes(searchQuery) || from.includes(searchQuery);
         })
-      : messages;
+      : visibleMessages;
 
     messageList.replaceChildren();
 
     if (!filtered.length) {
       const el = document.createElement("div");
       el.className = "empty-state";
-      el.textContent = searchQuery
-        ? "No messages match your search."
-        : state.token
-          ? "Inbox is active — waiting for emails."
-          : "Create an inbox to start receiving emails.";
+      if (state.currentFilter === "archived") {
+        el.textContent = searchQuery ? "No archived messages match your search." : "No archived messages.";
+      } else if (state.currentFilter === "starred") {
+        el.textContent = searchQuery ? "No starred messages match your search." : "No starred messages.";
+      } else {
+        el.textContent = searchQuery
+          ? "No messages match your search."
+          : state.token
+            ? "Inbox is active — waiting for emails."
+            : "Create an inbox to start receiving emails.";
+      }
       messageList.appendChild(el);
       return;
     }
 
     filtered.forEach((msg) => {
-      const item = document.createElement("button");
-      item.type = "button";
-      item.className = "message-item";
-      if (msg.id === state.selectedMessageId) item.classList.add("is-active");
-      if (msg._unread) item.classList.add("is-unread");
+      const item = document.createElement("div");
+      item.className = "message-item-wrapper";
+
+      const msgBtn = document.createElement("button");
+      msgBtn.type = "button";
+      msgBtn.className = "message-item";
+      if (msg.id === state.selectedMessageId) msgBtn.classList.add("is-active");
+      if (msg._unread) msgBtn.classList.add("is-unread");
 
       const from = document.createElement("div");
       from.className = "message-from";
@@ -301,10 +350,55 @@ document.addEventListener("DOMContentLoaded", () => {
       time.className = "message-time";
       time.textContent = timestampLabel(msg.createdAt || new Date());
 
-      item.appendChild(from);
-      item.appendChild(subject);
-      item.appendChild(time);
-      item.addEventListener("click", () => openMessage(msg.id));
+      msgBtn.appendChild(from);
+      msgBtn.appendChild(subject);
+      msgBtn.appendChild(time);
+      msgBtn.addEventListener("click", () => openMessage(msg.id));
+
+      // Action buttons
+      const actions = document.createElement("div");
+      actions.className = "message-actions";
+
+      // Star button
+      const starBtn = document.createElement("button");
+      starBtn.type = "button";
+      starBtn.className = "action-btn star-btn";
+      starBtn.title = state.starredIds.includes(msg.id) ? "Unstar" : "Star";
+      starBtn.innerHTML = state.starredIds.includes(msg.id)
+        ? '<svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor"><path d="M7 1l1.87 4.2h4.63l-3.75 2.88 1.43 4.32L7 9.9l-3.18 2.5 1.43-4.32L.5 5.2h4.63L7 1z"/></svg>'
+        : '<svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 1l1.87 4.2h4.63l-3.75 2.88 1.43 4.32L7 9.9l-3.18 2.5 1.43-4.32L.5 5.2h4.63L7 1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>';
+      starBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleStar(msg.id);
+      });
+      actions.appendChild(starBtn);
+
+      // Archive button
+      const archiveBtn = document.createElement("button");
+      archiveBtn.type = "button";
+      archiveBtn.className = "action-btn archive-btn";
+      archiveBtn.title = state.archivedIds.includes(msg.id) ? "Unarchive" : "Archive";
+      archiveBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M1.5 3h11v1H1.5z" fill="currentColor"/><rect x="2" y="4" width="10" height="8" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M5 7l1.5 1.5 2.5-2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+      archiveBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleArchive(msg.id);
+      });
+      actions.appendChild(archiveBtn);
+
+      // Delete button
+      const deleteBtn = document.createElement("button");
+      deleteBtn.type = "button";
+      deleteBtn.className = "action-btn delete-btn";
+      deleteBtn.title = "Delete";
+      deleteBtn.innerHTML = '<svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M5.5 4V3a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5v1M6.5 7v3M7.5 7v3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><rect x="3" y="4" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.1"/></svg>';
+      deleteBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        deleteMessage(msg.id);
+      });
+      actions.appendChild(deleteBtn);
+
+      item.appendChild(msgBtn);
+      item.appendChild(actions);
       messageList.appendChild(item);
     });
   }
@@ -433,7 +527,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (state.address) saveToHistory(state.address, state.password, state.token, state.domain);
     Object.assign(state, {
       address: "", password: "", token: "", domain: "",
-      messages: [], seenIds: [], selectedMessageId: ""
+      messages: [], seenIds: [], selectedMessageId: "",
+      deletedIds: [], archivedIds: [], starredIds: [],
+      currentFilter: "inbox"
     });
     persistState();
     renderInboxCard();
@@ -446,6 +542,64 @@ document.addEventListener("DOMContentLoaded", () => {
     stopAutoRefresh();
     autoRefreshEnabled = false;
     autoRefreshBtn.setAttribute("aria-checked", "false");
+  }
+
+  /* ════════════════════════════════════════
+     MESSAGE ACTIONS: FILTER, DELETE, ARCHIVE, STAR
+  ════════════════════════════════════════ */
+  function setFilter(filterName) {
+    state.currentFilter = filterName;
+    persistState();
+    
+    // Update active button
+    document.querySelectorAll(".filter-tab").forEach(btn => btn.classList.remove("is-active"));
+    document.querySelector(`[data-filter="${filterName}"]`).classList.add("is-active");
+    
+    renderMessages(state.messages);
+  }
+
+  function deleteMessage(messageId) {
+    if (!state.deletedIds.includes(messageId)) {
+      state.deletedIds.push(messageId);
+      persistState();
+      renderMessages(state.messages);
+      renderInboxCard();
+      
+      // If the deleted message was selected, clear preview
+      if (state.selectedMessageId === messageId) {
+        clearPreview();
+        state.selectedMessageId = "";
+      }
+      
+      setStatus("Message deleted", "success");
+    }
+  }
+
+  function toggleArchive(messageId) {
+    const idx = state.archivedIds.indexOf(messageId);
+    if (idx > -1) {
+      state.archivedIds.splice(idx, 1);
+      setStatus("Message moved to inbox", "success");
+    } else {
+      state.archivedIds.push(messageId);
+      setStatus("Message archived", "success");
+    }
+    persistState();
+    renderMessages(state.messages);
+    renderInboxCard();
+  }
+
+  function toggleStar(messageId) {
+    const idx = state.starredIds.indexOf(messageId);
+    if (idx > -1) {
+      state.starredIds.splice(idx, 1);
+      setStatus("Star removed", "success");
+    } else {
+      state.starredIds.push(messageId);
+      setStatus("Message starred", "success");
+    }
+    persistState();
+    renderMessages(state.messages);
   }
 
   /* ════════════════════════════════════════
@@ -531,7 +685,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function restoreHistory(h) {
     Object.assign(state, {
       address: h.address, password: h.password, token: h.token, domain: h.domain,
-      messages: [], seenIds: [], selectedMessageId: ""
+      messages: [], seenIds: [], selectedMessageId: "",
+      deletedIds: [], archivedIds: [], starredIds: [],
+      currentFilter: "inbox"
     });
     persistState();
     renderInboxCard();
@@ -606,7 +762,9 @@ document.addEventListener("DOMContentLoaded", () => {
       [STORAGE_KEY]: {
         address: state.address, password: state.password, token: state.token,
         domain: state.domain, messages: state.messages, seenIds: state.seenIds,
-        selectedMessageId: state.selectedMessageId
+        selectedMessageId: state.selectedMessageId, deletedIds: state.deletedIds,
+        archivedIds: state.archivedIds, starredIds: state.starredIds,
+        currentFilter: state.currentFilter
       }
     });
   }
